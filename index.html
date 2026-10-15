@@ -268,6 +268,7 @@ body.fixh .soc>.card.chat .say{flex:none;margin-top:8px}
 /* 非戰鬥分頁：隱藏戰鬥畫面（背景照跑），整頁只給功能 */
 body.nobt #stagebar,body.nobt #cv,body.nobt #dock,body.nobt #pbar.ov{display:none!important}
 @media (min-width:1000px){body.nobt{grid-template-columns:200px minmax(0,1fr);grid-template-rows:auto minmax(0,1fr);grid-template-areas:"nav top" "nav app"}body.nobt #app{padding:6px 24px 24px 6px}}
+.potq{position:relative}.potq .cdn{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:#0008;color:#fff;font-style:normal;font-weight:700;border-radius:inherit;font-size:13px}.potq.oncd{filter:saturate(.6)}
 </style></head><body>
 <div id="top"><span id="tName"></span><span class="sp"></span><span id="tG"></span><b id="tGold">0</b><span id="tD"></span><b id="tDia">0</b><button class="b s" id="snd" data-a="snd">音</button></div>
 <div id="stagebar"><span id="sbT"></span><div class="pb"><i id="sbP"></i></div><span id="sbX"></span><button class="b s y" data-a="boss" id="bossBtn">挑戰頭目</button></div>
@@ -278,7 +279,7 @@ body.nobt #stagebar,body.nobt #cv,body.nobt #dock,body.nobt #pbar.ov{display:non
 <script>
 'use strict';
 // ===================== 第 1 層：靜態資料（DATA）—— 前後端共用 =====================
-const VER='1.7.17',SKEY='xj_cache_v2',LEGACY='xyexp_save_v1';
+const VER='1.7.18',SKEY='xj_cache_v2',LEGACY='xyexp_save_v1';
 const STATN={str:'力量',agi:'敏捷',vit:'體力',int:'智力',dex:'靈巧',luk:'幸運'};
 const STATD={str:'近戰攻擊、負重',agi:'攻速、迴避',vit:'HP、防禦、魔防',int:'魔攻、SP、魔防',dex:'命中、遠程攻擊、詠唱',luk:'暴擊、完全迴避'};
 const ROLE={tank:'坦克',dps:'輸出',heal:'治療',sup:'輔助'};
@@ -292,23 +293,23 @@ const WCFG={fist:{atk:0,slot:0,spd:'—'},dagger:{atk:.8,slot:4,spd:'最快'},sw
 const DUALW=['dagger','sword'];// 刺客系左右手雙持：只限單手劍、匕首（左手武器卡片效果 60%）
 // 職業：line=系別 tier 0初心 1一轉 2二轉 3高階一轉 4進階二轉；base=基礎ASPD；hp/sp 係數；w=可用武器；sh=可否持盾；dual=二刀流
 const J={
- nov:{n:'初心者',t:0,role:'dps',base:150,hp:.8,sp:.6,w:['dagger','sword','mace'],sh:1,col:'#9bd17a',hair:'#8b5a2b',sk:['n_bash','n_first'],auto:{str:3,vit:2,agi:2,dex:2,luk:1}},
- sw:{n:'劍士',t:1,from:'nov',role:'tank',base:152,hp:1.5,sp:.8,w:['dagger','sword','tsword','axe','mace','spear'],sh:1,col:'#4a7fd1',hair:'#3a2a1a',sk:['s_bash','s_prov','s_magnum','s_hpreg'],auto:{str:4,vit:4,agi:1,dex:1}},
+ nov:{n:'初心者',t:0,role:'dps',base:150,hp:.8,sp:.6,w:['dagger','sword','axe','mace','staff','tstaff'],sh:1,col:'#9bd17a',hair:'#8b5a2b',sk:['n_bash','n_first'],auto:{str:3,vit:2,agi:2,dex:2,luk:1}},
+ sw:{n:'劍士',t:1,from:'nov',role:'tank',base:152,hp:1.5,sp:.8,w:['dagger','sword','tsword','spear','axe','taxe','mace'],sh:1,col:'#4a7fd1',hair:'#3a2a1a',sk:['s_bash','s_prov','s_magnum','s_hpreg'],auto:{str:4,vit:4,agi:1,dex:1}},
  mg:{n:'魔導士',t:1,from:'nov',role:'dps',base:146,hp:.7,sp:1.6,mag:1,w:['dagger','staff','tstaff'],sh:1,col:'#7b52c7',hair:'#e05a8a',sk:['m_fire','m_cold','m_bolt','m_wall'],auto:{int:5,dex:4,vit:1}},
  ac:{n:'弓箭手',t:1,from:'nov',role:'dps',base:152,hp:.85,sp:1,w:['dagger','bow'],sh:0,col:'#3f8f4f',hair:'#f0c040',sk:['a_double','a_shower','a_owl'],auto:{dex:5,agi:3,luk:1,vit:1}},
  al:{n:'服事',t:1,from:'nov',role:'heal',base:150,hp:1.1,sp:1.5,mag:1,w:['mace','staff','tstaff'],sh:1,col:'#f2f2f2',hair:'#e8c46a',sk:['h_heal','h_bless','h_agi','h_angelus'],auto:{int:4,vit:3,dex:3}},
  mc:{n:'商人',t:1,from:'nov',role:'tank',base:150,hp:1.4,sp:.9,w:['dagger','sword','axe','taxe','mace'],sh:1,col:'#b8742d',hair:'#5a3a1a',sk:['c_mammon','c_cart','c_disc'],auto:{str:4,vit:3,dex:2,luk:1}},
  th:{n:'盜賊',t:1,from:'nov',role:'dps',base:156,hp:1.2,sp:.9,w:['dagger','sword','bow','axe'],sh:1,col:'#4b4b5e',hair:'#c9c9c9',sk:['t_double','t_envenom','t_steal'],auto:{agi:5,str:3,luk:1,dex:1}},
- kn:{n:'騎士',t:2,from:'sw',role:'tank',base:153,hp:1.9,sp:.9,w:['dagger','sword','tsword','axe','mace','spear'],sh:1,col:'#2f5fb8',hair:'#3a2a1a',sk:['k_pierce','k_bowl','k_twoq'],auto:{str:5,vit:3,agi:2,dex:1}},
- cr:{n:'聖盾衛士',t:2,from:'sw',role:'tank',base:152,hp:2.1,sp:1.1,w:['dagger','sword','tsword','spear','mace'],sh:1,col:'#d8d8e8',hair:'#c08030',sk:['p_guard','p_grand','p_devo'],auto:{vit:5,str:3,int:1,dex:1}},
+ kn:{n:'騎士',t:2,from:'sw',role:'tank',base:153,hp:1.9,sp:.9,w:['dagger','sword','tsword','spear','axe','taxe','mace'],sh:1,col:'#2f5fb8',hair:'#3a2a1a',sk:['k_pierce','k_bowl','k_twoq'],auto:{str:5,vit:3,agi:2,dex:1}},
+ cr:{n:'聖盾衛士',t:2,from:'sw',role:'tank',base:152,hp:2.1,sp:1.1,w:['dagger','sword','tsword','spear','axe','taxe','mace'],sh:1,col:'#d8d8e8',hair:'#c08030',sk:['p_guard','p_grand','p_devo'],auto:{vit:5,str:3,int:1,dex:1}},
  wz:{n:'元素術師',t:2,from:'mg',role:'dps',base:147,hp:.75,sp:2,mag:1,w:['dagger','staff','tstaff'],sh:1,col:'#5a2fa0',hair:'#ff7aa8',sk:['w_storm','w_meteor','w_jupi'],auto:{int:5,dex:4,vit:1}},
- sg:{n:'智識學者',t:2,from:'mg',role:'sup',base:148,hp:1.1,sp:1.9,mag:1,w:['dagger','staff','tstaff','book'],sh:1,col:'#2f8f8f',hair:'#d9d9a0',sk:['g_ende','g_dispell','g_heaven'],auto:{int:4,dex:4,vit:2}},
+ sg:{n:'智識學者',t:2,from:'mg',role:'sup',base:148,hp:1.1,sp:1.9,mag:1,w:['dagger','sword','staff','tstaff','book'],sh:1,col:'#2f8f8f',hair:'#d9d9a0',sk:['g_ende','g_dispell','g_heaven'],auto:{int:4,dex:4,vit:2}},
  ht:{n:'獵鷹手',t:2,from:'ac',role:'dps',base:153,hp:.95,sp:1.1,w:['dagger','bow'],sh:0,col:'#2e6e3c',hair:'#f0c040',sk:['r_blitz','r_trap','r_falcon'],auto:{dex:5,luk:3,agi:2}},
  bd:{n:'吟遊歌者',t:2,from:'ac',role:'sup',base:152,hp:1.3,sp:1.3,w:['dagger','bow','inst','whip'],sh:0,col:'#c06030',hair:'#f0e080',sk:['b_bragi','b_assa','b_arrow'],auto:{dex:4,agi:3,int:2,vit:1}},
- pr:{n:'祭司',t:2,from:'al',role:'heal',base:151,hp:1.3,sp:1.9,mag:1,w:['mace','staff','tstaff','book'],sh:1,col:'#fff5d0',hair:'#e8c46a',sk:['h_sanct','h_kyrie','h_magnus','h_resu'],auto:{int:5,vit:3,dex:2}},
- mk:{n:'拳僧',t:2,from:'al',role:'dps',base:154,hp:1.6,sp:1.2,w:['mace','staff','knuckle'],sh:1,col:'#b04020',hair:'#202020',sk:['o_triple','o_combo','o_asura'],auto:{str:4,agi:4,vit:2}},
+ pr:{n:'祭司',t:2,from:'al',role:'heal',base:151,hp:1.3,sp:1.9,mag:1,w:['mace','staff','tstaff','knuckle','book'],sh:1,col:'#fff5d0',hair:'#e8c46a',sk:['h_sanct','h_kyrie','h_magnus','h_resu'],auto:{int:5,vit:3,dex:2}},
+ mk:{n:'拳僧',t:2,from:'al',role:'dps',base:154,hp:1.6,sp:1.2,w:['mace','staff','tstaff','knuckle'],sh:1,col:'#b04020',hair:'#202020',sk:['o_triple','o_combo','o_asura'],auto:{str:4,agi:4,vit:2}},
  bs:{n:'鍛鐵匠',t:2,from:'mc',role:'dps',base:152,hp:1.6,sp:1,w:['dagger','sword','axe','taxe','mace'],sh:1,col:'#8a5a2a',hair:'#303030',sk:['f_adren','f_power','f_hammer'],auto:{str:5,dex:3,vit:2}},
- am:{n:'藥劑師',t:2,from:'mc',role:'sup',base:151,hp:1.5,sp:1.2,w:['dagger','sword','axe','mace'],sh:1,col:'#6aa040',hair:'#a06030',sk:['l_acid','l_potion','l_homun'],auto:{str:3,int:3,dex:3,vit:1}},
+ am:{n:'藥劑師',t:2,from:'mc',role:'sup',base:151,hp:1.5,sp:1.2,w:['dagger','sword','axe','taxe','mace'],sh:1,col:'#6aa040',hair:'#a06030',sk:['l_acid','l_potion','l_homun'],auto:{str:3,int:3,dex:3,vit:1}},
  as:{n:'刺影',t:2,from:'th',role:'dps',base:156,hp:1.05,sp:1,dual:1,w:['dagger','sword','axe','katar'],sh:1,col:'#3a2a5a',hair:'#c9c9c9',sk:['x_sonic','x_edp','x_cloak','x_rmas','x_lmas'],auto:{agi:5,str:3,luk:2}},
  rg:{n:'遊俠盜',t:2,from:'th',role:'sup',base:155,hp:1.4,sp:1,w:['dagger','sword','bow'],sh:1,col:'#6a3030',hair:'#e0a060',sk:['g_strip','g_back','g_raid'],auto:{str:4,agi:3,dex:2,luk:1}},
  // 轉生 → 高階一轉（沿用一轉技能，素質點100）→ 進階二轉
@@ -411,13 +412,13 @@ for(let i=0;i<10;i++){const b=CH[i];const dk=c=>{const n=parseInt(c.slice(1),16)
 
 // 平衡：前置技能、武器需求、狀態需求、後延遲、觸媒
 const SKP={s_magnum:{pre:{s_bash:5}},s_hpreg:{},m_wall:{pre:{m_fire:4}},a_shower:{pre:{a_double:5}},h_angelus:{pre:{h_bless:3}},h_agi:{pre:{h_heal:3}},
- c_cart:{pre:{c_mammon:3}},t_envenom:{pre:{t_double:3}},k_pierce:{pre:{s_bash:5},w:['spear','sword','tsword']},k_bowl:{pre:{s_bash:10,k_pierce:3},w:['sword','tsword']},k_twoq:{pre:{k_pierce:1},w:['tsword']},
+ c_cart:{pre:{c_mammon:3}},t_envenom:{pre:{t_double:3}},k_pierce:{pre:{s_bash:5},w:['spear']},a_double:{w:['bow']},a_shower:{w:['bow']},k_bowl:{pre:{s_bash:10,k_pierce:3}},k_twoq:{pre:{k_pierce:1},w:['tsword']},
  p_grand:{pre:{p_guard:3,s_hpreg:5},acd:1.5},p_devo:{pre:{p_grand:3}},w_storm:{pre:{m_cold:5},acd:1},w_meteor:{pre:{m_fire:5,w_storm:3},acd:2,cat:'blue'},w_jupi:{pre:{m_bolt:5},acd:.5},
- g_heaven:{pre:{m_bolt:5,g_dispell:3},acd:1},r_blitz:{pre:{r_falcon:3},w:['bow']},r_trap:{pre:{a_owl:3},acd:1},r_falcon:{pre:{a_owl:5},w:['bow']},b_arrow:{w:['bow','inst','whip'],pre:{a_double:5}},
+ g_heaven:{pre:{m_bolt:5,g_dispell:3},acd:1},r_blitz:{pre:{r_falcon:3}},r_trap:{pre:{a_owl:3},acd:1},r_falcon:{pre:{a_owl:5},w:['bow']},b_arrow:{w:['inst','whip'],pre:{a_double:5}},
  b_bragi:{pre:{b_assa:3},w:['inst','whip']},b_assa:{w:['inst','whip']},h_sanct:{pre:{h_heal:5},cat:'blue',acd:1},h_magnus:{pre:{h_sanct:3},cat:'blue',acd:2},h_kyrie:{pre:{h_angelus:3}},
  o_combo:{pre:{o_triple:5},w:['knuckle','fist','mace','staff']},o_asura:{pre:{o_combo:3},need:'spirit',acd:3,d:'需 5 氣彈（三段掌累積），施放後 SP 歸零 3 秒'},
- f_power:{pre:{f_adren:3}},f_hammer:{pre:{f_power:1},acd:1},l_acid:{pre:{l_potion:3}},x_sonic:{pre:{t_double:5},w:['katar']},x_edp:{pre:{t_envenom:5},cat:'poison',w:['katar','dagger']},
- g_back:{pre:{t_double:5},w:['dagger','sword','bow']},g_raid:{pre:{g_back:3}},k_berserk:{pre:{k_twoq:5},acd:0,d:'狂暴後 HP 不能被補'},p_shrink:{pre:{p_grand:5},w:['spear','sword']},
+ f_power:{pre:{f_adren:3}},f_hammer:{pre:{f_power:1},acd:1},l_acid:{pre:{l_potion:3}},x_sonic:{pre:{t_double:5},w:['katar']},x_edp:{pre:{t_envenom:5},cat:'poison'},
+ g_back:{pre:{t_double:5},w:['dagger','sword','bow']},g_raid:{pre:{g_back:3}},k_berserk:{pre:{k_twoq:5},acd:0,d:'狂暴後 HP 不能被補'},p_shrink:{pre:{p_grand:5},wsh:1},
  w_amp:{pre:{w_storm:5}},r_sharp:{pre:{r_blitz:5},w:['bow'],acd:1},o_tiger:{pre:{o_combo:5},need:'spirit'},l_bomb:{pre:{l_acid:5},cat:'acid'},x_soul:{pre:{x_sonic:5},w:['katar'],acd:1},g_full:{pre:{g_raid:3}}};
 for(const k in SKP)Object.assign(SK[k],SKP[k]);
 const CATN={blue:'藍色魔力礦石',poison:'劇毒瓶',acid:'酸性藥瓶'};Object.assign(MAT,CATN);
@@ -536,7 +537,7 @@ function stepBattle(S,B,dt){B.ev=[];if(B.done)return B.ev;S.party.forEach(id=>{i
  if(!ids.some(id=>B.hr[id].hp>0)){B.ev.push({t:'wipe'});if(B.boss){B.done=2;return B.ev}B.pause=2.5;B.respawn=1;B.wave=0;return B.ev}
  if(!front(B)){B.wave++;if(B.wave>=B.need){B.done=1;B.ev.push({t:'clear'})}else{B.pause=.6}}
  return B.ev}
-function pickSkill(S,B,h,t,rt,T){const ks=Object.keys(h.sk).filter(k=>h.sk[k]>0&&SK[k].ty!=='pass'&&!(rt.cd[k]>0)&&rt.sp>=SK[k].sp+h.sk[k]&&!skReady(S,h,t,k,rt));if(!ks.length)return null;
+function pickSkill(S,B,h,t,rt,T){const ks=Object.keys(h.sk).filter(k=>h.sk[k]>0&&!(h.skOff&&h.skOff[k])&&SK[k].ty!=='pass'&&!(rt.cd[k]>0)&&rt.sp>=SK[k].sp+h.sk[k]&&!skReady(S,h,t,k,rt));if(!ks.length)return null;
  const bm=B.boss&&B.mobs[0];if(bm&&bm.bc&&!bm.bc.gold&&S.autoInt!==false&&!(S.noInt||{})[h.id]){const ik=ks.find(k=>SK[k].intr);if(ik)return ik}
  const low=S.party.filter(id=>B.hr[id]&&B.hr[id].hp>0&&B.hr[id].hp<T[id].mhp*.6);
  for(const k of ks){const d=SK[k];if(d.ty==='heal'&&(d.self?B.hr[h.id].hp<t.mhp*.5:low.length))return k}
@@ -1056,11 +1057,11 @@ for(const k in CONS)if(CONS[k].buy==='npc'&&!NPCSHOP.find(x=>x.k===k))NPCSHOP.pu
 for(const k in ARROWS)if(!NPCSHOP.find(x=>x.k===k))NPCSHOP.push({k,n:ARROWS[k].n,p:ARW_P});
 if(typeof DSHOP!=='undefined'&&!DSHOP.find(x=>x.k==='yfruit'))DSHOP.push({k:'yfruit',n:'天果',d:'立刻補滿 HP',p:15});
 if(typeof BIND!=='undefined'&&!BIND.includes('yfruit'))BIND.push('yfruit');
-function useCons(S,h,k,B){const c=CONS[k];if(!c)return'不能使用';if((S.mat[k]||0)<1)return c.n+'不足';if(c.lv&&h.bl<c.lv)return`需 Lv${c.lv}`;
- if(c.b){S.cbuf=S.cbuf||{};const now=Date.now();S.cbuf[k]=Math.max(now,S.cbuf[k]||0)+c.dur*1000;S.mat[k]--;return''}
+function useCons(S,h,k,B){const c=CONS[k];if(!c)return'不能使用';const M=(S.hmat&&S.hmat[h.id])||S.mat;if((M[k]||0)<1)return c.n+'不足';if(c.lv&&h.bl<c.lv)return`需 Lv${c.lv}`;
+ if(c.b){S.cbuf=S.cbuf||{};const now=Date.now();S.cbuf[k]=Math.max(now,S.cbuf[k]||0)+c.dur*1000;M[k]--;return''}
  const rt=B&&B.hr&&B.hr[h.id];if(!rt)return'不在戰鬥中';rt.pcd=rt.pcd||{};if((rt.pcd[k]||0)>0)return'冷卻中';const T=calc(S,h);
  if(k==='yfruit'){if(rt.hp<=0)return'倒下時請用天地樹葉子';if(rt.hp>=T.mhp)return'HP 已滿';rt.hp=T.mhp}else if(k==='ygg'){if(rt.hp>0)return'天地樹葉子只能用來復活';rt.hp=Math.ceil(T.mhp*.2)}
- S.mat[k]--;rt.pcd[k]=c.cd;if(B.ev)B.ev.push({t:'pot',k,id:h.id,n:c.n});return''}
+ M[k]--;rt.pcd[k]=c.cd;if(B.ev)B.ev.push({t:'pot',k,id:h.id,n:c.n});return''}
 // 增益（同種重複使用＝延長時間；不同料理可疊加；覺醒/狂暴取較高者）
 {const _e=eqBonus;eqBonus=function(S,h){const b=_e(S,h);if(S&&S.cbuf){const now=Date.now();let asp=0;for(const k in S.cbuf){if(S.cbuf[k]<=now){delete S.cbuf[k];continue}const c=CONS[k];if(!c||!c.b)continue;if(c.b.aspdP){asp=Math.max(asp,c.b.aspdP);continue}if(c.lv&&h.bl<c.lv)continue;for(const x in c.b)b[x]=(b[x]||0)+c.b[x]}if(asp)b.aspdP=(b.aspdP||0)+asp}return b}}
 // 戰鬥：自動用葉子、祭司復活術、元素箭矢屬性
@@ -1070,7 +1071,7 @@ const RESU_HP=[0,.1,.3,.5,.8];
   const ap=apSet(S);for(const h of S.heroes){const rt=B.hr&&B.hr[h.id];if(!rt)continue;rt.rcd=Math.max(0,(rt.rcd||0)-dt);
    if(rt.hp<=0){const pr=S.heroes.find(x=>x.id!==h.id&&(x.sk||{}).h_resu>0&&B.hr[x.id]&&B.hr[x.id].hp>0&&!(B.hr[x.id].rcd>0));
     if(pr){const L=Math.min(4,pr.sk.h_resu),T=calc(S,h);rt.hp=Math.ceil(T.mhp*RESU_HP[L]);B.hr[pr.id].rcd=60-(L-1)*10;ev.push({t:'resu',id:h.id,by:pr.id,n:'復活術'})}
-    else if(ap.leaf!==0&&(S.mat.ygg||0)>0)useCons(S,h,'ygg',B)}}}catch(e){}return ev}}
+    else if(ap.leaf!==0&&(((S.hmat&&S.hmat[h.id])||S.mat).ygg||0)>0)useCons(S,h,'ygg',B)}}}catch(e){}return ev}}
 // 原創卡：劍旗魚卡片（飾品）— 詠唱不會被打斷，但詠唱時間 +25%（第 3 章頭目低機率掉落）
 CARDS.swf={n:'劍旗魚卡片',sh:'blob',c:'#7fc8ff',slot:'acc',fx:{noIntr:1,castP:-25},boss:true,proc:null,src:{ch:2,mi:3,mob:(CH[2]&&CH[2].boss[0])||'第 3 章頭目'},rate:.004};
 // 亂碼修復：舊版伺服器分段解碼把中文切壞（U+FFFD）。道具名依模板重建，其餘字串移除亂碼字元；失敗建議直接重算
@@ -1475,7 +1476,7 @@ function render(){const S=G.S;if(SUBT[TAB]&&!SUBT[TAB].some(x=>x[0]===SUB[TAB]))
   if(s==='skill'){h+=`<div class="card"><div class="row"><b>技能樹</b><span class="sp"></span>本階段剩餘技能點 <b class="c">${skLeft(hr)}</b></div>
    ${allSkills(hr.job).map(k=>{const d=SK[k],lv=hr.sk[k]||0,why=canLearn(hr,k),rdy=lv?skReady(S,hr,t,k,null):'';return`<div class="it"><div class="sp"><b data-a="info" data-k="sk:${k}">${d.n}</b> <span class="tag">${['初心','一轉','二轉','三轉'][skTier(k)]}</span> <span class="sm">Lv${lv}/${d.max}｜需Lv${skReq(hr,k,lv+1).lv}・${STATN[skReq(hr,k,lv+1).st]}${skReq(hr,k,lv+1).sv}｜${{dmg:'單體',aoe:'範圍',heal:'治療',buff:'增益',taunt:'挑釁',pass:'被動',dethreat:'降仇恨'}[d.ty]}${d.el?'｜'+d.el:''}${HITS[k]?'｜'+nHits(k,Math.max(1,lv))+'段':''}${d.cast?'｜詠唱'+d.cast+'s':''}${d.cd?'｜冷卻'+d.cd+'秒':''}${d.acd?'｜後延遲'+d.acd+'s':''}${d.sp?'｜SP'+d.sp:''}${d.cat?'｜觸媒:'+MAT[d.cat]:''}${d.intr?'｜<span class="c">可打斷</span>':''}</span>
     <div class="sm">${d.d||''}${d.pre?' 前置：'+Object.entries(d.pre).map(([p,l])=>`${SK[p].n} Lv${l}`).join('、'):''}${d.w?' 武器：'+d.w.map(x=>WT[x].n).join('/'):''}${d.wsh?' 需盾':''}${rdy?` <span class="rd">（目前無法使用：${rdy}）</span>`:''}</div></div>
-    <button class="b s" data-a="learn" data-k="${k}" ${why?'disabled':''}>${why&&lv<d.max?why.slice(0,6):'+1'}</button></div>`}).join('')}
+    ${lv>0&&d.ty!=='pass'?`<label class="sm" style="white-space:nowrap;margin-right:6px"><input type="checkbox" data-a="skAuto" data-k="${k}" ${hr.skOff&&hr.skOff[k]?'':'checked'}> 自動</label>`:''}<button class="b s" data-a="learn" data-k="${k}" ${why?'disabled':''}>${why&&lv<d.max?why.slice(0,6):'+1'}</button></div>`}).join('')}
    <div class="row"><button class="b s r" data-a="skreset">洗本階段技能點（100 鑽）</button></div></div>`}
   if(s==='job'){h+=jobPage(S,hr)+`${(()=>{const c=rbCost(hr.rb||0),r=rbTitle(hr.rb);return`<div class="card"><b>轉生</b>（目前 ${hr.rb||0} 轉 ${r.t?nameHtml(hr):''}）<div class="sm">條件：Lv${RBMAX}。費用 ${c.dia} 鑽 + ${fmt(c.gold)} 金。轉生後等級與六維重置，職業、技能、推圖、裝備保留，並獲得轉生點與更強的起點。可無限轉生。</div><button class="b y" data-a="rebirth" ${canRebirth(hr)?'':'disabled'}>轉生</button></div>
    <div class="card"><b>轉生點</b> 剩餘 <b class="c">${hr.rp||0}</b><div class="sm">可點六維素質或特化能力。</div><div class="grid2">${Object.keys(RBP).map(k=>{const L=(hr.rpl||{})[k]||0;return`<div class="st"><span style="width:50px">${RBP[k][0]}</span><span>+${rbpVal(k,L)}</span><span class="sp"></span><span class="sm">Lv${L} 需${rbpCost(L)}</span><button class="b s" data-a="rbp" data-k="${k}" ${(hr.rp||0)<rbpCost(L)?'disabled':''}>+</button></div>`}).join('')}</div><button class="b s r" data-a="rsrbp">洗轉生點（50 鑽）</button></div>`})()}`}
@@ -2163,5 +2164,39 @@ ACT.crGo=async()=>{const S=G.S,it=S.inv.find(i=>i.u===CR.u);if(!it)return;const 
 // 道具視窗加「製作升階」入口
 {const _ii=itemInfo;itemInfo=function(S,it){let h=_ii(S,it);if(it&&it.aff&&CRAFT[it.q])h=h.replace('<div class="ifg">',`<div class="ifr" style="margin:6px 0"><span class="sm">可製作升階為${CRAFT[it.q].n}</span><button class="b s y" data-a="crFrom" data-v="${it.u}">前往製作</button></div><div class="ifg">`);return h}}
 ACT.crFrom=d=>{closeModal();CR.u=+d.v;CR.locks=[];TAB='equip';SUB.equip='craft';render()};
+// ===== 交易所批量購買：同一材料/卡片依單價由低到高跨掛單買到指定數量 =====
+function mkGroups(){const g={};for(const l of ON.market||[]){if(l.seller_id===ON.id||l.kind==='equip')continue;const it=typeof l.item==='string'?JSON.parse(l.item):l.item;(g[it.key]=g[it.key]||[]).push(l)}for(const k in g)g[k].sort((a,b)=>a.price-b.price||a.id-b.id);return g}
+function bulkCost(L,n){let left=n,c=0;for(const l of L){if(left<=0)break;const k=Math.min(left,l.qty);c+=k*l.price;left-=k}return left>0?null:c}
+{const _mh=marketHtml;marketHtml=function(S){let h=_mh(S);const G=mkGroups();const ks=Object.keys(G);if(!ks.length)return h;
+ const box=`<div class="card"><b>批量購買</b><div class="sm">同一種材料/卡片會從最便宜的掛單開始買，可跨多個賣家、可只買掛單的一部分。</div>${ks.map(k=>{const L=G[k],tot=L.reduce((a,l)=>a+l.qty,0);return`<div class="it"><div class="sp"><b>${gName(k)}</b><div class="sm">共 ${tot} 個・最低 ${L[0].price} 鑽／個・${L.length} 張掛單</div></div><button class="b s y" data-a="mBulk" data-k="${k}">批量購買</button></div>`}).join('')}</div>`;
+ const i=h.indexOf('<div class="card">',10);return i>0?h.slice(0,i)+box+h.slice(i):h+box}}
+ACT.mBulk=d=>{const L=mkGroups()[d.k]||[];const tot=L.reduce((a,l)=>a+l.qty,0);if(!tot)return toast('沒有掛單');const mx=Math.min(tot,(()=>{let n=0;while(n<tot&&bulkCost(L,n+1)<=G.S.dia)n++;return n})());
+ modal(`<div class="card"><b>🛒 批量購買 ${gName(d.k)}</b><div class="sm">市場共 ${tot} 個，你有 💎${G.S.dia}，最多可買 ${mx} 個</div><div class="row" style="gap:6px;margin:8px 0;flex-wrap:wrap">${[1,10,50].filter(n=>n<=tot).map(n=>`<button class="b s" data-a="mBulkN" data-n="${n}">${n}</button>`).join('')}<button class="b s" data-a="mBulkN" data-n="${mx}">MAX(${mx})</button></div><input id="mbq" type="number" min="1" max="${tot}" value="${Math.max(1,Math.min(10,mx||1))}" oninput="mbUpd()" style="width:100%"><div id="mbc" class="sm" style="margin:8px 0"></div><button class="b y" style="width:100%" data-a="mBulkGo" data-k="${d.k}">確認購買</button></div>`);ON.mbk=d.k;mbUpd()};
+function mbUpd(){const L=mkGroups()[ON.mbk]||[];const n=Math.max(1,Math.floor(+($('mbq')||{}).value||1));const c=bulkCost(L,n);const e=$('mbc');if(e)e.innerHTML=c==null?'<span class="rd">掛單數量不足</span>':`總價 💎${c}（平均 ${(c/n).toFixed(1)} 鑽／個）${c>G.S.dia?' <span class="rd">鑽石不足</span>':''}`}
+ACT.mBulkN=d=>{const e=$('mbq');if(e){e.value=d.n;mbUpd()}};
+ACT.mBulkGo=async d=>{const n=Math.floor(+($('mbq')||{}).value||0);const c=bulkCost(mkGroups()[d.k]||[],n);if(c==null)return toast('掛單數量不足');if(c>G.S.dia)return toast('鑽石不足');
+ try{await onUpload(true);const r=await onApi('POST','/api/market/bulk',{key:d.k,qty:n});closeModal();toast(`已購買 ${gName(d.k)} ×${r.qty}，花費 💎${r.cost}`);await after({rev:1})}catch(e){toast(e.message)}};
+// 自動戰鬥逐一開關技能（存在角色 skOff；伺服器組隊戰鬥用同一份角色資料，也會遵守）
+ACT.skAuto=(e,d)=>{const h=curH();const k=(d&&d.k)||e.k;h.skOff=h.skOff||{};const on=typeof e.checked==='boolean'?e.checked:!!h.skOff[k];if(on)delete h.skOff[k];else h.skOff[k]=1;save();toast((on?'自動施放：開 ':'自動施放：關 ')+SK[k].n);if(typeof wsSend==='function'&&ON.party)setTimeout(()=>wsSend({t:'party.refresh'}),1500)};
+// 組隊時天果/天地樹葉子也由伺服器執行
+{const _uc=ACT.useC;ACT.useC=d=>{if(mirOn()&&(d.k==='yfruit'||d.k==='ygg')){const n=(ON.pm||{})[d.k];if(n===0)return toast(CONS[d.k].n+'不足');wsSend({t:'party.drink',k:d.k});return}return _uc(d)}}
+// 藥水/天果/天地樹葉子/復活術 冷卻倒數
+function myRt(){const M=typeof mirOn==='function'&&mirOn()&&ON.mir;const B=M?M.B:G.B;if(!B||!B.hr)return null;const id=M?ON.id:(curH()||{}).id;return B.hr[id]}
+setInterval(()=>{try{if(TAB!=='battle')return;const pb=document.querySelector('.potb');if(!pb)return;const rt=myRt()||{};const pc=rt.pcd||{};
+ pb.querySelectorAll('[data-a=drink],[data-a=useC]').forEach(b=>{const k=b.dataset.k;const s=Math.ceil(pc[k]||0);let e=b.querySelector('.cdn');if(s>0){if(!e){e=document.createElement('em');e.className='cdn';b.appendChild(e)}e.textContent=s+'s';b.classList.add('oncd')}else{if(e)e.remove();b.classList.remove('oncd')}
+  if(typeof mirOn==='function'&&mirOn()&&ON.pm&&ON.pm[k]!=null){const x=b.querySelector('b');if(x)x.textContent=ON.pm[k]}});
+ const S=G.S;const pr=S&&S.heroes.find(h=>(h.sk||{}).h_resu>0);let r=pb.querySelector('.resucd');if(pr){const M=typeof mirOn==='function'&&mirOn()&&ON.mir;const B=M?M.B:G.B;const t=Math.ceil(((B&&B.hr&&B.hr[M?ON.id:pr.id])||{}).rcd||0);if(!r){r=document.createElement('span');r.className='potq resucd';r.title='祭司復活術：隊友倒下時自動施放';pb.appendChild(r)}r.innerHTML=`✝️ 復活術 <b>${t>0?t+'s':'就緒'}</b>`}else if(r)r.remove()}catch(e){}},250);
+// ===== 原創 Q 版道具圖示（SVG）：治療藥水/高級治療藥水/魔力藥水/天果/天地樹葉子 =====
+const ICONS={
+ bottle:(c1,c2)=>`<svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><rect x="12" y="3" width="8" height="5" rx="1.5" fill="#b07a4a"/><rect x="11" y="7" width="10" height="3" rx="1" fill="#e8e1d6"/><path d="M11 10h10v3c4 2 6 5 6 9a11 9 0 0 1-22 0c0-4 2-7 6-9z" fill="#eef6ff" stroke="#6b5a7a" stroke-width="1.4"/><path d="M7 21c3-2 15-2 18 0a10 7.5 0 0 1-18 0z" fill="${c1}"/><ellipse cx="16" cy="25" rx="7" ry="3" fill="${c2}" opacity=".55"/><ellipse cx="11.5" cy="16" rx="2" ry="3" fill="#fff" opacity=".8"/><circle cx="13" cy="21.5" r="1" fill="#3a2a3a"/><circle cx="19" cy="21.5" r="1" fill="#3a2a3a"/><path d="M14.5 23.5q1.5 1.2 3 0" stroke="#3a2a3a" stroke-width=".9" fill="none"/></svg>`,
+ pot:()=>ICONS.bottle('#ff5a6e','#c0203a'),
+ hpot:()=>ICONS.bottle('#ff9a3c','#e0502a').replace('</svg>','<path d="M24 5l1 2.2 2.3.3-1.7 1.6.4 2.3-2-1.1-2 1.1.4-2.3-1.7-1.6 2.3-.3z" fill="#ffd23f" stroke="#c98a00" stroke-width=".5"/></svg>'),
+ spp:()=>ICONS.bottle('#4aa8ff','#1f5fc0'),
+ yfruit:()=>`<svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><path d="M16 7c-1-3 1-5 3-5" stroke="#7a4a20" stroke-width="1.6" fill="none"/><path d="M17 6c3-3 8-2 9 1-3 2-7 2-9-1z" fill="#6cc46a"/><path d="M16 8c-6-3-12 1-12 9 0 7 5 12 12 12s12-5 12-12c0-8-6-12-12-9z" fill="#ffd23f" stroke="#c98a00" stroke-width="1.3"/><path d="M8 13c1-2 3-3 5-3" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round" opacity=".8"/><circle cx="12.5" cy="19" r="1.1" fill="#5a3a10"/><circle cx="19.5" cy="19" r="1.1" fill="#5a3a10"/><ellipse cx="10" cy="22" rx="1.6" ry="1" fill="#ff9aa8"/><ellipse cx="22" cy="22" rx="1.6" ry="1" fill="#ff9aa8"/><path d="M14.5 21.5q1.5 1.4 3 0" stroke="#5a3a10" stroke-width=".9" fill="none"/><path d="M26 4l.8 1.8 1.9.2-1.4 1.3.4 1.9-1.7-1-1.7 1 .4-1.9-1.4-1.3 1.9-.2z" fill="#fff6b0"/></svg>`,
+ ygg:()=>`<svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><path d="M6 27C6 14 14 5 27 4c0 13-8 22-21 23z" fill="#5fd38a" stroke="#2e8a50" stroke-width="1.4"/><path d="M7 26C12 19 18 12 25 6" stroke="#2e8a50" stroke-width="1.3" fill="none"/><path d="M12 20l-3-4M15 17l-1-5M18 14l2-4M14 19l5 1M17 15l5 0" stroke="#2e8a50" stroke-width=".9"/><circle cx="17" cy="20" r="1" fill="#1f4a2a"/><circle cx="21.5" cy="15.5" r="1" fill="#1f4a2a"/><path d="M18.5 19q2 .2 2.6-1.6" stroke="#1f4a2a" stroke-width=".8" fill="none"/><path d="M27 18l.7 1.6 1.7.2-1.3 1.1.4 1.7-1.5-.9-1.5.9.4-1.7-1.3-1.1 1.7-.2z" fill="#fff6b0"/><path d="M4 8l.6 1.3 1.4.2-1 .9.3 1.4-1.3-.7-1.3.7.3-1.4-1-.9 1.4-.2z" fill="#fff6b0"/></svg>`};
+const icoURI=k=>ICONS[k]?'data:image/svg+xml;utf8,'+encodeURIComponent(ICONS[k]()):null;
+function potImg(k,sz){const u=icoURI(k);return u?`<img src="${u}" width="${sz||22}" height="${sz||22}" alt="" style="vertical-align:middle">`:''}
+// 套用到藥水列與道具資訊
+setInterval(()=>{try{document.querySelectorAll('.potb [data-a=drink] span,.potb [data-a=useC] span').forEach(s=>{const k=s.parentNode.dataset.k;if(ICONS[k]&&!s.dataset.ic){s.dataset.ic=1;s.innerHTML=potImg(k,22)}})}catch(e){}},300);
 
 </script></body></html>
