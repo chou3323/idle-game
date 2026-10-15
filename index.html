@@ -130,8 +130,20 @@ const ET={中性:[1,1,1,1,1,1,1,1,.5,1],水:[1,.25,1,2,.5,1,1,1,1,1],地:[1,1,.2
 const emul=(a,d)=>(ET[a]||ET['中性'])[EL.indexOf(d)];
 const ELC={中性:'#9e9e9e',水:'#2f8fff',地:'#a0662a',火:'#ff5a2a',風:'#3fae4a',毒:'#9c27b0',聖:'#e0b800',暗:'#5b3f7a',念:'#8c7ae6',不死:'#616161'};
 const SIZES=['小型','中型','大型'];
-const WT={fist:{n:'空手',sz:[1,1,1],aspd:0},dagger:{n:'短劍',sz:[1,.75,.5],aspd:4},sword:{n:'單手劍',sz:[.75,1,.75],aspd:0},bow:{n:'弓',sz:[1,1,.75],aspd:-2},
- staff:{n:'法杖',sz:[1,1,1],aspd:-5},katar:{n:'拳刃',sz:[.75,1,.75],aspd:2},axe:{n:'斧',sz:[.5,.75,1],aspd:-4},knuckle:{n:'拳套',sz:[1,1,.75],aspd:3},mace:{n:'鈍器',sz:[.75,1,1],aspd:-2}};
+const WT={fist:{n:'空手',sz:[1,1,1],aspd:0,h:1},dagger:{n:'短劍',sz:[1,.75,.5],aspd:4,h:1},sword:{n:'單手劍',sz:[.75,1,.75],aspd:0,h:1},tsword:{n:'雙手劍',sz:[.75,.75,1],aspd:-3,h:2},
+ axe:{n:'單手斧',sz:[.5,.75,1],aspd:-4,h:1},taxe:{n:'雙手斧',sz:[.5,.75,1],aspd:-7,h:2},mace:{n:'鈍器',sz:[.75,1,1],aspd:-2,h:1},staff:{n:'單手杖',sz:[1,1,1],aspd:-5,h:1},tstaff:{n:'雙手杖',sz:[1,1,1],aspd:-7,h:2},
+ knuckle:{n:'拳套',sz:[1,1,.75],aspd:3,h:1},katar:{n:'拳刃',sz:[.75,1,.75],aspd:2,h:2},spear:{n:'單手矛',sz:[.75,.75,1],aspd:-3,h:1},tspear:{n:'雙手矛',sz:[.75,.75,1],aspd:-5,h:2},
+ bow:{n:'弓',sz:[1,1,.75],aspd:-2,h:2},inst:{n:'樂器',sz:[.75,1,.75],aspd:-1,h:1},whip:{n:'鞭子',sz:[.75,1,.5],aspd:-1,h:1},book:{n:'書',sz:[1,1,.5],aspd:-1,h:1}};
+// 官方職業可用武器（高階/進階二轉沿用同 key 自動繼承）
+const WPN={nov:['dagger','sword','axe','mace','staff'],swordsman:['dagger','sword','tsword','axe','taxe','mace','spear','tspear'],mage:['dagger','staff','tstaff'],archer:['dagger','bow'],
+ acolyte:['mace','staff','tstaff'],merchant:['dagger','sword','axe','taxe','mace'],thief:['dagger','sword','bow','axe'],
+ knight:['dagger','sword','tsword','axe','taxe','mace','spear','tspear'],crusader:['dagger','sword','tsword','axe','taxe','mace','spear','tspear'],
+ wizard:['dagger','staff','tstaff'],sage:['dagger','staff','tstaff','book'],hunter:['dagger','bow'],bard:['dagger','bow','inst'],dancer:['dagger','bow','whip'],
+ priest:['mace','staff','tstaff','book'],monk:['mace','staff','tstaff','knuckle'],blacksmith:['dagger','sword','axe','taxe','mace'],alchemist:['dagger','sword','axe','taxe','mace'],
+ assassin:['dagger','sword','axe','katar'],rogue:['dagger','sword','bow']};
+const NOSHIELD=['archer','hunter','bard','dancer'],DUALJ=['assassin'],DUALW=['dagger','sword','axe'],SHIELD_ASPD=5;
+const canWpn=(wt,job=S.job)=>(WPN[job]||[]).includes(wt);const canShield=(job=S.job)=>!NOSHIELD.includes(job);
+
 const STATN={str:'STR 力量',agi:'AGI 敏捷',vit:'VIT 體力',int:'INT 智力',dex:'DEX 靈巧',luk:'LUK 幸運'};
 const JOBS={
  nov:{n:'初心者',tn:'高階初心者',tier:0,base:150,hpF:1,spF:1,sk:['bash0'],look:{c:'#9bd17a',h:'#8b5a2b',hat:'nov'},auto:{str:3,agi:2,vit:2,dex:2,luk:1},desc:'冒險的起點'},
@@ -152,7 +164,7 @@ const JOBS={
  monk:{n:'武僧',tn:'拳聖',tsk:'t_monk',tier:2,from:'acolyte',base:157,hpF:1.6,spF:1.2,sk:['tripleattack','asura'],look:{c:'#b85a2a',h:'#3a2a1a',hat:'monk'},auto:{str:4,agi:3,vit:2,dex:1},start:'knuckle1',desc:'三段掌、阿修羅霸凰拳'},
  blacksmith:{n:'鐵匠',tn:'白鐵神匠',tsk:'t_blacksmith',tier:2,from:'merchant',base:154,hpF:1.7,spF:1,sk:['hammerfall','adrenaline'],look:{c:'#7a5a3a',h:'#3a2a1a',hat:'smith'},desc:'大地之鎚、速度激發'},
  alchemist:{n:'煉金術士',tn:'生命創造者',tsk:'t_alchemist',tier:2,from:'merchant',base:152,hpF:1.5,spF:1.2,sk:['acid','bomb'],look:{c:'#5a8a5a',h:'#6b3a1a',hat:'alche'},desc:'強酸攻擊、爆炎藥瓶'},
- assassin:{n:'刺客',tn:'十字影刺客',tsk:'t_assassin',tier:2,from:'thief',base:158,hpF:1.4,spF:1,sk:['sonic','katarm','edp'],look:{c:'#3d2a52',h:'#c0c0d0',hat:'assassin'},auto:{agi:4,luk:4,str:3,dex:1},start:'katar1',desc:'拳刃暴擊×2＋精通，音速連刺'},
+ assassin:{n:'刺客',tn:'十字影刺客',tsk:'t_assassin',tier:2,from:'thief',base:158,hpF:1.4,spF:1,sk:['sonic','katarm','edp','rhmast','lhmast'],look:{c:'#3d2a52',h:'#c0c0d0',hat:'assassin'},auto:{agi:4,luk:4,str:3,dex:1},start:'katar1',desc:'拳刃暴擊×2＋精通，音速連刺'},
  rogue:{n:'流氓',tn:'潛行者',tsk:'t_rogue',tier:2,from:'thief',base:156,hpF:1.5,spF:1,sk:['backstab','snatch'],look:{c:'#6a4a2a',h:'#c0c0d0',hat:'rogue'},desc:'背刺必中、強奪'},
 };
 const JWT={nov:'dagger',swordsman:'sword',mage:'staff',archer:'bow',thief:'dagger',acolyte:'mace',merchant:'axe',knight:'sword',crusader:'sword',wizard:'staff',sage:'staff',hunter:'bow',bard:'bow',dancer:'bow',assassin:'katar',rogue:'dagger',priest:'mace',monk:'knuckle',blacksmith:'axe',alchemist:'axe'};
@@ -160,7 +172,7 @@ function jobTree(j){const a=[];let x=j;while(x){a.unshift(x);x=JOBS[x].from}retu
 const jobSk=(j,tr)=>{j=j||S.job;tr=tr===undefined?S.trans:tr;const a=jobTree(j).flatMap(x=>JOBS[x].sk);if(tr&&JOBS[j].tsk)a.push(JOBS[j].tsk);return a};
 const jobAuto=j=>{for(const x of jobTree(j).reverse())if(JOBS[x].auto)return JOBS[x].auto};
 const jn=(j,tr)=>{j=j||S.job;tr=tr===undefined?S.trans:tr;const J=JOBS[j];return tr?(J.tn||'高階'+J.n):J.n};
-const SK={
+const SK={rhmast:{n:'右手修練',passive:1,d:'二刀流右手傷害 50%+10%×Lv（Lv5=100%）'},lhmast:{n:'左手修練',passive:1,d:'二刀流左手傷害 30%+10%×Lv（Lv5=80%）'},
  bash0:{n:'奮力一擊',sp:5,cd:4,mul:1.6,fx:'bigslash',d:'1.6倍物理'},
  bash:{n:'狂擊',sp:8,cd:3,mul:2.6,fx:'bigslash',d:'2.6倍物理'},
  magnum:{n:'爆炎斬',sp:14,cd:6,mul:2.2,el:'火',fx:'flame',d:'2.2倍 火屬性'},
@@ -241,8 +253,8 @@ const MAPS=[
   boss:['冥炎魔龍德塔','🐉',99,4000000,1600,150,600000,300000,'火','龍',2],cards:['c_lizard','c_egg','c_bonedra','c_raptor','c_deta']}
 ];
 const BOSS_NEED=30;
-const SLOTN={weapon:'武器',armor:'鎧甲',head:'頭飾',acc:'飾品'};
-const CARDS={
+const SLOTN={weapon:'右手',shield:'左手',armor:'鎧甲',head:'頭飾',acc:'飾品'};const SLOTL={weapon:'武器',shield:'盾牌',armor:'鎧甲',head:'頭飾',acc:'飾品'};
+const CARDS={c_crab:['鐵殼蟹卡片','🦀','shield',{def:5,vit:1}],c_frog:['綠蛙卡片','🐸','shield',{hp:300}],c_turtle:['岩甲龜卡片','🐢','shield',{resEl:{中性:15}}],
  c_poring:['波莉卡片','🩷','armor',{luk:2,pdodge:1}],c_lunatic:['露娜兔卡片','🐰','acc',{luk:1,crit:1}],c_fabre:['法布蟲卡片','🐛','armor',{vit:1,hp:100}],c_willow:['威樂樹精卡片','🌳','armor',{sp:80}],c_pkemp:['波莉皇帝卡片','👑','armor',{armEl:'聖'}],
  c_spore:['斯波菇卡片','🍄','head',{vit:2,mdef:3}],c_smokie:['煙煙狸卡片','🦝','acc',{agi:1,flee:5}],c_andre:['安德蟻卡片','🐜','weapon',{atk:20}],c_peco:['佩可鳥卡片','🐤','armor',{hpP:10}],c_moon:['月夜狐仙卡片','🦊','acc',{aspdP:10,crit:5}],
  c_dwolf:['沙漠狼仔卡片','🐺','weapon',{size:{0:15}}],c_isis:['伊希蛇女卡片','🐍','weapon',{race:{惡魔:20}}],c_mummy:['木乃伊兵卡片','🧟','weapon',{hit:20}],c_tbug:['盜蟲卡片','🐞','acc',{drop:25}],c_osiris:['冥王歐西爾卡片','🧛','head',{spcost:-25,castP:-15}],
@@ -281,10 +293,23 @@ const ITEMS={
  hiore:{n:'高級鋼石',ic:'💠',t:'mat',desc:'精煉成功率 +20%（鑽石商城）'},antibreak:{n:'防爆券',ic:'🛡️',t:'mat',desc:'+7 以上精煉失敗不會損壞（改為 -1）'},protect:{n:'保護券',ic:'🔰',t:'mat',desc:'精煉失敗完全不掉級、不損壞'},
  glove:{n:'靈巧手套',ic:'🧤',slot:'acc',dex:2,slots:0,price:3000},boots:{n:'疾風之靴',ic:'👢',slot:'acc',agi:2,flee:5,slots:0,price:3000},
 };
+Object.assign(ITEMS,{
+ guard:{n:'圓盾',ic:'🛡️',slot:'shield',def:3,slots:1,price:300},buckler:{n:'小圓盾',ic:'🛡️',slot:'shield',def:5,flee:2,slots:1,price:3000},bigshield:{n:'騎士大盾',ic:'🛡️',slot:'shield',def:9,hp:200,slots:1,r:2},
+ mirrorsh:{n:'鏡面之盾',ic:'🪞',slot:'shield',def:7,mdef:8,slots:1,r:3},dragonsh:{n:'龍鱗盾',ic:'🐉',slot:'shield',def:14,hp:500,slots:1,r:4},
+ orcaxe:{n:'獸人戰斧',ic:'🪓',slot:'weapon',wt:'axe',atk:80,slots:2,r:2},claymore:{n:'雙手大劍',ic:'⚔️',slot:'weapon',wt:'tsword',atk:95,slots:2,price:4000},
+ battleaxe:{n:'雙刃戰斧',ic:'🪓',slot:'weapon',wt:'taxe',atk:100,slots:2,price:4000},spear1:{n:'長矛',ic:'🔱',slot:'weapon',wt:'spear',atk:40,slots:3,price:500},
+ pike:{n:'騎士長槍',ic:'🔱',slot:'weapon',wt:'tspear',atk:105,slots:2,r:2},lance:{n:'聖騎長槍',ic:'🔱',slot:'weapon',wt:'tspear',atk:190,wEl:'聖',slots:1,r:4},
+ book1:{n:'魔法書',ic:'📕',slot:'weapon',wt:'book',atk:40,matk:30,slots:2,price:1500},bible:{n:'聖典',ic:'📖',slot:'weapon',wt:'book',atk:85,matk:70,int:2,slots:1,r:3},
+ lute:{n:'魯特琴',ic:'🎸',slot:'weapon',wt:'inst',atk:45,slots:2,price:1500},harp:{n:'星辰豎琴',ic:'🎼',slot:'weapon',wt:'inst',atk:120,dex:2,slots:1,r:3},
+ whip1:{n:'皮鞭',ic:'➰',slot:'weapon',wt:'whip',atk:45,slots:2,price:1500},rosewhip:{n:'玫瑰荊鞭',ic:'🌹',slot:'weapon',wt:'whip',atk:120,luk:2,slots:1,r:3},
+ stiletto:{n:'細身短劍',ic:'🔪',slot:'weapon',wt:'dagger',atk:60,slots:3,r:2},
+});
+['flame','kingblade'].forEach(k=>ITEMS[k].wt='tsword');ITEMS.giantaxe.wt='taxe';['wizstaff','bapstaff','arcanest'].forEach(k=>ITEMS[k].wt='tstaff');
 for(const k in ITEMS){if(ITEMS[k].slot)ITEMS[k].t='eq'}
 const DROPS=[['knife','sword1','bow1','staff1','mace1','cotton','porihat'],['katar1','leather','xbow','bunny','clip','goggles'],['flame','wizstaff','jur','robe','ninja','tiara'],['icefal','hbow','holymace','mithril','chain'],['bloodsword','bapstaff','horn','ninja','mithril'],['kingblade','ancring','shadowkat','galebow'],['arcanest','bioeye','giantaxe','dragonfist'],['dragonmail','kingblade','giantaxe','shadowkat']];
+[['guard','spear1'],['orcaxe','buckler','stiletto','pike'],['bigshield','bible','lute','whip1'],['mirrorsh','harp','rosewhip'],['lance'],['dragonsh']].forEach((a,i)=>DROPS[i]&&DROPS[i].push(...a));
 const BOSSDROP=['porihat','clip','tiara','mithril','horn','ancring','bioeye','dragonmail'];
-const SHOP=['pot','bluepot','ore','knife','sword1','bow1','staff1','mace1','axe1','knuckle1','katar1','xbow','cotton','leather','chain','bunny','goggles','clip','ring','brooch','glove','boots'];
+const SHOP=['pot','bluepot','ore','knife','sword1','bow1','staff1','mace1','axe1','knuckle1','katar1','xbow','spear1','guard','buckler','claymore','battleaxe','book1','lute','whip1','cotton','leather','chain','bunny','goggles','clip','ring','brooch','glove','boots'];
 const REF_RATE=[1,1,1,1,.9,.75,.6,.45,.3,.2];
 const MERCS={
  m_sw:{n:'雷恩',job:'swordsman',role:'近戰',price:2000,lv:10},
@@ -301,7 +326,7 @@ const KEY='idle_ro_save_v1';
 const uid=()=>Math.random().toString(36).slice(2,9);
 const NMAP=MAPS.length;
 function fresh(){return{v:3,name:'冒險者',sex:'M',job:'nov',trans:false,lv:1,exp:0,jlv:1,jexp:0,pts:48,skl:{},skp:0,st:{str:1,agi:1,vit:1,int:1,dex:1,luk:1},gold:100,dia:100,hp:100,spv:30,
- inv:[{id:'pot',q:5},{id:'knife',uid:'start1',ref:0,cards:[]}],cards:{},seen:{},eq:{weapon:'start1',armor:null,head:null,acc:null},map:0,unlocked:1,kills:Array(NMAP).fill(0),bossKills:Array(NMAP).fill(0),
+ inv:[{id:'pot',q:5},{id:'knife',uid:'start1',ref:0,cards:[]}],cards:{},seen:{},eq:{weapon:'start1',shield:null,armor:null,head:null,acc:null},map:0,unlocked:1,kills:Array(NMAP).fill(0),bossKills:Array(NMAP).fill(0),
  autoPot:true,autoStat:false,last:Date.now(),total:{kills:0},party:[],mercOwn:[],guild:null,month:null,cos:{head:null,back:null},cosOwn:[],spouse:null,gm:false,rate:{exp:1,drop:1},items2:{}}}
 let S,migrated=null,migratedV2=false;
 function clampJ(v,a,b){return Math.max(a,Math.min(b,v))}
@@ -327,22 +352,23 @@ const monthDays=()=>monthOn()?Math.ceil((S.month.until-Date.now())/86400000):0;
 const slv=k=>S.skl[k]||0;const lvM=k=>1+.2*(slv(k)-1);
 function bonus(){const b={race:{},size:{},resEl:{},vamp:[0,0]};
  const add=e=>{for(const k in e){const v=e[k];if(k==='race'||k==='size'||k==='resEl'){for(const r in v)b[k][r]=(b[k][r]||0)+v[r]}else if(k==='armEl'||k==='wEl')b[k]=v;else if(k==='vamp'){b.vamp=[b.vamp[0]+v[0],Math.max(b.vamp[1],v[1])]}else if(typeof v==='number')b[k]=(b[k]||0)+v}};
- for(const s in SLOTN){const it=getEq(s);if(!it)continue;const d=ITEMS[it.id];const r=1+.1*(it.ref||0);
-  const e={};for(const k of['str','agi','vit','int','dex','luk','hp','sp','flee','crit'])if(d[k])e[k]=d[k];if(d.def)e.def=Math.round(d.def*r);if(d.matk&&!d.wt)e.matk=Math.round(d.matk*r);if(d.race)e.race=d.race;add(e);
-  (it.cards||[]).forEach(c=>add(CARDS[c][3]))}
+ b.hand={R:{race:{},size:{},atk:0},L:{race:{},size:{},atk:0}};for(const s in SLOTN){const it=getEq(s);if(!it)continue;const d=ITEMS[it.id];const r=1+.1*(it.ref||0);const hk=d.wt?(s==='shield'?'L':'R'):null;
+  const e={};for(const k of['str','agi','vit','int','dex','luk','hp','sp','flee','crit'])if(d[k])e[k]=d[k];if(d.def)e.def=Math.round(d.def*r);if(d.matk&&!d.wt)e.matk=Math.round(d.matk*r);if(d.race&&!hk)e.race=d.race;add(e);const H=hk&&b.hand[hk];const addH=x=>{for(const k in x){if(k==='race'||k==='size')for(const r2 in x[k])H[k][r2]=(H[k][r2]||0)+x[k][r2];else if(k==='atk')H.atk+=x[k];else if(k==='wEl')H.wEl=x[k];else add({[k]:x[k]})}};
+  if(H&&d.race)addH({race:d.race});(it.cards||[]).forEach(c=>H?addH(CARDS[c][3]):add(CARDS[c][3]))}
  if(S.spouse)add({expP:5,hpP:5});if(monthOn())add({expP:20,drop:20});
  if(RT.buff.adren)add({aspdP:30});if(RT.buff.song)add({aspdP:15,crit:10});if(RT.buff.edp)add({atkP:50});
  return b}
 function stats(){const b=bonus(),J=JOBS[S.job],g=guildB(),s={};const all=g.all+(S.spouse?1:0);
  for(const k in S.st)s[k]=S.st[k]+(b[k]||0)+all+(RT.buff.bless&&['str','int','dex'].includes(k)?6:0)+(RT.buff.loud&&k==='str'?4:0);
- const W=getEq('weapon'),wd=W?ITEMS[W.id]:null,wt=wd?wd.wt:'fist',ranged=wt==='bow',tr=S.trans?1.25:1,L=S.lv;
+ const W=getEq('weapon'),wd=W?ITEMS[W.id]:null,wt=wd?wd.wt:'fist',ranged=wt==='bow',tr=S.trans?1.25:1,L=S.lv;const LH=getEq('shield'),ld=LH?ITEMS[LH.id]:null,dual=!!(ld&&ld.wt),wtL=dual?ld.wt:null,hasSh=!!(ld&&!ld.wt);
  const mhp=Math.floor((100+L*18*J.hpF+s.vit*12+(b.hp||0))*(1+s.vit/100)*(1+(b.hpP||0)/100)*tr);
  const msp=Math.floor((30+L*3*J.spF+s.int*4+(b.sp||0))*(1+s.int/100)*tr);
  // Renewal Status ATK：近戰 BaseLv/4+STR+DEX/5+LUK/3；遠程 BaseLv/4+DEX+STR/5+LUK/3
  const statusAtk=Math.floor(L/4)+(ranged?s.dex+Math.floor(s.str/5):s.str+Math.floor(s.dex/5))+Math.floor(s.luk/3);
  // Renewal 武器 ATK：武器攻擊×(1+STR/200)（遠程用 DEX），精煉每級 +10%（簡化）
  const wBase=wd?wd.atk*(1+.1*(W.ref||0)):0,wAtk=Math.round(wBase*(1+(ranged?s.dex:s.str)/200));
- const atk=statusAtk*2+wAtk+(b.atk||0);
+ const atk=statusAtk*2+wAtk+(b.atk||0)+b.hand.R.atk;const wAtkL=dual?Math.round(ld.atk*(1+.1*(LH.ref||0))*(1+s.str/200)):0;
+ const mR=dual?Math.min(100,50+10*slv('rhmast')):100,mL=dual?Math.min(80,30+10*slv('lhmast')):0;
  // Renewal Status MATK：BaseLv/4+INT+INT/2+DEX/5+LUK/3；武器 MATK 另加
  const statusMatk=Math.floor(L/4)+s.int+Math.floor(s.int/2)+Math.floor(s.dex/5)+Math.floor(s.luk/3);
  const matk=Math.floor((statusMatk+(b.matk||0))*(1+(b.matkP||0)/100));
@@ -353,14 +379,15 @@ function stats(){const b=bonus(),J=JOBS[S.job],g=guildB(),s={};const all=g.all+(
  const hit=175+L+s.dex+Math.floor(s.luk/3)+(b.hit||0),flee=100+L+s.agi+Math.floor(s.luk/5)+(b.flee||0);
  const crit=(1+s.luk*.3+(b.crit||0)+(wt==='katar'?slv('katarm')*3:0))*(wt==='katar'?2:1),pdodge=1+Math.floor(s.luk/10)+(b.pdodge||0);
  // Renewal ASPD：基礎+√(AGI×9.9987+DEX×0.1922)×修正(基礎≥145時 1−(基礎−144)/50)，再乘攻速%，上限 193
- const baseA=J.base+WT[wt].aspd+(S.trans?2:0),corr=baseA>=145?1-(baseA-144)/50:1;
+ // 雙武器（Renewal）：右手攻擊動作 + 左手武器動作/4；裝盾 ASPD −5
+ const bR=J.base+WT[wt].aspd+(S.trans?2:0),baseA=(dual?200-((200-bR)+(200-(J.base+WT[wtL].aspd))/4):bR)-(hasSh?SHIELD_ASPD:0),corr=baseA>=145?1-(baseA-144)/50:1;
  let aspd=baseA+Math.sqrt(s.agi*9.9987+s.dex*.1922)*corr;aspd=200-(200-aspd)*(1-Math.min(60,b.aspdP||0)/100);aspd=Math.min(193,aspd);
  const aps=50/(200-aspd);
  // Renewal 詠唱：變動 80%×(1−√((DEX×2+INT)/530))（≥530 時為 0）＋固定 20%（只受裝備詠唱%影響）
  const vcF=Math.max(0,1-Math.sqrt(Math.min(530,s.dex*2+s.int)/530)),castV=.8*vcF*(1+(b.castP||0)/100),castFix=.2*(1+Math.min(0,b.castP||0)/200),castM=Math.max(0,castV+castFix);
  const pb=partyB();
- return{s,b,wt,wd,ranged,mhp,msp,statusAtk,statusMatk,vmdef,castV,castFix,wAtk,atk,batk:b.atk||0,atkP:b.atkP||0,matk,def,vdef,mdef,hit,flee,crit,pdodge,aspd,aps,castM,
-  wEl:b.wEl||(wd&&wd.wEl)||'中性',armEl:b.armEl||'中性',expP:(b.expP||0)+g.expP+pb.expP,drop:(b.drop||0)+g.drop+pb.drop,spcost:b.spcost||0}}
+ return{s,b,wt,wd,dual,wtL,ld,wAtkL,mR,mL,hasSh,wElL:(b.hand.L.wEl)||(ld&&ld.wEl)||'中性',ranged,mhp,msp,statusAtk,statusMatk,vmdef,castV,castFix,wAtk,atk,batk:b.atk||0,atkP:b.atkP||0,matk,def,vdef,mdef,hit,flee,crit,pdodge,aspd,aps,castM,
+  wEl:b.hand.R.wEl||b.wEl||(wd&&wd.wEl)||'中性',armEl:b.armEl||'中性',expP:(b.expP||0)+g.expP+pb.expP,drop:(b.drop||0)+g.drop+pb.drop,spcost:b.spcost||0}}
 const statCost=v=>Math.floor((v-1)/10)+2;const lvPts=l=>Math.floor(l/5)+3;
 const needExp=l=>Math.floor((20*Math.pow(l,1.8)+10)*(S&&S.trans?1.25:1));
 const needJob=l=>Math.floor((12*Math.pow(l,1.85)+8)*(S&&S.trans?1.3:1));
@@ -377,13 +404,13 @@ function spawn(boss=false){const M=MAPS[S.map];const i=boss?-1:Math.floor(Math.r
  const mo=$('mo');mo.className='ent'+(boss?' boss':'');mo.innerHTML=mobSvg(mob)+(boss?'<span class="crown">👑</span>':'')}
 function callBoss(force){if((force||S.kills[S.map]>=BOSS_NEED)&&!(mob&&mob.boss)){if(!force)S.kills[S.map]-=BOSS_NEED;log(`👑 MVP「${MAPS[S.map].boss[0]}」出現了！`,'r4');RT.cast=null;hideCast();spawn(true)}}
 const hardDef=(d)=>(4000+d)/(4000+d*10),hardMdef=(d)=>(1000+d)/(1000+d*10);
-function physHit(m,mul,o={}){const t=stats();const el=o.el||t.wEl;const sz=WT[t.wt].sz[m.size];
+function physHit(m,mul,o={}){const t=stats();const L=o.hand==='L',H=t.b.hand[L?'L':'R'];const el=o.el||(L?t.wElL:t.wEl);const sz=WT[L?t.wtL:t.wt].sz[m.size];
  const crit=(o.canCrit!==false)&&Math.random()*100<critRate(t,m);
  if(!crit&&!o.sure&&Math.random()*100>hitRate(t,m))return{miss:1,d:0};
  // Renewal：(StatusATK×2 + 武器ATK×體型 + 裝備ATK)×ATK%×種族/體型×屬性；暴擊×1.4（Renewal 暴擊不無視防禦）
- let d=(t.statusAtk*2+(t.wAtk*(.95+Math.random()*.1))*sz+t.batk)*(1+t.atkP/100)*(1+(t.b.race[m.race]||0)/100)*(1+(t.b.size[m.size]||0)/100)*emul(el,m.el)*mul;
+ let d=(t.statusAtk*2+((L?t.wAtkL:t.wAtk)*(.95+Math.random()*.1))*sz+t.batk+H.atk)*(1+t.atkP/100)*(1+((t.b.race[m.race]||0)+(H.race[m.race]||0))/100)*(1+((t.b.size[m.size]||0)+(H.size[m.size]||0))/100)*emul(el,m.el)*mul*(t.dual?(L?t.mL:t.mR)/100:1);
  if(crit)d*=1.4;if(!o.ignoreDef)d=d*hardDef(m.def)-Math.floor(m.lv/2);
- d=emul(el,m.el)===0?0:Math.max(1,Math.floor(d));return{d,crit,el}}
+ d=emul(el,m.el)===0?0:Math.max(1,Math.floor(d));return{d,crit,el,hand:o.hand}}
 function magHit(m,mul,el){const t=stats();const W=getEq('weapon'),wd=W?ITEMS[W.id]:null;const wm=wd&&wd.matk?wd.matk*(1+.1*(W.ref||0))*(.9+Math.random()*.2):0;
  // Renewal：(StatusMATK + 武器MATK±變動)×MATK%×倍率×屬性×硬MDEF − 軟MDEF
  const d=((t.matk+wm)*mul*emul(el,m.el))*hardMdef(m.def*.5)-Math.floor(m.lv/4);return{d:emul(el,m.el)===0?0:Math.max(1,Math.floor(d)),el}}
@@ -412,8 +439,9 @@ function resolveSkill(k){const s=SK[k],t=stats();if(!mob)return;const L=Math.max
  const em=emul(s.el||t.wEl,mob.el);log(`⚡ ${s.n} Lv${L} ${tot}${em!==1?`（屬性×${em}）`:''}`,em>1?'r2':'');dealDmg(tot)}
 function normalAttack(){const t=stats();
  if(slv('autospell')&&Math.random()<.05+.03*slv('autospell')){const bolts=['firebolt','coldbolt','lightning','earthspike'];const k=bolts.sort((a,b)=>emul(SK[b].el,mob.el)-emul(SK[a].el,mob.el))[0];const res=[0,1].map(()=>magHit(mob,SK[k].mul*(1+.2*(slv('autospell')-1)),SK[k].el));log(`🔮 自動詠唱：${SK[k].n}`);playFx(SK[k].fx,res);dealDmg(res.reduce((a,r)=>a+r.d,0));return}
- if(JOBS[S.job].mag&&t.wt==='staff'){const r=magHit(mob,.7,'中性');playFx('spark',[r]);dealDmg(r.d);return}
+ if(JOBS[S.job].mag&&['staff','tstaff','book'].includes(t.wt)){const r=magHit(mob,.7,'中性');playFx('spark',[r]);dealDmg(r.d);return}
  if(slv('tripleattack')&&Math.random()<.1+.04*slv('tripleattack')){const res=[0,1,2].map(()=>physHit(mob,1+.1*slv('tripleattack'),{canCrit:false}));playFx('sonic',res);dealDmg(res.reduce((a,r)=>a+(r.d||0),0));return}
+ if(t.dual){const res=[physHit(mob,1),physHit(mob,1,{hand:'L'})];const dbl=slv('dblattack')&&t.wt==='dagger'&&Math.random()<.05+.05*slv('dblattack');playFx('slash',res);let tot=res.reduce((a,r)=>a+(r.d||0),0);if(dbl){const r3=physHit(mob,1,{canCrit:false});tot+=r3.d||0;later(440,()=>{fxSlash('#c5a3ff');showRes(r3)})}dealDmg(tot);return}
  const dbl=slv('dblattack')&&['dagger','katar'].includes(t.wt)&&Math.random()<.05+.05*slv('dblattack');
  const res=[physHit(mob,1)];if(dbl)res.push(physHit(mob,1,{canCrit:false}));
  playFx(t.wt==='bow'?'arrow':(t.wt==='mace'||t.wt==='fist'||t.wt==='knuckle')?'bonk':'slash',res);dealDmg(res.reduce((a,r)=>a+(r.d||0),0))}
@@ -452,7 +480,7 @@ function kill(){const m=mob;if(!m)return;mob=null;RT.cast=null;hideCast();RT.dot
  const dm=(1+t.drop/100)*(['thief','assassin','rogue'].includes(S.job)?1.3:1)*S.rate.drop;
  if(m.boss||Math.random()<.05*dm){const pool=DROPS[S.map];const id=m.boss&&Math.random()<.5?BOSSDROP[S.map]:pool[Math.floor(Math.random()*pool.length)];addItem(id);log(`🎁 掉落 ${ITEMS[id].ic}${ITEMS[id].n}`,'r2')}
  if(Math.random()<(m.boss?.5:.008*dm)){S.cards[m.card]=(S.cards[m.card]||0)+1;S.seen[m.card]=1;log(`🃏 獲得【${CARDS[m.card][0]}】！`,'r3')}
- if(Math.random()<.08*dm)addItem('ore');if(Math.random()<.12)addItem('pot');
+ if(Math.random()<.004*dm){const sc=['c_crab','c_frog','c_turtle'][Math.floor(Math.random()*3)];S.cards[sc]=(S.cards[sc]||0)+1;S.seen[sc]=1;log(`🃏 獲得【${CARDS[sc][0]}】！`,'r3')}if(Math.random()<.08*dm)addItem('ore');if(Math.random()<.12)addItem('pot');
  if(m.boss){const dd=5+Math.floor(Math.random()*11);S.dia+=dd;log(`💎 MVP 獎勵 鑽石 +${dd}`,'r4');S.bossKills[S.map]++;if(S.unlocked<=S.map+1&&S.map+1<MAPS.length){S.unlocked=S.map+2;log(`🗺️ 新地圖解鎖：${MAPS[S.map+1].n}`,'r4')}}
  log(`⚔️ 擊敗 ${m.n}，Base+${Math.floor(m.exp*em)} Job+${Math.floor(m.exp*.7*em)} 💰+${m.gold}`);
  if(S.total.kills%10===0)save()}
@@ -466,15 +494,16 @@ function offline(){const sec=Math.min(8*3600,(Date.now()-(S.last||Date.now()))/1
  const res={sec,kills,exp:Math.floor(Math.min(ex*kills*em*.5,needExp(S.lv)*1.5)),jexp:Math.floor(Math.min(ex*.7*kills*em*.5,needJob(S.jlv)*1.5)),gold:Math.floor(g*kills*.5),ore:Math.floor(kills/300),pot:Math.floor(kills/60)};
  const lv0=S.lv,j0=S.jlv;gainExp(res.exp);gainJob(res.jexp);S.gold+=res.gold;if(res.ore)addItem('ore',res.ore);if(res.pot)addItem('pot',res.pot);
  S.kills[S.map]=Math.min(999,S.kills[S.map]+kills);S.total.kills+=kills;if(S.guild){S.guild.exp+=kills;guildLv()}res.lvup=S.lv-lv0;res.jlvup=S.jlv-j0;return res}
-function chibi(job,wt,sex,cos){const L=JOBS[job].look,skin='#ffe3cc',c=L.c,h=L.h;sex=sex||'M';cos=cos||{};
- const W={sword:'<rect x="69" y="38" width="7" height="48" rx="2" fill="#e3ecf7" stroke="#7d8da3"/><rect x="63" y="84" width="19" height="5" rx="2" fill="#d4a63a"/><rect x="70.5" y="88" width="4" height="10" fill="#7a4b2a"/>',
+function chibi(job,wt,sex,cos,lh){const L=JOBS[job].look,skin='#ffe3cc',c=L.c,h=L.h;sex=sex||'M';cos=cos||{};
+ const W0={sword:'<rect x="69" y="38" width="7" height="48" rx="2" fill="#e3ecf7" stroke="#7d8da3"/><rect x="63" y="84" width="19" height="5" rx="2" fill="#d4a63a"/><rect x="70.5" y="88" width="4" height="10" fill="#7a4b2a"/>',
   dagger:'<path d="M70 62 L76 62 L73 50Z" fill="#e3ecf7"/><rect x="70" y="60" width="6" height="26" rx="2" fill="#e3ecf7" stroke="#7d8da3"/><rect x="66" y="84" width="14" height="4" fill="#d4a63a"/>',
   katar:'<path d="M72 82 L106 80 L72 70Z" fill="#dfe6ee" stroke="#6d7b8c"/><rect x="66" y="70" width="8" height="18" rx="2" fill="#5b3f7a"/>',
   bow:'<path d="M70 52 Q96 86 70 120" stroke="#8b5a2b" stroke-width="5" fill="none" stroke-linecap="round"/><line x1="70" y1="52" x2="70" y2="120" stroke="#fff" stroke-width="1.5"/>',
   staff:'<line x1="73" y1="36" x2="73" y2="108" stroke="#8b5a2b" stroke-width="5" stroke-linecap="round"/><circle cx="73" cy="33" r="8" fill="#7fd3ff" stroke="#fff" stroke-width="2"/>',
   mace:'<rect x="70.5" y="56" width="5" height="40" fill="#8b5a2b"/><circle cx="73" cy="54" r="10" fill="#c9a24a" stroke="#7a5a1a"/><circle cx="73" cy="54" r="4" fill="#fff6"/>',
   axe:'<rect x="70.5" y="44" width="5" height="52" fill="#8b5a2b"/><path d="M75 46 Q96 50 92 70 Q84 60 75 62Z" fill="#cfd8dc" stroke="#78909c"/>',
-  knuckle:'<rect x="64" y="82" width="16" height="12" rx="4" fill="#b0bec5" stroke="#546e7a"/><circle cx="67" cy="82" r="2" fill="#eceff1"/><circle cx="72" cy="81" r="2" fill="#eceff1"/><circle cx="77" cy="82" r="2" fill="#eceff1"/>',fist:''}[wt]||'';
+  knuckle:'<rect x="64" y="82" width="16" height="12" rx="4" fill="#b0bec5" stroke="#546e7a"/><circle cx="67" cy="82" r="2" fill="#eceff1"/><circle cx="72" cy="81" r="2" fill="#eceff1"/><circle cx="77" cy="82" r="2" fill="#eceff1"/>',tsword:'<rect x="68" y="18" width="9" height="68" rx="2" fill="#e3ecf7" stroke="#7d8da3"/><rect x="60" y="84" width="25" height="6" rx="2" fill="#d4a63a"/><rect x="70" y="89" width="5" height="14" fill="#7a4b2a"/>',taxe:'<rect x="70" y="30" width="6" height="72" fill="#8b5a2b"/><path d="M76 32 Q104 36 100 64 Q88 52 76 56Z M70 32 Q48 36 52 60 Q62 50 70 54Z" fill="#cfd8dc" stroke="#78909c"/>',tstaff:'<line x1="73" y1="22" x2="73" y2="112" stroke="#6b4423" stroke-width="6" stroke-linecap="round"/><circle cx="73" cy="20" r="10" fill="#ce93d8" stroke="#fff" stroke-width="2"/>',spear:'<line x1="73" y1="30" x2="73" y2="106" stroke="#8b5a2b" stroke-width="4"/><path d="M73 14 L79 32 L67 32Z" fill="#e3ecf7" stroke="#7d8da3"/>',tspear:'<line x1="73" y1="18" x2="73" y2="114" stroke="#5d4037" stroke-width="5"/><path d="M73 0 L81 22 L65 22Z" fill="#e3ecf7" stroke="#7d8da3"/><rect x="66" y="22" width="14" height="4" fill="#d4a63a"/>',inst:'<ellipse cx="78" cy="84" rx="10" ry="12" fill="#c68642" stroke="#7a4b2a"/><rect x="76" y="50" width="4" height="26" fill="#7a4b2a"/><circle cx="78" cy="84" r="3" fill="#3e2723"/>',whip:'<rect x="70" y="80" width="5" height="14" fill="#7a4b2a"/><path d="M72 80 Q96 60 86 40 Q78 30 92 20" stroke="#a1887f" stroke-width="3" fill="none"/>',book:'<rect x="64" y="72" width="20" height="24" rx="2" fill="#8e24aa" stroke="#4a148c"/><rect x="67" y="75" width="14" height="18" fill="#f3e5f5"/>',fist:''};const WS=W0;const W=WS[wt]||'';
+ const LHS=lh==='shield'?'<g><ellipse cx="26" cy="84" rx="13" ry="16" fill="#90a4ae" stroke="#455a64" stroke-width="2"/><path d="M26 72 L26 96 M16 84 L36 84" stroke="#ffd54f" stroke-width="3"/></g>':lh&&WS[lh]?`<g transform="translate(100,0) scale(-1,1)">${WS[lh]}</g><circle cx="28" cy="90" r="5.5" fill="#ffe3cc"/>`:'';
  const hats={nov:`<path d="M48 22 Q56 10 60 16" stroke="${h}" stroke-width="3" fill="none"/>`,
   sword:'<path d="M25 40 Q50 14 75 40 L75 45 L25 45Z" fill="#b8c4d6" stroke="#7d8da3"/><path d="M50 18 Q60 4 70 10" stroke="#e53935" stroke-width="5" fill="none"/>',
   knight:'<path d="M23 44 Q50 8 77 44 L77 48 L23 48Z" fill="#90a4c4" stroke="#455a7a"/><path d="M30 26 L22 12 L36 22Z M70 26 L78 12 L64 22Z" fill="#ffd54f"/>',
@@ -510,7 +539,7 @@ function chibi(job,wt,sex,cos){const L=JOBS[job].look,skin='#ffe3cc',c=L.c,h=L.h
  <path d="M25 50 Q22 20 50 20 Q78 20 75 50 Q70 34 58 32 Q54 40 44 36 Q34 38 25 50Z" fill="${h}"/><path d="M25 48 Q22 62 28 68 L30 50Z M75 48 Q78 62 72 68 L70 50Z" fill="${h}"/>
  <ellipse cx="41" cy="53" rx="3.4" ry="${sex==='F'?5.2:4.6}" fill="#3a2a4a"/><ellipse cx="59" cy="53" rx="3.4" ry="${sex==='F'?5.2:4.6}" fill="#3a2a4a"/><circle cx="42.3" cy="51.5" r="1.3" fill="#fff"/><circle cx="60.3" cy="51.5" r="1.3" fill="#fff"/>
  <ellipse cx="35" cy="60" rx="4" ry="2.4" fill="#ff9eb5" opacity=".7"/><ellipse cx="65" cy="60" rx="4" ry="2.4" fill="#ff9eb5" opacity=".7"/><path d="M46 62 Q50 65 54 62" stroke="#c0506a" stroke-width="1.8" fill="none"/>
- ${hats}${head}<g class="wpn">${W}<circle cx="72" cy="90" r="5.5" fill="${skin}"/></g></g></svg>`}
+ ${hats}${head}${LHS}<g class="wpn">${W}<circle cx="72" cy="90" r="5.5" fill="${skin}"/></g></g></svg>`}
 function mobSvg(m){if(m.look.startsWith('svg:')){const c=m.look.slice(4),z=m.boss?120:84;return `<span class="mb"><svg viewBox="0 0 100 100" width="${z}" height="${z}"><ellipse cx="50" cy="94" rx="30" ry="5" fill="#0002"/>
  <path d="M50 18 C78 18 92 52 90 72 C88 92 12 92 10 72 C8 52 22 18 50 18Z" fill="${c}" stroke="#0002" stroke-width="2"/>
  <ellipse cx="36" cy="38" rx="9" ry="6" fill="#fff8" transform="rotate(-25 36 38)"/>
@@ -589,7 +618,7 @@ let pDown=0;
 const fmt=n=>Math.floor(n).toLocaleString();
 const etag=e=>`<span class="tag" style="background:${ELC[e]}">${e}</span>`;
 let lastJob='',lastWt='',lastParty=null;
-function drawActors(){const t=stats();if(lastJob!==S.job||lastWt!==t.wt){$('pl').innerHTML=chibi(S.job,t.wt,S.sex,S.cos);lastJob=S.job;lastWt=t.wt}
+function drawActors(){const t=stats();const lk=t.wt+'|'+(t.wtL||(t.hasSh?'shield':''));if(lastJob!==S.job||lastWt!==lk){$('pl').innerHTML=chibi(S.job,t.wt,S.sex,S.cos,t.wtL||(t.hasSh?'shield':''));lastJob=S.job;lastWt=lk}
  const pk=S.party.join();if(pk!==lastParty){lastParty=pk;$('mercs').innerHTML=S.party.map((k,i)=>{const M=MERCS[k];return `<div class="merc" id="merc${i}" style="left:${[3,30,-1][i]}%;bottom:${[64,96,8][i]}px">${chibi(M.job,JWT[M.job])}</div>`}).join('')}}
 function render(){const t=stats(),J=JOBS[S.job],M=MAPS[S.map];drawActors();
  $('nm').textContent=`${S.name}`;$('jb').textContent=`${jn()} B${S.lv}/J${S.jlv}`;$('dia').textContent=fmt(S.dia);$('mcard').textContent=monthOn()?`🎫${monthDays()}天`:'';$('gold').textContent=fmt(S.gold);$('gtag').textContent=S.guild?`${S.guild.emblem}${S.guild.name}`:'';
@@ -629,7 +658,7 @@ function panelJob(){const J=JOBS[S.job];const cand=Object.entries(JOBS).filter((
  <p class="small">轉職條件：初心者 Job Lv.10 → 一轉；一轉 Job Lv.40 以上 → 二轉（Job 等級重置為 1，技能保留）。二轉 Base 99 / Job 50 可「轉生」。</p>
  ${cand.map(([k,j])=>{const c=canChange(k);return `<div class="job row"><div style="width:52px;height:62px">${chibi(k,JWT[k],j.sex||S.sex,S.cos)}</div><div class="sp"><b>${jn(k)}</b><div class="small">${j.desc}</div><div class="small">技能：${[...j.sk,...(S.trans&&j.tsk?[j.tsk]:[])].map(s=>SK[s].n).join('、')}</div></div><button ${c!=='ok'?'disabled':''} onclick="changeJob('${k}')">${c==='ok'?'轉職':c}</button></div>`}).join('')}
  ${J.tier===2?(!S.trans?`<div class="job"><b>🔄 轉生</b><div class="small">Base 99 + Job 50 → 高階初心者：等級歸 1，獲得 100 屬性點、HP/SP×1.25，可轉高階一轉與進階二轉（各兩分支），並學習進階技能。</div><button ${canRe?'':'disabled'} onclick="rebirth()">${canRe?'轉生！':'條件未達成'}</button></div>`:'<div class="job"><b>三轉 / 四轉</b><div class="small">🚧 規劃中，敬請期待！</div></div>'):''}`)}
-function changeJob(k){if(canChange(k)!=='ok')return false;const j=JOBS[k];S.job=k;S.jlv=1;S.jexp=0;RT.cd={};RT.cast=null;hideCast();
+function changeJob(k){if(canChange(k)!=='ok')return false;const j=JOBS[k];S.job=k;S.jlv=1;S.jexp=0;RT.cd={};RT.cast=null;hideCast();setTimeout(()=>{fixEq();render()},0);
  if(j.start){addItem(j.start);S.eq.weapon=S.inv[S.inv.length-1].uid}
  log(`🌟 轉職成功！成為 ${jn()}`,'r4');fxLvUp();addItem('pot',10);if(S.autoStat)autoAlloc();save();render();panel();return true}
 function rebirth(){const J=JOBS[S.job];if(!(J.tier===2&&!S.trans&&S.lv>=99&&S.jlv>=50))return false;S.prevJob=S.job;S.trans=true;S.job='nov';S.lv=1;S.exp=0;S.jlv=1;S.jexp=0;for(const k in S.st)S.st[k]=1;S.pts=100;S.skl={};S.skp=0;RT.cd={};RT.buff={};
@@ -662,14 +691,25 @@ function donate(n){if(!S.guild||S.gold<n)return;S.gold-=n;S.guild.exp+=n/10;S.gu
 function gskUp(k){const g=S.guild;if(!g||g.pts<1||g.sk[k]>=GSK[k].max)return;g.pts--;g.sk[k]++;save();render();panel()}
 function leaveGuild(){S.guild=null;render();panel()}
 const isEq=it=>it.uid&&Object.values(S.eq).includes(it.uid);
-function eqDesc(it){const d=ITEMS[it.id],r=1+.1*(it.ref||0);const o=[];if(d.wt)o.push(WT[d.wt].n);if(d.atk)o.push('ATK '+Math.round(d.atk*r));if(d.matk)o.push('MATK '+Math.round(d.matk*(d.wt?1:r)));if(d.def)o.push('DEF '+Math.round(d.def*r));
+function eqDesc(it){const d=ITEMS[it.id],r=1+.1*(it.ref||0);const o=[];if(d.wt)o.push(WT[d.wt].n+(WT[d.wt].h===2?'（雙手）':''));if(d.atk)o.push('ATK '+Math.round(d.atk*r));if(d.matk)o.push('MATK '+Math.round(d.matk*(d.wt?1:r)));if(d.def)o.push('DEF '+Math.round(d.def*r));
  for(const k of['hp','sp','str','agi','vit','int','dex','luk','flee','crit'])if(d[k])o.push(BN[k]+'+'+d[k]);if(d.wEl)o.push(etag(d.wEl)+'屬性');if(d.race)o.push(fxText({race:d.race}));
  const sl=[];for(let i=0;i<(d.slots||0);i++)sl.push(it.cards&&it.cards[i]?'🃏'+CARDS[it.cards[i]][0]:'⬜');return o.join(' ')+(d.slots?`<br>插槽 ${sl.join(' ')}`:'')}
-function itemLine(it,btns){const d=ITEMS[it.id];return `<div class="it"><span class="ic">${d.ic}</span><div class="sp r${d.r||1}"><b>${it.ref?'+'+it.ref+' ':''}${d.n}${d.slots?`[${d.slots}]`:''}</b>${d.t!=='eq'?' ×'+it.q:` <span class="small">[${SLOTN[d.slot]}]</span>`}<div class="small">${d.t==='eq'?eqDesc(it):d.desc}</div></div>${btns}</div>`}
-function panelBag(){const eqs=Object.keys(SLOTN).map(s=>{const it=getEq(s);return it?itemLine(it,`<button class="g" onclick="unequip('${s}')">卸下</button>`):`<div class="it small"><span class="ic">⬜</span>${SLOTN[s]}：未裝備</div>`}).join('');
- const rest=S.inv.filter(i=>!isEq(i)).map(it=>{const d=ITEMS[it.id],i=S.inv.indexOf(it);let b='';if(d.t==='eq')b=`<button onclick="equip(${i})">裝備</button> <button class="g" onclick="sell(${i})">賣</button>`;else if(d.t==='use')b=`<button onclick="useItem(${i})">使用</button>`;else b=`<button class="g" onclick="sell(${i})">賣</button>`;return itemLine(it,b)}).join('');
- P(`<h3>🧩 裝備中</h3>${eqs}<h3 style="margin-top:10px">🎒 背包</h3>${rest||'<p class="small">空空的</p>'}`)}
-function equip(i){const it=S.inv[i];S.eq[ITEMS[it.id].slot]=it.uid;log(`裝備 ${ITEMS[it.id].n}`);render();panel()}
+function itemLine(it,btns,pre){const d=ITEMS[it.id];return `<div class="it"><span class="ic">${d.ic}</span><div class="sp r${d.r||1}">${pre||''}<b>${it.ref?'+'+it.ref+' ':''}${d.n}${d.slots?`[${d.slots}]`:''}</b>${d.t!=='eq'?' ×'+it.q:` <span class="small">[${d.wt?WT[d.wt].n+(WT[d.wt].h===2?'·雙手':'·單手'):SLOTL[d.slot]}]</span>`}<div class="small">${d.t==='eq'?eqDesc(it):d.desc}</div></div>${btns}</div>`}
+function panelBag(){const t=stats(),rw=getEq('weapon'),two=rw&&WT[ITEMS[rw.id].wt].h===2;const eqs=Object.keys(SLOTN).map(s=>{const it=getEq(s);const lab=`<span class="tag" style="background:${s==='weapon'?'#e57373':s==='shield'?'#64b5f6':'#bdbdbd'}">${SLOTN[s]}${s==='shield'&&it?(ITEMS[it.id].wt?'·副手':'·盾'):''}</span> `;return it?itemLine(it,`<button class="g" onclick="unequip('${s}')">卸下</button>`,lab):`<div class="it small"><span class="ic">⬜</span>${lab}${s==='shield'&&two?'（雙手武器佔用）':'未裝備'}</div>`}).join('');
+ const info=`<p class="small">可用武器：${(WPN[S.job]||[]).map(w=>WT[w].n+(WT[w].h===2?'(雙手)':'')).join('、')}｜盾牌：${canShield()?'可':'不可'}${DUALJ.includes(S.job)?'｜可二刀流（左手：短劍/單手劍/單手斧）':''}${t.dual?`<br>⚔️ 二刀流中：右手 ${t.mR}%／左手 ${t.mL}%（右手修練 Lv${slv('rhmast')}・左手修練 Lv${slv('lhmast')}），ASPD ${t.aspd.toFixed(1)}`:''}${t.hasSh?`<br>🛡️ 裝備盾牌：ASPD −${SHIELD_ASPD}`:''}</p>`;
+ const rest=S.inv.filter(i=>!isEq(i)).map(it=>{const d=ITEMS[it.id],i=S.inv.indexOf(it);let b='';if(d.t==='eq'){const e=eqOk(d,false),dl=d.wt&&!eqOk(d,true);b=(e?`<span class="small" style="color:#e53935">${e}</span> `:`<button onclick="equip(${i})">${d.wt?'右手':'裝備'}</button> `)+(dl?`<button class="alt" onclick="equip(${i},true)">左手</button> `:'')+`<button class="g" onclick="sell(${i})">賣</button>`}else if(d.t==='use')b=`<button onclick="useItem(${i})">使用</button>`;else b=`<button class="g" onclick="sell(${i})">賣</button>`;return itemLine(it,b)}).join('');
+ P(`<h3>🧩 裝備中</h3>${info}${eqs}<h3 style="margin-top:10px">🎒 背包</h3>${rest||'<p class="small">空空的</p>'}`)}
+function eqOk(d,left){if(d.wt){if(!canWpn(d.wt))return'此職業無法裝備';if(left&&!(DUALJ.includes(S.job)&&DUALW.includes(d.wt)))return'此職業無法左手持此武器';return''}if(d.slot==='shield'&&!canShield())return'此職業無法裝備';return''}
+function equip(i,left){const it=S.inv[i],d=ITEMS[it.id];const e=eqOk(d,left);if(e){log('🚫 '+d.n+'：'+e);return false}
+ const rw=getEq('weapon');if((left||d.slot==='shield')&&rw&&rw.uid!==it.uid&&WT[ITEMS[rw.id].wt].h===2){log(`🚫 右手持雙手武器（${WT[ITEMS[rw.id].wt].n}），左手無法裝備`);return false}
+ for(const s in S.eq)if(S.eq[s]===it.uid)S.eq[s]=null;
+ if(d.wt&&!left){S.eq.weapon=it.uid;if(WT[d.wt].h===2&&S.eq.shield){S.eq.shield=null;log('雙手武器佔用左手，已卸下左手裝備')}}
+ else if(left||d.slot==='shield')S.eq.shield=it.uid;else S.eq[d.slot]=it.uid;
+ log(`裝備 ${d.n}${left?'（左手）':''}`);render();panel();return true}
+function fixEq(quiet){if(!('shield' in S.eq))S.eq.shield=null;const bad=[];const rw=getEq('weapon'),lw=getEq('shield');
+ if(rw&&!canWpn(ITEMS[rw.id].wt)){S.eq.weapon=null;bad.push(ITEMS[rw.id].n)}
+ if(lw){const d=ITEMS[lw.id],r2=getEq('weapon');if(eqOk(d,!!d.wt)||(r2&&WT[ITEMS[r2.id].wt].h===2)){S.eq.shield=null;bad.push(d.n)}}
+ if(bad.length&&!quiet)log('🎒 不符裝備規則，已卸下放回背包：'+bad.join('、'),'r1');return bad}
 function unequip(s){S.eq[s]=null;render();panel()}
 function sell(i){const it=S.inv[i],d=ITEMS[it.id];const p=Math.floor((d.price||800*(d.r||1))*.3);if(d.t==='eq'){(it.cards||[]).forEach(c=>S.cards[c]=(S.cards[c]||0)+1);S.inv.splice(i,1)}else{it.q--;if(!it.q)S.inv.splice(i,1)}S.gold+=p;log(`賣出 ${d.n} +${p}💰`);render();panel()}
 function useItem(i){const it=S.inv[i],t=stats();if(it.id==='pot')S.hp=Math.min(t.mhp,S.hp+t.mhp*.3);else S.spv=Math.min(t.msp,S.spv+t.msp*.3);it.q--;if(!it.q)S.inv.splice(i,1);render();panel()}
@@ -760,7 +800,7 @@ function modal(h){$('mbody').innerHTML=h+'<div style="text-align:center;margin-t
 
 document.addEventListener('click',e=>{const b=e.target.closest('#nav button,#subnav button');if(!b)return;if(b.dataset.g)goGrp(b.dataset.g);else goTab(b.dataset.t)});
 $('panel').addEventListener('pointerdown',()=>pDown=performance.now());addEventListener('pointerup',()=>setTimeout(()=>pDown=0,50));addEventListener('pointercancel',()=>pDown=0);document.addEventListener('click',()=>pDown=0,true);
-load();if(S.gm)TABS.gm='🛠️GM';nav();render();panel();
+load();fixEq();if(S.gm)TABS.gm='🛠️GM';nav();render();panel();
 const off=offline();let msg='';
 if(migratedV2)msg+=`<h3>🎊 已更新到 v3</h3><p class="small">裝備、卡片、進度全部保留。新增 Job 等級（依原進度換算為 Job ${S.jlv}）、技能點 ${S.skp}、商人系、二轉分支、轉生、點數商城（贈送 💎100）。</p>`;
 if(migrated!==null)msg+=`<h3>🎊 已更新到 v2</h3><p class="small">等級、能力、金幣、地圖進度都保留；舊版裝備與卡片已折換成 💰${fmt(migrated)}，並送你一把職業武器。</p>`;
@@ -772,6 +812,7 @@ let lt=performance.now();setInterval(()=>{const n=performance.now();const dt=Mat
 setInterval(save,15000);addEventListener('beforeunload',()=>{if(!window.__noSave)save()});
 window.G={get S(){return S},learn,rebirth,dbuy,claimDaily,wearCos,gm,gmLogin,needJob,jobMax,monthDays,jn,RT,stats,save,changeJob,goMap,callBoss,refine,buy,hire,makeGuild,donate,gskUp,socket,equip,addItem,startSkill,autoAlloc,spawn,playFx,physHit,get mob(){return mob},
  forceCrit(){if(!mob)return;const r=physHit(mob,1,{sure:1});r.crit=true;r.d=Math.floor((r.d||50)*1.4);playFx('slash',[r]);dealDmg(r.d)}};
+const _gm0=gm;gm=function(){const r=_gm0.apply(this,arguments);fixEq();lastWt='';render();return r};G.gm=gm;G.fixEq=fixEq;G.eqOk=eqOk;
 </script>
 <script>
 /* ===== 音效：Web Audio 即時合成（全部原創，無任何音檔） ===== */
