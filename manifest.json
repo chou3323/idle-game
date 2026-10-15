@@ -1,2 +1,2 @@
-{"name":"幻境物語：放置冒險","short_name":"幻境物語","description":"原創致敬風格放置 RPG","start_url":"./","scope":"./","id":"./","display":"standalone","orientation":"portrait","background_color":"#ffe9f3","theme_color":"#b05cc9","lang":"zh-Hant",
+{"name":"王權紀元：放置征戰","short_name":"王權紀元","description":"原創中世紀奇幻放置 RPG：衝裝、變身、血盟、攻城","start_url":"./","scope":"./","id":"./?app=ql","display":"standalone","orientation":"portrait","background_color":"#15100b","theme_color":"#15100b","lang":"zh-Hant",
 "icons":[{"src":"icons/icon-192.png","sizes":"192x192","type":"image/png","purpose":"any"},{"src":"icons/icon-512.png","sizes":"512x512","type":"image/png","purpose":"any"},{"src":"icons/icon-512.png","sizes":"512x512","type":"image/png","purpose":"maskable"}]}
