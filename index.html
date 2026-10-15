@@ -278,7 +278,7 @@ body.nobt #stagebar,body.nobt #cv,body.nobt #dock,body.nobt #pbar.ov{display:non
 <script>
 'use strict';
 // ===================== 第 1 層：靜態資料（DATA）—— 前後端共用 =====================
-const VER='1.7.15',SKEY='xj_cache_v2',LEGACY='xyexp_save_v1';
+const VER='1.7.16',SKEY='xj_cache_v2',LEGACY='xyexp_save_v1';
 const STATN={str:'力量',agi:'敏捷',vit:'體力',int:'智力',dex:'靈巧',luk:'幸運'};
 const STATD={str:'近戰攻擊、負重',agi:'攻速、迴避',vit:'HP、防禦、魔防',int:'魔攻、SP、魔防',dex:'命中、遠程攻擊、詠唱',luk:'暴擊、完全迴避'};
 const ROLE={tank:'坦克',dps:'輸出',heal:'治療',sup:'輔助'};
@@ -401,7 +401,7 @@ const DSHOP=[{k:'safe1',n:'一般防降級券',d:'+5~+9 精煉失敗不降級',p
 const COS={c_wing:['天使羽翼','#fff6c0'],c_cat:['貓耳髮箍','#ff9ac0'],c_crown:['小王冠','#ffd23f'],c_bunny:['兔耳','#ffffff'],c_devil:['惡魔角','#c02040'],c_halo:['光環','#fffa90']};
 const COSP=120;
 // 商城道具也可打怪掉落（一般怪低、頭目較高），課金只是方便
-const FARMD={prot1:[.002,.08],safe1:[.003,.10],bls1:[.0015,.06],sfprot:[.001,.05]};
+const FARMD={prot1:[.002,.08],safe1:[.003,.10],bls1:[.0015,.06]};
 const farmTxt=b=>Object.entries(FARMD).map(([k,r])=>DSHOP.find(x=>x.k===k).n+' '+(r[b?1:0]*100).toFixed(b?0:2)+'%').join('、');
 
 // 第 11~20 章：異界深層（同主題強化版，Lv100~190）
@@ -676,7 +676,7 @@ function onKill(S,B,m){const pb=partyBonus(S),R=B.rng,meal=S.meal>Date.now()?20:
  if(R.n()<(m.boss?.7:.035)*dm){const it=genEquip(S,m.ch,R);S.inv.push(it);it.owner=who();B.ev.push({t:'drop',n:it.n,it,who:it.owner});}
  if(R.n()<(m.boss?.12:.004)*dm){const id='c'+m.ch+'_'+m.mi;S.cards[id]=(S.cards[id]||0)+1;B.ev.push({t:'card',n:CARDS[id].n})}
  rfDrop(S,m,R,dm);if(R.n()<.05)addMat(S,'blue',1);if(R.n()<.04)addMat(S,'poison',1);if(R.n()<.03)addMat(S,'acid',1);
- for(const k in FARMD)if(R.n()<FARMD[k][m.boss?1:0]*(1+pb.drop/100)){addMat(S,k,1);B.ev.push({t:'mat',n:DSHOP.find(x=>x.k===k).n,who:who()})}
+ for(const k in FARMD)if(R.n()<FARMD[k][m.boss?1:0]*(1+pb.drop/100)){addMat(S,k,1);B.ev.push({t:'mat',n:(DSHOP.find(x=>x.k===k)||{n:MAT[k]||k}).n,who:who()})}
  if(m.boss){addMat(S,'elu',1);if(R.n()<.35)addMat(S,'egg',1);addMat(S,'food',2);S.dia+=5}}
 function petExp(S,p,x){p.x+=x;const need=l=>Math.floor(30*l*l+40);while(p.lv<PETMAX&&p.x>=need(p.lv)){p.x-=need(p.lv);p.lv++}}
 
@@ -753,16 +753,21 @@ function rollAdd(it,R){const p=ADDP[Math.floor(R.n()*ADDP.length)];
   return p[0]==='SKLV'?['sk_'+k,1+Math.floor(R.n()*3),1,3]:rollLine(it,R,'skd_'+k,p[1])}return rollLine(it,R,p[0],p[1])}
 function rollSpecial(it,R){let p;for(let g=0;g<20;g++){p=SPP[Math.floor(R.n()*SPP.length)];if(!p[3]||R.n()<p[3]*4)break}
  const v=p[0]==='idef'||p[0]==='mpen'?Math.round(p[1]+it.ch*1.5+R.n()*it.ch):p[0]==='alldmg'?Math.round(p[1]+it.ch*.5):p[1];return{k:p[0],v,d:p[2]}}
-function rollAffix(S,it,R){const q=R.n()<.45?0:R.n()<.55?1:R.n()<.65?2:R.n()<.8?3:4;it.q=q;const qm=1+q*.15;
+// 七色品質：機率（累積）、主屬性條數、附加條數、主屬性倍率。彩＝綠＋1 洞（飾品 +2）＋1 主屬性＋1 附加＋彩虹特殊屬性（鑽石解鎖/重洗，費用很高）
+const QW=[.4013,.27,.17,.10,.045,.0135,.0002],QMAIN=[1,2,2,3,3,3,4],QADD=[0,0,1,1,2,2,3],QMUL=[1,1.1,1.2,1.3,1.45,1.6,1.8];
+const SPCOST2={un:300,re:200};
+function rollQ(R){const x=R.n();let a=0;for(let q=0;q<QW.length;q++){a+=QW[q];if(x<a)return q}return 0}
+function rollAffix(S,it,R){const q=rollQ(R);it.q=q;const qm=QMUL[q];
  const lns=Object.keys(MAINST);let ln=lns[Math.floor(R.n()*6)];if(it.wt){const ok=lns.filter(l=>J[l].w.includes(it.wt));if(ok.length)ln=ok[Math.floor(R.n()*ok.length)]}it.ln=ln;
  const ms=MAINST[ln][Math.floor(R.n()*MAINST[ln].length)];const main=[rollLine(it,R,ms,1)];
- while(main.length<3){const k=SIX[Math.floor(R.n()*6)];if(!main.some(x=>x[0]===k))main.push(rollLine(it,R,k,1))}
- const add=[];let g=0;while(add.length<2&&g++<50){const l=rollAdd(it,R);if(!add.some(x=>x[0]===l[0]))add.push(l)}
- main.forEach(l=>l[1]=Math.round(l[1]*qm));it.aff={main,add,sp:{lock:1,...rollSpecial(it,R)}};applyAff(it);it.n=(q>=3?QUAL[q]+'之':'')+it.n}
+ while(main.length<QMAIN[q]){const k=SIX[Math.floor(R.n()*6)];if(!main.some(x=>x[0]===k))main.push(rollLine(it,R,k,1))}
+ const add=[];let g=0;while(add.length<QADD[q]&&g++<50){const l=rollAdd(it,R);if(!add.some(x=>x[0]===l[0]))add.push(l)}
+ main.forEach(l=>l[1]=Math.round(l[1]*qm));it.aff={main,add,sp:{lock:1,...rollSpecial(it,R)}};
+ if(q===6){it.slots=(it.slots||0)+(it.slot==='acc'?2:1);let s2,g2=0;do{s2=rollSpecial(it,R)}while(s2.k===it.aff.sp.k&&g2++<20);it.aff.sp2={lock:1,...s2}}applyAff(it);it.n=(q>=3?QUAL[q]+'之':'')+it.n}
 function applyAff(it){const b={};if(it.base)Object.assign(b,it.base);else{it.base={...it.b};Object.assign(b,it.b)}const a=it.aff;[...a.main,...a.add].forEach(l=>b[l[0]]=(b[l[0]]||0)+l[1]);
- if(!a.sp.lock){ b[a.sp.k]=(b[a.sp.k]||0)+a.sp.v}it.b=b}
-function spUnlock(S,u){const it=S.inv.find(i=>i.u===u);if(!it||!it.aff||!it.aff.sp.lock)return'';if(S.dia<30)return'鑽石不足（30）';S.dia-=30;it.aff.sp.lock=0;applyAff(it);return''}
-function spReroll(S,u){const it=S.inv.find(i=>i.u===u);if(!it||!it.aff||it.aff.sp.lock)return'先解鎖';if(S.dia<20)return'鑽石不足（20）';S.dia-=20;it.aff.sp={lock:0,...rollSpecial(it,RNG((Math.random()*1e9)|0))};applyAff(it);return''}
+ if(!a.sp.lock){ b[a.sp.k]=(b[a.sp.k]||0)+a.sp.v}if(a.sp2&&!a.sp2.lock)b[a.sp2.k]=(b[a.sp2.k]||0)+a.sp2.v;it.b=b}
+function spUnlock(S,u,w){const it=S.inv.find(i=>i.u===u);if(w===2){if(!it||!it.aff||!it.aff.sp2||!it.aff.sp2.lock)return'沒有可解鎖的彩虹屬性';if(S.dia<SPCOST2.un)return'鑽石不足（'+SPCOST2.un+'）';S.dia-=SPCOST2.un;it.aff.sp2.lock=0;applyAff(it);return''}if(!it||!it.aff||!it.aff.sp.lock)return'';if(S.dia<30)return'鑽石不足（30）';S.dia-=30;it.aff.sp.lock=0;applyAff(it);return''}
+function spReroll(S,u,w){const it=S.inv.find(i=>i.u===u);if(w===2){if(!it||!it.aff||!it.aff.sp2||it.aff.sp2.lock)return'先解鎖彩虹屬性';if(S.dia<SPCOST2.re)return'鑽石不足（'+SPCOST2.re+'）';S.dia-=SPCOST2.re;let s2,g=0;do{s2=rollSpecial(it,RNG((Math.random()*1e9)|0))}while(s2.k===it.aff.sp.k&&g++<20);it.aff.sp2={lock:0,...s2};applyAff(it);return''}if(!it||!it.aff||it.aff.sp.lock)return'先解鎖';if(S.dia<20)return'鑽石不足（20）';S.dia-=20;it.aff.sp={lock:0,...rollSpecial(it,RNG((Math.random()*1e9)|0))};applyAff(it);return''}
 const _ge=genEquip;genEquip=function(S,ch,rng,slot){const R=rng||RNG((Math.random()*1e9)|0);const it=_ge(S,ch,R,slot);rollAffix(S,it,R);return it};
 const itemVal=it=>Math.floor((50+it.ch*120)*(1+(it.q||0)*.8)*(1+(it.rf||0)*.3)*(1+it.cards.length*.5));
 // ===== 一般商店（NPC，金幣）=====
@@ -1702,17 +1707,21 @@ function itemInfo(S,it){const a=it.aff,q=it.q||0,nm=cleanN(it.n),wt=it.wt&&WT[it
  const tr=it.wt&&typeof WTRAIT!=='undefined'&&WTRAIT[it.wt];
  const B2=wt?sec('武器特點',(tr?tr.t.map(x=>`<div class="sm">・${x}</div>`).join(''):'')+(tr&&tr.t.some(x=>/速度/.test(x))?'':`<div class="sm">・攻擊速度：${WCFG[it.wt]?WCFG[it.wt].spd:'—'}</div>`)):'';
  const B3=a?sec('詞條',[...a.main.map(l=>afLine(l)),...a.add.map(l=>afLine(l))].join('')||'<div class="sm">無</div>'):'';
- const B4=a?sec('特殊屬性',a.sp.lock?`<div class="ifr"><span>特殊屬性：未解鎖</span><button class="b s y" data-a="afUn" data-v="${it.u}">💎${SPCOST.un} 解鎖</button></div>`:`<div class="ifr af3"><span>${esc(a.sp.d||statN(a.sp.k))}</span><button class="b s" data-a="afRe" data-v="${it.u}">💎${SPCOST.re} 重洗</button></div>`):'';
+ const B4=a?sec('特殊屬性',a.sp.lock?`<div class="ifr"><span>特殊屬性：未解鎖</span><button class="b s y" data-a="afUn" data-v="${it.u}">💎${SPCOST.un} 解鎖</button></div>`:`<div class="ifr af3"><span>${esc(a.sp.d||fmtS(a.sp.k,a.sp.v))}</span><button class="b s" data-a="afRe" data-v="${it.u}">💎${SPCOST.re} 重洗</button></div>`):'';
+ const B4b=a&&a.sp2?sec('🌈 彩虹特殊屬性',a.sp2.lock?`<div class="ifr"><span>彩虹屬性：未解鎖</span><button class="b s y" data-a="afUn2" data-v="${it.u}">💎${SPCOST2.un} 解鎖</button></div>`:`<div class="ifr af3 rainbow-l"><span>${esc(a.sp2.d||fmtS(a.sp2.k,a.sp2.v))}</span><button class="b s" data-a="afRe2" data-v="${it.u}">💎${SPCOST2.re} 重洗</button></div>`):'';
  const cs=it.cards||[],sl=it.slots||0;
  const B5=sec(`卡片（${cs.length}/${sl} 洞）`,sl?[...cs.map(c=>`<div class="ifr"><span>🃏 ${CARDS[c].n}</span><b class="pos sm">${fmtB(CARDS[c].fx)}</b></div>`),...Array(Math.max(0,sl-cs.length)).fill('<div class="ifr"><span class="sm">◻ 空洞（可插卡）</span></div>')].join(''):'<div class="sm">沒有卡洞</div>');
  const B6=false?sec('潛能',it.pot.l.map(([k,v])=>`<div class="ifr af2"><span>${fmtS(k,v)}</span></div>`).join('')+`<div class="ifr"><span class="sm">方塊 ×${S.mat.cube||0}</span><button class="b s" data-a="afCube" data-v="${it.u}" ${(S.mat.cube||0)<1?'disabled':''}>重洗潛能</button></div>`):'';
  const B7=it.set&&SETS[it.set]?sec('套裝：'+SETS[it.set].n,Object.entries(SETS[it.set].b).map(([n,bb])=>`<div class="ifr"><span>${n} 件</span><b class="pos sm">${fmtB(bb)}</b></div>`).join('')):'';
  return infoBox(`<span class="rfcell ${QCLS(q)} ${rfGlow(it.rf||0)}"><img src="${itemIcon(it)}">${it.rf?`<i class="rfb">+${it.rf}</i>`:''}</span>`,`<span class="nq${q}">${it.rf?'+'+it.rf+' ':''}${esc(nm)}</span>`,`<span class="nq${q}">${QUAL[q]||''}</span>・${typ}`,
-  `<div class="ifg">${B1}${B2}${B3}${B4}${B5}${B6}${B7}</div>`).replace('<div class="ifo">','<div class="ifo full">')}
+  `<div class="ifg">${B1}${B2}${B3}${B4}${B4b}${B5}${B6}${B7}</div>`).replace('<div class="ifo">','<div class="ifo full">')}
 async function afCall(op,u,local){try{if(ON.token){await onUpload(true);const j=await onApi('POST','/api/aff',{op,u});await after({rev:1})}else{const e=local();if(e)throw new Error(e);save()}SFX.ok();return true}catch(e){toast(e.message);return false}}
 const afReopen=u=>{const own=owner(G.S,u);render();if(own)ACT.eqslot&&ACT.eqslot({k:own[1]});else ACT.bagit&&ACT.bagit({v:u})};
 ACT.afUn=async d=>{const u=+d.v;if(G.S.dia<SPCOST.un)return toast('鑽石不足（需要 '+SPCOST.un+'）');if(!confirm(`花 ${SPCOST.un} 鑽石解鎖特殊屬性？`))return;if(await afCall('unlock',u,()=>spUnlock(G.S,u))){toast('特殊屬性已解鎖！');afReopen(u)}};
 ACT.afRe=async d=>{const u=+d.v;if(G.S.dia<SPCOST.re)return toast('鑽石不足（需要 '+SPCOST.re+'）');if(!confirm(`花 ${SPCOST.re} 鑽石重洗特殊屬性？`))return;if(await afCall('reroll',u,()=>spReroll(G.S,u))){toast('特殊屬性已重洗');afReopen(u)}};
+
+ACT.afUn2=async d=>{const u=+d.v;if(G.S.dia<SPCOST2.un)return toast('鑽石不足（需要 '+SPCOST2.un+'）');if(!confirm(`花 ${SPCOST2.un} 鑽石解鎖彩虹特殊屬性？`))return;if(await afCall('unlock2',u,()=>spUnlock(G.S,u,2))){toast('彩虹屬性已解鎖！');afReopen(u)}};
+ACT.afRe2=async d=>{const u=+d.v;if(G.S.dia<SPCOST2.re)return toast('鑽石不足（需要 '+SPCOST2.re+'）');if(!confirm(`花 ${SPCOST2.re} 鑽石重洗彩虹特殊屬性？`))return;if(await afCall('reroll2',u,()=>spReroll(G.S,u,2))){toast('彩虹屬性已重洗');afReopen(u)}};
 
 // ===== 稱號：前端追蹤遊戲內事件（送伺服器驗證整理）＋稱號圖鑑 UI =====
 function tst(S){return S.tst=S.tst||{rs:0,rsMax:0,brk15:0,rf20:0,bl:{},never:0,gold0:0,g0:0}}
