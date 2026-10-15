@@ -260,6 +260,10 @@ body.fixh .soc>.card.chat .say{flex:none;margin-top:8px}
  #modal .ifo.full .ifa{display:flex;gap:6px}#modal .ifo.full .ifa .b{flex:1;padding:10px 4px}}
 @media(max-width:360px){.ifg{grid-template-columns:1fr}}
 #modal .ifo.full .cmpg{display:grid;grid-template-columns:1fr 1fr;column-gap:10px}
+.pbar{background:linear-gradient(90deg,#fff3f9,#eef6ff);border-radius:14px;padding:6px 8px;margin-bottom:6px;box-shadow:0 2px 8px #f4c6da44}.pbar-h{font-size:13px;display:flex;align-items:center;gap:6px}.pbar-l{display:flex;gap:6px;overflow-x:auto;margin-top:4px}
+.pbm{min-width:92px;background:#fff;border-radius:10px;padding:4px 6px;display:flex;flex-direction:column;gap:2px;cursor:pointer;border:2px solid transparent}.pbm.me{border-color:#ffb3d0}.pbm.off{opacity:.5}.pbm b{font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.pbm small{font-size:10px;color:#998}
+.pbh,.pbs{display:block;height:4px;background:#eee;border-radius:3px;overflow:hidden}.pbh u,.pbs u{display:block;height:100%;text-decoration:none}.pbh u{background:#4cd07a}.pbs u{background:#5aa8ff}
+#pbar.ov .pbar{background:#ffffffd0;backdrop-filter:blur(4px);margin:0}
 </style></head><body>
 <div id="top"><span id="tName"></span><span class="sp"></span><span id="tG"></span><b id="tGold">0</b><span id="tD"></span><b id="tDia">0</b><button class="b s" id="snd" data-a="snd">音</button></div>
 <div id="stagebar"><span id="sbT"></span><div class="pb"><i id="sbP"></i></div><span id="sbX"></span><button class="b s y" data-a="boss" id="bossBtn">挑戰頭目</button></div>
@@ -270,9 +274,9 @@ body.fixh .soc>.card.chat .say{flex:none;margin-top:8px}
 <script>
 'use strict';
 // ===================== 第 1 層：靜態資料（DATA）—— 前後端共用 =====================
-const VER='1.7.9',SKEY='xj_cache_v2',LEGACY='xyexp_save_v1';
+const VER='1.7.10',SKEY='xj_cache_v2',LEGACY='xyexp_save_v1';
 const STATN={str:'STR',agi:'AGI',vit:'VIT',int:'INT',dex:'DEX',luk:'LUK'};
-const STATD={str:'近戰ATK、負重',agi:'ASPD、FLEE',vit:'HP、DEF、MDEF',int:'MATK、SP、MDEF',dex:'HIT、遠程ATK、詠唱',luk:'暴擊、完全迴避'};
+const STATD={str:'近戰攻擊、負重',agi:'攻速、迴避',vit:'HP、防禦、魔防',int:'魔攻、SP、魔防',dex:'命中、遠程攻擊、詠唱',luk:'暴擊、完全迴避'};
 const ROLE={tank:'坦克',dps:'輸出',heal:'治療',sup:'輔助'};
 // 武器類型（Renewal 基礎攻速修正 / 單雙手）
 const WT={fist:{n:'空手',a:0,h:1},dagger:{n:'短劍',a:4,h:1},sword:{n:'單手劍',a:0,h:1},tsword:{n:'雙手劍',a:-3,h:2},axe:{n:'單手斧',a:-4,h:1},taxe:{n:'雙手斧',a:-7,h:2},
@@ -281,7 +285,7 @@ const WT={fist:{n:'空手',a:0,h:1},dagger:{n:'短劍',a:4,h:1},sword:{n:'單手
 // 武器類型設定表（參考 RO）：atk=基礎攻擊倍率、slot=卡洞上限、spd=攻速描述；雙手武器攻擊高洞少，單手攻擊低洞多
 const WCFG={fist:{atk:0,slot:0,spd:'—'},dagger:{atk:.8,slot:4,spd:'最快'},sword:{atk:1,slot:4,spd:'普通'},tsword:{atk:1.45,slot:2,spd:'慢'},axe:{atk:1.1,slot:3,spd:'慢'},taxe:{atk:1.55,slot:2,spd:'很慢'},mace:{atk:1.05,slot:3,spd:'稍慢'},spear:{atk:1.35,slot:2,spd:'慢'},
  staff:{atk:.7,slot:3,spd:'慢'},tstaff:{atk:.8,slot:2,spd:'很慢'},bow:{atk:1.1,slot:2,spd:'稍慢'},knuckle:{atk:.9,slot:3,spd:'快'},katar:{atk:1.3,slot:2,spd:'快'},inst:{atk:.95,slot:3,spd:'稍慢'},whip:{atk:.95,slot:3,spd:'稍慢'},book:{atk:.85,slot:3,spd:'稍慢'}};
-const DUALW=['dagger','sword'];// 刺客系左右手雙持：只限單手劍、匕首（兩把武器的卡片都生效）
+const DUALW=['dagger','sword'];// 刺客系左右手雙持：只限單手劍、匕首（左手武器卡片效果 60%）
 // 職業：line=系別 tier 0初心 1一轉 2二轉 3高階一轉 4進階二轉；base=基礎ASPD；hp/sp 係數；w=可用武器；sh=可否持盾；dual=二刀流
 const J={
  nov:{n:'初心者',t:0,role:'dps',base:150,hp:.8,sp:.6,w:['dagger','sword','mace'],sh:1,col:'#9bd17a',hair:'#8b5a2b',sk:['n_bash','n_first'],auto:{str:3,vit:2,agi:2,dex:2,luk:1}},
@@ -329,7 +333,7 @@ const SK={
  p_guard:{n:'自動防禦',ty:'pass',p:{block:2},max:10},p_grand:{n:'聖十字審判',ty:'aoe',el:'聖',m:[100,40],cd:7,sp:37,max:10,fx:'holy'},p_devo:{n:'犧牲守護',ty:'pass',p:{shareP:3},max:5},
  w_storm:{n:'暴風雪',ty:'aoe',el:'水',mag:1,m:[100,40],cast:2.5,cd:8,sp:60,max:10,fx:'ice'},w_meteor:{n:'隕石術',ty:'aoe',el:'火',mag:1,m:[125,50],cast:3,cd:9,sp:64,max:10,fx:'meteor'},w_jupi:{n:'雷鳴光球',ty:'dmg',el:'風',mag:1,m:[400,100],cast:1.5,cd:4,sp:30,max:10,fx:'bolt'},
  g_ende:{n:'屬性附魔',ty:'buff',all:1,b:{atkP:2},dur:90,cd:45,sp:30,max:10},g_dispell:{n:'魔力抽取',ty:'pass',p:{spP:3},max:10},g_heaven:{n:'天地雷擊',ty:'aoe',el:'風',mag:1,m:[100,25],cast:2,cd:9,sp:50,max:10,fx:'bolt'},
- r_blitz:{n:'閃光連擊',ty:'aoe',m:[200,40],cd:4,sp:20,max:10,fx:'falcon'},r_trap:{n:'地雷陷阱',ty:'aoe',el:'地',m:[150,40],cd:6,sp:15,max:10,fx:'trap'},r_falcon:{n:'獵鷹自動突擊',ty:'pass',p:{falcon:1},max:10,d:'普攻時 LUK/3% 機率鷹擊，傷害看 DEX/INT（鳥獵流）'},
+ r_blitz:{n:'閃光連擊',ty:'aoe',m:[200,40],cd:4,sp:20,max:10,fx:'falcon'},r_trap:{n:'地雷陷阱',ty:'aoe',el:'地',m:[150,40],cd:6,sp:15,max:10,fx:'trap'},r_falcon:{n:'獵鷹自動突擊',ty:'pass',p:{falcon:1},max:10,d:'普攻時 幸運/3% 機率鷹擊，傷害看 靈巧/智力（鳥獵流）'},
  b_bragi:{n:'詩人之歌',ty:'buff',all:1,b:{castP:3},dur:60,cd:40,sp:40,max:10},b_assa:{n:'激昂戰歌',ty:'buff',all:1,b:{aspdP:2},dur:60,cd:40,sp:38,max:10},b_arrow:{n:'箭雨弦音',ty:'aoe',m:[120,30],cd:5,sp:18,max:10,fx:'arrow'},
  h_sanct:{n:'聖域',ty:'heal',all:1,mag:1,m:[40,20],cast:1,cd:8,sp:40,max:10,fx:'holy'},h_kyrie:{n:'光之屏障',ty:'buff',all:1,b:{defP:4},dur:60,cd:40,sp:30,max:10},h_magnus:{n:'聖靈驅魔陣',ty:'aoe',el:'聖',mag:1,m:[100,30],cast:3,cd:10,sp:60,max:10,fx:'holy'},
  o_triple:{n:'三段掌',ty:'pass',p:{tri:3},max:10},o_combo:{n:'連環破',ty:'dmg',m:[300,50],cd:3,sp:15,max:5,fx:'slash'},o_asura:{n:'阿修羅霸凰拳',ty:'dmg',m:[800,200],cast:1,cd:20,sp:80,max:5,fx:'big'},
@@ -367,7 +371,7 @@ const ARMN={sh:['木盾','圓盾','騎士盾','聖盾','魔王盾'],arm:['布衣
 // 卡片：怪物外型+章節 → 效果
 const CARDFX=[{atk:5},{hpP:5},{flee:5},{dex:2},{int:2},{crit:4},{aspdP:4},{matk:10},{defP:5},{luk:3},{str:2},{agi:2},{vit:2},{atkP:4},{matkP:4},{castP:5},{dropP:5},{expP:5}];
 const CSLOT=['wpn','arm','head','gar','shoe','acc1','sh'];
-const BN={hp:'HP',sp:'SP',atk:'ATK',matk:'MATK',def:'DEF',mdef:'MDEF',str:'STR',agi:'AGI',vit:'VIT',int:'INT',dex:'DEX',luk:'LUK',crit:'暴擊',hit:'命中',flee:'迴避',aspdP:'攻速%',hpP:'HP%',spP:'SP%',atkP:'ATK%',matkP:'MATK%',defP:'DEF%',castP:'詠唱縮短%',dropP:'掉落%',expP:'經驗%',goldP:'金幣%',block:'格擋%',dbl:'二連擊%',tri:'三段掌%',falcon:'鷹擊',pet:'寵物傷害%',shareP:'分擔%',spReg:'SP回復',critD:'暴傷%'};
+const BN={hp:'HP',sp:'SP',atk:'攻擊',matk:'魔攻',def:'防禦',mdef:'魔防',str:'力量',agi:'敏捷',vit:'體力',int:'智力',dex:'靈巧',luk:'幸運',crit:'暴擊',hit:'命中',flee:'迴避',aspdP:'攻速%',hpP:'HP%',spP:'SP%',atkP:'攻擊%',matkP:'魔攻%',defP:'防禦%',castP:'詠唱縮短%',dropP:'掉落%',expP:'經驗%',goldP:'金幣%',block:'格擋%',dbl:'二連擊%',tri:'三段掌%',falcon:'鷹擊',pet:'寵物傷害%',shareP:'分擔%',spReg:'SP回復',critD:'暴傷%'};
 // 精煉（RO：依武器等級的每級ATK、安全值、成功率）
 // ===== 精煉 +20（v1.7.3）：每級加成％（武器攻擊/魔攻；防具防禦×0.7），+10/+15/+20 大跳升 =====
 const RFSTEP=l=>l<=9?5:l<=15?7:10,RFJUMP={10:20,15:30,20:60};
@@ -740,7 +744,7 @@ const ADDP=[['atk',4],['matk',4],['atkP',.6],['matkP',.6],['crit',.6],['critD',1
  ...SIX.map(k=>[k+'P',.5]),['hp',25],['sp',6],['hpP',.8],['spP',.8],['def',3],['mdef',2],['flee',2],['pd',.3],['hit',2],['bossP',.8],['RACE',1.2],['ELEM',1.2],['SKLV',0],['SKD',1.5]];
 const RACEK=()=>RACES.map(r=>'r_'+r),ELK=['火','水','風','地','聖','暗'];
 const SPP=[['proc_fire',1,'攻擊時 6% 自動施放火焰箭 Lv5'],['proc_bolt',1,'攻擊時 6% 自動施放落雷箭 Lv5'],['proc_heal',1,'受擊 5% 回復 10% HP'],['lifesteal',1,'普攻吸 HP 3%'],['spsteal',1,'普攻吸 SP 1%'],
- ['stunP',3,'攻擊 3% 機率暈眩（頭目減半）'],['refl',5,'近戰反傷 5%'],['idef',8,'無視防禦 +%'],['mpen',8,'穿透 MDEF +%'],['cdreset',3,'施放技能 3% 機率冷卻歸零'],['killSp',5,'擊殺回復 SP 5%'],
+ ['stunP',3,'攻擊 3% 機率暈眩（頭目減半）'],['refl',5,'近戰反傷 5%'],['idef',8,'無視防禦 +%'],['mpen',8,'穿透 魔防 +%'],['cdreset',3,'施放技能 3% 機率冷卻歸零'],['killSp',5,'擊殺回復 SP 5%'],
  ['allsk',1,'【稀有】全技能等級 +1',.05],['allst',5,'【稀有】全素質 +5',.05],['alldmg',6,'【稀有】全傷害 +%',.05]];
 const rngRange=(ch,base)=>{const lo=Math.max(1,base*(1+ch*.45)),hi=Math.max(2*base,base*(2+ch*.9));return[lo,hi]};
 function rollLine(it,R,k,base){const [lo,hi]=rngRange(it.ch,base);const v=lo+(hi-lo)*R.n();return[k,v<10?Math.round(v*10)/10:Math.round(v),+lo.toFixed(1),+hi.toFixed(1)]}
@@ -785,7 +789,7 @@ function exOrder(S,m,qty,price){const tot=price*qty;if(S.dia<tot)return'鑽石�
 function exTick(S){if(!S.ex)return[];const r=[];S.ex.mine=S.ex.mine.filter(l=>{const fair=l.mat?{ori:3,elu:12,cube:15,sfs:2,egg:40,food:2,blue:2}[l.mat]*l.qty:Math.floor(itemVal(l.item)/120);const p=l.mat?l.price*l.qty:l.price;
   if(Date.now()-l.t>60000&&Math.random()<(p<=fair*1.2?.05:.005)){const g=Math.floor(p*(1-EXFEE));S.dia+=g;r.push(`交易所售出 ${l.mat?MAT[l.mat]+'×'+l.qty:l.item.n}，實收 ${g} 鑽`);return false}return true});
  S.ex.orders=S.ex.orders.filter(o=>{const fair={ori:3,elu:12,cube:15,sfs:2,egg:40,food:2,blue:2}[o.mat]||5;if(Date.now()-o.t>60000&&Math.random()<(o.price>=fair?.05:.005)){addMat(S,o.mat,o.qty);r.push(`收購完成 ${MAT[o.mat]}×${o.qty}`);return false}return true});return r}
-ELK.forEach(e=>BN['e_'+e]=e+'屬性增傷%');SIX.forEach(k=>BN[k+'P']=STATN[k]+'%');Object.assign(BN,{dr:'減傷%',lifesteal:'吸HP%',spsteal:'吸SP%',proc_fire:'觸發火焰箭',proc_bolt:'觸發落雷箭',proc_heal:'受擊回血',allst:'全素質',castF:'固定詠唱-秒',cdP:'冷卻-%',acdP:'後延遲-%',spcP:'SP消耗-%',pd:'完全迴避',bossP:'對頭目%',stunP:'暈眩%',refl:'反傷%',idef:'無視防禦%',mpen:'穿透MDEF%',cdreset:'冷卻歸零%',killSp:'擊殺回SP%',allsk:'全技能Lv',alldmg:'全傷害%'});
+ELK.forEach(e=>BN['e_'+e]=e+'屬性增傷%');SIX.forEach(k=>BN[k+'P']=STATN[k]+'%');Object.assign(BN,{dr:'減傷%',lifesteal:'吸HP%',spsteal:'吸SP%',proc_fire:'觸發火焰箭',proc_bolt:'觸發落雷箭',proc_heal:'受擊回血',allst:'全素質',castF:'固定詠唱-秒',cdP:'冷卻-%',acdP:'後延遲-%',spcP:'SP消耗-%',pd:'完全迴避',bossP:'對頭目%',stunP:'暈眩%',refl:'反傷%',idef:'無視防禦%',mpen:'穿透魔防%',cdreset:'冷卻歸零%',killSp:'擊殺回SP%',allsk:'全技能Lv',alldmg:'全傷害%'});
 for(const k in SK){BN['sk_'+k]=SK[k].n+' Lv';BN['skd_'+k]=SK[k].n+' 傷害%'}
 // ===== 屬性自然寫法（全遊戲共用）：statN(k) 名稱、fmtS(k,v) 「二連擊機率 +5%」、fmtB(物件) =====
 const NATN={hp:['最大 HP',''],sp:['最大 SP',''],atk:['物理攻擊',''],matk:['魔法攻擊',''],def:['防禦',''],mdef:['魔法防禦',''],str:['力量',''],agi:['敏捷',''],vit:['體力',''],int:['智力',''],dex:['靈巧',''],luk:['幸運',''],
@@ -821,7 +825,7 @@ function resetRbp(h){let r=0;for(const k in (h.rpl||{}))for(let L=0;L<h.rpl[k];L
 gainExp=function(S,h,be,je){const j=J[h.job];if((h.maxBl||0)>h.bl){be*=2;je*=2}h.bx+=be;while(h.bl<baseMax&&h.bx>=needB(h,h.bl)){h.bx-=needB(h,h.bl);h.bl++;h.pts+=lvPts(h.bl);S.ev.push({t:'lvup',id:h.id,k:'base',lv:h.bl})}
  if(h.bl>=baseMax)h.bx=Math.min(h.bx,needB(h,h.bl));h.jx+=je;const jm=jobMax(j.t);while(h.jl<jm&&h.jx>=jobNeed(h.jl,j.t)){h.jx-=jobNeed(h.jl,j.t);h.jl++;S.ev.push({t:'lvup',id:h.id,k:'job',lv:h.jl})}if(h.jl>=jm)h.jx=0;if(h.auto){autoAlloc(h);autoSkill(h)}};
 const _ce=canEquip;canEquip=function(S,h,it,slot){const bl=h.bl;h.bl=Math.max(bl,h.maxBl||0);try{return _ce(S,h,it,slot)}finally{h.bl=bl}};
-const RBP={hp:['HP',60],def:['DEF',3],mdef:['MDEF',2],flee:['FLEE',2],crit:['暴擊',.4],block:['格擋%',.3],hit:['HIT',2],atk:['ATK',4],matk:['MATK',4],dr:['減傷%',.15]};
+const RBP={hp:['HP',60],def:['防禦',3],mdef:['魔防',2],flee:['迴避',2],crit:['暴擊',.4],block:['格擋%',.3],hit:['命中',2],atk:['攻擊',4],matk:['魔攻',4],dr:['減傷%',.15]};
 const rbpCost=L=>1+Math.floor(L/10);const rbpVal=(k,L)=>Math.round(RBP[k][1]*L/(1+L/40)*10)/10;
 function rbpAdd(h,k){h.rpl=h.rpl||{};const L=h.rpl[k]||0,c=rbpCost(L);if((h.rp||0)<c)return'轉生點不足';h.rp-=c;h.rpl[k]=L+1;return''}
 const _eb=eqBonus;eqBonus=function(S,h){const b=_eb(S,h);if(h.rpl)for(const k in h.rpl){b[k]=(b[k]||0)+rbpVal(k,h.rpl[k])}if(h.rb)b.hpP=(b.hpP||0)+h.rb;return b};
@@ -889,9 +893,9 @@ function fireProcs(S,B,h,t,m){const R=B.rng;for(const p of procList(S,h)){if(m.h
   S.stat.proc=(S.stat.proc||0)+1}}
 
 // ===== 寵物定案：加能力/特化，親密度越高加成越高 =====
-Object.assign(PETS.p_blob,{b:{hpP:1.2,vit:.6},spec:{def:2},sd:'HP、VIT、DEF'});Object.assign(PETS.p_fox,{b:{matkP:1,int:.6},spec:{skd_m_fire:3,castP:1},sd:'MATK、INT、火焰箭傷害%、詠唱'});
-Object.assign(PETS.p_wolf,{b:{atkP:1,str:.6},spec:{skd_k_bowl:3,critD:1},sd:'ATK、STR、旋風劍傷害%、暴傷'});Object.assign(PETS.p_drg,{b:{atkP:.6,matkP:.6,dex:.6},spec:{cdP:1,hit:2},sd:'ATK/MATK、DEX、冷卻-%、HIT'});
-Object.assign(PETS.p_bat,{b:{aspdP:.5,agi:.6},spec:{crit:.6,flee:2},sd:'攻速、AGI、暴擊、FLEE'});
+Object.assign(PETS.p_blob,{b:{hpP:1.2,vit:.6},spec:{def:2},sd:'HP、體力、防禦'});Object.assign(PETS.p_fox,{b:{matkP:1,int:.6},spec:{skd_m_fire:3,castP:1},sd:'魔攻、智力、火焰箭傷害%、詠唱'});
+Object.assign(PETS.p_wolf,{b:{atkP:1,str:.6},spec:{skd_k_bowl:3,critD:1},sd:'攻擊、力量、旋風劍傷害%、暴傷'});Object.assign(PETS.p_drg,{b:{atkP:.6,matkP:.6,dex:.6},spec:{cdP:1,hit:2},sd:'攻擊/魔攻、靈巧、冷卻-%、命中'});
+Object.assign(PETS.p_bat,{b:{aspdP:.5,agi:.6},spec:{crit:.6,flee:2},sd:'攻速、敏捷、暴擊、迴避'});
 const petMul=p=>(1+p.lv/10)*(1+p.ev*.5)*(.5+(p.int||0)/1000);
 function petBonus(S){const p=S.pets.find(x=>x.u===S.petOn);if(!p)return{};const d=PETS[p.k],m=petMul(p),b={};for(const k in d.b)b[k]=Math.round(d.b[k]*m*10)/10;if(p.ev>=1)for(const k in d.spec)b[k]=Math.round(d.spec[k]*m*10)/10;return b}
 const _eb3=eqBonus;eqBonus=function(S,h){const b=_eb3(S,h);if(h.id===S.party[0]){const pb=petBonus(S);for(const k in pb)b[k]=(b[k]||0)+pb[k]}return b};
@@ -1033,12 +1037,12 @@ const CONS={
  yfruit:{n:'天果',ic:'🍎',d:'立刻補滿 HP（只能用鑽石購買）。冷卻 15 秒',cd:15,buy:'dia',p:15},
  awk:{n:'覺醒藥水',ic:'🧪',d:'攻擊速度 +10%，持續 5 分鐘',b:{aspdP:10},dur:300,buy:'npc',p:1500},
  bers:{n:'狂暴藥水',ic:'⚗️',d:'攻擊速度 +15%，持續 5 分鐘（需 Lv85）',b:{aspdP:15},dur:300,lv:85,buy:'npc',p:4000},
- fstr:{n:'力量料理',ic:'🍖',d:'STR +5，持續 10 分鐘',b:{str:5},dur:600,buy:'npc',p:2500},
- fagi:{n:'敏捷料理',ic:'🍗',d:'AGI +5，持續 10 分鐘',b:{agi:5},dur:600,buy:'npc',p:2500},
- fvit:{n:'體力料理',ic:'🍲',d:'VIT +5，持續 10 分鐘',b:{vit:5},dur:600,buy:'npc',p:2500},
- fint:{n:'智力料理',ic:'🍰',d:'INT +5，持續 10 分鐘',b:{int:5},dur:600,buy:'npc',p:2500},
- fdex:{n:'靈巧料理',ic:'🥗',d:'DEX +5（詠唱更快、命中更高），持續 10 分鐘',b:{dex:5},dur:600,buy:'npc',p:2500},
- fluk:{n:'幸運料理',ic:'🍡',d:'LUK +5，持續 10 分鐘',b:{luk:5},dur:600,buy:'npc',p:2500}};
+ fstr:{n:'力量料理',ic:'🍖',d:'力量 +5，持續 10 分鐘',b:{str:5},dur:600,buy:'npc',p:2500},
+ fagi:{n:'敏捷料理',ic:'🍗',d:'敏捷 +5，持續 10 分鐘',b:{agi:5},dur:600,buy:'npc',p:2500},
+ fvit:{n:'體力料理',ic:'🍲',d:'體力 +5，持續 10 分鐘',b:{vit:5},dur:600,buy:'npc',p:2500},
+ fint:{n:'智力料理',ic:'🍰',d:'智力 +5，持續 10 分鐘',b:{int:5},dur:600,buy:'npc',p:2500},
+ fdex:{n:'靈巧料理',ic:'🥗',d:'靈巧 +5（詠唱更快、命中更高），持續 10 分鐘',b:{dex:5},dur:600,buy:'npc',p:2500},
+ fluk:{n:'幸運料理',ic:'🍡',d:'幸運 +5，持續 10 分鐘',b:{luk:5},dur:600,buy:'npc',p:2500}};
 const ARROWS={arw:{n:'箭矢',el:'無'},arw_f:{n:'火箭矢',el:'火'},arw_w:{n:'水晶箭矢',el:'水'},arw_a:{n:'風箭矢',el:'風'},arw_e:{n:'石頭箭矢',el:'地'},arw_h:{n:'銀箭矢',el:'聖'},arw_d:{n:'影子箭矢',el:'暗'}};
 const ARW_P=2;// 每支 2 金（一次普攻消耗 1 支）
 for(const k in CONS)MAT[k]=CONS[k].n;for(const k in ARROWS)MAT[k]=ARROWS[k].n;
@@ -1097,8 +1101,8 @@ function rfFill(S,need){const all=[];const M0={...S.mat};let M={...S.mat};for(co
  if(!all.length)return{err:'材料已足夠，不需要合成'};S.mat=M;return{steps:all}}
 // ===== 武器特點（參考 RO，表格驅動；說明彈窗與職業圖鑑都讀這張表）=====
 const WTRAIT={
- dagger:{t:['攻擊速度最快','刺客系可左右手各拿一把（雙持）'],b:{}},
- sword:{t:['攻守平衡，命中 +10','刺客系可雙持'],b:{hit:10}},
+ dagger:{t:['攻擊速度最快','刺客系可左右手各拿一把（雙持）；左手武器傷害較低（左手修練可提高），左手武器上的卡片效果只有 60%'],b:{}},
+ sword:{t:['攻守平衡，命中 +10','刺客系可雙持；左手武器上的卡片效果只有 60%'],b:{hit:10}},
  tsword:{t:['雙手大劍：攻擊高、卡洞少','暴擊傷害 +10%'],b:{critD:10}},
  axe:{t:['攻擊偏高、速度慢','無視怪物防禦 5%'],b:{idef:5}},
  taxe:{t:['雙手巨斧：攻擊最高、速度很慢','無視怪物防禦 10%'],b:{idef:10}},
@@ -1113,6 +1117,8 @@ const WTRAIT={
  whip:{t:['鞭子：技能消耗 SP -5%'],b:{spcP:5}},
  book:{t:['書：魔法攻擊 +4%','詠唱速度 +5%'],b:{matkP:4,castP:5}}};
 {const _e=eqBonus;eqBonus=function(S,h){const b=_e(S,h);if(!S||!S.inv||!h||!h.eq)return b;const w=S.inv.find(i=>i.u===h.eq.wpn);const tr=w&&WTRAIT[w.wt];if(tr)for(const k in tr.b)b[k]=(b[k]||0)+tr.b[k];return b}}
+// 派遣中的寵物不給戰鬥加成（伺服器存檔時也會強制取消參戰）
+{const W=fn=>function(S,...a){if(S&&S.petOn!=null&&pdBusy(S,S.petOn)){const o=S.petOn;S.petOn=null;try{return fn(S,...a)}finally{S.petOn=o}}return fn(S,...a)};petBonus=W(petBonus);stepBattle=W(stepBattle)}
 
 // ===================== 第 5 層：繪製（像素 sprite，程式繪製）=====================
 const cv=document.getElementById("cv");let X=cv.getContext("2d");X.imageSmoothingEnabled=false;const W=320,H=180;
@@ -1426,8 +1432,8 @@ function render(){const S=G.S;nav();let h=subBar();const s=SUB[TAB];
    <div class="row sm">素質點 <b class="c">${hr.pts}</b><span class="sp"></span><button class="b s r" data-a="rsst">洗素質(50鑽)</button><label><input type="checkbox" data-a="auto" ${hr.auto?'checked':''}> 自動配點/技能</label></div>
    <div class="grid2">${Object.keys(STATN).map(k=>{const add=t.s[k]-hr.st[k];return`<div class="st"><b style="width:30px" data-a="info" data-k="st:${k}">${STATN[k]}</b><span>${hr.st[k]}<span class="gr">+${add}</span></span><span class="sp"></span><span class="sm">需${statCost(hr.st[k])}</span><button class="b s" data-a="st" data-k="${k}" ${hr.pts<statCost(hr.st[k])||hr.st[k]>=STATCAP?'disabled':''}>+</button></div>`}).join('')}</div>
    <div class="sm" style="margin-top:4px">${Object.entries(STATD).map(([k,v])=>STATN[k]+'：'+v).join('｜')}</div></div>
-   <div class="card grid2 sm"><div>HP ${fmt(t.mhp)}　SP ${fmt(t.msp)}</div><div>ATK ${Math.floor(t.statusAtk*2)}+${Math.floor(t.watk)}${t.over?` <span class="pu">(過精+0~${t.over})</span>`:''}</div><div>MATK ${Math.floor(t.matk)}</div><div>ASPD <b>${t.aspd.toFixed(1)}</b>（${t.aps.toFixed(2)}/秒）</div>
-   <div>DEF ${Math.floor(t.hdef)}+${Math.floor(t.sdef)}　<b class="bl">物理減傷 ${Math.round((1-defRed(t.hdef))*100)}%</b></div><div>MDEF ${Math.floor(t.mdef)}${t.b.dr?`　<b class="bl">技能減傷 ${t.b.dr}%</b>`:''}</div><div>HIT ${Math.floor(t.hit)}　FLEE ${Math.floor(t.flee)}</div><div>暴擊 ${t.crit.toFixed(1)}%　完全迴避 ${t.pd.toFixed(1)}</div>
+   <div class="card grid2 sm"><div>HP ${fmt(t.mhp)}　SP ${fmt(t.msp)}</div><div>攻擊 ${Math.floor(t.statusAtk*2)}+${Math.floor(t.watk)}${t.over?` <span class="pu">(過精+0~${t.over})</span>`:''}</div><div>魔攻 ${Math.floor(t.matk)}</div><div>攻速 <b>${t.aspd.toFixed(1)}</b>（${t.aps.toFixed(2)}/秒）</div>
+   <div>防禦 ${Math.floor(t.hdef)}+${Math.floor(t.sdef)}　<b class="bl">物理減傷 ${Math.round((1-defRed(t.hdef))*100)}%</b></div><div>魔防 ${Math.floor(t.mdef)}${t.b.dr?`　<b class="bl">技能減傷 ${t.b.dr}%</b>`:''}</div><div>命中 ${Math.floor(t.hit)}　迴避 ${Math.floor(t.flee)}</div><div>暴擊 ${t.crit.toFixed(1)}%　完全迴避 ${t.pd.toFixed(1)}</div>
    <div>詠唱 變動×${t.castV.toFixed(2)} 固定×${t.castF.toFixed(2)}</div><div>${t.dual?'二刀流':t.hasSh?'持盾':WT[t.wt].n}${t.b.block?'　格擋'+t.b.block+'%':''}</div></div>
    ${bonusCards(S,hr)}
 `}
@@ -1464,7 +1470,7 @@ function render(){const S=G.S;nav();let h=subBar();const s=SUB[TAB];
    if(ty==='card')h+=Object.entries(CARDS).map(([id,c])=>{const t=`${c.n} ${bnTxt(c.fx)} ${c.proc?SK[c.proc.k].n:''}`;if(!M(t))return'';return`<div class="it"><div class="sp"><b class="${c.boss?'r3':'c'}" data-a="info" data-k="card:${id}">${c.n}</b> <span class="tag">${SLOT[c.slot]}</span> ${S.codex&&S.codex[id]?'<span class="gr">已收集</span>':'<span class="sm">未收集</span>'}<div class="sm">${bnTxt(c.fx)}${c.proc?`｜普攻命中 ${c.proc.ch}% 觸發 ${SK[c.proc.k].n} Lv${c.proc.lv}（不佔普攻）`:''}</div><div class="sm">來源：第${c.src.ch+1}章 ${c.src.mob}（${(c.rate*100).toFixed(2)}%）</div></div><button class="b s" data-a="farm" data-c="${c.src.ch}" data-m="${c.src.mi}">農這張</button></div>`}).join('');
    if(ty==='equip')h+=`<div class="card sm">強化道具掉落：所有魔物皆有機率掉落 ${farmTxt(0)}；頭目 ${farmTxt(1)}。點數商城亦可購買。</div>`+Object.keys(WNAMES).flatMap(wt=>WNAMES[wt].map((n,t)=>[n,WT[wt].n+(WT[wt].h==2?'(雙手)':''),t,J?Object.keys(J).filter(j=>J[j].t>=1&&J[j].w&&J[j].w.includes(wt)&&!J[j].src).map(j=>J[j].n).slice(0,6).join('/'):''])).concat(Object.keys(ARMN).flatMap(sl=>ARMN[sl].map((n,t)=>[n,SLOT[sl],t,'依部位']))).filter(x=>M(x.join(' '))).map(([n,ty2,t,jb])=>`<div class="it"><div class="sp"><b>${n}</b> <span class="tag">${ty2}</span><div class="sm">掉落：第${t*2+1}~${t*2+2}章（一般 3.5%、頭目 70%），交易所亦可購得｜可用：${jb}</div><div class="sm">屬性：3 主（六維，其一固定職系主屬性）+2 附加+1 特殊（鑽石解鎖）；數值隨章節提高</div></div></div>`).join('');
    if(ty==='pet')h+=Object.entries(PETS).filter(([k,p])=>M(p.ev.join(' ')+p.sd)).map(([k,p])=>`<div class="it"><div class="sp"><b>${p.ev.join(' → ')}</b><div class="sm">加成：${p.sd}｜Lv10/30 進化（神之金屬），進化後解鎖特化｜親密度越高加成越高</div><div class="sm">取得：孵化寵物蛋（各章頭目 35% 掉落、交易所）</div></div></div>`).join('')}
-  if(s==='pet'){h+=unl(S,'pet')?`<div class="card sm">寵物（希望式）：孵蛋、餵飼料升級、Lv10/30 進化（需神之金屬），出戰時不攻擊，而是給主角加能力（素質、HP、ATK/MATK 等，進化後解鎖職業/技能特化），親密度（餵食、陪伴打怪提升，上限 1000）越高加成越高；輔助技能「小護盾」：HP<50% 時全隊減傷 8%、5 秒、冷卻 45 秒。也可派遣（採集/挖礦/釣魚/狩獵，離線也算，最多 8 小時）。蛋 ${S.mat.egg||0}　飼料 ${S.mat.food||0}　<button class="b s g" data-a="hatch" ${S.mat.egg>0?'':'disabled'}>孵化</button></div>`+
+  if(s==='pet'){h+=unl(S,'pet')?`<div class="card sm">寵物（希望式）：孵蛋、餵飼料升級、Lv10/30 進化（需神之金屬），出戰時不攻擊，而是給主角加能力（素質、HP、攻擊/魔攻 等，進化後解鎖職業/技能特化），親密度（餵食、陪伴打怪提升，上限 1000）越高加成越高；輔助技能「小護盾」：HP<50% 時全隊減傷 8%、5 秒、冷卻 45 秒。也可派遣（採集/挖礦/釣魚/狩獵，離線也算，最多 8 小時）。蛋 ${S.mat.egg||0}　飼料 ${S.mat.food||0}　<button class="b s g" data-a="hatch" ${S.mat.egg>0?'':'disabled'}>孵化</button></div>`+
    S.pets.map(p=>{const d=PETS[p.k];return`<div class="it"><canvas data-a="info" data-k="pet:${p.k}" class="ic" data-pet="${p.u}" width="32" height="32"></canvas><div class="sp"><b>${d.ev[p.ev]}</b> Lv${p.lv} <span class="sm">親密 ${p.int||0}/1000｜${d.sd}｜${pdBusy(S,p.u)?pdTag(S,p.u):S.petOn===p.u?'<span class="gr">參戰中</span>':'待命'}</span></div><div class="row"><button class="b s" data-a="feed" data-v="${p.u}">餵</button><button class="b s y" data-a="evo" data-v="${p.u}">進化</button><button class="b s g" data-a="peton" data-v="${p.u}">參戰</button>${pdBtn(S,p)}</div></div>`}).join(''):'<p class="sm">1-5 解鎖</p>'}
   if(s==='life'){h+=unl(S,'life')?`<div class="card"><b>生活技能</b><div class="sm">採集材料（點一下採一次；寵物派遣請到「寵物」頁）→ 製作藥水、飼料、精煉材料、料理。</div><div class="row"><button class="b g" data-a="gather">採集</button><button class="b" data-a="pdGo">寵物派遣</button></div>
    <div class="sm">${Object.entries(S.mat).filter(([k,v])=>v>0).map(([k,v])=>`<span data-a="info" data-k="mat:${k}" style="cursor:pointer">${MAT[k]||k}×${v}</span>`).join('　')}</div></div>`+Object.entries(RECIPE).map(([k,r])=>`<div class="it"><div class="sp"><b>${r.n}</b> <span class="sm">${Object.entries(r.need).map(([m,n])=>MAT[m]+'×'+n).join(' ')}</span></div><button class="b s" data-a="craft" data-k="${k}">製作</button>${k==='meal'?`<button class="b s y" data-a="eat">吃</button>`:''}</div>`).join(''):'<p class="sm">2-1 解鎖</p>'}
@@ -1720,7 +1726,7 @@ const QCLS=q=>'q'+(q||0);
 function eqCell(S,hr,sl){const it=S.inv.find(i=>i.u===hr.eq[sl]);return`<button class="eqs ${it?QCLS(it.q)+' '+rfGlow(it.rf||0):'empty'}" data-a="eqslot" data-k="${sl}">${it?`<img src="${itemIcon(it)}">${it.rf?`<i class="rfb">+${it.rf}</i>`:''}`:`<span>${sl==='sh'&&J[hr.job].dual?'左手武器':sl==='wpn'&&J[hr.job].dual?'右手武器':SLOT[sl]}</span>`}</button>`}
 function eqView(S,hr){const t=calc(S,hr);
  return`<div class="card eqw"><div class="eqw-c">${EQL.map(sl=>eqCell(S,hr,sl)).join('')}</div><div class="eqw-m"><canvas class="eqhero" data-hero="${hr.id}" width="96" height="120"></canvas><b>${esc(hr.name)}</b><span class="sm">${J[hr.job].n}・Lv${hr.bl}</span>
-  <div class="eqw-s"><span>ATK <b>${fmt(Math.round(t.atk))}</b></span><span>MATK <b>${fmt(Math.round(t.matk))}</b></span><span>DEF <b>${fmt(Math.round(t.hdef||t.def||0))}</b></span><span>HP <b>${fmt(Math.round(t.mhp))}</b></span></div></div><div class="eqw-c">${EQR.map(sl=>eqCell(S,hr,sl)).join('')}</div></div>`}
+  <div class="eqw-s"><span>攻擊 <b>${fmt(Math.round(t.atk))}</b></span><span>魔攻 <b>${fmt(Math.round(t.matk))}</b></span><span>防禦 <b>${fmt(Math.round(t.hdef||t.def||0))}</b></span><span>HP <b>${fmt(Math.round(t.mhp))}</b></span></div></div><div class="eqw-c">${EQR.map(sl=>eqCell(S,hr,sl)).join('')}</div></div>`}
 const BTAB=[['all','全部'],['wpn','武器'],['def','防具'],['acc','飾品'],['mat','道具'],['card','卡片']];G.btab=G.btab||'all';
 function matIcon(k){const st=/^(wst|ast)(\d)$/.exec(k),tk=/^(prot|safe|bls)(\d)$/.exec(k);let body;const t=+(st||tk||[0,0,1])[2];const tc=['','#bfe3ff','#ffd36b','#ff9ad5'][t]||'#ddd';
  if(st)body=`<path d="M24 7 L37 18 L31 40 L17 40 L11 18 Z" fill="${st[1]==='wst'?'#ff8f8f':'#8fc8ff'}" stroke="#5b4a78" stroke-width="2.4" stroke-linejoin="round"/><path d="M24 7 L24 40 M11 18 L37 18" stroke="#fff" stroke-width="1.4" opacity=".6"/><circle cx="20" cy="15" r="2.2" fill="#fff"/>`;
@@ -1750,7 +1756,7 @@ setInterval(()=>{if(document.querySelector('canvas[data-hero]'))try{eqHeroDraw()
 const WTN=k=>(WT[k]||{}).n||k;
 function jobNext(h){const j=J[h.job];if(j.t==0)return{ks:['sw','mg','ac','al','mc','th'],need:[['職業等級',h.jl,10]]};if(j.t==1)return{ks:Object.keys(J).filter(k=>J[k].from===h.job&&J[k].t==2),need:[['職業等級',h.jl,40],['等級',h.bl,35]]};
  if(j.t==3&&h.past2&&ADV[h.past2])return{ks:[ADV[h.past2]],need:[['職業等級',h.jl,40],['等級',h.bl,50]]};return{ks:[],need:[]}}
-function jobCard(k,h,act){const j=J[k];return`<div class="card jbc ${act?'ok':''}"><div class="jbc-h"><span class="jbc-d" style="background:${j.col||'#ccc'}"></span><b>${jobName(k,h.sex)}</b><span class="tag">${ROLE[j.role]||''}</span></div><div class="sm">可用武器：${(j.w||[]).map(WTN).join('、')}${j.sh?'・可持盾':''}${j.dual?'・可二刀流':''}</div><details class="sm"><summary>武器特點</summary>${(j.w||[]).filter(w=>WTRAIT[w]).map(w=>`<div>・<b>${WTN(w)}</b>：${WTRAIT[w].t.join('；')}</div>`).join('')}</details><div class="sm">招牌技能：${(j.sk||[]).slice(0,3).map(s=>SK[s]?`<span data-a="info" data-k="sk:${s}" class="c" style="cursor:pointer">${SK[s].n}</span>`:'').join('、')}</div>${act?`<button class="b g" style="width:100%;margin-top:8px" data-a="job" data-k="${k}">轉職：${jobName(k,h.sex)}</button>`:''}</div>`}
+function jobCard(k,h,act){const j=J[k];return`<div class="card jbc ${act?'ok':''}"><div class="jbc-h"><span class="jbc-d" style="background:${j.col||'#ccc'}"></span><b>${jobName(k,h.sex)}</b><span class="tag">${ROLE[j.role]||''}</span></div><div class="sm">可用武器：${(j.w||[]).map(WTN).join('、')}${j.sh?'・可持盾':''}${j.dual?'・可雙持單手劍／短劍（左手卡片效果 60%）':''}</div><details class="sm"><summary>武器特點</summary>${(j.w||[]).filter(w=>WTRAIT[w]).map(w=>`<div>・<b>${WTN(w)}</b>：${WTRAIT[w].t.join('；')}</div>`).join('')}</details><div class="sm">招牌技能：${(j.sk||[]).slice(0,3).map(s=>SK[s]?`<span data-a="info" data-k="sk:${s}" class="c" style="cursor:pointer">${SK[s].n}</span>`:'').join('、')}</div>${act?`<button class="b g" style="width:100%;margin-top:8px" data-a="job" data-k="${k}">轉職：${jobName(k,h.sex)}</button>`:''}</div>`}
 function jobPage(S,h){const j=J[h.job],n=jobNext(h),o=jobOptions(S,h);const done=n.need.every(([_,v,r])=>v>=r);
  return`<div class="card jbn"><div class="sm">目前職業</div><div class="jbc-h"><span class="jbc-d" style="background:${j.col||'#ccc'}"></span><b style="font-size:20px">${jobName(h.job,h.sex)}</b><span class="tag">${ROLE[j.role]||''}</span></div>
   ${n.ks.length?`<div class="jbp">${n.need.map(([t,v,r])=>`<div class="jbp-r"><span>${t}</span><div class="jbp-bar"><i style="width:${Math.min(100,v/r*100)}%"></i></div><b class="${v>=r?'pos':''}">${Math.min(v,r)}/${r}</b></div>`).join('')}</div><div class="sm" style="margin-top:6px">${done?'✨ 條件達成！選擇下一個職業：':'達成條件後即可轉職，下一階可選：'}</div>`:`<div class="sm">${j.t==2&&ADV[h.job]&&J[ADV[h.job]]?`下一步：Lv${RBMAX} 轉生後，高階職業可晉升為「${J[ADV[h.job]].n}」（${ROLE[J[ADV[h.job]].role]||''}）。`:'已是最終職業，滿等可轉生。'}</div>`}</div>
@@ -1772,7 +1778,7 @@ function nqUpd(){const it=NPCSHOP.find(x=>x.k===document.querySelector('[data-a=
 ACT.nq=d=>{document.getElementById('nqv').value=d.v;nqUpd()};
 ACT.nbuyGo=d=>{const n=+document.getElementById('nqv').value||0,it=NPCSHOP.find(x=>x.k===d.k);if(!confirm(`購買 ${it.n} ×${n}，共 ${fmt(it.p*n)} 金？`))return;const e=npcBuy(G.S,d.k,n);toast(e||`已購買 ${it.n} ×${n}`);if(!e){closeModal();save();render()}};
 // ===== 組隊：同畫面顯示隊友（外觀、武器、精煉發光、稱號），點擊查看裝備 =====
-function allyList(){const p=ON&&ON.party;if(!p||!p.look||!G.S)return[];return p.running?p.look.filter(l=>l.id!==ON.id):[]}
+function allyList(){const p=ON&&ON.party;if(!p||!p.look||!G.S||!p.members||p.members.length<2)return[];const on=new Set(p.members.filter(m=>m.on!==false).map(m=>m.id));return p.look.filter(l=>l.id!==ON.id&&on.has(l.id))}
 function allyPos(i){return[96-i*18,134+(i%2?10:-6)]}
 {const _d=draw;draw=function(dt){_d(dt);try{const L=allyList();if(!L.length)return;const S=G.S,inv=S.inv,T=performance.now()/1000;
  L.slice(0,9).forEach((l,i)=>{const p=allyPos(i);const W=l.eq.find(e=>e.sl==='wpn');S.inv=W?[{...W,u:-1}]:[];const h={id:1000+l.id,name:l.name,job:J[l.job]?l.job:'nov',sex:l.sex||'m',eq:W?{wpn:-1}:{},rb:l.rb};
@@ -1862,7 +1868,7 @@ function onWs(m){const t=m.t;
  else if(t==='party'){ON.party=m.p}
  else if(t==='pinv'){ON.pinv=ON.pinv.filter(x=>x.pid!==m.pid);ON.pinv.push(m);toast(`🎈 ${esc(m.name)} 邀請你加入隊伍<br><span class="sm">到「社交 › 隊伍」接受</span>`,3000)}
  else if(t==='stage'){log(`[組隊] ${m.win?'過關':'失敗'} → ${m.prog.ch+1}-${m.prog.st+1}`,'c');if(ON.party)ON.party.prog=m.prog;return}
- else if(t==='ev'){return}
+ else if(t==='ev'){partyEv(m);return}
  else if(t==='saved'){onDownload();return}
  else if(t==='presence'){if(ON.soc)for(const f of ON.soc.friends)if(f.id===m.id)f.on=m.on}
  else if(t==='friend'){toast(m.kind==='req'?`👋 ${esc(m.name)} 想加你好友`:`🎉 你和 ${esc(m.name)} 成為好友`,2500);onSocial()}
@@ -1962,7 +1968,7 @@ const _sub=ACT.sub;ACT.sub=d=>{_sub(d);if(TAB==='social'){if(d.v==='guild')onGui
 // 桌面戰鬥頁右側：隊伍／公會簽到／在線好友／今日
 function battleSide(S){const p=ON.party,D=ON.gd,F=ON.soc?ON.soc.friends.filter(f=>f.on):[];let h='';
  h+=`<div class="card"><div class="row"><b>線上隊伍</b><span class="sp"></span>${p?`<span class="tag">${p.members.length}/10</span>`:''}</div>${p?p.members.map(m=>`<div class="it">${av(m.name,m.on)}<b class="sp">${m.id===p.leader?'👑 ':''}${esc(m.name)}</b></div>`).join('')+`<div class="sm">${p.running?'🔥 共推中'+(p.prog?` ${p.prog.ch+1}-${p.prog.st+1}`:''):'待命中'}</div>`:'<div class="sm">組隊後每波怪更多、效率更高。</div><button class="b s g" data-a="pNew" style="margin-top:8px">建立隊伍</button>'}</div>`;
- h+=`<div class="card"><div class="row"><b>公會</b><span class="sp"></span>${D&&D.g?`<span class="tag">Lv${D.g.lv}</span>`:''}</div>${D&&D.g?`<div class="row"><span class="sp">${esc(D.g.name)}</span><button class="b s ${D.signed?'':'y'}" data-a="gSign" ${D.signed?'disabled':''}>${D.signed?'已簽到':'簽到 +'+D.signDia+'鑽'}</button></div>${D.g.notice?`<div class="notice sm">${esc(D.g.notice)}</div>`:''}`:'<div class="sm">加入公會可獲得 ATK／經驗／掉落加成與每日簽到鑽石。</div>'}</div>`;
+ h+=`<div class="card"><div class="row"><b>公會</b><span class="sp"></span>${D&&D.g?`<span class="tag">Lv${D.g.lv}</span>`:''}</div>${D&&D.g?`<div class="row"><span class="sp">${esc(D.g.name)}</span><button class="b s ${D.signed?'':'y'}" data-a="gSign" ${D.signed?'disabled':''}>${D.signed?'已簽到':'簽到 +'+D.signDia+'鑽'}</button></div>${D.g.notice?`<div class="notice sm">${esc(D.g.notice)}</div>`:''}`:'<div class="sm">加入公會可獲得 攻擊／經驗／掉落加成與每日簽到鑽石。</div>'}</div>`;
  h+=`<div class="card"><div class="row"><b>在線好友</b><span class="sp"></span><span class="sm">${F.length} 人</span></div>${F.slice(0,6).map(u=>`<div class="it">${av(u.name,1)}<b class="sp">${esc(u.name)}</b><button class="b s" data-a="dmOpen" data-k="${u.id}">密語</button>${p&&p.leader===ON.id&&!p.members.some(m=>m.id===u.id)?`<button class="b s g" data-a="pInv" data-k="${u.id}">邀請</button>`:''}</div>`).join('')||'<div class="empty">目前沒有在線好友</div>'}</div>`;
  const mo=monthOn(S);h+=`<div class="card"><b>今日</b><div class="grid2" style="margin-top:6px"><div class="st">月卡 <b class="sp" style="text-align:right">${mo?'生效中':'未開通'}</b></div><div class="st">最高進度 <b class="sp" style="text-align:right">${(S.prog.max/10|0)+1}-${S.prog.max%10+1}</b></div><div class="st">金幣 <b class="sp" style="text-align:right">${fmt(S.gold)}</b></div><div class="st">鑽石 <b class="sp" style="text-align:right">${S.dia}</b></div></div>${mo?`<button class="b s" data-a="claim" style="margin-top:8px">領取月卡每日獎勵</button>`:''}</div>`;return h}
 
@@ -2021,6 +2027,22 @@ ACT.pdStartGo=async()=>{const {u,k,h}=G.pdSel;try{await pdCall('/api/pet/disp',{
 ACT.pdGet=async d=>{const u=+d.v;try{const j=await pdCall('/api/pet/claim',{u},()=>{const r=pdClaim(G.S,u,Date.now(),Math.random);if(r.err)throw new Error(r.err);return r});render();modal(infoBox('🎁','派遣收穫',PDLOC[j.loc]?PDLOC[j.loc].n:'',sec('獲得',`<div>${Object.entries(j.got||{}).map(([m,n])=>`${MAT[m]||m} ×${n}`).join('、')||'空手而回'}</div>`)));SFX.ok()}catch(e){toast(e.message);render()}};
 ACT.pdCan=async d=>{if(!confirm('召回後這次派遣沒有收穫，確定？'))return;try{await pdCall('/api/pet/cancel',{u:+d.v},()=>{const e=pdCancel(G.S,+d.v);if(e)throw new Error(e);return{}});toast('已召回')}catch(e){toast(e.message)}render()};
 setInterval(()=>{if(TAB==='adv'&&SUB.adv==='pet'&&G.S&&G.S.srvst&&G.S.srvst.pd&&Object.keys(G.S.srvst.pd).length&&$('modal').style.display!=='flex')render()},30000);
+{const _p=ACT.peton;ACT.peton=d=>{if(pdBusy(G.S,+d.v))return toast('這隻寵物正在派遣中，回來後才能參戰');_p(d)}}
+// ===== 組隊顯示：上方隊伍欄（名字/職業/HP/SP）、隊友傷害數字、「組隊中」狀態 =====
+ON.pfx=[];ON.pst={};
+function partyEv(m){ON.pst={};for(const [id,hp,mhp,sp,msp] of (m.hr||[]))ON.pst[id]={hp,mhp,sp,msp};ON.pstT=Date.now();if(m.prog&&ON.party)ON.party.prog=m.prog;
+ const L=allyList();for(const e of (m.ev||[])){const i=L.findIndex(l=>l.id===e.src||l.id===e.id);if(i<0)continue;if(e.t==='dmg'&&e.tot)ON.pfx.push({i,v:e.tot,c:e.crit,t0:performance.now(),k:e.k});else if(e.t==='heal'&&e.d)ON.pfx.push({i,v:e.d,heal:1,t0:performance.now()});else if(e.t==='cast'&&e.k&&SK[e.k])ON.pfx.push({i,txt:SK[e.k].n,t0:performance.now()})}
+ if(ON.pfx.length>40)ON.pfx.splice(0,ON.pfx.length-40);pbarUpd()}
+function pbarHtml(){const p=ON.party;if(!p||!p.members||p.members.length<2)return'';const lk=Object.fromEntries((p.look||[]).map(l=>[l.id,l]));
+ return`<div class="pbar"><div class="pbar-h">🧑‍🤝‍🧑 <b>組隊中</b>（${p.members.length} 人）${p.running?`<span class="tag">共推 ${p.prog?(p.prog.ch+1)+'-'+(p.prog.st+1):''}</span>`:'<span class="tag">等待開始</span>'}</div><div class="pbar-l">${p.members.map(m=>{const l=lk[m.id]||{},s=ON.pst[m.id];const hp=s?Math.round(s.hp/s.mhp*100):100,sp=s?Math.round(s.sp/s.msp*100):100;
+  return`<div class="pbm ${m.id===ON.id?'me':''} ${m.on===false?'off':''}" data-a="ally" data-k="${m.id}"><b>${m.id===p.leader?'👑':''}${esc(m.name)}</b><small>${l.job&&J[l.job]?jobName(l.job,l.sex):''}${l.bl?' Lv'+l.bl:''}${m.on===false?'・離線':''}</small><i class="pbh"><u style="width:${hp}%"></u></i><i class="pbs"><u style="width:${sp}%"></u></i></div>`}).join('')}</div></div>`}
+function pbarUpd(){const c=$('cv');if(!c)return;let b=$('pbar');const h=TAB==='battle'?pbarHtml():'';if(!h){if(b)b.remove();return}if(!b){b=document.createElement('div');b.id='pbar';c.parentNode.insertBefore(b,c)}if(b.innerHTML!==h)b.innerHTML=h;const wide=innerWidth>=900;b.classList.toggle('ov',wide);if(wide){const r=c.getBoundingClientRect();Object.assign(b.style,{position:'fixed',left:(r.left+8)+'px',top:(r.top+8)+'px',width:(r.width-16)+'px',zIndex:4})}else b.removeAttribute('style')}
+addEventListener('resize',()=>{try{pbarUpd()}catch(e){}});
+{const _r=render;render=function(...a){const r=_r(...a);try{pbarUpd()}catch(e){}return r}}
+{const _d=draw;draw=function(dt){_d(dt);try{const L=allyList();if(!L.length)return;const now=performance.now();
+ L.slice(0,9).forEach((l,i)=>{const p=allyPos(i),s=ON.pst[l.id];if(s){X.fillStyle='#0006';X.fillRect(p[0]-10,p[1]+14,20,3);X.fillStyle='#4cd07a';X.fillRect(p[0]-10,p[1]+14,20*Math.max(0,Math.min(1,s.hp/s.mhp)),3)}});
+ ON.pfx=ON.pfx.filter(f=>now-f.t0<1100);for(const f of ON.pfx){const p=allyPos(f.i);const a=(now-f.t0)/1100;X.save();X.globalAlpha=1-a;X.textAlign='center';X.font=(f.c?'bold 10px':'bold 8px')+' sans-serif';X.lineWidth=2;X.strokeStyle='#3a2350';X.fillStyle=f.heal?'#6dff9a':f.txt?'#ffe27a':f.c?'#ffb43b':'#fff';const t=f.txt||((f.heal?'+':'')+fmt(f.v));const y=p[1]-28-a*14;X.strokeText(t,p[0]+12,y);X.fillText(t,p[0]+12,y);X.restore()}}catch(e){}}}
+setInterval(()=>{try{pbarUpd()}catch(e){}},1000);
 
 // ===== 精煉頁 v2（Q 版）：選裝備條 → 中間大鐵砧格 → 目前/下一級對比 → 成功率 → 材料金幣 → 保護勾選 → 動畫；石頭合成面板 =====
 function rfStat(it,rf){const w=it.slot==='wpn'||it.wt;const p=rfP(rf);const L=[];if(w)L.push(['攻擊／魔攻',`+${p}%`]);else L.push(['防禦',`+${Math.round(p*.7)}%`]);if(!w){const hp=rf>=20?5:rf>=15?2.5:rf>=10?1:0;L.push(['最大 HP',hp?`+${hp}%`:'—'])}L.push(['光芒',rf>=20?'彩虹神光':rf>=15?'金色光芒':rf>=9?'藍色光芒':'—']);return L}
