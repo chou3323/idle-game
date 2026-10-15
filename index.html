@@ -90,7 +90,7 @@ const SK={
  h_heal:{n:'治癒術',ty:'heal',mag:1,m:[60,40],cast:.3,cd:2,sp:13,max:10},h_bless:{n:'天使祝福',ty:'buff',all:1,b:{str:1,int:1,dex:1},dur:60,cd:30,sp:28,max:10},h_agi:{n:'加速術',ty:'buff',all:1,b:{agi:1,aspdP:1.5},dur:60,cd:30,sp:18,max:10},h_angelus:{n:'天使之賜',ty:'buff',all:1,b:{defP:5},dur:60,cd:40,sp:23,max:10},
  c_mammon:{n:'金錢重擊',ty:'dmg',m:[150,50],cd:4,sp:5,max:10,gold:1,fx:'coin'},c_cart:{n:'推車衝撞',ty:'aoe',m:[150,20],cd:6,sp:12,max:10,fx:'slash'},c_disc:{n:'砍價術',ty:'pass',p:{goldP:2},max:10},
  t_double:{n:'二刀連擊',ty:'pass',p:{dbl:5},max:10},t_envenom:{n:'塗毒',ty:'dmg',el:'毒',m:[100,15],cd:3,sp:12,max:10,fx:'poison'},t_steal:{n:'偷竊',ty:'pass',p:{dropP:1},max:10},
- k_pierce:{n:'穿刺突擊',ty:'dmg',m:[200,40],cd:2.5,sp:7,max:10,fx:'slash'},k_bowl:{n:'旋風劍',ty:'aoe',m:[200,40],cd:5,sp:14,max:10,fx:'slash'},k_twoq:{n:'雙手快攻',ty:'buff',self:1,b:{aspdP:3},dur:120,cd:120,sp:14,max:10},
+ k_pierce:{n:'穿刺突擊',ty:'dmg',m:[200,46],cd:2.5,sp:7,max:10,fx:'slash'},k_bowl:{n:'旋風劍',ty:'aoe',m:[200,40],cd:5,sp:14,max:10,fx:'slash'},k_twoq:{n:'雙手快攻',ty:'buff',self:1,b:{aspdP:3},dur:120,cd:120,sp:14,max:10},
  p_guard:{n:'自動防禦',ty:'pass',p:{block:2},max:10},p_grand:{n:'聖十字審判',ty:'aoe',el:'聖',m:[100,40],cd:7,sp:37,max:10,fx:'holy'},p_devo:{n:'犧牲守護',ty:'pass',p:{shareP:3},max:5},
  w_storm:{n:'暴風雪',ty:'aoe',el:'水',mag:1,m:[100,40],cast:2.5,cd:8,sp:60,max:10,fx:'ice'},w_meteor:{n:'隕石術',ty:'aoe',el:'火',mag:1,m:[125,50],cast:3,cd:9,sp:64,max:10,fx:'meteor'},w_jupi:{n:'雷鳴光球',ty:'dmg',el:'風',mag:1,m:[400,100],cast:1.5,cd:4,sp:30,max:10,fx:'bolt'},
  g_ende:{n:'屬性附魔',ty:'buff',all:1,b:{atkP:2},dur:90,cd:45,sp:30,max:10},g_dispell:{n:'魔力抽取',ty:'pass',p:{spP:3},max:10},g_heaven:{n:'天地雷擊',ty:'aoe',el:'風',mag:1,m:[100,25],cast:2,cd:9,sp:50,max:10,fx:'bolt'},
@@ -244,7 +244,7 @@ const monthOn=S=>S.month>Date.now();
 // ===================== 第 3 層：戰鬥模擬（確定性 seed，可搬到伺服器）=====================
 function newBattle(S,ch,st,seed){const boss=st===STAGES-1;const B={ch,st,boss,wave:0,need:boss?1:WAVES,mobs:[],hr:{},t:0,timer:boss?BOSS_T:0,rng:RNG(seed),ev:[],pause:0,taunt:null,tauntT:0,petT:0,done:0};
  S.party.forEach(id=>{B.hr[id]={hp:1e9,sp:1e9,at:0,cast:null,cd:{},buf:{},dl:0,spirit:0}});spawn(S,B);return B}
-function spawn(S,B){B.mobs=[];const n=B.boss?3:3+(B.rng.n()<.3?1:0);const ps=PSC(S.party.length);for(let i=0;i<n;i++){const m=mkMob(B.ch,B.st,Math.floor(B.rng.n()*3),B.boss&&i===0,B.rng);m.hp=m.mhp=Math.floor(m.mhp*ps.hp);m.atk=Math.floor(m.atk*ps.atk);B.mobs.push(m)}B.ev.push({t:'spawn'})}
+function spawn(S,B){B.mobs=[];const np=S.party.length;const n=B.boss?3:3+(B.rng.n()<.3?1:0)+(np>=2?Math.round((np-1)*MOBX):0);const ps=B.boss?PSC(np):PSCM(np);for(let i=0;i<n;i++){const m=mkMob(B.ch,B.st,Math.floor(B.rng.n()*3),B.boss&&i===0,B.rng);m.hp=m.mhp=Math.floor(m.mhp*ps.hp);m.atk=Math.floor(m.atk*ps.atk);B.mobs.push(m)}B.ev.push({t:'spawn'})}
 function heroStats(S,B){const r={};const pb=partyBonus(S);S.party.forEach(id=>{const h=S.heroes.find(x=>x.id===id),rt=B.hr[id];const buf={};for(const k in rt.buf){const x=rt.buf[k];for(const q in x.b)buf[q]=(buf[q]||0)+x.b[q]}
   if(pb.atk){buf.atkP=(buf.atkP||0)+pb.atk;buf.matkP=(buf.matkP||0)+pb.atk;buf.defP=(buf.defP||0)+pb.atk}if(S.guild)buf.atkP=(buf.atkP||0)+S.guild.lv;
   const t=calc(S,h,buf);r[id]=t;if(rt.hp>t.mhp)rt.hp=t.mhp;if(rt.sp>t.msp)rt.sp=t.msp});return r}
@@ -295,7 +295,7 @@ function autoAtk(S,B,h,t,rt,m){const R=B.rng;const hr=hitRate(t,m);
  const crit=R.n()*100<t.crit;let parts=[];const dbl=t.b.dbl&&t.wt==='dagger'&&R.n()*100<t.b.dbl,tri=t.b.tri&&R.n()*100<t.b.tri;
  // 攻速流成長線：溢出攻速 → 普攻傷害 +2%/點；同目標連續命中疊層（每層 +3%，最多 10 層）；LUK/10% 機率多重打擊
  const rt0=B.hr[h.id];if(rt0.stkT===m){rt0.stk=Math.min(10,(rt0.stk||0)+1)}else{rt0.stk=0;rt0.stkT=m}
- const amul=(100+(t.ovA||0)*2+rt0.stk*1)*(tri?1+h.sk.o_triple*.2:1);const multi=R.n()*100<t.s.luk/30+(t.ovA||0)*.5;
+ const amul=(100+(t.ovA||0)*2+rt0.stk*.5)*(tri?1+h.sk.o_triple*.2:1);const multi=R.n()*100<t.s.luk/30+(t.ovA||0)*.5;
  const nh=(tri?3:dbl?2:1)+(multi?1:0);for(let i=0;i<nh;i++)parts.push(physDmg(B,t,m,amul,null,crit));
  if(t.dual){const L=physDmg(B,t,m,30+((h.sk.x_cloak||0)),null,crit);parts.push(L)}
  if(tri)B.hr[h.id].spirit=Math.min(5,B.hr[h.id].spirit+1);
@@ -365,6 +365,8 @@ SK.h_fade={n:'寧靜祈禱',ty:'dethreat',r:12,self:1,cd:20,sp:15,max:5,d:'治�
 const JDM={"kn":1.128,"cr":1.18,"wz":1.095,"sg":1.137,"ht":1.818,"bd":1.438,"pr":1.054,"mk":2.296,"bs":0.918,"am":1.256,"as":1.017,"rg":1.234};
 
 // 怪物依隊伍人數縮放（單人推圖可行；4 人為基準 1.0）
+const MOBX=1.0;const HPX=.1;// 組隊每多一人多 1.5 隻怪（10人≈17隻/波）
+const PSCM=n=>{n=Math.max(1,Math.min(10,n));return{hp:.3+HPX*(n-1),atk:.35+.07*(n-1)}};
 const PSC=n=>({hp:[0,.3,.55,.78,1,1.2,1.4,1.6,1.8,2,2.2][Math.min(10,n)],atk:[0,.35,.6,.85,1,1.05,1.1,1.15,1.2,1.25,1.3][Math.min(10,n)]});
 
 const CHB=[1.89,1.378,1.425,0.821,0.728,0.728,0.913,0.913,0.681,1.006,1.564,1.378,1.704,1.75,1.518,2.029,1.75,1.564,1.936,2.215].concat(Array(10).fill(1));
@@ -413,7 +415,7 @@ function onKill(S,B,m){const pb=partyBonus(S),R=B.rng,meal=S.meal>Date.now()?20:
  const who=()=>{const id=S.party[Math.min(np-1,Math.floor(R.n()*np))];return(S.heroes.find(x=>x.id===id)||S.heroes[0]).name};
  S.party.forEach(id=>{const h=S.heroes.find(x=>x.id===id),rt=B.hr[id];if(rt&&rt.hp>0){const t=calc(S,h);if(t.b.killSp)rt.sp=Math.min(t.msp,rt.sp+t.msp*t.b.killSp/100)}});
  const pet=S.pets.find(x=>x.u===S.petOn);if(pet){petExp(S,pet,Math.ceil(m.exp/12));if(B.rng.n()<.02)pet.int=Math.min(1000,(pet.int||0)+1)}
- const g=Math.floor(m.gold*(1+(pb.gold||0)/100)*(1+(S.party.reduce((a,id)=>a+(S.heroes.find(x=>x.id===id).sk.c_disc||0)*2,0))/100));S.gold+=g;B.ev.push({t:'gold',mob:B.mobs.indexOf(m),g});
+ const g=Math.floor(m.gold/np*(1+(pb.gold||0)/100)*(1+(S.party.reduce((a,id)=>a+(S.heroes.find(x=>x.id===id).sk.c_disc||0)*2,0))/100));S.gold+=g;B.ev.push({t:'gold',mob:B.mobs.indexOf(m),g});
  const dm=1+pb.drop/100;
  if(R.n()<(m.boss?.7:.035)*dm){const it=genEquip(S,m.ch,R);S.inv.push(it);it.owner=who();B.ev.push({t:'drop',n:it.n,it,who:it.owner});}
  if(R.n()<(m.boss?.12:.004)*dm){const id='c'+m.ch+'_'+m.mi;S.cards[id]=(S.cards[id]||0)+1;B.ev.push({t:'card',n:CARDS[id].n})}
@@ -613,7 +615,7 @@ CH.forEach((c,ci)=>{[...c.mob,c.boss].forEach((m,mi)=>{const tr=CTRAIT[m[1]]||['
 const _ok=onKill;onKill=function(S,B,m){const cid='c'+m.ch+'_'+m.mi;const before=S.cards[cid]||0;const R=B.rng;const _n=R.n.bind(R);_ok(S,B,m);
  // 原 onKill 的卡片判定已移除，這裡重新判定
  if((S.cards[cid]||0)>before){S.cards[cid]=before;B.ev=B.ev.filter(e=>e.t!=='card')}
- const pb=partyBonus(S);if(R.n()<CARDS[cid].rate*(1+pb.drop/100)){S.cards[cid]=(S.cards[cid]||0)+1;(S.codex=S.codex||{})[cid]=1;B.ev.push({t:'card',n:CARDS[cid].n,who:S.heroes.find(h=>h.id===S.party[Math.floor(R.n()*S.party.length)]).name})}
+ const pb=partyBonus(S);if(R.n()<CARDS[cid].rate*(1+pb.drop/100)){S.cards[cid]=(S.cards[cid]||0)+1;(S.codex=S.codex||{})[cid]=1;B.ev.push({t:'card',n:CARDS[cid].n,who:(S.heroes.find(h=>h.id===S.party[Math.min(S.party.length-1,Math.floor(R.n()*S.party.length))])||S.heroes[0]).name})}
  (S.seen=S.seen||{})['m'+m.ch+'_'+m.mi]=(S.seen['m'+m.ch+'_'+m.mi]||0)+1};
 // ===== 機率觸發技能：不佔普攻頻率、不取代原攻擊；每張卡/每件裝備獨立判定 =====
 function procList(S,h){const L=[];for(const sl in h.eq){const it=S.inv.find(i=>i.u===h.eq[sl]);if(!it)continue;(it.cards||[]).forEach(c=>{const p=CARDS[c]&&CARDS[c].proc;if(p)L.push({...p,src:CARDS[c].n})});
@@ -873,21 +875,21 @@ function render(){const S=G.S;nav();let h=subBar();const s=SUB[TAB];
    <div class="sm" style="margin-top:4px">${Object.entries(STATD).map(([k,v])=>STATN[k]+'：'+v).join('｜')}</div></div>
    <div class="card grid2 sm"><div>HP ${fmt(t.mhp)}　SP ${fmt(t.msp)}</div><div>ATK ${Math.floor(t.statusAtk*2)}+${Math.floor(t.watk)}${t.over?` <span class="pu">(過精+0~${t.over})</span>`:''}</div><div>MATK ${Math.floor(t.matk)}</div><div>ASPD <b>${t.aspd.toFixed(1)}</b>（${t.aps.toFixed(2)}/秒）</div>
    <div>DEF ${Math.floor(t.hdef)}+${Math.floor(t.sdef)}　<b class="bl">物理減傷 ${Math.round((1-defRed(t.hdef))*100)}%</b></div><div>MDEF ${Math.floor(t.mdef)}${t.b.dr?`　<b class="bl">技能減傷 ${t.b.dr}%</b>`:''}</div><div>HIT ${Math.floor(t.hit)}　FLEE ${Math.floor(t.flee)}</div><div>暴擊 ${t.crit.toFixed(1)}%　完全迴避 ${t.pd.toFixed(1)}</div>
-   <div>詠唱 變動×${t.castV.toFixed(2)} 固定×${t.castF.toFixed(2)}</div><div>${t.dual?'二刀流':t.hasSh?'持盾 ASPD-5':WT[t.wt].n}${t.b.block?'　格擋'+t.b.block+'%':''}</div></div>
+   <div>詠唱 變動×${t.castV.toFixed(2)} 固定×${t.castF.toFixed(2)}</div><div>${t.dual?'二刀流':t.hasSh?'持盾':WT[t.wt].n}${t.b.block?'　格擋'+t.b.block+'%':''}</div></div>
    <div class="card sm">裝備加成：${bnTxt(t.b)||'無'}</div>
-   <p class="sm">後期章節門檻：怪物 FLEE 高→要 DEX 才打得中；怪物 HIT 高→要 AGI 才閃得掉；頭目傷害高→要 VIT/INT 撐。Renewal 公式：ASPD=基礎+√(AGI×9.9987+DEX×0.1922)×修正，上限193；變動詠唱=80%×(1−√((DEX×2+INT)/530))，DEX×2+INT=530 無變動詠唱；StatusATK=Lv/4+STR+DEX/5+LUK/3（弓/樂器/鞭：DEX 主）；硬DEF 減傷=(4000+DEF)/(4000+DEF×10)，軟DEF=VIT/2+AGI/5+Lv/2；HIT=175+Lv+DEX+LUK/3、FLEE=100+Lv+AGI+LUK/5；暴擊=1+LUK×0.3（拳刃×2）；素質點每級 Lv/5+3，提升成本 (現值−1)/10+2，初始 48（轉生 100）。</p>`}
-  if(s==='skill'){h+=`<div class="card"><div class="row"><b>技能樹</b><span class="sp"></span>本階段剩餘技能點 <b class="c">${skLeft(hr)}</b><span class="sm">（每級 3 點，依轉職階段分池；技能另有等級/主屬性門檻）</span></div>
+`}
+  if(s==='skill'){h+=`<div class="card"><div class="row"><b>技能樹</b><span class="sp"></span>本階段剩餘技能點 <b class="c">${skLeft(hr)}</b></div>
    ${allSkills(hr.job).map(k=>{const d=SK[k],lv=hr.sk[k]||0,why=canLearn(hr,k),rdy=lv?skReady(S,hr,t,k,null):'';return`<div class="it"><div class="sp"><b>${d.n}</b> <span class="tag">${['初心','一轉','二轉','三轉'][skTier(k)]}</span> <span class="sm">Lv${lv}/${d.max}｜需Lv${skReq(hr,k,lv+1).lv}・${STATN[skReq(hr,k,lv+1).st]}${skReq(hr,k,lv+1).sv}｜${{dmg:'單體',aoe:'範圍',heal:'治療',buff:'增益',taunt:'挑釁',pass:'被動',dethreat:'降仇恨'}[d.ty]}${d.el?'｜'+d.el:''}${HITS[k]?'｜'+nHits(k,Math.max(1,lv))+'段':''}${d.cast?'｜詠唱'+d.cast+'s':''}${d.cd?'｜CD'+d.cd+'s':''}${d.acd?'｜後延遲'+d.acd+'s':''}${d.sp?'｜SP'+d.sp:''}${d.cat?'｜觸媒:'+MAT[d.cat]:''}${d.intr?'｜<span class="c">可打斷</span>':''}</span>
     <div class="sm">${d.d||''}${d.pre?' 前置：'+Object.entries(d.pre).map(([p,l])=>`${SK[p].n} Lv${l}`).join('、'):''}${d.w?' 武器：'+d.w.map(x=>WT[x].n).join('/'):''}${d.wsh?' 需盾':''}${rdy?` <span class="rd">（目前無法使用：${rdy}）</span>`:''}</div></div>
     <button class="b s" data-a="learn" data-k="${k}" ${why?'disabled':''}>${why&&lv<d.max?why.slice(0,6):'+1'}</button></div>`}).join('')}
    <div class="row"><button class="b s r" data-a="skreset">洗本階段技能點（100 鑽）</button></div></div>`}
-  if(s==='job'){const o=jobOptions(S,hr);h+=`<div class="card"><b>轉職路線</b><div class="sm">單一等級（楓之谷式）：Lv10 一轉（六系）→ Lv30 二轉（各兩條）→ Lv70 三轉，滿等 200 可轉生；Lv70~200 為三轉深度培養期。每級 5 素質點、3 技能點；技能點依轉職階段分池，只能用當前階段點數（可回點前階技能），前階剩餘不帶到下一轉。六維上限 130，單輪點不滿。</div>
+  if(s==='job'){const o=jobOptions(S,hr);h+=`<div class="card"><b>轉職路線</b><div class="sm">Lv10 一轉 → Lv30 二轉 → Lv70 三轉，滿等 200 可轉生。各階段的技能點只能在該階段使用，可回點前階技能。</div>
    ${['sw','mg','ac','al','mc','th'].map(l=>{const tw=Object.keys(J).filter(k=>J[k].from===l&&J[k].t==2);return`<div class="it"><div class="sp"><b>${J[l].n}</b>（${ROLE[J[l].role]}）→ ${tw.map(k=>`${jobName(k,hr.sex)}<span class="sm">(${ROLE[J[k].role]})</span> → ${J[ADV[k]].n}`).join('　／　')}</div></div>`}).join('')}
    <div style="margin-top:6px">${o.length?o.map(k=>`<button class="b g" data-a="job" data-k="${k}">轉職：${jobName(k,hr.sex)}</button> `).join(''):'<span class="sm">尚未達成轉職條件</span>'}
-   </div></div>${(()=>{const c=rbCost(hr.rb||0),r=rbTitle(hr.rb);return`<div class="card"><b>轉生</b>（目前 ${hr.rb||0} 轉 ${r.t?nameHtml(hr):''}）<div class="sm">條件：Lv${RBMAX}。費用 ${c.dia} 鑽 + ${fmt(c.gold)} 金（每次遞增，可無限轉生）。重置等級與六維（初始六維每轉 +3（最多 +60）、素質點 +20），保留職業、技能、推圖、裝備。技能保留，重練等級不重複給技能點，每轉 +${RB_SKP}。經驗需求每轉 +12%；練回歷史最高 Lv${hr.maxBl||'-'} 前經驗×2；裝備等級限制看歷史最高等級。每轉 +10 轉生點、HP+1%。稱號：1轉白、5轉藍、10轉金、20轉紫、50轉彩虹。</div><button class="b y" data-a="rebirth" ${canRebirth(hr)?'':'disabled'}>轉生</button></div>
-   <div class="card"><b>轉生點</b> 剩餘 <b class="c">${hr.rp||0}</b><div class="sm">可點六維素質或特化能力；同項越高消耗越多（每 10 級 +1），收益遞減 v=基礎×L/(1+L/40)。</div><div class="grid2">${Object.keys(RBP).map(k=>{const L=(hr.rpl||{})[k]||0;return`<div class="st"><span style="width:50px">${RBP[k][0]}</span><span>+${rbpVal(k,L)}</span><span class="sp"></span><span class="sm">Lv${L} 需${rbpCost(L)}</span><button class="b s" data-a="rbp" data-k="${k}" ${(hr.rp||0)<rbpCost(L)?'disabled':''}>+</button></div>`}).join('')}</div><button class="b s r" data-a="rsrbp">洗轉生點（50 鑽）</button></div>`})()}`}
+   </div></div>${(()=>{const c=rbCost(hr.rb||0),r=rbTitle(hr.rb);return`<div class="card"><b>轉生</b>（目前 ${hr.rb||0} 轉 ${r.t?nameHtml(hr):''}）<div class="sm">條件：Lv${RBMAX}。費用 ${c.dia} 鑽 + ${fmt(c.gold)} 金。轉生後等級與六維重置，職業、技能、推圖、裝備保留，並獲得轉生點與更強的起點。可無限轉生。</div><button class="b y" data-a="rebirth" ${canRebirth(hr)?'':'disabled'}>轉生</button></div>
+   <div class="card"><b>轉生點</b> 剩餘 <b class="c">${hr.rp||0}</b><div class="sm">可點六維素質或特化能力。</div><div class="grid2">${Object.keys(RBP).map(k=>{const L=(hr.rpl||{})[k]||0;return`<div class="st"><span style="width:50px">${RBP[k][0]}</span><span>+${rbpVal(k,L)}</span><span class="sp"></span><span class="sm">Lv${L} 需${rbpCost(L)}</span><button class="b s" data-a="rbp" data-k="${k}" ${(hr.rp||0)<rbpCost(L)?'disabled':''}>+</button></div>`}).join('')}</div><button class="b s r" data-a="rsrbp">洗轉生點（50 鑽）</button></div>`})()}`}
   if(s==='party'){const pb=partyBonus(S);h+=`<div class="card"><b>組隊（線上版開放）</b><div class="sm">單機版為單人推圖（怪物強度依人數自動縮放）。上線後可與真人好友最多 10 人同畫面共推進度。</div>
-   <div class="sm" style="margin-top:4px">組隊加成：每多 1 人 經驗/金幣 +10%、掉落 +2%（滿 10 人 +100% / +20%）；經驗均分；掉落物品/卡片/金幣每件隨機分給一名隊員（RO 式）。<br>月卡：只作用於自己（經驗/金幣 +30%、掉落 +5%、離線收益 12 小時），與組隊加成相加。<br>四職加成：每種不同職系 +2.5%（最多 10%）；坦+補+輸出 鐵三角 ATK/DEF+10%。</div></div>
+   <div class="sm" style="margin-top:4px">組隊人數越多，經驗、金幣、掉落越多；物品與卡片隨機分給一名隊員。<br>月卡：只作用於自己（經驗/金幣 +30%、掉落 +5%、離線收益 12 小時），與組隊加成相加。<br>職系越多元、坦補輸出齊全，隊伍越強。</div></div>
    <div class="card"><b>傷害統計（DPS 面板）</b>${(()=>{const d=S.stat.dmg||{};const tot=Object.values(d).reduce((a,b)=>a+b,0)||1;return Object.entries(d).map(([k,v])=>`<div class="row sm"><span style="width:70px">${k==='pet'?'寵物':(S.heroes.find(h=>h.id==k)||{name:k}).name}</span><div class="sp hb"><i style="width:${v/tot*100}%;background:#ffd866"></i></div><span>${fmt(v)}（${(v/tot*100).toFixed(0)}%）</span></div>`).join('')})()}<button class="b s" data-a="dpsreset">重置統計</button></div>`}}
  if(TAB==='equip'){h+=heroSel();const hr=curH();
   if(s==='eq'){h+=`<div class="card">${Object.keys(SLOT).map(sl=>{const it=S.inv.find(i=>i.u===hr.eq[sl]);return`<div class="it"><span class="tag" style="width:44px">${SLOT[sl]}</span>${it?stl(it)+`<div class="sp">${itemDesc(it)}</div><div><button class="b s" data-a="uneq" data-k="${sl}">卸</button><br><button class="b s y" data-a="goref" data-v="${it.u}">精煉</button></div>`:'<span class="sm sp">（空）</span>'}</div>`}).join('')}</div>
@@ -898,7 +900,7 @@ function render(){const S=G.S;nav();let h=subBar();const s=SUB[TAB];
   if(s==='ref'){h+=`<div class="card sm">RO 精煉：武器 Lv1~4 每級 ATK +2/3/5/7，安全值 +7/+6/+5/+4（防具 +4），超過安全值有過精隨機額外傷害，失敗會損壞（保護券可防）。+4 起發光，+7 藍光、+9 粉光。材料：鋼鐵原石（Lv3以上/後期用神之金屬）。
    <div class="row"><label><input type="checkbox" data-a="ro" data-k="prot" ${G.ro.prot?'checked':''}>保護券(${S.mat.prot||0})</label><label><input type="checkbox" data-a="ro" data-k="safe" ${G.ro.safe?'checked':''}>防降級(${S.mat.safe||0})</label><label><input type="checkbox" data-a="ro" data-k="hammer" ${G.ro.hammer?'checked':''}>精煉槌(${S.mat.blessh||0})</label></div>原石 ${S.mat.ori||0}　神之金屬 ${S.mat.elu||0}</div>`+
    pick(i=>true,it=>{const wl=it.slot==='wpn'?it.wl:0,r=REF.rate[wl][it.rf]||0,c=(200+it.ch*150)*(it.rf+1);return it.rf>=10?'<span class="sm">+10</span>':`<div class="sm" style="text-align:right">${r}%${it.rf>=REF.safe[wl]?'<br><span class="rd">會損壞</span>':''}<br>${fmt(c)}金<br><button class="b s y" data-a="ref" data-v="${it.u}">精煉</button></div>`})}
-  if(s==='star'){h+=unl(S,'star')?`<div class="card sm">星力強化（楓之谷式）：最高 ★15，成功率遞減，★5 以上失敗會降星，★12 以上有機率爆星（-3，防爆券可防）。星力石 ${S.mat.sfs||0}　防爆券 ${S.mat.sfprot||0}</div>`+pick(i=>true,it=>`<div class="sm" style="text-align:right">★${it.star} ${SF.rate(it.star)}%<br>${fmt(SF.cost(it.star,it.ch))}金<br><button class="b s y" data-a="star" data-v="${it.u}">強化</button></div>`):'<p class="sm">3-1 解鎖</p>'}
+  if(s==='star'){h+=unl(S,'star')?`<div class="card sm">星力強化：最高 ★15，失敗可能降星或爆星（防爆券可防）。星力石 ${S.mat.sfs||0}　防爆券 ${S.mat.sfprot||0}</div>`+pick(i=>true,it=>`<div class="sm" style="text-align:right">★${it.star} ${SF.rate(it.star)}%<br>${fmt(SF.cost(it.star,it.ch))}金<br><button class="b s y" data-a="star" data-v="${it.u}">強化</button></div>`):'<p class="sm">3-1 解鎖</p>'}
   if(s==='pot'){h+=unl(S,'pot')?`<div class="card sm">潛能（楓之谷式）：用潛能方塊重洗 3 條，等級 稀有→罕見→傳說→傳奇 有機率提升。方塊 ${S.mat.cube||0}｜特殊屬性：鑽石 30 解鎖、20 重洗</div>`+pick(i=>true,it=>`<div><button class="b s" data-a="cube" data-v="${it.u}">方塊</button><br>${it.aff&&it.aff.sp.lock?`<button class="b s y" data-a="spun" data-v="${it.u}">解鎖特殊</button>`:`<button class="b s y" data-a="spre" data-v="${it.u}">洗特殊</button>`}</div>`):'<p class="sm">4-1 解鎖</p>'}
   if(s==='card'){const cs=Object.keys(S.cards).filter(c=>S.cards[c]>0);h+=`<div class="card sm">卡片：怪物低機率掉落（頭目較高），只能插入對應部位、有空插槽的裝備，插入後無法取出。頭目卡＝對下一章種族增傷。</div>
    ${cs.map(c=>`<div class="it ${PICK===c?'card':''}"><span class="tag">${SLOT[CARDS[c].slot]}</span><div class="sp"><b class="c">${CARDS[c].n}</b>×${S.cards[c]} <span class="sm">${bnTxt(CARDS[c].fx)}</span></div><button class="b s" data-a="pickcard" data-k="${c}">選擇</button></div>`).join('')||'<p class="sm">還沒有卡片</p>'}
