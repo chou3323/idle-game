@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html lang="zh-Hant"><head><meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="theme-color" content="#b05cc9"><link rel="manifest" href="manifest.json">
+<meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="幻境物語">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png"><link rel="icon" type="image/png" href="icons/icon-192.png">
 <title>幻境物語：放置冒險 v3</title>
 <style>
 :root{--card:#fff;--pri:#ff8fb1;--pri2:#8fb8ff;--txt:#4a3b5c;--mut:#9a8aab;--bad:#ff6b6b}
@@ -88,6 +91,10 @@ button.alt{background:var(--pri2)}button.g{background:#c9c0d3}button:disabled{op
 @media(max-width:899px){body.bt #main>#subnav,body.bt #main>#panel{display:none}}
 #app{padding-bottom:calc(84px + env(safe-area-inset-bottom))!important}
 button{touch-action:manipulation}
+html,body{overscroll-behavior:none;-webkit-tap-highlight-color:transparent;touch-action:pan-y}body{padding-top:env(safe-area-inset-top);padding-left:env(safe-area-inset-left);padding-right:env(safe-area-inset-right);-webkit-user-select:none;user-select:none}input{-webkit-user-select:text;user-select:text}
+
+#inst{position:fixed;left:8px;right:8px;bottom:calc(70px + env(safe-area-inset-bottom));z-index:30;display:none;align-items:center;gap:8px;background:#fff;border-radius:14px;padding:10px 12px;box-shadow:0 4px 16px #0003;font-size:13px}#inst span{flex:1}#inst button{min-height:40px}
+@media(max-width:899px){button{min-height:36px}}
 </style></head><body>
 <div id="app">
 <div id="left">
@@ -765,4 +772,97 @@ let lt=performance.now();setInterval(()=>{const n=performance.now();const dt=Mat
 setInterval(save,15000);addEventListener('beforeunload',()=>{if(!window.__noSave)save()});
 window.G={get S(){return S},learn,rebirth,dbuy,claimDaily,wearCos,gm,gmLogin,needJob,jobMax,monthDays,jn,RT,stats,save,changeJob,goMap,callBoss,refine,buy,hire,makeGuild,donate,gskUp,socket,equip,addItem,startSkill,autoAlloc,spawn,playFx,physHit,get mob(){return mob},
  forceCrit(){if(!mob)return;const r=physHit(mob,1,{sure:1});r.crit=true;r.d=Math.floor((r.d||50)*1.4);playFx('slash',[r]);dealDmg(r.d)}};
+</script>
+<script>
+/* ===== 音效：Web Audio 即時合成（全部原創，無任何音檔） ===== */
+(function(){
+let AC=null,master,sfxG,musG,comp,unlocked=false;const last={};let voices=0;
+const A=()=>{if(!S.audio)S.audio={sfx:true,mus:false,sv:.7,mv:.35};return S.audio};
+function init(){if(AC)return;const C=window.AudioContext||window.webkitAudioContext;if(!C)return;AC=new C();
+ comp=AC.createDynamicsCompressor();comp.threshold.value=-18;comp.ratio.value=6;master=AC.createGain();master.gain.value=.9;
+ sfxG=AC.createGain();musG=AC.createGain();sfxG.connect(comp);musG.connect(comp);comp.connect(master);master.connect(AC.destination);apply()}
+function apply(){if(!AC)return;const a=A();sfxG.gain.value=a.sfx?a.sv:0;musG.gain.value=a.mus?a.mv*.5:0;if(a.mus)bgmStart();else bgmStop()}
+function unlock(){init();if(AC&&AC.state!=='running')AC.resume();if(AC&&!unlocked){unlocked=true;const b=AC.createBuffer(1,1,22050),s=AC.createBufferSource();s.buffer=b;s.connect(AC.destination);s.start(0);apply()}}
+['pointerdown','touchend','keydown','click'].forEach(e=>addEventListener(e,unlock,{passive:true}));
+function ok(name,gap){if(!AC||!unlocked||!A().sfx||AC.state!=='running'||window.__speed>1)return false;const n=AC.currentTime;if(last[name]&&n-last[name]<gap)return false;if(voices>10)return false;last[name]=n;return true}
+function env(g,t,a,d,v){g.gain.setValueAtTime(0.0001,t);g.gain.exponentialRampToValueAtTime(v,t+a);g.gain.exponentialRampToValueAtTime(0.0001,t+a+d)}
+function tone(type,f1,f2,dur,vol,delay=0,dest){const t=AC.currentTime+delay,o=AC.createOscillator(),g=AC.createGain();o.type=type;o.frequency.setValueAtTime(f1,t);if(f2)o.frequency.exponentialRampToValueAtTime(f2,t+dur);env(g,t,.005,dur,vol);o.connect(g);g.connect(dest||sfxG);voices++;o.onended=()=>voices--;o.start(t);o.stop(t+dur+.05)}
+let nb=null;function noise(dur,vol,ftype,f1,f2,delay=0,q=1){if(!nb){nb=AC.createBuffer(1,AC.sampleRate,AC.sampleRate);const d=nb.getChannelData(0);for(let i=0;i<d.length;i++)d[i]=Math.random()*2-1}
+ const t=AC.currentTime+delay,s=AC.createBufferSource(),f=AC.createBiquadFilter(),g=AC.createGain();s.buffer=nb;f.type=ftype;f.Q.value=q;f.frequency.setValueAtTime(f1,t);if(f2)f.frequency.exponentialRampToValueAtTime(f2,t+dur);env(g,t,.004,dur,vol);s.connect(f);f.connect(g);g.connect(sfxG);voices++;s.onended=()=>voices--;s.start(t);s.stop(t+dur+.05)}
+const arp=(ns,step,type='triangle',vol=.18,len=.25)=>ns.forEach((f,i)=>tone(type,f,0,len,vol,i*step));
+const SFX={
+ blade:()=>{noise(.12,.35,'highpass',5000,1500,0,.7);tone('square',900,300,.06,.06)},
+ fist:()=>{tone('sine',160,60,.12,.5);noise(.06,.25,'lowpass',1200,300)},
+ blunt:()=>{tone('sine',110,45,.2,.55);noise(.12,.3,'bandpass',600,200,0,2);tone('square',220,90,.08,.08)},
+ arrow:()=>{noise(.18,.22,'bandpass',2500,6000,0,3)},
+ arrowhit:()=>{noise(.05,.25,'highpass',3000,0);tone('triangle',500,250,.05,.1)},
+ fire:()=>{noise(.45,.4,'lowpass',2500,200,0,1);tone('sawtooth',90,50,.35,.12)},
+ ice:()=>{[1800,2400,3100].forEach((f,i)=>tone('sine',f,f*1.02,.18,.12,i*.03));noise(.15,.15,'highpass',6000,0)},
+ thunder:()=>{noise(.5,.55,'lowpass',4000,120,0,.5);tone('sawtooth',70,40,.4,.15)},
+ holy:()=>{arp([880,1108,1318,1760],.06,'sine',.14,.5)},
+ dark:()=>{tone('sawtooth',200,60,.4,.12);tone('sine',120,50,.4,.2)},
+ spark:()=>{tone('triangle',1200,2400,.1,.12)},
+ magichit:()=>{tone('sine',700,350,.1,.15)},
+ crit:()=>{tone('square',1400,700,.08,.12);noise(.2,.45,'bandpass',2000,600,0,1);tone('sine',90,40,.25,.5)},
+ miss:()=>{noise(.12,.12,'bandpass',1200,3000,0,4)},
+ die:()=>{tone('triangle',600,120,.35,.18);noise(.3,.15,'bandpass',800,200,.05,2)},
+ drop:()=>{arp([1046,1318],.08,'triangle',.16,.18)},
+ card:()=>{arp([784,1046,1318,1568,2093],.07,'triangle',.18,.3)},
+ coin:()=>{tone('square',1975,0,.05,.06);tone('square',2637,0,.12,.06,.05)},
+ lvup:()=>{arp([523,659,784,1046,1318],.09,'triangle',.22,.4)},
+ jobup:()=>{arp([392,523,659,784],.08,'sine',.2,.35)},
+ refok:()=>{tone('square',2000,0,.04,.1);arp([1046,1568,2093],.1,'triangle',.2,.4)},
+ reffail:()=>{arp([392,311,233],.15,'sawtooth',.12,.3)},
+ refbreak:()=>{noise(.5,.5,'highpass',3000,600,0,.5);arp([311,233,155],.14,'sawtooth',.15,.35)},
+ mvp:()=>{tone('sawtooth',110,0,1.1,.12);tone('sawtooth',116,0,1.1,.1);arp([220,262,330,440],.18,'square',.08,.5)},
+ job:()=>{arp([523,659,784,1046,784,1046,1318,1568],.1,'triangle',.2,.45);tone('sine',261,0,1.2,.12)},
+ buff:()=>{arp([660,880,1320],.05,'sine',.12,.3)},heal:()=>{arp([784,988,1175,1568],.06,'sine',.12,.35)},
+};
+function play(n,gap=.06){if(ok(n,gap))try{SFX[n]()}catch(e){}}
+window.SND={play,apply,unlock,get ctx(){return AC},SFX};
+// 詠唱音
+let castO=null;function castOn(){castOff();if(!ok('cast',.05))return;const o=AC.createOscillator(),l=AC.createOscillator(),lg=AC.createGain(),g=AC.createGain();o.type='sine';o.frequency.value=440;l.frequency.value=6;lg.gain.value=30;l.connect(lg);lg.connect(o.frequency);g.gain.value=0.0001;g.gain.exponentialRampToValueAtTime(.06,AC.currentTime+.2);o.frequency.linearRampToValueAtTime(880,AC.currentTime+3);o.connect(g);g.connect(sfxG);o.start();l.start();castO={o,l,g}}
+function castOff(){if(!castO)return;const{o,l,g}=castO;castO=null;const t=AC.currentTime;g.gain.cancelScheduledValues(t);g.gain.setValueAtTime(g.gain.value,t);g.gain.exponentialRampToValueAtTime(.0001,t+.1);o.stop(t+.12);l.stop(t+.12)}
+// BGM：簡單原創五聲音階循環
+let bgmT=null,step=0;const MEL=[0,2,4,7,9,7,4,2,0,4,7,9,12,9,7,4],BAS=[0,0,5,5,7,7,5,5];
+function bgmStart(){if(bgmT||!AC)return;bgmT=setInterval(()=>{if(AC.state!=='running'||document.hidden)return;const r=262,f=n=>r*Math.pow(2,n/12);const m=MEL[step%16];if(step%2===0||Math.random()<.5)tone('triangle',f(m),0,.32,.12,0,musG);if(step%2===0)tone('sine',f(BAS[(step/2|0)%8]-12),0,.6,.18,0,musG);step++},300)}
+function bgmStop(){clearInterval(bgmT);bgmT=null}
+// ===== 掛勾既有遊戲函式 =====
+const wrap=(n,f)=>{const o=window[n];window[n]=function(){return f(o,this,arguments)}};
+const SPELL={fire:'fire',meteor:'fire',flame:'fire',ice:'ice',pierce:'ice',bolt:'thunder',holy:'holy',magnus:'holy',spark:'spark',poison:'dark',arrow:'arrow',arrowrain:'arrow',storm:'ice',grand:'holy',asura:'holy',note:'holy',spike:'blunt'};
+let lastFx='';
+wrap('playFx',(o,t,a)=>{lastFx=a[0];const s=SPELL[a[0]];if(s&&SFX[s])play(s,s==='arrow'?.09:.08);return o.apply(t,a)});
+wrap('showRes',(o,t,a)=>{const r=a[0]||{};if(r.miss||r.d===0)play('miss',.12);else if(r.crit)play('crit',.1);else if(a[1]==='m')play('magichit',.07);else if(lastFx==='arrow'||lastFx==='arrowrain')play('arrowhit',.08);else{const wt=stats().wt;play(['sword','dagger','katar'].includes(wt)?'blade':['mace','axe','staff'].includes(wt)?'blunt':['bow','gun'].includes(wt)?'arrowhit':'fist',.08)}lastFx='';return o.apply(t,a)});
+wrap('showCast',(o,t,a)=>{const r=o.apply(t,a);castOn();return r});wrap('hideCast',(o,t,a)=>{castOff();return o.apply(t,a)});
+wrap('kill',(o,t,a)=>{const inv=S.inv.length,c=JSON.stringify(S.cards),g=S.gold;const r=o.apply(t,a);play('die',.1);if(JSON.stringify(S.cards)!==c)play('card',.3);else if(S.inv.length>inv)play('drop',.2);if(S.gold>g)setTimeout(()=>play('coin',.15),120);return r});
+wrap('gainExp',(o,t,a)=>{const l=S.lv;const r=o.apply(t,a);if(S.lv>l)play('lvup',.5);return r});
+wrap('gainJob',(o,t,a)=>{const l=S.jlv;const r=o.apply(t,a);if(S.jlv>l)setTimeout(()=>play('jobup',.5),S.lv?250:0);return r});
+wrap('callBoss',(o,t,a)=>{const b=mob&&mob.boss;const r=o.apply(t,a);if(!b&&mob&&mob.boss)play('mvp',1);return r});
+wrap('refine',(o,t,a)=>{const r=o.apply(t,a);if(r)play(r==='ok'?'refok':r==='break'?'refbreak':'reffail',.2);return r});
+wrap('changeJob',(o,t,a)=>{const r=o.apply(t,a);if(r!==false)play('job',1);return r});
+wrap('rebirth',(o,t,a)=>{const r=o.apply(t,a);play('job',1);return r});
+if(window.G){G.playFx=window.playFx;G.refine=window.refine;G.changeJob=window.changeJob;G.callBoss=window.callBoss;G.rebirth=window.rebirth}
+// 設定頁
+window.setAud=(k,v)=>{A()[k]=v;unlock();apply();save()};
+wrap('panelSet',(o,t,a)=>{const r=o.apply(t,a);const a2=A();if(!$('audset'))$('panel').insertAdjacentHTML('afterbegin',`<div id="audset" class="job" style="margin-bottom:10px"><b>🔊 音效與音樂</b>
+<div class="row" style="margin-top:6px"><label style="min-width:90px"><input type="checkbox" ${a2.sfx?'checked':''} onchange="setAud('sfx',this.checked)"> 音效</label><input type="range" min="0" max="1" step="0.05" value="${a2.sv}" oninput="setAud('sv',+this.value)" style="flex:1"></div>
+<div class="row"><label style="min-width:90px"><input type="checkbox" ${a2.mus?'checked':''} onchange="setAud('mus',this.checked)"> 背景音樂</label><input type="range" min="0" max="1" step="0.05" value="${a2.mv}" oninput="setAud('mv',+this.value)" style="flex:1"></div>
+<div class="row"><button class="alt" onclick="SND.unlock();SND.play('lvup',0)">▶ 試聽</button><span class="small">手機需先點一下畫面才會發聲；高速攻擊時自動節流。</span></div></div>`);return r});
+document.addEventListener('visibilitychange',()=>{if(AC&&document.hidden)AC.suspend();else if(AC&&unlocked)AC.resume()});
+})();
+</script>
+<script>
+/* ===== PWA：註冊 SW、安裝提示 ===== */
+(function(){
+if('serviceWorker' in navigator&&location.protocol!=='file:'){const had=!!navigator.serviceWorker.controller;navigator.serviceWorker.register('sw.js').then(r=>{r.update()});let re=false;navigator.serviceWorker.addEventListener('controllerchange',()=>{if(re||!had)return;re=true;if(!window.__noReload){save();location.reload()}})}
+const sa=matchMedia('(display-mode: standalone)').matches||navigator.standalone;if(sa)return;
+const bar=document.createElement('div');bar.id='inst';bar.innerHTML='<span id="instT"></span><button id="instB">安裝</button><button id="instX" class="alt">✕</button>';document.body.appendChild(bar);
+const hide=()=>{bar.style.display='none';localStorage.setItem('inst_skip',Date.now())};$('instX').onclick=hide;
+if(Date.now()-(+localStorage.getItem('inst_skip')||0)<3*864e5)return;
+let dp=null;addEventListener('beforeinstallprompt',e=>{e.preventDefault();dp=e;$('instT').textContent='📲 將「幻境物語」安裝到主畫面，全螢幕遊玩！';$('instB').style.display='';bar.style.display='flex'});
+$('instB').onclick=async()=>{if(!dp)return;dp.prompt();await dp.userChoice;dp=null;bar.style.display='none'};
+addEventListener('appinstalled',()=>bar.style.display='none');
+const ios=/iphone|ipad|ipod/i.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
+if(ios){$('instT').innerHTML='📲 安裝到主畫面：點 Safari 下方 <b>分享 ⬆️</b> → <b>加入主畫面 ➕</b>';$('instB').style.display='none';bar.style.display='flex'}
+})();
 </script></body></html>
