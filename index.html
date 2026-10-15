@@ -682,6 +682,36 @@ exOrder=function(S,m,qty,price){qty=qty|0;price=price|0;if(!tradeable(m))return'
 exTick=function(S){if(!S.ex)return[];const r=[];S.ex.mine=S.ex.mine.filter(l=>{const k=l.mat||eqKey(l.item),b=l.mat?band(S,k):eqBand(S,l.item),pos=(l.price-b.lo)/Math.max(1,b.hi-b.lo);// 越便宜越快賣
   if(Date.now()-l.t>60000&&Math.random()<.06*(1.2-pos)){const p=l.mat?l.price*l.qty:l.price,g=Math.floor(p*(1-EXFEE));S.dia+=g;rec(S,k);r.push(`交易所售出 ${l.mat?gName(l.mat)+'×'+l.qty:l.item.n}，實收 ${g} 鑽`);return false}return true});
  S.ex.orders=S.ex.orders.filter(o=>{const b=band(S,o.mat),pos=(o.price-b.lo)/Math.max(1,b.hi-b.lo);if(Date.now()-o.t>60000&&Math.random()<.06*(.2+pos)){gAdd(S,o.mat,o.qty);rec(S,o.mat);r.push(`收購完成 ${gName(o.mat)}×${o.qty}`);return false}return true});return r};
+// ===== v1.3.4 修正 =====
+const EQTR=3,EXDAYS=[3,5,7],DAYCAP=.1;// 裝備最多交易 3 次後綁定；掛單 3~7 天；有區間道具每日漲跌 ±10%
+const trLeft=it=>Math.max(0,EQTR-(it.tr||0));
+const trTxt=it=>it.bound?'<span class="rd">已綁定</span>':`可交易 ${trLeft(it)} 次`;
+// 每日更新改為有漲跌幅上限
+mktDaily=function(S){S.mkt=S.mkt||{day:mktDay(),g:{}};const d=mktDay();if(S.mkt.day===d)return;const n=Math.min(30,d-S.mkt.day);const R=RNG(d^(S.seed||7));
+ for(const k in S.mkt.g){if(k.startsWith('e:')){delete S.mkt.g[k];continue}const r=S.mkt.g[k];for(let i=0;i<n;i++){const dem=r.today+r.bid+R.n()*4,sup=r.ask+R.n()*4;const p=(dem-sup)/(dem+sup+1);
+   r.m=Math.max(.5,Math.min(2.5,r.m*(1+Math.max(-DAYCAP,Math.min(DAYCAP,.12*p)))));r.vol.push(r.today+Math.floor(R.n()*3));if(r.vol.length>7)r.vol.shift();r.today=0}}S.mkt.day=d};
+const expT=days=>Date.now()+Math.max(3,Math.min(7,days||7))*864e5;
+// 裝備：自由定價（≥1 鑽），交易次數上限
+exList=function(S,u,price,days){const it=S.inv.find(i=>i.u===u);if(!it)return'';if(owner(S,u))return'先卸下裝備';if(it.bound||trLeft(it)<=0)return'已達交易次數上限（綁定）';price=Math.max(1,price|0);
+ const fee=Math.max(1,Math.ceil(price*EXFEE));if(S.dia<fee)return'手續費鑽石不足';S.dia-=fee;S.inv=S.inv.filter(i=>i!==it);S.ex.mine.push({id:'my'+nu(S),item:it,price,t:Date.now(),exp:expT(days)});return''};
+const _exListMat=exListMat;exListMat=function(S,m,qty,price,days){const e=_exListMat(S,m,qty,price);if(!e){const l=S.ex.mine[S.ex.mine.length-1];l.exp=expT(days)}return e};
+const _exBuy=exBuy;exBuy=function(S,id){const l=S.ex.list.find(x=>x.id===id);const e=_exBuy(S,id);if(!e&&l&&l.item){l.item.tr=(l.item.tr||0)+1;if(l.item.tr>=EQTR)l.item.bound=1}return e};
+const _exTick=exTick;exTick=function(S){if(!S.ex)return[];const r=[];const now=Date.now();
+ S.ex.mine=S.ex.mine.filter(l=>{if(l.exp&&now>l.exp){if(l.mat)gAdd(S,l.mat,l.qty);else S.inv.push(l.item);r.push(`掛單到期，已退回：${l.mat?gName(l.mat)+'×'+l.qty:l.item.n}`);return false}return true});
+ // 裝備售出判定：以估值為參考，定價越低越快賣（不設上下限）
+ S.ex.mine=S.ex.mine.filter(l=>{if(l.mat)return true;const ref=eqBase(l.item),q=l.price/ref;if(now-l.t>60000&&Math.random()<.06*Math.max(.02,Math.min(1.5,1.6-q))){l.item.tr=(l.item.tr||0)+1;const g=Math.floor(l.price*(1-EXFEE));S.dia+=g;r.push(`交易所售出 ${l.item.n}，實收 ${g} 鑽`);return false}return true});
+ const mats=S.ex.mine.filter(l=>l.mat);const eqs=S.ex.mine.filter(l=>!l.mat);S.ex.mine=mats;const r2=_exTick(S);S.ex.mine=S.ex.mine.concat(eqs);return r.concat(r2)};
+// NPC 回收：遊戲幣賣給系統，回收品進入系統庫存
+const RECYC_MAX=40;
+const recPush=(S,x)=>{S.recyc=S.recyc||[];S.recyc.push(x);if(S.recyc.length>RECYC_MAX)S.recyc.shift()};
+npcSell=function(S,u){const it=S.inv.find(i=>i.u===u);if(!it||owner(S,u))return'已裝備';S.gold+=Math.floor(itemVal(it)*.3);S.inv=S.inv.filter(i=>i!==it);if((it.q||0)>=1)recPush(S,{item:it});return''};
+const recycVal=k=>Math.max(10,gBase(k)*40);// 每個回收給的金幣
+function npcRecycle(S,k,qty){qty=qty|0;if(!tradeable(k))return'點數商城道具不可回收';if(qty<1||gHas(S,k)<qty)return'數量不足';gAdd(S,k,-qty);const g=recycVal(k)*qty;S.gold+=g;recPush(S,{mat:k,qty});return''}
+// 限時特價：每 6 小時一期，約 50% 機率開放，從回收庫存挑最多 3 件，以鑽石販售
+function saleSlot(S){const slot=Math.floor(Date.now()/216e5);S.sale=S.sale||{};if(S.sale.slot===slot)return S.sale;const R=RNG(slot^(S.seed||3));const L=[];
+ if((S.recyc||[]).length&&R.n()<.5)for(let i=0;i<3&&S.recyc.length;i++){const x=S.recyc.splice(Math.floor(R.n()*S.recyc.length),1)[0];const p=x.item?Math.max(2,Math.floor(eqBase(x.item)*.7)):Math.max(1,Math.floor(band(S,x.mat).mid*.7))*x.qty;L.push({id:'s'+slot+'_'+i,...x,price:p})}
+ S.sale={slot,end:(slot+1)*216e5,list:L};return S.sale}
+function saleBuy(S,id){const sl=saleSlot(S),x=sl.list.find(y=>y.id===id);if(!x)return'已售完';if(S.dia<x.price)return'鑽石不足';S.dia-=x.price;if(x.item){x.item.u=nu(S);x.item.tr=(x.item.tr||0);S.inv.push(x.item)}else gAdd(S,x.mat,x.qty);sl.list=sl.list.filter(y=>y!==x);return''}
 
 // ===================== 第 5 層：繪製（像素 sprite，程式繪製）=====================
 const cv=document.getElementById("cv");let X=cv.getContext("2d");X.imageSmoothingEnabled=false;const W=320,H=180;
@@ -973,17 +1003,18 @@ function render(){const S=G.S;nav();let h=subBar();const s=SUB[TAB];
    <div class="sm">${Object.entries(S.mat).filter(([k,v])=>v>0).map(([k,v])=>`${MAT[k]||k}×${v}`).join('　')}</div></div>`+Object.entries(RECIPE).map(([k,r])=>`<div class="it"><div class="sp"><b>${r.n}</b> <span class="sm">${Object.entries(r.need).map(([m,n])=>MAT[m]+'×'+n).join(' ')}</span></div><button class="b s" data-a="craft" data-k="${k}">製作</button>${k==='meal'?`<button class="b s y" data-a="eat">吃</button>`:''}</div>`).join(''):'<p class="sm">2-1 解鎖</p>'}
   if(s==='dun'){h+=unl(S,'dungeon')?`<div class="card"><b>每日副本</b>（剩 ${dunLeft(S)}/3 次）<div class="sm">挑戰目前最高章節的頭目分身，勝利獲得大量材料、卡片機率。</div>${['寵物島（寵物經驗/飼料）','古城回廊（神之金屬/方塊）','冰霜領地（星力石/卡片）'].map((n,i)=>`<div class="it"><span class="sp">${n}</span><button class="b s y" data-a="dun" data-k="${i}" ${dunLeft(S)>0?'':'disabled'}>挑戰</button></div>`).join('')}</div>`:'<p class="sm">2-6 解鎖</p>'}}
  if(TAB==='more'){
+  if(s==='shop'){const sl=saleSlot(S);if(sl.list.length)h+=`<div class="card"><b class="y">限時特價</b> <span class="sm">剩 ${Math.max(0,Math.ceil((sl.end-Date.now())/6e4))} 分鐘</span>${sl.list.map(x=>`<div class="it">${x.item?stl(x.item):''}<div class="sp">${x.item?itemDesc(x.item):'<b>'+gName(x.mat)+'</b>×'+x.qty}</div><button class="b s y" data-a="salebuy" data-k="${x.id}">${x.price} 鑽</button></div>`).join('')}</div>`}
   if(s==='shop'){h+=`<div class="card sm">點數商城（鑽石）：只賣精煉保護類、改名、變性、結婚、時裝、月卡。購買物品綁定不可交易。精煉保護類道具打怪也會掉落（頭目機率較高），可到圖鑑查來源。</div>`+DSHOP.map(x=>`<div class="it"><div class="sp"><b>${x.n}</b> <span class="sm">${x.d||''}${S.mat[x.k]?'（持有'+S.mat[x.k]+'）':''}</span></div><button class="b s y" data-a="dbuy" data-k="${x.k}">${x.p} 鑽</button></div>`).join('')+
    `<div class="card"><b>使用</b><div class="row"><input id="newname" placeholder="新名字" style="width:110px"><button class="b s" data-a="rename">改名(選中角色)</button><button class="b s" data-a="sex">變性</button><button class="b s" data-a="marry">與選中夥伴結婚</button></div></div>
    <div class="card"><b>時裝（${COSP} 鑽）</b><div class="row">${Object.entries(COS).map(([k,[n]])=>`<button class="b s ${S.cos[k]?'g':''}" data-a="cos" data-k="${k}">${n}${S.cos[k]?'（穿上）':''}</button>`).join('')}</div><div class="sm">穿在目前選中的角色身上（${curH().name}）</div></div>`}
   if(s==='npc'){h+=`<div class="card sm">一般商店（NPC，金幣）。裝備可在背包出售給商人。</div>`+NPCSHOP.map(x=>`<div class="it"><div class="sp">${x.n}</div><button class="b s" data-a="nbuy" data-k="${x.k}" data-n="1">${x.p}金</button><button class="b s" data-a="nbuy" data-k="${x.k}" data-n="10">×10</button></div>`).join('')}
   if(s==='ex'){exRefresh(S);const q=EXQ;const bt=b=>`<span class="sm gr">區間 ${b.lo}~${b.hi}${b.thin?'（稀有・基準價）':''}</span>`;const goods=EXMAT2.concat(Object.keys(S.cards).filter(c=>S.cards[c]>0).map(c=>'c:'+c));const sel=G.exm&&goods.includes(G.exm)?G.exm:goods[0];const sb=sel?band(S,sel):null;
-   h+=`<div class="card sm">交易所：<b>一律以鑽石計價</b>，所有物品皆可交易（點數商城道具及其掉落同款除外）。價格由系統依近期成交量與掛單量算出區間，只能在區間內定價，每日更新。上架收 5% 手續費、售出實收扣 5%。
+   h+=`<div class="card sm">交易所：<b>一律以鑽石計價</b>，所有物品皆可交易（點數商城道具及其掉落同款除外）。材料、卡片依近期成交與掛單算出價格區間，每日更新且有漲跌幅上限；裝備自由定價，每件最多交易 3 次後綁定。掛單 3~7 天未售出自動退回。上架收 5% 手續費、售出實收扣 5%。
    <div class="row"><input id="exq" placeholder="搜尋名稱" value="${q}" style="width:120px"><button class="b s" data-a="exq">搜尋</button></div></div>
-   <div class="card"><b>市場</b>${S.ex.list.filter(l=>!q||(l.mat?gName(l.mat):l.item.n).includes(q)).map(l=>`<div class="it">${l.item?stl(l.item):''}<div class="sp">${l.mat?`<b>${gName(l.mat)}</b>×${l.qty}`:itemDesc(l.item)}<div class="sm">賣家 ${l.seller}</div></div><button class="b s y" data-a="exbuy" data-k="${l.id}">${l.mat?l.price*l.qty:l.price} 鑽</button></div>`).join('')}</div>
-   <div class="card"><b>我的上架</b>${S.ex.mine.map(l=>`<div class="it"><div class="sp">${l.mat?gName(l.mat)+'×'+l.qty:l.item.n} ｜ ${l.mat?l.price*l.qty:l.price} 鑽</div><button class="b s r" data-a="excancel" data-k="${l.id}">下架</button></div>`).join('')||'<p class="sm">無</p>'}
-   <div class="sm">上架裝備（未裝備）：</div>${S.inv.filter(i=>!owner(S,i.u)).slice(0,12).map(it=>{const b=eqBand(S,it);return`<div class="it">${stl(it)}<div class="sp sm">${it.n} ${bt(b)}</div><input id="ep${it.u}" type="number" min="${b.lo}" max="${b.hi}" value="${b.mid}" style="width:60px"><button class="b s" data-a="exsell" data-v="${it.u}">上架</button></div>`}).join('')}
-   <div class="row" style="margin-top:6px"><select id="exm" data-a="exmsel">${goods.map(m=>`<option value="${m}" ${m===sel?'selected':''}>${gName(m)}(${gHas(S,m)})</option>`).join('')}</select><input id="exn" type="number" value="1" style="width:50px"><input id="exp" type="number" ${sb?`min="${sb.lo}" max="${sb.hi}" value="${sb.mid}"`:''} style="width:60px">鑽/個<button class="b s" data-a="exsellm">上架</button><button class="b s g" data-a="exorder">掛收購</button></div>${sb?bt(sb):''}
+   <div class="card"><b>市場</b>${S.ex.list.filter(l=>!q||(l.mat?gName(l.mat):l.item.n).includes(q)).map(l=>`<div class="it">${l.item?stl(l.item):''}<div class="sp">${l.mat?`<b>${gName(l.mat)}</b>×${l.qty}`:itemDesc(l.item)}<div class="sm">賣家 ${l.seller}${l.item?'｜'+trTxt({tr:(l.item.tr||0)+1}).replace('可交易','買後可再交易'):''}</div></div><button class="b s y" data-a="exbuy" data-k="${l.id}">${l.mat?l.price*l.qty:l.price} 鑽</button></div>`).join('')}</div>
+   <div class="card"><b>我的上架</b>${S.ex.mine.map(l=>`<div class="it"><div class="sp">${l.mat?gName(l.mat)+'×'+l.qty:l.item.n} ｜ ${l.mat?l.price*l.qty:l.price} 鑽<div class="sm">${l.exp?'剩 '+Math.max(0,Math.ceil((l.exp-Date.now())/36e5))+' 小時下架':''}</div></div><button class="b s r" data-a="excancel" data-k="${l.id}">下架</button></div>`).join('')||'<p class="sm">無</p>'}
+   <div class="sm">上架裝備（未裝備）：</div><div class="row sm">掛單期限 <select id="exd">${EXDAYS.map(d=>`<option value="${d}" ${d===7?'selected':''}>${d} 天</option>`).join('')}</select>（到期未售出自動退回）</div>${S.inv.filter(i=>!owner(S,i.u)).slice(0,12).map(it=>`<div class="it">${stl(it)}<div class="sp sm">${it.n}<div>${trTxt(it)}｜自由定價（估 ${eqBase(it)} 鑽）</div></div>${it.bound||!trLeft(it)?'':`<input id="ep${it.u}" type="number" min="1" value="${eqBase(it)}" style="width:60px"><button class="b s" data-a="exsell" data-v="${it.u}">上架</button>`}</div>`).join('')}
+   <div class="row" style="margin-top:6px"><select id="exm" data-a="exmsel">${goods.map(m=>`<option value="${m}" ${m===sel?'selected':''}>${gName(m)}(${gHas(S,m)})</option>`).join('')}</select><input id="exn" type="number" value="1" style="width:50px"><input id="exp" type="number" ${sb?`min="${sb.lo}" max="${sb.hi}" value="${sb.mid}"`:''} style="width:60px">鑽/個<button class="b s" data-a="exsellm">上架</button><button class="b s g" data-a="exorder">掛收購</button></div>${sb?bt(sb):''}<div class="row" style="margin-top:6px"><button class="b s" data-a="recyc">NPC 回收（${sel?fmt(recycVal(sel)):0} 金/個）</button><span class="sm">遊戲幣賣給系統，部分回收品會成為商城限時特價</span></div>
    ${S.ex.orders.length?'<div class="sm">收購中：'+S.ex.orders.map(o=>`${gName(o.mat)}×${o.qty}@${o.price}`).join('、')+'</div>':''}</div>`}
   if(s==='month'){const on=monthOn(S);h+=`<div class="card"><b>月卡</b><div class="sm">每日領 20,000 金幣 + 30 鑽石；有效期間自己的經驗/金幣 +30%、掉落 +5%，離線收益上限延長為 12 小時（只作用於自己，與組隊加成相加）。</div><div>${on?`有效至 ${new Date(S.month).toLocaleDateString()}`:'未啟用'}</div><button class="b y" data-a="claim" ${on&&S.lastClaim!==today()?'':'disabled'}>領取今日獎勵</button> <button class="b" data-a="dbuy" data-k="month">購買（300 鑽）</button></div>`}
   if(s==='guild'){h+=unl(S,'guild')?(S.guild?`<div class="card"><b>${S.guild.n}</b> Lv${S.guild.lv} <progress max="${S.guild.lv*300}" value="${S.guild.x}"></progress><div class="sm">公會加成：全隊 ATK +${S.guild.lv}%、經驗 +${S.guild.lv*2}%、掉落 +${S.guild.lv}%</div><button class="b" data-a="donate">捐獻 ${fmt(1000*S.guild.lv)} 金</button> <button class="b s r" data-a="gquit">退出</button>
@@ -1027,7 +1058,7 @@ const ACT={
  marry:()=>{const S=G.S,h=curH();if(h.id===1)return toast('先選一位夥伴');if(!(S.mat.ring>0))return toast('需要結婚戒指');S.mat.ring--;h.married=1;S.heroes[0].married=1;toast(`與 ${h.name} 結婚了！`);SFX.lv()},
  cos:d=>{const S=G.S;if(!S.cos[d.k]){if(S.dia<COSP)return toast('鑽石不足');S.dia-=COSP;S.cos[d.k]=1}curH().cos=curH().cos===d.k?null:d.k},
  nbuy:d=>{toast(npcBuy(G.S,d.k,+d.n)||'購買成功')},exq:()=>{EXQ=$('exq').value.trim()},exbuy:d=>{toast(exBuy(G.S,d.k)||'購買成功')},excancel:d=>{exCancel(G.S,d.k)},
- exmsel:t=>{G.exm=t.value},exsell:d=>{toast(exList(G.S,+d.v,+$('ep'+d.v).value)||'已上架')},exsellm:()=>{toast(exListMat(G.S,$('exm').value,+$('exn').value,+$('exp').value)||'已上架')},exorder:()=>{toast(exOrder(G.S,$('exm').value,+$('exn').value,+$('exp').value)||'已掛收購（鑽石已凍結）')},
+ exmsel:t=>{G.exm=t.value},exsell:d=>{toast(exList(G.S,+d.v,+$('ep'+d.v).value,+$('exd').value)||'已上架')},recyc:()=>{toast(npcRecycle(G.S,$('exm').value,+$('exn').value)||'已回收')},salebuy:d=>{toast(saleBuy(G.S,d.k)||'購買成功')},exsellm:()=>{toast(exListMat(G.S,$('exm').value,+$('exn').value,+$('exp').value,+$('exd').value)||'已上架')},exorder:()=>{toast(exOrder(G.S,$('exm').value,+$('exn').value,+$('exp').value)||'已掛收購（鑽石已凍結）')},
  art:e=>{G.S.set.art=e.checked?'q':'px'},cq:()=>{G.cq=$('cq').value.trim()},ct:d=>{G.ct=d.k},farm:d=>{const S=G.S,ci=+d.c,mi=+d.m;const st=mi==3?9:0;if(S.prog.max<stageIdx(ci,st))return toast('尚未開放該章節');S.prog.ch=ci;S.prog.st=st;S.prog.auto=0;S.farm=(mi==3?CH[ci].boss:CH[ci].mob[mi])[0]+`（第${ci+1}章）`;startStage();toast('開始農：'+S.farm)},
  dpsreset:()=>{G.S.stat.dmg={}},claim:()=>{toast(claimMonth(G.S)?'領取 20,000 金 + 30 鑽':'今天已領')},gjoin:d=>{G.S.guild={n:GUILDS[+d.k].n,lv:1,x:0}},gquit:()=>{G.S.guild=null},donate:()=>{toast(guildDonate(G.S)?'捐獻成功':'金幣不足')},
  export:()=>{save();const t=localStorage.getItem(SKEY);navigator.clipboard&&navigator.clipboard.writeText(t);toast('已複製到剪貼簿')},wipe:()=>{if(confirm('確定刪除存檔？')){localStorage.removeItem(SKEY);location.reload()}},
@@ -1046,5 +1077,6 @@ function boot(){const S=G.S;const off=offline(S,Date.now());S.ev=[];if(off&&off.
 G.S=load();nav();if(G.S){boot()}else create();requestAnimationFrame(frame);
 if('serviceWorker' in navigator&&location.protocol!=='file:')navigator.serviceWorker.register('sw.js').catch(()=>{});
 window.G=G;Object.assign(window,{ACT,refine,stepBattle,calc});
+{const _id=itemDesc;itemDesc=function(it){return _id(it)+` <span class="sm">${trTxt(it)}</span>`}}
 
 </script></body></html>
