@@ -189,7 +189,7 @@ progress{-webkit-appearance:none;appearance:none;height:8px;border:0;border-radi
 <script>
 'use strict';
 // ===================== 第 1 層：靜態資料（DATA）—— 前後端共用 =====================
-const VER='1.7.0',SKEY='xj_cache_v2',LEGACY='xyexp_save_v1';
+const VER='1.7.1',SKEY='xj_cache_v2',LEGACY='xyexp_save_v1';
 const STATN={str:'STR',agi:'AGI',vit:'VIT',int:'INT',dex:'DEX',luk:'LUK'};
 const STATD={str:'近戰ATK、負重',agi:'ASPD、FLEE',vit:'HP、DEF、MDEF',int:'MATK、SP、MDEF',dex:'HIT、遠程ATK、詠唱',luk:'暴擊、完全迴避'};
 const ROLE={tank:'坦克',dps:'輸出',heal:'治療',sup:'輔助'};
@@ -1011,20 +1011,80 @@ drawHero=function(...a){return qart()?drawHeroQ(...a):_dhP(...a)};drawMob=functi
 // Q 版用 2 倍解析度與平滑；像素版保持 320×180 pixelated
 function applyArt(){const q=qart();const want=q?2:1;if(cv.width!==W*want){cv.width=W*want;cv.height=H*want}X.setTransform(want,0,0,want,0,0);X.imageSmoothingEnabled=q;cv.style.imageRendering=q?'auto':'pixelated';document.body.classList.toggle('q',q)}
 
+// ===================== 音效引擎 v2（Web Audio 即時合成，全部原創，不含任何外部音檔）=====================
+let AC=null,BUS=null,NZB=null;const VO={ends:[],last:{},dens:[]};const VMAX=20;
+function ac(){if(!AC){try{AC=new(window.AudioContext||window.webkitAudioContext)()}catch(e){}}if(AC&&AC.state==='suspended'&&AC.resume)AC.resume();if(AC&&!BUS)mkBus(AC);return AC}
+function mkBus(a){const c=a.createDynamicsCompressor();c.threshold.value=-20;c.knee.value=14;c.ratio.value=8;c.attack.value=.002;c.release.value=.18;const m=a.createGain(),cat={};for(const k of ['atk','sk','ui'])(cat[k]=a.createGain()).connect(m);m.connect(c);c.connect(a.destination);BUS={m,c,cat};const b=a.createBuffer(1,a.sampleRate,a.sampleRate),d=b.getChannelData(0);for(let i=0;i<d.length;i++)d[i]=Math.random()*2-1;NZB=b;sv()}
+function setV(){const s=(G.S&&G.S.set)||{};return{on:s.snd!==0,vol:s.vol??.7,atk:s.vAtk??.8,sk:s.vSk??.9,ui:s.vUi??.8}}
+function sv(){if(!BUS)return;const v=setV();BUS.m.gain.value=v.on?v.vol:0;for(const k in BUS.cat)BUS.cat[k].gain.value=v[k]}
+// 發聲閘：限制同時發聲數、同類最小間隔，攻速密集時自動降音量
+function vGate(cat,key,len,minGap,pri){const a=ac();if(!a||!BUS||!setV().on)return null;const now=a.currentTime;VO.ends=VO.ends.filter(t=>t>now);if(VO.ends.length>=VMAX&&!pri)return null;
+ const lk=VO.last[key]||0;if(now-lk<minGap&&!pri)return null;VO.last[key]=now;let g=1;if(cat==='atk'){VO.dens=VO.dens.filter(t=>now-t<.6);VO.dens.push(now);g=1/Math.sqrt(Math.max(1,VO.dens.length/3))}
+ VO.ends.push(now+len);const o=a.createGain();o.gain.value=g;o.connect(BUS.cat[cat]);return o}
+function O(dst,t,f,d,type,v,f2,att){const a=AC,o=a.createOscillator(),g=a.createGain();o.type=type||'sine';o.frequency.setValueAtTime(f,t);if(f2)o.frequency.exponentialRampToValueAtTime(Math.max(20,f2),t+d);g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(v,t+(att||.004));g.gain.exponentialRampToValueAtTime(.0001,t+d);o.connect(g);g.connect(dst);o.start(t);o.stop(t+d+.03);return o}
+function N(dst,t,d,v,ft,f,q,f2,att){const a=AC,s=a.createBufferSource();s.buffer=NZB;s.loop=true;const fl=a.createBiquadFilter();fl.type=ft||'bandpass';fl.frequency.setValueAtTime(f||2000,t);if(f2)fl.frequency.exponentialRampToValueAtTime(f2,t+d);fl.Q.value=q||1;const g=a.createGain();g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(v,t+(att||.003));g.gain.exponentialRampToValueAtTime(.0001,t+d);s.connect(fl);fl.connect(g);g.connect(dst);s.start(t,Math.random()*.5);s.stop(t+d+.03)}
+const RN=(a,b)=>a+Math.random()*(b-a);
+// 聲音定義：f(dst,t,v)
+const SDEF={
+ blade:(o,t,v)=>{N(o,t,.05,.5*v,'bandpass',RN(3800,4600),1.4);O(o,t,RN(1100,1300),.045,'triangle',.18*v,420);O(o,t+.004,180,.04,'sine',.25*v,90)},
+ blunt:(o,t,v)=>{N(o,t,.07,.55*v,'lowpass',1100,.8);O(o,t,RN(150,170),.09,'sine',.5*v,55);N(o,t,.02,.25*v,'bandpass',1800,2)},
+ bow:(o,t,v)=>{O(o,t,RN(310,340),.07,'triangle',.18*v,290);N(o,t,.035,.25*v,'highpass',5200,.7);N(o,t+.055,.04,.4*v,'bandpass',2400,1.5);O(o,t+.055,700,.035,'triangle',.12*v,300)},
+ fist:(o,t,v)=>{N(o,t,.045,.5*v,'lowpass',1600,1);O(o,t,RN(210,240),.06,'sine',.5*v,75)},
+ staff:(o,t,v)=>{O(o,t,RN(1250,1400),.07,'sine',.22*v,800);N(o,t,.03,.25*v,'bandpass',2600,2);O(o,t,320,.05,'sine',.2*v,140)},
+ pet:(o,t,v)=>{O(o,t,RN(900,1000),.05,'triangle',.15*v,600)},
+ crit:(o,t,v)=>{N(o,t,.11,.7*v,'highpass',1800,.7);O(o,t,1050,.13,'square',.12*v,1900);O(o,t,1580,.16,'triangle',.18*v,2200);O(o,t,130,.18,'sine',.8*v,45);N(o,t,.09,.5*v,'lowpass',700,.7)},
+ fire:(o,t,v)=>{N(o,t,.5,.8*v,'lowpass',3500,.7,180,.008);O(o,t,95,.42,'sine',.8*v,32);for(let i=0;i<5;i++)N(o,t+RN(.05,.35),.03,.25*v,'bandpass',RN(1500,3500),3)},
+ ice:(o,t,v)=>{O(o,t,2350,.18,'sine',.16*v,3100);O(o,t,3130,.14,'sine',.1*v,3900);for(let i=0;i<6;i++){const u=t+.08+i*RN(.015,.035);N(o,u,.035,.35*v,'bandpass',RN(5000,8000),4);O(o,u,RN(1800,2800),.05,'triangle',.08*v,RN(2600,3600))}},
+ bolt:(o,t,v)=>{O(o,t,1900,.2,'sawtooth',.16*v,110);O(o,t+.02,1300,.16,'square',.08*v,90);N(o,t,.28,.6*v,'highpass',2800,.8);for(let i=0;i<4;i++)N(o,t+i*.045,.025,.45*v,'bandpass',RN(3000,6000),2);O(o,t+.03,70,.25,'sine',.5*v,40)},
+ wind:(o,t,v)=>{N(o,t,.38,.55*v,'bandpass',380,3,2600,.06);N(o,t+.08,.3,.3*v,'bandpass',600,4,3400,.05)},
+ earth:(o,t,v)=>{O(o,t,72,.38,'sine',.8*v,38);N(o,t,.35,.6*v,'lowpass',420,.8,120);for(let i=0;i<4;i++)N(o,t+.06+i*RN(.03,.06),.04,.3*v,'bandpass',RN(900,1500),3)},
+ holy:(o,t,v)=>{[1318.5,1975.5,2637].forEach((f,i)=>O(o,t+i*.012,f,.75-i*.15,'sine',(.22-i*.05)*v,f*1.005,.006));O(o,t+.09,2093,.5,'sine',.07*v)},
+ dark:(o,t,v)=>{O(o,t,220,.5,'sawtooth',.12*v,105,.03);O(o,t,223,.5,'sawtooth',.1*v,108,.03);N(o,t,.45,.3*v,'lowpass',500,2,160,.04);O(o,t+.05,58,.4,'sine',.5*v,40)},
+ poison:(o,t,v)=>{for(let i=0;i<4;i++){const u=t+i*RN(.04,.07);O(o,u,RN(380,700),.06,'sine',.2*v,RN(800,1100))}},
+ skill:(o,t,v)=>{N(o,t,.12,.6*v,'bandpass',1400,1,500);O(o,t,240,.15,'triangle',.3*v,90);O(o,t,140,.16,'sine',.5*v,50)},
+ // 招牌技能專屬
+ soul:(o,t,v)=>{SDEF.dark(o,t,v*.8);SDEF.blade(o,t+.04,v);O(o,t+.04,880,.25,'square',.08*v,220)},
+ asura:(o,t,v)=>{O(o,t,600,.12,'sawtooth',.18*v,1800);SDEF.fire(o,t+.1,v*1.1);SDEF.crit(o,t+.1,v*.8)},
+ pierce:(o,t,v)=>{N(o,t,.12,.5*v,'bandpass',2000,2,7000,.01);O(o,t,500,.14,'triangle',.2*v,1800);SDEF.bow(o,t+.08,v)},
+ meteor:(o,t,v)=>{N(o,t,.35,.35*v,'bandpass',4000,2,500,.2);SDEF.fire(o,t+.32,v*1.2)},
+ // 系統
+ cast:(o,t,v)=>{O(o,t,620,.45,'sine',.09*v,930,.08);O(o,t,930,.45,'sine',.05*v,1395,.1)},
+ rel:(o,t,v)=>{N(o,t,.15,.35*v,'bandpass',700,1.5,3200,.02);O(o,t,700,.14,'sine',.14*v,1500)},
+ buff:(o,t,v)=>{[784,1046,1318].forEach((f,i)=>O(o,t+i*.05,f,.25,'sine',.13*v))},
+ stun:(o,t,v)=>{for(let i=0;i<3;i++){O(o,t+i*.09,1100,.08,'triangle',.12*v,800)}},
+ heal:(o,t,v)=>{SDEF.holy(o,t,v);O(o,t+.12,1760,.55,'sine',.1*v,1780)},
+ lv:(o,t,v)=>{[523.3,659.3,784,1046.5].forEach((f,i)=>{O(o,t+i*.085,f,.22,'triangle',.22*v);O(o,t+i*.085,f*2,.15,'sine',.06*v)});SDEF.holy(o,t+.36,v*.7)},
+ job:(o,t,v)=>{[[523.3,659.3,784],[698.5,880,1046.5],[784,987.8,1174.7],[1046.5,1318.5,1568]].forEach((c,i)=>c.forEach(f=>O(o,t+i*.16,f,i==3?.9:.2,'triangle',.11*v,0,.01)));SDEF.holy(o,t+.5,v)},
+ drop:(o,t,v)=>{O(o,t,1318.5,.1,'square',.06*v);O(o,t+.07,1975.5,.18,'square',.06*v);O(o,t+.07,3951,.12,'sine',.05*v)},
+ card:(o,t,v)=>{[1568,1976,2349,2637,3136].forEach((f,i)=>O(o,t+i*.06,f,.3,'sine',.12*v));SDEF.holy(o,t+.32,v);N(o,t,.5,.12*v,'highpass',7000,.7,0,.2)},
+ clang:(o,t,v)=>{N(o,t,.06,.5*v,'bandpass',2600,3);[1480,2210,3170].forEach(f=>O(o,t,f,.3,'sine',.1*v,f*.99))},
+ ok:(o,t,v)=>{SDEF.clang(o,t,v);[1046.5,1318.5,1568,2093].forEach((f,i)=>O(o,t+.2+i*.07,f,.25,'triangle',.16*v))},
+ fail:(o,t,v)=>{SDEF.clang(o,t,v);O(o,t+.22,392,.4,'triangle',.2*v,262)},
+ brk:(o,t,v)=>{SDEF.clang(o,t,v);N(o,t+.15,.5,.7*v,'lowpass',3000,.7,200);O(o,t+.2,300,.6,'sawtooth',.12*v,60)},
+ boss:(o,t,v)=>{O(o,t,110,.9,'sawtooth',.12*v,104,.25);O(o,t,165,.9,'sawtooth',.07*v,156,.25);for(let i=0;i<3;i++)O(o,t+.2+i*.32,60,.18,'sine',.6*v,40)},
+ intr:(o,t,v)=>{N(o,t,.15,.5*v,'bandpass',900,1);O(o,t,320,.2,'square',.1*v,640)},
+ hurt:(o,t,v)=>{N(o,t,.06,.3*v,'lowpass',800,1);O(o,t,200,.07,'square',.06*v,120)}};
+const SCAT={blade:'atk',blunt:'atk',bow:'atk',fist:'atk',staff:'atk',pet:'atk',crit:'atk',hurt:'atk'};const SLEN={fire:.55,meteor:.9,job:1.5,lv:.9,card:.9,boss:1.2,brk:.8};
+function play(k,delay,v,pri){const f=SDEF[k];if(!f)return;const cat=SCAT[k]||(['cast','rel','buff','stun','heal','fire','ice','bolt','wind','earth','holy','dark','poison','skill','soul','asura','pierce','meteor'].includes(k)?'sk':'ui');
+ const o=vGate(cat,k+(cat==='atk'?'':Math.round((delay||0)*20)),SLEN[k]||.4,cat==='atk'?.028:.02,pri);if(!o)return;try{f(o,AC.currentTime+(delay||0)+.005,v||1)}catch(e){}}
+const WSND={dagger:'blade',sword:'blade',tsword:'blade',katar:'blade',spear:'blade',mace:'blunt',axe:'blunt',taxe:'blunt',bow:'bow',fist:'fist',knuckle:'fist',staff:'staff',tstaff:'staff',book:'staff',inst:'staff',whip:'blade'};
+const WCACHE={};function wSnd(id){const S=G.S,c=WCACHE[id];if(c&&Date.now()-c.t<2000)return c.k;const h=S&&S.heroes.find(x=>x.id===id);let k='blade';if(h){const w=S.inv.find(i=>i.u===h.eq.wpn);k=WSND[w?w.wt:'fist']||'blade'}WCACHE[id]={k,t:Date.now()};return k}
+const SIGSND={x_soul:'soul',o_asura:'asura',o_tiger:'asura',r_sharp:'pierce'};const ELSND={'火':'fire','水':'ice','風':'bolt','地':'earth','聖':'holy','暗':'dark','毒':'poison'};const FXSND={fire:'fire',meteor:'meteor',ice:'ice',bolt:'bolt',holy:'holy',poison:'poison',arrow:'bow',falcon:'bow',trap:'earth',big:'skill',slash:'blade'};
+function skSnd(k,fx){const s=SK[k]||{};return SIGSND[k]||(s.el&&s.el!=='風'&&ELSND[s.el])||FXSND[fx||s.fx]||(s.el&&ELSND[s.el])||'skill'}
+function dmgSnd(e,i,dl){if(e.src==='pet')return play('pet',dl,.6);if(e.k){play(skSnd(e.k,e.fx),dl,i?.75:1);if(e.crit&&!i)play('crit',dl,.6)}else play(e.crit?'crit':wSnd(e.src),dl)}
+const SFX={hit:d=>play('blunt',d),crit:d=>play('crit',d),cast:()=>play('cast'),rel:()=>play('rel'),buff:()=>play('buff'),stun:()=>play('stun'),heal:()=>play('heal'),lv:()=>play('lv',0,1,1),job:()=>play('job',0,1,1),drop:()=>play('drop'),card:()=>play('card',0,1,1),boss:()=>play('boss',0,1,1),intr:()=>play('intr',0,1,1),fail:()=>play('fail',0,1,1),ok:()=>play('ok',0,1,1),brk:()=>play('brk',0,1,1),wind:()=>play('wind')};
+const VOLS=[['vol','總音量',.7],['vAtk','普攻',.8],['vSk','技能',.9],['vUi','系統（升級／掉寶／精煉）',.8]];
+function volCard(S){return`<div class="card"><b>音效與音量</b>${VOLS.map(([k,n,d])=>`<div class="row" style="align-items:center;gap:8px;margin-top:6px"><span style="min-width:6.5em">${n}</span><input type="range" min="0" max="100" value="${Math.round((S.set[k]??d)*100)}" data-a="vol" data-k="${k}" style="flex:1"><button class="b s" data-a="sfxTry" data-k="${k}">試聽</button></div>`).join('')}<div class="sm" style="margin-top:6px">原創合成音效（不使用任何外部音檔）；攻速很快時自動限制同時發聲數並降低音量。</div></div>`}
+const TRY={vol:['crit','fire','heal'],vAtk:['blade','blunt','bow','fist','staff','crit'],vSk:['fire','ice','bolt','earth','wind','holy','dark'],vUi:['lv','drop','card','ok']};
+function sfxTry(k){ac();sv();(TRY[k]||TRY.vol).forEach((s,i)=>play(s,i*.32,1,1))}
+document.addEventListener('input',ev=>{const t=ev.target;if(t.dataset&&t.dataset.a==='vol'&&G.S){G.S.set[t.dataset.k]=+t.value/100;ac();sv()}});
+
 // 原創貨幣圖示（SVG）：H 金幣、藍紫切面寶石
 const GOLDI='<svg class="cur" viewBox="0 0 24 24" aria-label="金幣"><defs><radialGradient id="gg" cx="35%" cy="30%" r="75%"><stop offset="0" stop-color="#fff6c2"/><stop offset=".45" stop-color="#ffcf3a"/><stop offset="1" stop-color="#c47d00"/></radialGradient></defs><circle cx="12" cy="12" r="11" fill="#8a5300"/><circle cx="12" cy="12" r="9.6" fill="url(#gg)" stroke="#ffe27a" stroke-width="1"/><circle cx="12" cy="12" r="7" fill="none" stroke="#b87300" stroke-width=".9" opacity=".7"/><path d="M8.6 7.5v9M15.4 7.5v9M8.6 12h6.8" stroke="#8a5300" stroke-width="2.1" stroke-linecap="round"/><ellipse cx="8.5" cy="6.8" rx="2.6" ry="1.3" fill="#fff" opacity=".75" transform="rotate(-30 8.5 6.8)"/></svg>';
 const DIAI='<svg class="cur" viewBox="0 0 24 24" aria-label="鑽石"><defs><linearGradient id="dg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#c9b8ff"/><stop offset=".5" stop-color="#7a6cff"/><stop offset="1" stop-color="#3b2fa8"/></linearGradient></defs><path d="M6 3h12l4 6-10 13L2 9z" fill="url(#dg)" stroke="#2a1f80" stroke-width=".8" stroke-linejoin="round"/><path d="M2 9h20M6 3l3 6 3-6 3 6 3-6M9 9l3 13 3-13" fill="none" stroke="#e8e2ff" stroke-width=".6" opacity=".8"/><path d="M7 4.2h3.5L8.6 8H3.8z" fill="#fff" opacity=".55"/></svg>';
 try{document.getElementById('tG').innerHTML=GOLDI;document.getElementById('tD').innerHTML=DIAI}catch(e){}
 function curI(h){return String(h).replace(/(\d[\d,.]*\s*[萬億]?)\s*(鑽石|鑽|金幣|金)(?![色牌庫幣屬])/g,(a,n,u)=>n+(u[0]==='鑽'?DIAI:GOLDI))}
 // ===================== 第 6 層：音效（Web Audio，原創合成）=====================
-let AC=null;const SND={on:1};function ac(){if(!AC){try{AC=new(window.AudioContext||window.webkitAudioContext)()}catch(e){}}return AC}
-function tone(f,d,type,v,slide,delay){const a=ac();if(!a||!G.S.set.snd)return;const t=a.currentTime+(delay||0),o=a.createOscillator(),g=a.createGain();o.type=type||'square';o.frequency.setValueAtTime(f,t);if(slide)o.frequency.exponentialRampToValueAtTime(Math.max(30,f*slide),t+d);g.gain.setValueAtTime(v||.06,t);g.gain.exponentialRampToValueAtTime(.001,t+d);o.connect(g);g.connect(a.destination);o.start(t);o.stop(t+d+.02)}
-function noise(d,v,hp,delay){const a=ac();if(!a||!G.S.set.snd)return;const t=a.currentTime+(delay||0),b=a.createBuffer(1,a.sampleRate*d,a.sampleRate),c=b.getChannelData(0);for(let i=0;i<c.length;i++)c[i]=(Math.random()*2-1)*(1-i/c.length);const s=a.createBufferSource();s.buffer=b;const f=a.createBiquadFilter();f.type='highpass';f.frequency.value=hp||800;const g=a.createGain();g.gain.value=v||.08;s.connect(f);f.connect(g);g.connect(a.destination);s.start(t)}
-const SFX={hit:d=>{noise(.06,.07,1200,d);tone(180,.06,'square',.03,.5,d)},crit:d=>{noise(.12,.12,600,d);tone(520,.15,'sawtooth',.05,.3,d)},arrow:d=>{noise(.08,.04,3000,d);tone(900,.08,'triangle',.03,.4,d)},
- fire:d=>{noise(.18,.06,400,d);tone(220,.18,'sawtooth',.03,.5,d)},ice:d=>{tone(1400,.12,'triangle',.04,.6,d)},bolt:d=>{noise(.2,.1,2000,d);tone(90,.2,'square',.04,.5,d)},holy:d=>{tone(880,.3,'sine',.05,1.5,d);tone(1320,.3,'sine',.03,1.2,d)},
- cast:()=>tone(440,.4,'sine',.03,2),heal:()=>{tone(660,.15,'sine',.05,1.5);tone(990,.2,'sine',.04,1.3,.08)},lv:()=>{[523,659,784,1046].forEach((f,i)=>tone(f,.15,'square',.05,1,i*.08))},drop:()=>{tone(1200,.08,'square',.04);tone(1600,.1,'square',.04,1,.07)},
- boss:()=>{tone(110,.6,'sawtooth',.07,.6);tone(82,.6,'square',.05,.8,.2)},intr:()=>{noise(.15,.12,500);tone(300,.2,'square',.06,2)},fail:()=>{tone(300,.4,'triangle',.06,.4)},ok:()=>{tone(784,.1,'square',.05);tone(1046,.2,'square',.05,1,.1)},brk:()=>{noise(.4,.15,200);tone(150,.4,'sawtooth',.06,.3)}};
-const fxSnd={fire:'fire',meteor:'fire',ice:'ice',bolt:'bolt',holy:'holy',arrow:'arrow',falcon:'arrow',poison:'fire',trap:'hit'};
 // ===================== 第 7 層：主程式與 UI =====================
 const G={S:null,B:null};const $=id=>document.getElementById(id);const fmt=n=>n>=1e6?(n/1e6).toFixed(1)+'M':n>=1e4?(n/1e3).toFixed(1)+'K':Math.floor(n)+'';
 function save(){const S=G.S;S.t=Date.now();const ev=S.ev;S.ev=[];localStorage.setItem(SKEY,JSON.stringify(S));S.ev=ev}
@@ -1039,10 +1099,10 @@ const POSE={};
 function startStage(){const S=G.S;G.B=newBattle(S,S.prog.ch,S.prog.st,(S.seed+S.prog.ch*977+S.prog.st*131+S.stat.kill)>>>0);if(G.B.boss){SFX.boss();toast(`頭目關！${CH[S.prog.ch].boss[0]}（限時 ${BOSS_T} 秒）`)}hud()}
 function onEvents(ev){const S=G.S,B=G.B,P=heroPos(S);
  for(const e of ev){if(e.t==='atk'||e.t==='dmg'&&e.src!=='pet'&&!e.k){const id=e.id||e.src;POSE[id]={p:1,t:.2}}
-  if(e.t==='cast'){POSE[e.id]={p:2,t:e.dur};SFX.cast()}
-  if(e.t==='skill'){POSE[e.id]={p:SK[e.k].mag?2:1,t:.3};const h=S.heroes.find(x=>x.id===e.id),p=P[e.id];if(p&&!['dmg','aoe'].includes(SK[e.k].ty))num(p[0],p[1]-22,SK[e.k].n,'#bff')}
+  if(e.t==='cast'){POSE[e.id]={p:2,t:e.dur};SFX.cast()}if(e.t==='stun')SFX.stun();
+  if(e.t==='skill'){POSE[e.id]={p:SK[e.k].mag?2:1,t:.3};if(SK[e.k].ty==='heal');else if(['dmg','aoe'].includes(SK[e.k].ty))SFX.rel();else SFX.buff();const h=S.heroes.find(x=>x.id===e.id),p=P[e.id];if(p&&!['dmg','aoe'].includes(SK[e.k].ty))num(p[0],p[1]-22,SK[e.k].n,'#bff')}
   if(e.t==='dmg'){const mp=mobPos(B,e.mob),src=P[e.src]||[150,120];const k=e.fx||'swing',n=e.parts.length;const step=n>6?.08:.13;
-   e.parts.forEach((d,i)=>{fx(k,src[0]+6,src[1],mp[0]+(i%3-1)*4,mp[1]-4,i*step);num(mp[0]+((i*7)%15-7),mp[1]-14-i*2,fmt(d),e.crit?'#ffd23f':'#fff',false,i*step+.05);const s=fxSnd[k]||'hit';if(i<10)SFX[e.crit?'crit':s](i*step)});
+   e.parts.forEach((d,i)=>{fx(k,src[0]+6,src[1],mp[0]+(i%3-1)*4,mp[1]-4,i*step);num(mp[0]+((i*7)%15-7),mp[1]-14-i*2,fmt(d),e.crit?'#ffd23f':'#fff',false,i*step+.05);if(i<12)dmgSnd(e,i,i*step)});
    if(n>1)num(mp[0],mp[1]-34,fmt(e.tot),'#ff9a3a',true,n*step+.1);else if(e.crit)num(mp[0],mp[1]-30,fmt(e.tot)+'!','#ffd23f',true);if(e.k&&SK[e.k]&&e.src!=='pet')num(src[0],src[1]-24,SK[e.k].n,'#bff')}
   if(e.t==='atk'&&e.miss){const mp=mobPos(B,e.mob);num(mp[0],mp[1]-14,'Miss','#aaa')}
   if(e.t==='hhit'){const p=P[e.id];if(p){num(p[0],p[1]-20,'-'+fmt(e.d),e.ult?'#ff3030':'#ff8a7a',!!e.ult);if(e.red>=15&&(e.ult||Math.random()<.25))num(p[0]+10,p[1]-30,'減傷'+e.red+'%','#9fd0ff')}}
@@ -1054,7 +1114,7 @@ function onEvents(ev){const S=G.S,B=G.B,P=heroPos(S);
   if(e.t==='bcast'){SFX.boss();log(`頭目讀條：<b class="rd">${e.n}</b>${e.gold?'（金色：不可打斷）':''}`)}
   if(e.t==='intr'){if(e.ok){SFX.intr();num(232,80,'打斷成功！','#7fe08f',true);log(`<span class="gr">打斷成功：${e.n}</span>`)}else num(232,86,'打斷 '+e.v+'%','#ffd866')}
   if(e.t==='bult'){shake=.4;log(`<span class="rd">頭目施放 ${e.n}！</span>`)}if(e.t==='phase')log(`<span class="pu">頭目進入第二階段，屬性變為「${e.el}」</span>`);if(e.t==='rage')log('<span class="rd">頭目狂暴了！ATK×2</span>');
-  if(e.t==='drop'){log(`${e.who||''} 獲得 <span class="${QC[e.it.q||0]}">${e.it.n}</span>`);SFX.drop()}if(e.t==='mat'){log(`<b class="c">${e.who||''} 獲得：${e.n}</b>`);SFX.drop()}if(e.t==='card'){log(`<b class="c">${e.who||''} 獲得卡片：${e.n}</b>`);SFX.drop();toast('獲得 '+e.n)}
+  if(e.t==='drop'){log(`${e.who||''} 獲得 <span class="${QC[e.it.q||0]}">${e.it.n}</span>`);SFX.drop()}if(e.t==='mat'){log(`<b class="c">${e.who||''} 獲得：${e.n}</b>`);SFX.drop()}if(e.t==='card'){log(`<b class="c">${e.who||''} 獲得卡片：${e.n}</b>`);SFX.card();toast('獲得 '+e.n)}
   if(e.t==='petsh'){const p=P[S.party[0]];if(p)num(p[0],p[1]-36,'寵物護盾','#9fd0ff')}if(e.t==='hdie'){const h=S.heroes.find(x=>x.id===e.id);log(`<span class="rd">${h.name} 倒下了</span>`)}}
  for(const e of S.ev){if(e.t==='lvup'){const h=S.heroes.find(x=>x.id===e.id);const p=P[e.id];if(p)num(p[0],p[1]-30,'LV UP','#ffd866',true);SFX.lv();log(`${h.name} Lv${e.lv}`,'c')}}S.ev=[]}
 function battleDone(){const S=G.S,B=G.B,i=stageIdx(B.ch,B.st);
@@ -1082,7 +1142,7 @@ function hud(){const S=G.S,B=G.B;if(!$("tG").innerHTML){$("tG").innerHTML=GOLDI;
 
 let TAB='battle',SUB={team:'stat',equip:'eq',adv:'stage',more:'shop',social:'chat'},SEL=1,PICK=null,EXQ='';
 const TABS=[['battle','戰鬥'],['team','角色'],['equip','裝備'],['adv','冒險'],['social','社交'],['more','更多']];
-const SUBT={team:[['stat','屬性'],['skill','技能'],['job','轉職'],['party','隊伍']],equip:[['eq','穿戴'],['bag','背包'],['ref','精煉'],['star','星力'],['pot','潛能'],['card','卡片']],adv:[['stage','推圖'],['codex','圖鑑'],['pet','寵物'],['life','生活'],['dun','副本']],more:[['shop','點數商城'],['npc','商店'],['ex','交易所'],['month','月卡'],['set','設定']],social:[['chat','聊天'],['friend','好友'],['party','隊伍'],['guild','公會'],['dm','密語']]};
+const SUBT={team:[['stat','屬性'],['skill','技能'],['job','轉職']],equip:[['eq','穿戴'],['bag','背包'],['ref','精煉'],['star','星力'],['pot','潛能'],['card','卡片']],adv:[['stage','推圖'],['codex','圖鑑'],['pet','寵物'],['life','生活'],['dun','副本']],more:[['shop','點數商城'],['npc','商店'],['ex','交易所'],['month','月卡'],['set','設定']],social:[['chat','聊天'],['friend','好友'],['party','隊伍'],['guild','公會'],['dm','密語']]};
 function icon(k,c){const e=document.createElement('canvas');e.width=e.height=16;const x=e.getContext('2d');const r=(a,b,w,h,cc)=>{x.fillStyle=cc;x.fillRect(a,b,w,h)};c=c||'#ffd866';
  ({battle:()=>{r(7,1,2,10,'#ddd');r(4,10,8,2,c);r(7,12,2,3,'#8b5a2b')},team:()=>{r(5,2,6,5,'#ffd9b8');r(4,1,8,3,'#8b5a2b');r(4,8,8,6,c)},equip:()=>{r(3,3,10,10,'#9aa');r(5,5,6,6,c)},adv:()=>{r(2,3,12,10,'#c9a060');r(4,5,3,2,'#e33');r(9,8,3,3,'#3a3')},more:()=>{r(2,7,3,3,c);r(7,7,3,3,c);r(12,7,3,3,c)}}[k]||(()=>{}))();return e}
 function nav(){$('nav').innerHTML='';TABS.forEach(([k,n])=>{const b=document.createElement('button');b.dataset.t=k;b.className=TAB===k?'on':'';b.appendChild(icon(k,TAB===k?'#ffd866':'#8890b0'));b.appendChild(document.createTextNode(n));$('nav').appendChild(b)})}
@@ -1096,8 +1156,8 @@ function itemDesc(it){const a=it.aff;let s=`<span class="${QC[it.q||0]}">${it.rf
  s+=`<div class="sm">${it.atk?'ATK '+it.atk+' ':''}${it.matk?'MATK '+it.matk+' ':''}${it.def?'DEF '+it.def:''}</div>`;
  if(a){s+=`<div class="sm">主：${a.main.map(l=>`${BN[l[0]]}+${l[1]}<span class="sm">[${l[2]}~${l[3]}]</span>`).join('、')}</div><div class="sm bl">附加：${a.add.map(l=>`${BN[l[0]]||l[0]}+${l[1]}`).join('、')}</div><div class="sm ${a.sp.lock?'':'pu'}">特殊：${a.sp.lock?'🔒（鑽石解鎖）':a.sp.d+(a.sp.k==='allsk'?'':` ${a.sp.v}`)}</div>`}
  if(it.pot)s+=`<div class="sm ${POTC[it.pot.r]}">潛能[${POTR[it.pot.r]}]：${it.pot.l.map(([k,v])=>BN[k]+'+'+v).join('、')}</div>`;if(it.cards.length)s+=`<div class="sm c">卡片：${it.cards.map(c=>CARDS[c].n).join('、')}</div>`;return s}
-function heroSel(){const S=G.S;return`<div class="subs">${S.heroes.map(h=>`<button class="${SEL===h.id?'on':''}" data-a="sel" data-v="${h.id}">${h.name}${h.rb?'★'+h.rb:''}${S.party.includes(h.id)?'':'(休)'}</button>`).join('')}</div>`}
-const curH=()=>G.S.heroes.find(h=>h.id===SEL)||G.S.heroes[0];
+function heroSel(){return'';const S=G.S;return`<div class="subs">${S.heroes.map(h=>`<button class="${SEL===h.id?'on':''}" data-a="sel" data-v="${h.id}">${h.name}${h.rb?'★'+h.rb:''}${S.party.includes(h.id)?'':'(休)'}</button>`).join('')}</div>`}
+const curH=()=>G.S.heroes[0];
 function subBar(){return SUBT[TAB]?`<div class="subs">${SUBT[TAB].map(([k,n])=>`<button class="${SUB[TAB]===k?'on':''}" data-a="sub" data-v="${k}">${n}</button>`).join('')}</div>`:''}
 function partyBox(){const S=G.S,B=G.B;const e=$('pbox');if(!e||!B)return;e.innerHTML=S.party.map(id=>{const h=S.heroes.find(x=>x.id===id),rt=B.hr[id],t=calc(S,h);const tp=B.boss?threatPct(S,B,id):0;
  return`<div class="row" style="margin:2px 0"><span style="width:96px">${nameHtml(h)} <span class="sm">${jobName(h.job,h.sex)}</span></span><span class="sm" style="width:52px">Lv${h.bl}</span><div class="sp"><div class="hb"><i style="width:${100*Math.max(0,rt?rt.hp:0)/t.mhp}%;background:#5d5"></i></div><div class="hb" style="height:3px"><i style="width:${100*Math.max(0,rt?rt.sp:0)/t.msp}%;background:#59f"></i></div></div>${B.boss?`<span class="sm ${tp>=90?'rd':''}" style="width:44px;text-align:right">仇${tp}%</span>`:''}</div>`}).join('')}
@@ -1161,8 +1221,8 @@ function render(){const S=G.S;nav();let h=subBar();const s=SUB[TAB];
  if(TAB==='more'){
   if(s==='shop'){const sl=saleSlot(S);if(sl.list.length)h+=`<div class="card"><b class="y">限時特價</b> <span class="sm">剩 ${Math.max(0,Math.ceil((sl.end-Date.now())/6e4))} 分鐘</span>${sl.list.map(x=>`<div class="it">${x.item?stl(x.item):''}<div class="sp">${x.item?itemDesc(x.item):'<b>'+gName(x.mat)+'</b>×'+x.qty}</div><button class="b s y" data-a="salebuy" data-k="${x.id}">${x.price} 鑽</button></div>`).join('')}</div>`}
   if(s==='shop'){h+=`<div class="card sm">點數商城（鑽石）：只賣精煉保護類、改名、變性、結婚、時裝、月卡。購買物品綁定不可交易。精煉保護類道具打怪也會掉落（頭目機率較高），可到圖鑑查來源。</div>`+DSHOP.map(x=>`<div class="it"><div class="sp"><b>${x.n}</b> <span class="sm">${x.d||''}${S.mat[x.k]?'（持有'+S.mat[x.k]+'）':''}</span></div><button class="b s y" data-a="dbuy" data-k="${x.k}">${x.p} 鑽</button></div>`).join('')+
-   `<div class="card"><b>使用</b><div class="row"><input id="newname" placeholder="新名字" style="width:110px"><button class="b s" data-a="rename">改名(選中角色)</button><button class="b s" data-a="sex">變性</button><button class="b s" data-a="marry">與選中夥伴結婚</button></div></div>
-   <div class="card"><b>時裝（${COSP} 鑽）</b><div class="row">${Object.entries(COS).map(([k,[n]])=>`<button class="b s ${S.cos[k]?'g':''}" data-a="cos" data-k="${k}">${n}${S.cos[k]?'（穿上）':''}</button>`).join('')}</div><div class="sm">穿在目前選中的角色身上（${curH().name}）</div></div>`}
+   `<div class="card"><b>使用</b><div class="row"><button class="b s" data-a="sex">變性</button></div></div>
+   <div class="card"><b>時裝（${COSP} 鑽）</b><div class="row">${Object.entries(COS).map(([k,[n]])=>`<button class="b s ${S.cos[k]?'g':''}" data-a="cos" data-k="${k}">${n}${S.cos[k]?'（穿上）':''}</button>`).join('')}</div><div class="sm">穿在你的角色身上（${curH().name}）</div></div>`}
   if(s==='npc'){h+=`<div class="card sm">一般商店（NPC，金幣）。裝備可在背包出售給商人。</div>`+NPCSHOP.map(x=>`<div class="it"><div class="sp">${x.n}</div><button class="b s" data-a="nbuy" data-k="${x.k}" data-n="1">${x.p}金</button><button class="b s" data-a="nbuy" data-k="${x.k}" data-n="10">×10</button></div>`).join('')}
   if(TAB==='more'&&s==='ex')h+=marketHtml(S);if(0){exRefresh(S);const q=EXQ;const bt=b=>`<span class="sm gr">區間 ${b.lo}~${b.hi}${b.thin?'（稀有・基準價）':''}</span>`;const goods=EXMAT2.concat(Object.keys(S.cards).filter(c=>S.cards[c]>0).map(c=>'c:'+c));const sel=G.exm&&goods.includes(G.exm)?G.exm:goods[0];const sb=sel?band(S,sel):null;
    h+=`<div class="card sm">交易所：<b>一律以鑽石計價</b>，所有物品皆可交易（點數商城道具及其掉落同款除外）。材料、卡片依近期成交與掛單算出價格區間，每日更新且有漲跌幅上限；裝備自由定價，每件最多交易 3 次後綁定。掛單 3~7 天未售出自動退回。上架收 5% 手續費、售出實收扣 5%。
@@ -1175,7 +1235,7 @@ function render(){const S=G.S;nav();let h=subBar();const s=SUB[TAB];
   if(s==='month'){const on=monthOn(S);h+=`<div class="card"><b>月卡</b><div class="sm">每日領 20,000 金幣 + 30 鑽石；有效期間自己的經驗/金幣 +30%、掉落 +5%，離線收益上限延長為 12 小時（只作用於自己，與組隊加成相加）。</div><div>${on?`有效至 ${new Date(S.month).toLocaleDateString()}`:'未啟用'}</div><button class="b y" data-a="claim" ${on&&S.lastClaim!==today()?'':'disabled'}>領取今日獎勵</button> <button class="b" data-a="dbuy" data-k="month">購買（300 鑽）</button></div>`}
   if(0){h+=unl(S,'guild')?(S.guild?`<div class="card"><b>${S.guild.n}</b> Lv${S.guild.lv} <progress max="${S.guild.lv*300}" value="${S.guild.x}"></progress><div class="sm">公會加成：全隊 ATK +${S.guild.lv}%、經驗 +${S.guild.lv*2}%、掉落 +${S.guild.lv}%</div><button class="b" data-a="donate">捐獻 ${fmt(1000*S.guild.lv)} 金</button> <button class="b s r" data-a="gquit">退出</button>
    <div class="sm" style="margin-top:6px">成員（單機：NPC）：${['會長 星芽','副會長 小波','阿傑','莉莉','K'].join('、')}</div></div>`:GUILDS.map((g,i)=>`<div class="it"><span class="sp">${g.n}</span><button class="b s g" data-a="gjoin" data-k="${i}">加入</button></div>`).join('')):'<p class="sm">1-4 解鎖</p>'}
-  if(s==='set'){h+=`<div class="card"><div class="row"><label><input type="checkbox" data-a="snd" ${S.set.snd?'checked':''}> 音效</label><label><input type="checkbox" data-a="art" ${S.set.art!=='px'?'checked':''}> Q 版美術（取消＝像素版）</label></div><div class="sm">版本 ${VER}｜存檔以伺服器為準，每分鐘自動上傳。</div>
+  if(s==='set'){h+=volCard(S)+`<div class="card"><div class="row"><label><input type="checkbox" data-a="snd" ${S.set.snd?'checked':''}> 音效</label><label><input type="checkbox" data-a="art" ${S.set.art!=='px'?'checked':''}> Q 版美術（取消＝像素版）</label></div><div class="sm">版本 ${VER}｜存檔以伺服器為準，每分鐘自動上傳。</div>
    <div class="row"><span class="sm">帳號 ${esc(ON.user||"")}</span><span class="sp"></span><button class="b s r" data-a="onOut">登出</button></div>
 </div>`}}
  if(TAB==='social')h+=socialHtml(S,s);if(TAB==='battle'&&innerWidth>=1000)h+=battleSide(S);
@@ -1208,13 +1268,13 @@ function subBar(){return SUBT[TAB]?`<div class="subs">${SUBT[TAB].map(([k,n])=>`
 
 G.ro={prot:0,safe:0,hammer:0};G.gm=0;
 const ACT={
- sub:d=>{SUB[TAB]=d.v;PICK=null},sel:d=>{SEL=+d.v},snd:()=>{G.S.set.snd=G.S.set.snd?0:1;$('snd').style.opacity=G.S.set.snd?1:.4},
+ sub:d=>{SUB[TAB]=d.v;PICK=null},sel:d=>{SEL=+d.v},vol:t=>{G.S.set[t.dataset.k]=+t.value/100;sv()},sfxTry:d=>sfxTry(d.k),snd:()=>{G.S.set.snd=G.S.set.snd?0:1;sv();$('snd').style.opacity=G.S.set.snd?1:.4},
  boss:()=>{const S=G.S,B=G.B;if(canIntrNow(S,B)){B.manual=1;toast('下令打斷！',800);return}if(B.boss)return;const i=stageIdx(S.prog.ch,STAGES-1);if(S.prog.max>=i){S.prog.st=STAGES-1;startStage()}else toast('先推進到本章第 9 關')},
  autopush:e=>{G.S.prog.auto=e.checked?1:0},autoboss:e=>{G.S.prog.autoBoss=e.checked?1:0},autoint:e=>{G.S.autoInt=e.checked},aihold:e=>{G.S.aiHoldMain=e.checked},
  auto:e=>{curH().auto=e.checked?1:0},st:d=>{const h=curH();const c=statCost(h.st[d.k]);if(h.pts>=c&&h.st[d.k]<STATCAP){h.pts-=c;h.st[d.k]++}},
  learn:d=>{learn(curH(),d.k)},skreset:()=>{const S=G.S;if(S.dia<100)return toast('鑽石不足');S.dia-=100;resetSkills(curH())},
- job:d=>{const h=curH(),e=changeJob(G.S,h,d.k);toast(e||`轉職成功：${jobName(d.k,h.sex)}！`);if(!e){SFX.lv();autoSkill(h)}},
- rebirth:()=>{const h=curH();const e=rebirth(G.S,h);toast(e||`轉生成功！${rbTitle(h.rb).t}`);if(!e)SFX.lv()},rbp:d=>{const e=rbpAdd(curH(),d.k);if(e)toast(e)},
+ job:d=>{const h=curH(),e=changeJob(G.S,h,d.k);toast(e||`轉職成功：${jobName(d.k,h.sex)}！`);if(!e){SFX.job();autoSkill(h)}},
+ rebirth:()=>{const h=curH();const e=rebirth(G.S,h);toast(e||`轉生成功！${rbTitle(h.rb).t}`);if(!e)SFX.job()},rbp:d=>{const e=rbpAdd(curH(),d.k);if(e)toast(e)},
  rsst:()=>{const S=G.S;if(S.dia<50)return toast('鑽石不足');S.dia-=50;resetStats(curH())},rsrbp:()=>{const S=G.S;if(S.dia<50)return toast('鑽石不足');S.dia-=50;resetRbp(curH())},
  party:d=>{const S=G.S,id=+d.v;if(S.party.includes(id))S.party=S.party.filter(x=>x!==id);else if(S.party.length<10)S.party.push(id);else return toast('隊伍已滿 10 人');startStage()},
  noint:(e,d)=>{const S=G.S;S.noInt=S.noInt||{};S.noInt[d.v]=!e.checked},
@@ -1299,7 +1359,8 @@ function onLogout(msg){ON.token='';localStorage.removeItem('xj_tk');sessionStora
 async function onEnter(){try{const s=await onApi('GET','/api/save?login=1');ON.nick=s.nick||'';if(s.data.needChar){G.cname=G.cname||(legacy()||{heroes:[{}]}).heroes[0].name||'';charView();return}
  applySave(s);gate(null);boot();if(s.off&&s.off.kills>0)toast(`歡迎回來！離線 ${Math.floor(s.off.sec/60)} 分鐘<br>擊殺 ${s.off.kills}・金幣 +${fmt(s.off.g)}・經驗 +${fmt(s.off.be)}`,4000);onConnect();onLists()}
  catch(e){if(e.message==='登入已過期')return;authView(e.message);if(!ON.net)setTimeout(onEnter,4000)}}
-function applySave(s){const d=migrate(s.data);d.ev=[];G.S=d;ON.rev=s.rev;ON.dia0=d.dia;save();if(G.booted)startStage()}
+function solo(d){if(d&&d.heroes&&d.heroes.length>1){const m=d.heroes[0];d.heroes=[m];d.party=[m.id]}else if(d&&d.heroes&&d.heroes[0])d.party=[d.heroes[0].id];return d}
+function applySave(s){const d=solo(migrate(s.data));d.ev=[];G.S=d;ON.rev=s.rev;ON.dia0=d.dia;save();if(G.booted)startStage()}
 // ---------- 存檔上傳 ----------
 async function onUpload(quiet,keep){if(!ON.token||!G.S||ON.busy)return;ON.busy=1;try{const S=G.S;const ev=S.ev;S.ev=[];const data=JSON.parse(JSON.stringify(S));S.ev=ev;const sent=S.dia;
   const j=await onApi('PUT','/api/save',{data,rev:ON.rev},keep);ON.rev=j.rev;S.dia=j.dia+(S.dia-sent);ON.lastUp=Date.now();if(!quiet)toast('已同步')}
