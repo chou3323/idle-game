@@ -105,7 +105,7 @@ html,body{touch-action:manipulation}*{-webkit-touch-callout:none}
 <script>
 'use strict';
 // ===================== 第 1 層：靜態資料（DATA）—— 前後端共用 =====================
-const VER='1.4.2',SKEY='xyexp_save_v1';
+const VER='1.5.0',SKEY='xyexp_save_v1';
 const STATN={str:'STR',agi:'AGI',vit:'VIT',int:'INT',dex:'DEX',luk:'LUK'};
 const STATD={str:'近戰ATK、負重',agi:'ASPD、FLEE',vit:'HP、DEF、MDEF',int:'MATK、SP、MDEF',dex:'HIT、遠程ATK、詠唱',luk:'暴擊、完全迴避'};
 const ROLE={tank:'坦克',dps:'輸出',heal:'治療',sup:'輔助'};
@@ -997,7 +997,7 @@ function hud(){const S=G.S,B=G.B;if(!$("tG").innerHTML){$("tG").innerHTML=GOLDI;
 
 let TAB='battle',SUB={team:'stat',equip:'eq',adv:'stage',more:'shop'},SEL=1,PICK=null,EXQ='';
 const TABS=[['battle','戰鬥'],['team','角色'],['equip','裝備'],['adv','冒險'],['more','更多']];
-const SUBT={team:[['stat','屬性'],['skill','技能'],['job','轉職'],['party','隊伍']],equip:[['eq','穿戴'],['bag','背包'],['ref','精煉'],['star','星力'],['pot','潛能'],['card','卡片']],adv:[['stage','推圖'],['codex','圖鑑'],['pet','寵物'],['life','生活'],['dun','副本']],more:[['shop','點數商城'],['npc','商店'],['ex','交易所'],['month','月卡'],['guild','公會'],['set','設定']]};
+const SUBT={team:[['stat','屬性'],['skill','技能'],['job','轉職'],['party','隊伍']],equip:[['eq','穿戴'],['bag','背包'],['ref','精煉'],['star','星力'],['pot','潛能'],['card','卡片']],adv:[['stage','推圖'],['codex','圖鑑'],['pet','寵物'],['life','生活'],['dun','副本']],more:[['shop','點數商城'],['npc','商店'],['ex','交易所'],['month','月卡'],['guild','公會'],['online','線上'],['set','設定']]};
 function icon(k,c){const e=document.createElement('canvas');e.width=e.height=16;const x=e.getContext('2d');const r=(a,b,w,h,cc)=>{x.fillStyle=cc;x.fillRect(a,b,w,h)};c=c||'#ffd866';
  ({battle:()=>{r(7,1,2,10,'#ddd');r(4,10,8,2,c);r(7,12,2,3,'#8b5a2b')},team:()=>{r(5,2,6,5,'#ffd9b8');r(4,1,8,3,'#8b5a2b');r(4,8,8,6,c)},equip:()=>{r(3,3,10,10,'#9aa');r(5,5,6,6,c)},adv:()=>{r(2,3,12,10,'#c9a060');r(4,5,3,2,'#e33');r(9,8,3,3,'#3a3')},more:()=>{r(2,7,3,3,c);r(7,7,3,3,c);r(12,7,3,3,c)}}[k]||(()=>{}))();return e}
 function nav(){$('nav').innerHTML='';TABS.forEach(([k,n])=>{const b=document.createElement('button');b.dataset.t=k;b.className=TAB===k?'on':'';b.appendChild(icon(k,TAB===k?'#ffd866':'#8890b0'));b.appendChild(document.createTextNode(n));$('nav').appendChild(b)})}
@@ -1094,6 +1094,7 @@ function render(){const S=G.S;nav();let h=subBar();const s=SUB[TAB];
    <div class="row"><button class="b s" data-a="export">匯出存檔</button><button class="b s r" data-a="wipe">刪除存檔重來</button></div>
    <div class="row" style="margin-top:6px"><input id="gmpw" type="password" placeholder="GM 密碼" style="width:120px"><button class="b s" data-a="gmon">GM</button></div></div>
    ${G.gm?`<div class="card"><b>GM 面板</b><div class="row">${[['gold','金幣+100萬'],['dia','鑽石+5000'],['mat','材料全+50'],['cards','每種卡+1'],['egg','寵物蛋+3'],['lv','全隊+10等'],['gear','發本章裝備×8'],['stage','解鎖下一章'],['boss','直接挑頭目'],['spd','速度×1/×3'],['month','月卡+30天'],['rb','全隊轉生一次']].map(([k,n])=>`<button class="b s" data-a="gm" data-k="${k}">${n}</button>`).join('')}</div></div>`:''}`}}
+ if(TAB==='more'&&s==='online')h+=onlineHtml(S);
  $('app').innerHTML=curI(h);partyBox();document.querySelectorAll('canvas[data-mob]').forEach(c=>{const [ci,mi]=c.dataset.mob.split('_').map(Number);const m=mi==3?CH[ci].boss:CH[ci].mob[mi];X_SWAP(c.getContext('2d'),()=>drawMob(16,18,{sh:m[1],c:m[2],at:0,boss:0},0))});document.querySelectorAll('canvas[data-pet]').forEach(c=>{const p=G.S.pets.find(x=>x.u==c.dataset.pet);if(!p)return;const x=c.getContext('2d');const d=PETS[p.k];X_SWAP(x,()=>drawMob(16,18,{sh:d.sh,c:d.c[p.ev],at:0},0))})}
 function X_SWAP(ctx,fn){const o=X;X=ctx;try{fn()}finally{X=o}}
 
@@ -1160,5 +1161,56 @@ setInterval(()=>{if(!G.S||innerWidth<1000)return;const l=$('dlog'),p=$('ddps');i
   document.getElementById('a2x').onclick=()=>{localStorage.setItem('a2hs_off',1);d.remove()};if(btn)document.getElementById('a2go').onclick=async()=>{d.remove();if(dp){dp.prompt();await dp.userChoice;dp=null}}};
  addEventListener('beforeinstallprompt',e=>{e.preventDefault();dp=e;setTimeout(()=>show('把仙境冒險裝成 App，全螢幕更好玩',1),4000)});
  const ios=/iphone|ipad|ipod/i.test(navigator.userAgent);if(ios)setTimeout(()=>show('分享 →「加入主畫面」全螢幕玩'),5000)})();
+
+// ===== 線上功能（登入、雲端存檔、組隊、公會、聊天、線上交易所）；不登入時單機照常 =====
+const ON={api:localStorage.getItem('xj_api')||(new URLSearchParams(location.search).get('api'))||'https://api.ragnarokidle.app',token:localStorage.getItem('xj_tk')||'',name:localStorage.getItem('xj_nm')||'',rev:+localStorage.getItem('xj_rev')||0,ws:null,party:null,chat:[],market:[],guilds:[],stage:null,evN:0,msg:'',ch:'world',auto:localStorage.getItem('xj_auto')!=='0'};
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+async function onApi(m,p,b){const r=await fetch(ON.api.replace(/\/$/,'')+p,{method:m,headers:{'content-type':'application/json',...(ON.token?{authorization:'Bearer '+ON.token}:{})},body:b?JSON.stringify(b):undefined});const j=await r.json().catch(()=>({}));if(r.status===401&&ON.token){onLogout();throw new Error('登入已過期')}if(!r.ok)throw new Error(j.error||('錯誤 '+r.status)+(j.errs?'：'+j.errs.join('、'):''));return j}
+function onSet(k,v){ON[k]=v;localStorage.setItem({token:'xj_tk',name:'xj_nm',rev:'xj_rev',api:'xj_api'}[k],v)}
+function onDone(t){ON.msg=t;toast(t);if(TAB==='more'&&SUB.more==='online')render()}
+async function onAuth(reg){const u=$('onU').value.trim(),p=$('onP').value;try{const j=await onApi('POST',reg?'/api/register':'/api/login',{username:u,password:p,sex:G.S.heroes[0].sex});onSet('token',j.token);onSet('name',u);
+ const s=await onApi('GET','/api/save');onSet('rev',s.rev);if(reg){await onUpload(true)}else if(confirm('要用雲端存檔覆蓋本機進度嗎？\n（取消＝保留本機，並上傳到雲端）')){onApplySave(s)}else await onUpload(true);onConnect();onDone(reg?'註冊成功，已建立雲端存檔':'登入成功')}catch(e){onDone(e.message)}}
+function onLogout(){onSet('token','');onSet('name','');if(ON.ws)ON.ws.close();ON.ws=null;ON.party=null}
+function onApplySave(s){const d=migrate(s.data);d.ev=[];G.S=d;onSet('rev',s.rev);save();startStage()}
+async function onUpload(quiet){if(!ON.token)return;try{const S=G.S;const ev=S.ev;S.ev=[];const body={data:JSON.parse(JSON.stringify(S)),rev:ON.rev};S.ev=ev;const j=await onApi('PUT','/api/save',body);onSet('rev',j.rev);if(typeof j.dia==='number')S.dia=j.dia;if(!quiet)onDone('已上傳雲端存檔')}catch(e){if(/衝突/.test(e.message)){const s=await onApi('GET','/api/save');onApplySave(s);onDone('雲端有較新進度，已同步')}else onDone('上傳失敗：'+e.message)}}
+async function onDownload(){try{const s=await onApi('GET','/api/save');onApplySave(s);onDone('已下載雲端存檔')}catch(e){onDone(e.message)}}
+function onConnect(){if(!ON.token||ON.ws&&ON.ws.readyState<2)return;const w=new WebSocket(ON.api.replace(/^http/,'ws').replace(/\/$/,'')+'/ws?token='+encodeURIComponent(ON.token));ON.ws=w;
+ w.onmessage=e=>{const m=JSON.parse(e.data);if(m.t==='chat'){ON.chat.push(m);if(ON.chat.length>80)ON.chat.shift()}else if(m.t==='party'){ON.party=m.p}else if(m.t==='ev'){ON.evN+=m.ev.length;ON.pmobs=m.mobs}else if(m.t==='stage'){ON.stage=m.prog;log(`[組隊] ${m.win?'過關':'失敗'} → ${m.prog.ch+1}-${m.prog.st+1}`,'c')}else if(m.t==='saved'){onDownloadQuiet()}else if(m.t==='err')toast(m.e);
+  if(TAB==='more'&&SUB.more==='online'){const c=$('onChat');if(c&&m.t==='chat'){c.innerHTML=chatHtml();c.scrollTop=1e9}else if(m.t!=='ev')render()}};
+ w.onclose=()=>{ON.ws=null;if(ON.token)setTimeout(onConnect,5000)}}
+async function onDownloadQuiet(){try{const s=await onApi('GET','/api/save');if(s.rev>ON.rev)onApplySave(s)}catch(e){}}
+const wsSend=o=>{if(ON.ws&&ON.ws.readyState===1)ON.ws.send(JSON.stringify(o));else toast('尚未連線')};
+const chatHtml=()=>ON.chat.filter(m=>ON.ch==='all'||m.ch===ON.ch).slice(-40).map(m=>`<div><span class="tag">${{world:'世界',guild:'公會',party:'隊伍'}[m.ch]}</span> <b>${esc(m.name)}</b>：${esc(m.text)}</div>`).join('')||'<div class="sm">還沒有訊息</div>';
+async function onLoadLists(){try{ON.guilds=(await onApi('GET','/api/guilds')).guilds;ON.market=(await onApi('GET','/api/market')).list}catch(e){}}
+function onlineHtml(S){let h='';if(!ON.token){return h+`<div class="card"><b>線上模式</b><div class="sm">不登入也可以照常玩單機。登入後可雲端存檔、和朋友組隊共推、加入公會、聊天與線上交易所。</div>
+  <div class="row" style="margin-top:8px"><input id="onU" placeholder="帳號（3~16 字）" style="flex:1"><input id="onP" type="password" placeholder="密碼（至少 6 碼）" style="flex:1"></div>
+  <div class="row" style="margin-top:8px"><button class="b" data-a="onLogin">登入</button><button class="b g" data-a="onReg">註冊並上傳目前進度</button></div>
+  <div class="sm" style="margin-top:8px">伺服器：<input id="onApiI" value="${esc(ON.api)}" style="width:62%"><button class="b s" data-a="onApiSet">儲存</button></div>${ON.msg?`<div class="sm c">${esc(ON.msg)}</div>`:''}</div>`}
+ const conn=ON.ws&&ON.ws.readyState===1;const p=ON.party;
+ h+=`<div class="card"><div class="row"><b>${esc(ON.name)}</b><span class="tag">${conn?'<span class="gr">● 已連線</span>':'<span class="rd">● 離線</span>'}</span><span class="sp"></span><button class="b s r" data-a="onOut">登出</button></div>
+  <div class="row" style="margin-top:8px"><button class="b s" data-a="onUp">上傳存檔</button><button class="b s" data-a="onDown">下載雲端存檔</button><label><input type="checkbox" data-a="onAuto" ${ON.auto?'checked':''}> 每 5 分鐘自動上傳</label></div><div class="sm">雲端版本 r${ON.rev}${ON.msg?'｜'+esc(ON.msg):''}</div></div>`;
+ h+=`<div class="card"><b>線上組隊（最多 10 人）</b>${p?`<div class="sm">隊伍編號 <b class="c">${p.id}</b>（把編號給朋友加入）｜${p.running?'推圖中':'待命'}${ON.stage?`｜進度 ${ON.stage.ch+1}-${ON.stage.st+1}`:''}</div>
+  <div class="row">${p.members.map(m=>`<span class="tag">${m.id===p.leader?'👑':''}${esc(m.name||m.id)}</span>`).join('')}</div>
+  <div class="row" style="margin-top:6px">${p.leader===onMe()?(p.running?'<button class="b s r" data-a="onPStop">停止</button>':'<button class="b s g" data-a="onPStart">從目前關卡開始共推</button>'):''}<button class="b s r" data-a="onPLeave">離開隊伍</button></div>`:
+  `<div class="row" style="margin-top:6px"><button class="b s g" data-a="onPCreate">建立隊伍</button><input id="onPid" type="number" placeholder="隊伍編號" style="width:100px"><button class="b s" data-a="onPJoin">加入</button></div><div class="sm">組隊戰鬥由伺服器計算，經驗/金幣/進度自動寫回每個人的雲端存檔。</div>`}</div>`;
+ h+=`<div class="card"><div class="row"><b>聊天</b><span class="sp"></span><div class="subs" style="margin:0">${[['world','世界'],['guild','公會'],['party','隊伍']].map(([k,n])=>`<button class="${ON.ch===k?'on':''}" data-a="onCh" data-k="${k}">${n}</button>`).join('')}</div></div>
+  <div id="onChat" style="max-height:180px;overflow:auto;font-size:13px">${chatHtml()}</div><div class="row" style="margin-top:6px"><input id="onMsg" placeholder="說點什麼…" maxlength="200" style="flex:1"><button class="b s" data-a="onSay">送出</button></div></div>`;
+ h+=`<div class="card"><div class="row"><b>公會</b><span class="sp"></span><button class="b s" data-a="onRef">重新整理</button></div>${ON.guilds.map(g=>`<div class="it"><div class="sp"><b>${esc(g.name)}</b> <span class="sm">Lv${g.lv}｜${g.n} 人</span></div><button class="b s" data-a="onGJoin" data-k="${g.id}">加入</button></div>`).join('')||'<div class="sm">尚無公會</div>'}
+  <div class="row" style="margin-top:6px"><input id="onGName" placeholder="公會名稱" style="flex:1"><button class="b s g" data-a="onGCreate">建立</button><button class="b s r" data-a="onGLeave">退出公會</button></div></div>`;
+ h+=`<div class="card"><div class="row"><b>線上交易所</b><span class="sp"></span><button class="b s" data-a="onRef">重新整理</button></div><div class="sm">與真人玩家交易（鑽石計價、伺服器托管）。點數商城道具不可上架；裝備自由定價、交易 3 次綁定；材料/卡片依系統區間。</div>
+  ${ON.market.map(l=>{const it=typeof l.item==='string'?JSON.parse(l.item):l.item;return`<div class="it"><div class="sp">${l.kind==='equip'?itemDesc(it):'<b>'+gName(it.key)+'</b>×'+l.qty}</div><button class="b s y" data-a="onBuy" data-k="${l.id}">${l.price*l.qty} 鑽</button></div>`}).join('')||'<div class="sm">目前沒有掛單</div>'}
+  <div class="sm" style="margin-top:6px">上架裝備（未裝備）：</div>${S.inv.filter(i=>!owner(S,i.u)&&!i.bound).slice(0,8).map(it=>`<div class="it"><div class="sp sm">${esc(it.n)}｜${trTxt(it)}</div><input id="onEp${it.u}" type="number" min="1" value="${eqBase(it)}" style="width:64px"><button class="b s" data-a="onSell" data-v="${it.u}">上架</button></div>`).join('')}</div>`;
+ return h}
+const onMe=()=>{try{return JSON.parse(atob(ON.token.split('.')[0].replace(/-/g,'+').replace(/_/g,'/'))).id}catch(e){return 0}};
+const onTry=f=>async d=>{try{await f(d)}catch(e){onDone(e.message)}};
+Object.assign(ACT,{onLogin:()=>onAuth(0),onReg:()=>onAuth(1),onOut:()=>{onLogout();onDone('已登出（單機照常可玩）')},onUp:()=>onUpload(),onDown:()=>{if(confirm('用雲端存檔覆蓋本機？'))onDownload()},
+ onAuto:t=>{ON.auto=t.checked;localStorage.setItem('xj_auto',t.checked?'1':'0')},onApiSet:()=>{onSet('api',$('onApiI').value.trim());onDone('伺服器位址已儲存')},
+ onPCreate:()=>wsSend({t:'party.create'}),onPJoin:()=>wsSend({t:'party.join',id:+$('onPid').value}),onPLeave:()=>{wsSend({t:'party.leave'});ON.party=null},onPStart:onTry(async()=>{await onUpload(true);wsSend({t:'party.start',ch:G.S.prog.ch,st:G.S.prog.st})}),onPStop:()=>wsSend({t:'party.stop'}),
+ onCh:d=>{ON.ch=d.k},onSay:()=>{const t=$('onMsg').value.trim();if(t){wsSend({t:'chat',ch:ON.ch,text:t});$('onMsg').value=''}},
+ onRef:onTry(async()=>{await onLoadLists();render()}),onGCreate:onTry(async()=>{await onApi('POST','/api/guild/create',{name:$('onGName').value.trim()});await onLoadLists();onDone('公會已建立')}),onGJoin:onTry(async d=>{await onApi('POST','/api/guild/join',{id:+d.k});await onLoadLists();onDone('已加入公會')}),onGLeave:onTry(async()=>{await onApi('POST','/api/guild/leave');await onLoadLists();onDone('已退出公會')}),
+ onBuy:onTry(async d=>{await onUpload(true);await onApi('POST','/api/market/buy',{id:+d.k});await onDownload();await onLoadLists();onDone('購買成功')}),
+ onSell:onTry(async d=>{await onUpload(true);await onApi('POST','/api/market/list',{u:+d.v,price:+$('onEp'+d.v).value,days:7});await onDownload();await onLoadLists();onDone('已上架到線上交易所')})});
+setInterval(()=>{if(ON.token&&ON.auto&&G.S)onUpload(true)},300000);
+if(ON.token){setTimeout(()=>{onConnect();onLoadLists();onDownloadQuiet()},1500)}
 
 </script></body></html>
