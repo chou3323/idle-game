@@ -1,2 +1,2 @@
-{"name":"王權紀元：放置征戰","short_name":"王權紀元","description":"原創中世紀奇幻放置 RPG：衝裝、變身、血盟、攻城","start_url":"./","scope":"./","id":"./?app=ql","display":"standalone","orientation":"portrait","background_color":"#15100b","theme_color":"#15100b","lang":"zh-Hant",
+{"name":"星芽遠征團：放置冒險","short_name":"星芽遠征團","description":"原創可愛像素組隊放置 RPG：推圖、轉職、卡片、精煉、寵物","start_url":"./","scope":"./","id":"./?app=xy","display":"standalone","orientation":"portrait","background_color":"#141a30","theme_color":"#1b2340","lang":"zh-Hant",
 "icons":[{"src":"icons/icon-192.png","sizes":"192x192","type":"image/png","purpose":"any"},{"src":"icons/icon-512.png","sizes":"512x512","type":"image/png","purpose":"any"},{"src":"icons/icon-512.png","sizes":"512x512","type":"image/png","purpose":"maskable"}]}
