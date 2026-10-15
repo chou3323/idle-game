@@ -279,7 +279,7 @@ body.nobt #stagebar,body.nobt #cv,body.nobt #dock,body.nobt #pbar.ov{display:non
 <script>
 'use strict';
 // ===================== 第 1 層：靜態資料（DATA）—— 前後端共用 =====================
-const VER='1.7.18',SKEY='xj_cache_v2',LEGACY='xyexp_save_v1';
+const VER='1.7.19',SKEY='xj_cache_v2',LEGACY='xyexp_save_v1';
 const STATN={str:'力量',agi:'敏捷',vit:'體力',int:'智力',dex:'靈巧',luk:'幸運'};
 const STATD={str:'近戰攻擊、負重',agi:'攻速、迴避',vit:'HP、防禦、魔防',int:'魔攻、SP、魔防',dex:'命中、遠程攻擊、詠唱',luk:'暴擊、完全迴避'};
 const ROLE={tank:'坦克',dps:'輸出',heal:'治療',sup:'輔助'};
@@ -1058,12 +1058,12 @@ for(const k in ARROWS)if(!NPCSHOP.find(x=>x.k===k))NPCSHOP.push({k,n:ARROWS[k].n
 if(typeof DSHOP!=='undefined'&&!DSHOP.find(x=>x.k==='yfruit'))DSHOP.push({k:'yfruit',n:'天果',d:'立刻補滿 HP',p:15});
 if(typeof BIND!=='undefined'&&!BIND.includes('yfruit'))BIND.push('yfruit');
 function useCons(S,h,k,B){const c=CONS[k];if(!c)return'不能使用';const M=(S.hmat&&S.hmat[h.id])||S.mat;if((M[k]||0)<1)return c.n+'不足';if(c.lv&&h.bl<c.lv)return`需 Lv${c.lv}`;
- if(c.b){S.cbuf=S.cbuf||{};const now=Date.now();S.cbuf[k]=Math.max(now,S.cbuf[k]||0)+c.dur*1000;M[k]--;return''}
+ if(c.b){let CB;if(S.hcb){CB=S.hcb[h.id]=S.hcb[h.id]||{}}else CB=S.cbuf=S.cbuf||{};const now=Date.now();CB[k]=Math.max(now,CB[k]||0)+c.dur*1000;M[k]--;if(B&&B.ev)B.ev.push({t:'pot',k,id:h.id,n:c.n});return''}
  const rt=B&&B.hr&&B.hr[h.id];if(!rt)return'不在戰鬥中';rt.pcd=rt.pcd||{};if((rt.pcd[k]||0)>0)return'冷卻中';const T=calc(S,h);
  if(k==='yfruit'){if(rt.hp<=0)return'倒下時請用天地樹葉子';if(rt.hp>=T.mhp)return'HP 已滿';rt.hp=T.mhp}else if(k==='ygg'){if(rt.hp>0)return'天地樹葉子只能用來復活';rt.hp=Math.ceil(T.mhp*.2)}
  M[k]--;rt.pcd[k]=c.cd;if(B.ev)B.ev.push({t:'pot',k,id:h.id,n:c.n});return''}
 // 增益（同種重複使用＝延長時間；不同料理可疊加；覺醒/狂暴取較高者）
-{const _e=eqBonus;eqBonus=function(S,h){const b=_e(S,h);if(S&&S.cbuf){const now=Date.now();let asp=0;for(const k in S.cbuf){if(S.cbuf[k]<=now){delete S.cbuf[k];continue}const c=CONS[k];if(!c||!c.b)continue;if(c.b.aspdP){asp=Math.max(asp,c.b.aspdP);continue}if(c.lv&&h.bl<c.lv)continue;for(const x in c.b)b[x]=(b[x]||0)+c.b[x]}if(asp)b.aspdP=(b.aspdP||0)+asp}return b}}
+{const _e=eqBonus;eqBonus=function(S,h){const b=_e(S,h);const CBX=S&&((S.hcb&&h&&S.hcb[h.id])||(!S.hcb&&S.cbuf));if(CBX){const now=Date.now();let asp=0;for(const k in CBX){if(CBX[k]<=now){delete CBX[k];continue}const c=CONS[k];if(!c||!c.b)continue;if(c.b.aspdP){asp=Math.max(asp,c.b.aspdP);continue}if(c.lv&&h.bl<c.lv)continue;for(const x in c.b)b[x]=(b[x]||0)+c.b[x]}if(asp)b.aspdP=(b.aspdP||0)+asp}return b}}
 // 戰鬥：自動用葉子、祭司復活術、元素箭矢屬性
 const RESU_HP=[0,.1,.3,.5,.8];
 {const _sb=stepBattle;stepBattle=function(S,B,dt){const ar=S.arrow&&ARROWS[S.arrow]&&(S.mat[S.arrow]||0)>0?S.arrow:null;const ev=_sb(S,B,dt);
@@ -1460,7 +1460,7 @@ function partyBox(){const S=G.S,B=G.B;const e=$('pbox');if(!e||!B)return;e.inner
  return`<div class="row" style="margin:2px 0"><span style="width:96px">${nameHtml(h)} <span class="sm">${jobName(h.job,h.sex)}</span></span><span class="sm" style="width:52px">Lv${h.bl}</span><div class="sp"><div class="hb"><i style="width:${100*Math.max(0,rt?rt.hp:0)/t.mhp}%;background:#5d5"></i></div><div class="hb" style="height:3px"><i style="width:${100*Math.max(0,rt?rt.sp:0)/t.msp}%;background:#59f"></i></div></div>${B.boss?`<span class="sm ${tp>=90?'rd':''}" style="width:44px;text-align:right">仇${tp}%</span>`:''}</div>`}).join('')}
 function render(){const S=G.S;if(SUBT[TAB]&&!SUBT[TAB].some(x=>x[0]===SUB[TAB]))SUB[TAB]=SUBT[TAB][0][0];document.body.classList.toggle('nobt',TAB!=='battle');nav();let h=subBar();const s=SUB[TAB];
  if(TAB==='battle'){const pb=partyBonus(S);h+=`<div class="card"><div class="row"><b>角色</b><span class="sp"></span><span class="sm">${ON.party?'線上隊伍 '+ON.party.members.length+' 人':'在「社交 › 隊伍」邀請好友共推'}</span></div><div id="pbox"></div></div>
-  <div class="row"><label class="sm"><input type="checkbox" data-a="autopush" ${S.prog.auto?'checked':''}> 自動推進</label><label class="sm"><input type="checkbox" data-a="autoboss" ${S.prog.autoBoss?'checked':''}> 自動挑頭目</label><label class="sm"><input type="checkbox" data-a="autoint" ${S.autoInt!==false?'checked':''}> 自動打斷</label></div><div class="sm" style="opacity:.8;margin:2px 4px 6px">⚔️ 技能全自動施放：依「角色 → 技能」頁學會的技能，冷卻好且 SP 足夠就會放，施放時角色頭上會顯示技能名（被動觸發也會顯示）。頭目詠唱時按上方「打斷！」可手動打斷。</div>${potBar(S)}
+  <div class="row"><label class="sm"><input type="checkbox" data-a="autopush" ${S.prog.auto?'checked':''}> 自動推進</label><label class="sm"><input type="checkbox" data-a="autoboss" ${S.prog.autoBoss?'checked':''}> 自動挑頭目</label><label class="sm"><input type="checkbox" data-a="autoint" ${S.autoInt!==false?'checked':''}> 自動打斷</label></div><div class="sm" style="opacity:.8;margin:2px 4px 6px">⚔️ 技能自動施放：「角色 → 技能」頁每個已學主動技能都有「自動」開關，打勾的技能在冷卻好且 SP 足夠時自動施放，取消打勾就不會自動放（組隊戰鬥同樣遵守）。施放時角色頭上會顯示技能名。頭目詠唱時按上方「打斷！」可手動打斷。</div>${potBar(S)}
   ${S.lastFail?`<div class="card sm"><b class="rd">上次頭目失敗建議：</b>${S.lastFail.join('；')}</div>`:''}<div id="log">${LOG.join('')}</div>`}
  if(TAB==='team'){h+=heroSel();if(s==='stat')h+=pnoCard();const hr=curH(),t=calc(S,hr),j=J[hr.job];
   if(s==='stat'){h+=`<div class="card"><div class="row">${nameHtml(hr)} <span class="tag">${jobName(hr.job,hr.sex)}</span><span class="tag">${ROLE[j.role]}</span><span class="sp"></span><span class="c">戰力 ${fmt(heroPower(S,hr))}</span></div>
@@ -2179,7 +2179,7 @@ ACT.mBulkGo=async d=>{const n=Math.floor(+($('mbq')||{}).value||0);const c=bulkC
 // 自動戰鬥逐一開關技能（存在角色 skOff；伺服器組隊戰鬥用同一份角色資料，也會遵守）
 ACT.skAuto=(e,d)=>{const h=curH();const k=(d&&d.k)||e.k;h.skOff=h.skOff||{};const on=typeof e.checked==='boolean'?e.checked:!!h.skOff[k];if(on)delete h.skOff[k];else h.skOff[k]=1;save();toast((on?'自動施放：開 ':'自動施放：關 ')+SK[k].n);if(typeof wsSend==='function'&&ON.party)setTimeout(()=>wsSend({t:'party.refresh'}),1500)};
 // 組隊時天果/天地樹葉子也由伺服器執行
-{const _uc=ACT.useC;ACT.useC=d=>{if(mirOn()&&(d.k==='yfruit'||d.k==='ygg')){const n=(ON.pm||{})[d.k];if(n===0)return toast(CONS[d.k].n+'不足');wsSend({t:'party.drink',k:d.k});return}return _uc(d)}}
+{const _uc=ACT.useC;ACT.useC=d=>{if(mirOn()&&CONS[d.k]){const n=(ON.pm||{})[d.k];if(n===0)return toast(CONS[d.k].n+'不足');wsSend({t:'party.drink',k:d.k});const c=CONS[d.k];if(c.b){G.S.cbuf=G.S.cbuf||{};const now=Date.now();G.S.cbuf[d.k]=Math.max(now,G.S.cbuf[d.k]||0)+c.dur*1000;toast(c.n+' 已由隊伍伺服器生效');setTimeout(render,300)}return}return _uc(d)}}
 // 藥水/天果/天地樹葉子/復活術 冷卻倒數
 function myRt(){const M=typeof mirOn==='function'&&mirOn()&&ON.mir;const B=M?M.B:G.B;if(!B||!B.hr)return null;const id=M?ON.id:(curH()||{}).id;return B.hr[id]}
 setInterval(()=>{try{if(TAB!=='battle')return;const pb=document.querySelector('.potb');if(!pb)return;const rt=myRt()||{};const pc=rt.pcd||{};
