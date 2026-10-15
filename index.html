@@ -264,6 +264,7 @@ body.fixh .soc>.card.chat .say{flex:none;margin-top:8px}
 .pbm{min-width:92px;background:#fff;border-radius:10px;padding:4px 6px;display:flex;flex-direction:column;gap:2px;cursor:pointer;border:2px solid transparent}.pbm.me{border-color:#ffb3d0}.pbm.off{opacity:.5}.pbm b{font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.pbm small{font-size:10px;color:#998}
 .pbh,.pbs{display:block;height:4px;background:#eee;border-radius:3px;overflow:hidden}.pbh u,.pbs u{display:block;height:100%;text-decoration:none}.pbh u{background:#4cd07a}.pbs u{background:#5aa8ff}
 #pbar.ov .pbar{background:#ffffffd0;backdrop-filter:blur(4px);margin:0}
+.bdg{background:#ff3b4f!important;box-shadow:0 1px 3px #0003}.subs .bdg{top:-6px;left:auto;right:-6px}
 </style></head><body>
 <div id="top"><span id="tName"></span><span class="sp"></span><span id="tG"></span><b id="tGold">0</b><span id="tD"></span><b id="tDia">0</b><button class="b s" id="snd" data-a="snd">音</button></div>
 <div id="stagebar"><span id="sbT"></span><div class="pb"><i id="sbP"></i></div><span id="sbX"></span><button class="b s y" data-a="boss" id="bossBtn">挑戰頭目</button></div>
@@ -274,7 +275,7 @@ body.fixh .soc>.card.chat .say{flex:none;margin-top:8px}
 <script>
 'use strict';
 // ===================== 第 1 層：靜態資料（DATA）—— 前後端共用 =====================
-const VER='1.7.10',SKEY='xj_cache_v2',LEGACY='xyexp_save_v1';
+const VER='1.7.11',SKEY='xj_cache_v2',LEGACY='xyexp_save_v1';
 const STATN={str:'STR',agi:'AGI',vit:'VIT',int:'INT',dex:'DEX',luk:'LUK'};
 const STATD={str:'近戰攻擊、負重',agi:'攻速、迴避',vit:'HP、防禦、魔防',int:'魔攻、SP、魔防',dex:'命中、遠程攻擊、詠唱',luk:'暴擊、完全迴避'};
 const ROLE={tank:'坦克',dps:'輸出',heal:'治療',sup:'輔助'};
@@ -2043,6 +2044,17 @@ addEventListener('resize',()=>{try{pbarUpd()}catch(e){}});
  L.slice(0,9).forEach((l,i)=>{const p=allyPos(i),s=ON.pst[l.id];if(s){X.fillStyle='#0006';X.fillRect(p[0]-10,p[1]+14,20,3);X.fillStyle='#4cd07a';X.fillRect(p[0]-10,p[1]+14,20*Math.max(0,Math.min(1,s.hp/s.mhp)),3)}});
  ON.pfx=ON.pfx.filter(f=>now-f.t0<1100);for(const f of ON.pfx){const p=allyPos(f.i);const a=(now-f.t0)/1100;X.save();X.globalAlpha=1-a;X.textAlign='center';X.font=(f.c?'bold 10px':'bold 8px')+' sans-serif';X.lineWidth=2;X.strokeStyle='#3a2350';X.fillStyle=f.heal?'#6dff9a':f.txt?'#ffe27a':f.c?'#ffb43b':'#fff';const t=f.txt||((f.heal?'+':'')+fmt(f.v));const y=p[1]-28-a*14;X.strokeText(t,p[0]+12,y);X.fillText(t,p[0]+12,y);X.restore()}}catch(e){}}}
 setInterval(()=>{try{pbarUpd()}catch(e){}},1000);
+// ===== 紅色未讀泡泡：底部「社交」與各分頁（密語、隊伍/公會聊天、好友邀請、組隊邀請）；伺服器記錄，看過即消失 =====
+ON.unS={dm:0,freq:0,pinv:0,party:0,guild:0};
+async function unreadSync(){if(!ON.token)return;try{const j=await onApi('GET','/api/unread');ON.unS=j;ON.un.party=Math.max(ON.un.party||0,j.party);ON.un.guild=Math.max(ON.un.guild||0,j.guild);if(j.dm>(ON.un.dm||0))ON.un.dm=j.dm}catch(e){}badge()}
+let _rdT={};function markRead(ch){if(!ON.token||!['party','guild'].includes(ch))return;clearTimeout(_rdT[ch]);_rdT[ch]=setTimeout(()=>onApi('POST','/api/read',{ch}).catch(()=>{}),400)}
+function subCounts(){const F=ON.soc||{};return{chat:(ON.un.party||0)+(ON.un.guild||0),friend:F.incoming?F.incoming.length:ON.unS.freq,party:(ON.pinv||[]).length,guild:0,dm:ON.un.dm||0}}
+badge=function(){if(TAB==='social'&&SUB.social==='chat'&&['party','guild'].includes(ON.ch)&&G.S&&document.visibilityState!=='hidden'){ON.un[ON.ch]=0;markRead(ON.ch)}const c=subCounts();const n=c.chat+c.friend+c.party+c.dm;const b=document.querySelector('#nav button[data-t=social]');if(b){let e=b.querySelector('.bdg');if(!e){e=document.createElement('i');e.className='bdg';b.appendChild(e)}e.textContent=n>99?'99+':n;e.style.display=n?'':'none'}
+ if(TAB==='social')document.querySelectorAll('.subs button[data-v]').forEach(x=>{const v=c[x.dataset.v]||0;let e=x.querySelector('.bdg');if(!e){e=document.createElement('i');e.className='bdg';x.style.position='relative';x.appendChild(e)}e.textContent=v>99?'99+':v;e.style.display=v?'':'none'})};
+{const _r=render;render=function(...a){const r=_r(...a);try{if(TAB==='social'&&SUB.social==='chat'&&['party','guild'].includes(ON.ch)&&ON.un[ON.ch]===0)markRead(ON.ch);badge()}catch(e){}return r}}
+{const _o=ACT.onCh;ACT.onCh=d=>{_o(d);markRead(d.k)}}
+setInterval(unreadSync,60000);setTimeout(unreadSync,2500);
+{const _w=typeof onSocial==='function'?onSocial:null;if(_w)onSocial=async function(...a){const r=await _w(...a);unreadSync();return r}}
 
 // ===== 精煉頁 v2（Q 版）：選裝備條 → 中間大鐵砧格 → 目前/下一級對比 → 成功率 → 材料金幣 → 保護勾選 → 動畫；石頭合成面板 =====
 function rfStat(it,rf){const w=it.slot==='wpn'||it.wt;const p=rfP(rf);const L=[];if(w)L.push(['攻擊／魔攻',`+${p}%`]);else L.push(['防禦',`+${Math.round(p*.7)}%`]);if(!w){const hp=rf>=20?5:rf>=15?2.5:rf>=10?1:0;L.push(['最大 HP',hp?`+${hp}%`:'—'])}L.push(['光芒',rf>=20?'彩虹神光':rf>=15?'金色光芒':rf>=9?'藍色光芒':'—']);return L}
