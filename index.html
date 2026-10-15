@@ -230,6 +230,7 @@ body.fixh .soc>.card.chat .say{flex:none;margin-top:8px}
 .jbs{display:grid;grid-template-columns:1fr;gap:8px}@media (min-width:700px){.jbs{grid-template-columns:1fr 1fr}}.card.jbc{border-radius:18px;margin:0}.card.jbc.ok{box-shadow:0 0 0 2px #9be0b8 inset}.jbc-h{display:flex;gap:8px;align-items:center;margin-bottom:4px}.jbc-d{width:14px;height:14px;border-radius:50%;box-shadow:0 0 0 3px #fff,0 0 0 4px #e2dcf0}
 .jbp{display:grid;gap:6px;margin-top:8px}.jbp-r{display:grid;grid-template-columns:70px 1fr 64px;gap:8px;align-items:center;font-size:13px}.jbp-r b{text-align:right}.jbp-r b.pos{color:#2fae6b}.jbp-bar{height:10px;border-radius:6px;background:#efe9fb;overflow:hidden}.jbp-bar i{display:block;height:100%;background:linear-gradient(90deg,#ffb3d9,#a8c8ff)}
 .potb{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap}.potq{position:relative;display:flex;align-items:center;gap:4px;border:0;border-radius:16px;padding:6px 12px;background:#fff;box-shadow:0 2px 0 rgba(120,90,180,.15);font-weight:700;color:#5b4a78}.potq i{position:absolute;top:-6px;right:-4px;font-style:normal;font-size:10px;background:#c9a8ff;color:#fff;border-radius:8px;padding:0 4px}.potq.set{font-size:12px}.potq.set.on{background:#e7f8ee}.qbtn{display:flex;gap:6px;flex-wrap:wrap}
+.sug{display:flex;flex-direction:column;gap:2px;margin-top:4px}.sug:empty{display:none}.sgi{display:flex;align-items:center;gap:8px;padding:6px 8px;border-radius:10px;cursor:pointer;background:rgba(255,255,255,.6)}.sgi:hover{background:#fde7f1}.sgi mark{background:#ffe08a;border-radius:3px;padding:0 1px}
 </style></head><body>
 <div id="top"><span id="tName"></span><span class="sp"></span><span id="tG"></span><b id="tGold">0</b><span id="tD"></span><b id="tDia">0</b><button class="b s" id="snd" data-a="snd">音</button></div>
 <div id="stagebar"><span id="sbT"></span><div class="pb"><i id="sbP"></i></div><span id="sbX"></span><button class="b s y" data-a="boss" id="bossBtn">挑戰頭目</button></div>
@@ -240,7 +241,7 @@ body.fixh .soc>.card.chat .say{flex:none;margin-top:8px}
 <script>
 'use strict';
 // ===================== 第 1 層：靜態資料（DATA）—— 前後端共用 =====================
-const VER='1.7.6',SKEY='xj_cache_v2',LEGACY='xyexp_save_v1';
+const VER='1.7.7',SKEY='xj_cache_v2',LEGACY='xyexp_save_v1';
 const STATN={str:'STR',agi:'AGI',vit:'VIT',int:'INT',dex:'DEX',luk:'LUK'};
 const STATD={str:'近戰ATK、負重',agi:'ASPD、FLEE',vit:'HP、DEF、MDEF',int:'MATK、SP、MDEF',dex:'HIT、遠程ATK、詠唱',luk:'暴擊、完全迴避'};
 const ROLE={tank:'坦克',dps:'輸出',heal:'治療',sup:'輔助'};
@@ -1786,7 +1787,7 @@ const ub=(n)=>n?`<i class="ub">${n>99?'99+':n}</i>`:'';
 function socialHtml(S,s){if(!ON.ws||ON.ws.readyState!==1){if(!ON.net)return'<div class="card empty">連線中斷，正在重新連線…</div>'}let h='';
  if(s==='chat'){ON.un[ON.ch]=0;setTimeout(()=>{const c=$('chatL');if(c)c.scrollTop=1e9;badge()});h+=`<div class="card chat"><div class="seg sm2">${Object.entries(CHN).map(([k,n])=>`<button class="${ON.ch===k?'on':''}" data-a="onCh" data-k="${k}">${n}${ub(k===ON.ch?0:ON.un[k])}</button>`).join('')}</div>
   <div id="chatL" class="msgs">${chatList()}</div><div class="say"><input id="chatI" maxlength="200" placeholder="${ON.ch==='guild'&&!(ON.gd&&ON.gd.g)?'加入公會後可使用':ON.ch==='party'&&!ON.party?'組隊後可使用':'說點什麼…'}"><button class="b" data-a="onSay">送出</button></div></div>`}
- if(s==='friend'){const F=ON.soc||{friends:[],incoming:[],outgoing:[],blocks:[]};h+=`<div class="card"><div class="say"><input id="fQ" placeholder="搜尋玩家名稱"><button class="b" data-a="fFind">搜尋</button></div>${ON.users.map(u=>`<div class="it">${av(u.name,u.on)}<b class="sp">${esc(u.name)}</b><button class="b s g" data-a="fReq" data-k="${u.id}">加好友</button></div>`).join('')}</div>`;
+ if(s==='friend'){const F=ON.soc||{friends:[],incoming:[],outgoing:[],blocks:[]};h+=`<div class="card"><div class="say"><input id="fQ" placeholder="輸入部分暱稱或玩家編號" autocomplete="off"><button class="b" data-a="fFind">搜尋</button></div><div id="fSug" class="sug"></div>${ON.users.map(u=>`<div class="it">${av(u.name,u.on)}<b class="sp">${esc(u.name)}${u.pno?` <span class="sm">#${u.pno}</span>`:''}</b><button class="b s" data-a="dmOpen" data-k="${u.id}" data-n="${esc(u.name)}">密語</button><button class="b s g" data-a="fReq" data-k="${u.id}">加好友</button></div>`).join('')}</div>`;
   if(F.incoming.length)h+=`<div class="card"><b>好友邀請</b>${F.incoming.map(u=>`<div class="it">${av(u.name,u.on)}<b class="sp">${esc(u.name)}</b><button class="b s g" data-a="fAcc" data-k="${u.id}">接受</button><button class="b s r" data-a="fRej" data-k="${u.id}">拒絕</button></div>`).join('')}</div>`;
   h+=`<div class="card"><div class="row"><b>好友</b><span class="sm">${F.friends.filter(f=>f.on).length}/${F.friends.length} 在線</span></div>${F.friends.sort((a,b)=>b.on-a.on).map(u=>`<div class="it">${av(u.name,u.on)}<div class="sp"><b>${esc(u.name)}</b><div class="sm">${u.on?'在線':'離線'}</div></div><button class="b s" data-a="dmOpen" data-k="${u.id}">密語${ub(F.unread&&F.unread[u.id])}</button><button class="b s g" data-a="pInv" data-k="${u.id}" ${u.on?'':'disabled'}>邀請組隊</button><button class="b s r" data-a="uMenu" data-k="${u.id}" data-n="${esc(u.name)}">⋯</button></div>`).join('')||'<div class="empty">還沒有好友，搜尋玩家名稱加好友吧</div>'}</div>`;
   if(F.outgoing.length)h+=`<div class="card sm">已送出邀請：${F.outgoing.map(u=>esc(u.name)).join('、')}</div>`;if(F.blocks.length)h+=`<div class="card"><b>封鎖名單</b>${F.blocks.map(u=>`<div class="it"><span class="sp">${esc(u.name)}</span><button class="b s" data-a="fUnb" data-k="${u.id}">解除</button></div>`).join('')}</div>`}
@@ -1896,5 +1897,12 @@ function rfPage(S,pick){const o=G.ro;
 const rfMsg=r=>r.r==='ok'?(SFX.ok(),'精煉成功！+'+r.rf):r.r==='down'?(SFX.fail(),'精煉失敗，降到 +'+r.rf):r.r==='fail'?(SFX.fail(),'精煉失敗（券保護，等級不變）'):r.r==='break'?(SFX.brk(),'精煉失敗，裝備損壞了…'):r.r==='max'?'已達上限':(r.why||'金幣或材料不足');
 ACT.ref=async d=>{const u=+d.v;if(ON.token){if(ON.rfb)return;ON.rfb=1;try{await onUpload(true);const j=await onApi('POST','/api/refine',{u,o:G.ro});toast(rfMsg(j));await after({rev:1})}catch(e){toast(e.message)}finally{ON.rfb=0;render()}}else{toast(rfMsg(refine(G.S,u,G.ro)));save();render()}};
 ACT.rfcomb=async d=>{if(ON.token){try{await onUpload(true);const j=await onApi('POST','/api/rfcombine',{k:d.k,n:+d.v});toast(`合成 ${j.times} 個 ${MAT[j.to]}`);await after({rev:1})}catch(e){toast(e.message)}render()}else{const r=rfCombine(G.S,d.k,+d.v);toast(r.err||`合成 ${r.times} 個 ${MAT[r.to]}`);save();render()}};
+// ===== 找玩家：邊打邊縮小候選（debounce 250ms、最多 8 筆），點選即選定 =====
+let _fqT=0,_fqN=0;
+document.addEventListener('input',e=>{if(!e.target||e.target.id!=='fQ')return;clearTimeout(_fqT);const v=e.target.value.trim();const box=document.getElementById('fSug');if(!v){if(box)box.innerHTML='';return}
+ _fqT=setTimeout(async()=>{const n=++_fqN;try{const j=await onApi('GET','/api/users?q='+encodeURIComponent(v));if(n!==_fqN)return;const b=document.getElementById('fSug');if(!b)return;ON.sug=j.list||[];
+  b.innerHTML=ON.sug.length?ON.sug.map((u,i)=>`<div class="sgi" data-a="fPick" data-v="${i}">${av(u.name,u.on)}<b class="sp">${hlq(u.name,v)}</b><span class="sm">#${u.pno||''}</span></div>`).join(''):'<div class="sm" style="padding:6px">沒有符合的玩家</div>'}catch(err){}},250)});
+function hlq(n,q){const s=String(n),i=s.toLowerCase().indexOf(q.toLowerCase());return i<0?esc(s):esc(s.slice(0,i))+'<mark>'+esc(s.slice(i,i+q.length))+'</mark>'+esc(s.slice(i+q.length))}
+ACT.fPick=d=>{const u=ON.sug&&ON.sug[+d.v];if(!u)return;ON.users=[u];const i=document.getElementById('fQ');if(i)i.value=u.name;render()};
 
 </script></body></html>
