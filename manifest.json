@@ -1,2 +1,2 @@
-{"name":"星芽遠征團：放置冒險","short_name":"星芽遠征團","description":"原創可愛像素組隊放置 RPG：推圖、轉職、卡片、精煉、寵物","start_url":"./","scope":"./","id":"./?app=xy","display":"standalone","orientation":"portrait","background_color":"#141a30","theme_color":"#1b2340","lang":"zh-Hant",
+{"name":"仙境冒險","short_name":"仙境冒險","description":"原創可愛像素組隊放置 RPG：推圖、轉職、卡片、精煉、寵物","start_url":"./","scope":"./","id":"./?app=xy","display":"standalone","orientation":"portrait","background_color":"#1a1c3a","theme_color":"#1e2147","lang":"zh-Hant",
 "icons":[{"src":"icons/icon-192.png","sizes":"192x192","type":"image/png","purpose":"any"},{"src":"icons/icon-512.png","sizes":"512x512","type":"image/png","purpose":"any"},{"src":"icons/icon-512.png","sizes":"512x512","type":"image/png","purpose":"maskable"}]}
