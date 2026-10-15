@@ -262,8 +262,8 @@ const MAPS=[
   boss:['冥炎魔龍德塔','🐉',99,4000000,1600,150,600000,300000,'火','龍',2],cards:['c_lizard','c_egg','c_bonedra','c_raptor','c_deta']}
 ];
 const BOSS_NEED=30;
-const SLOTN={weapon:'右手',shield:'左手',armor:'鎧甲',head:'頭飾',acc:'飾品'};const SLOTL={weapon:'武器',shield:'盾牌',armor:'鎧甲',head:'頭飾',acc:'飾品'};
-const CARDS={c_crab:['鐵殼蟹卡片','🦀','shield',{def:5,vit:1}],c_frog:['綠蛙卡片','🐸','shield',{hp:300}],c_turtle:['岩甲龜卡片','🐢','shield',{resEl:{中性:15}}],
+const SLOTN={weapon:'右手',shield:'左手',head:'頭飾',armor:'鎧甲',garment:'披肩',shoes:'鞋子',acc:'飾品'};const SLOTL={weapon:'武器',shield:'盾牌',armor:'鎧甲',head:'頭飾',garment:'披肩',shoes:'鞋子',acc:'飾品'};
+const CARDS={c_wisp:['幽靈披風卡片','👻','garment',{flee:10}],c_mole:['鑽地鼠卡片','🐹','shoes',{hp:400,agi:1}],c_crab:['鐵殼蟹卡片','🦀','shield',{def:5,vit:1}],c_frog:['綠蛙卡片','🐸','shield',{hp:300}],c_turtle:['岩甲龜卡片','🐢','shield',{resEl:{中性:15}}],
  c_poring:['波莉卡片','🩷','armor',{luk:2,pdodge:1}],c_lunatic:['露娜兔卡片','🐰','acc',{luk:1,crit:1}],c_fabre:['法布蟲卡片','🐛','armor',{vit:1,hp:100}],c_willow:['威樂樹精卡片','🌳','armor',{sp:80}],c_pkemp:['波莉皇帝卡片','👑','armor',{armEl:'聖'}],
  c_spore:['斯波菇卡片','🍄','head',{vit:2,mdef:3}],c_smokie:['煙煙狸卡片','🦝','acc',{agi:1,flee:5}],c_andre:['安德蟻卡片','🐜','weapon',{atk:20}],c_peco:['佩可鳥卡片','🐤','armor',{hpP:10}],c_moon:['月夜狐仙卡片','🦊','acc',{aspdP:10,crit:5}],
  c_dwolf:['沙漠狼仔卡片','🐺','weapon',{size:{0:15}}],c_isis:['伊希蛇女卡片','🐍','weapon',{race:{惡魔:20}}],c_mummy:['木乃伊兵卡片','🧟','weapon',{hit:20}],c_tbug:['盜蟲卡片','🐞','acc',{drop:25}],c_osiris:['冥王歐西爾卡片','🧛','head',{spcost:-25,castP:-15}],
@@ -315,11 +315,22 @@ Object.assign(ITEMS,{
 });
 Object.assign(ITEMS.claymore,{wl:2});Object.assign(ITEMS.battleaxe,{wl:2});ITEMS.book1.wl=2;ITEMS.lute.wl=2;ITEMS.whip1.wl=2;
 ['flame','kingblade'].forEach(k=>ITEMS[k].wt='tsword');ITEMS.giantaxe.wt='taxe';['wizstaff','bapstaff','arcanest'].forEach(k=>ITEMS[k].wt='tstaff');
+Object.assign(ITEMS,{
+ muffler:{n:'披肩',ic:'🧣',slot:'garment',def:2,slots:1,price:500},hood:{n:'連帽斗篷',ic:'🧥',slot:'garment',def:4,flee:3,slots:1,price:3000,lv:20},manteau:{n:'騎士披風',ic:'🦸',slot:'garment',def:8,hp:300,slots:1,r:2,jobs:['swordsman','merchant','acolyte']},
+ wizcape:{n:'魔導斗篷',ic:'🪄',slot:'garment',def:5,int:3,matk:20,slots:1,r:3,jobs:['mage','acolyte']},shadowcape:{n:'暗影披風',ic:'🌑',slot:'garment',def:6,agi:3,flee:8,slots:1,r:3,jobs:['thief','archer']},
+ sandals:{n:'涼鞋',ic:'🩴',slot:'shoes',def:1,slots:1,price:300},shoes1:{n:'皮靴',ic:'🥾',slot:'shoes',def:3,hp:100,slots:1,price:2500,lv:15},greaves:{n:'鋼鐵脛甲',ic:'🦿',slot:'shoes',def:9,hp:400,slots:1,r:3,jobs:['swordsman','merchant']},
+ magicshoes:{n:'魔法鞋',ic:'👠',slot:'shoes',def:4,sp:80,int:1,slots:1,r:2,jobs:['mage','acolyte','archer']},
+});
+// 職業綁定（官方風格：二轉/高階繼承一轉；未列 jobs 者全職業）、需求 Base Lv
+Object.assign(ITEMS.robe,{jobs:['mage','acolyte']});Object.assign(ITEMS.ninja,{jobs:['thief']});Object.assign(ITEMS.mithril,{jobs:['swordsman','merchant']});Object.assign(ITEMS.dragonmail,{jobs:['swordsman','merchant']});
+Object.assign(ITEMS.chain,{jobs:['swordsman','merchant','acolyte','thief','archer']});Object.assign(ITEMS.tiara,{jobs:['mage','acolyte']});Object.assign(ITEMS.goggles,{jobs:['merchant','thief','archer','swordsman']});
+Object.assign(ITEMS.bioeye,{jobs:['alchemist','sage','blacksmith','wizard']});Object.assign(ITEMS.glove,{jobs:['archer','merchant','thief']});Object.assign(ITEMS.brooch,{jobs:['mage','acolyte','archer']});
+for(const k in ITEMS){const d=ITEMS[k];if(d.slot&&d.lv===undefined)d.lv={1:1,2:24,3:48,4:70}[d.r||1]}
 for(const k in ITEMS){if(ITEMS[k].slot)ITEMS[k].t='eq'}
 const DROPS=[['knife','sword1','bow1','staff1','mace1','cotton','porihat'],['katar1','leather','xbow','bunny','clip','goggles'],['flame','wizstaff','jur','robe','ninja','tiara'],['icefal','hbow','holymace','mithril','chain'],['bloodsword','bapstaff','horn','ninja','mithril'],['kingblade','ancring','shadowkat','galebow'],['arcanest','bioeye','giantaxe','dragonfist'],['dragonmail','kingblade','giantaxe','shadowkat']];
-[['guard','spear1'],['orcaxe','buckler','stiletto','pike'],['bigshield','bible','lute','whip1'],['mirrorsh','harp','rosewhip'],['lance'],['dragonsh']].forEach((a,i)=>DROPS[i]&&DROPS[i].push(...a));
+[['guard','spear1','muffler'],['manteau','magicshoes'],['wizcape','shadowcape','greaves'],['orcaxe','buckler','stiletto','pike'],['bigshield','bible','lute','whip1'],['mirrorsh','harp','rosewhip'],['lance'],['dragonsh']].forEach((a,i)=>DROPS[i]&&DROPS[i].push(...a));
 const BOSSDROP=['porihat','clip','tiara','mithril','horn','ancring','bioeye','dragonmail'];
-const SHOP=['pot','bluepot','ore1','ore2','eore','ore','knife','sword1','bow1','staff1','mace1','axe1','knuckle1','katar1','xbow','spear1','guard','buckler','claymore','battleaxe','book1','lute','whip1','cotton','leather','chain','bunny','goggles','clip','ring','brooch','glove','boots'];
+const SHOP=['pot','bluepot','muffler','hood','sandals','shoes1','ore1','ore2','eore','ore','knife','sword1','bow1','staff1','mace1','axe1','knuckle1','katar1','xbow','spear1','guard','buckler','claymore','battleaxe','book1','lute','whip1','cotton','leather','chain','bunny','goggles','clip','ring','brooch','glove','boots'];
 // ===== Renewal 精煉（官方表）=====
 const wlv=d=>d.wl||Math.min(4,d.r||1);
 const REF_TBL={1:[1,1,1,1,1,1,1,.6,.5,.2],2:[1,1,1,1,1,1,.6,.4,.2,.2],3:[1,1,1,1,1,.6,.5,.2,.2,.2],4:[1,1,1,1,.6,.4,.4,.2,.2,.1],A:[1,1,1,1,.6,.4,.4,.2,.2,.1]};
@@ -343,7 +354,7 @@ const KEY='idle_ro_save_v1';
 const uid=()=>Math.random().toString(36).slice(2,9);
 const NMAP=MAPS.length;
 function fresh(){return{v:3,name:'冒險者',sex:'M',job:'nov',trans:false,lv:1,exp:0,jlv:1,jexp:0,pts:48,skl:{},skp:0,st:{str:1,agi:1,vit:1,int:1,dex:1,luk:1},gold:100,dia:100,hp:100,spv:30,
- inv:[{id:'pot',q:5},{id:'knife',uid:'start1',ref:0,cards:[]}],cards:{},seen:{},eq:{weapon:'start1',shield:null,armor:null,head:null,acc:null},map:0,unlocked:1,kills:Array(NMAP).fill(0),bossKills:Array(NMAP).fill(0),
+ inv:[{id:'pot',q:5},{id:'knife',uid:'start1',ref:0,cards:[]}],cards:{},seen:{},eq:{weapon:'start1',shield:null,garment:null,shoes:null,armor:null,head:null,acc:null},map:0,unlocked:1,kills:Array(NMAP).fill(0),bossKills:Array(NMAP).fill(0),
  autoPot:true,autoStat:false,last:Date.now(),total:{kills:0},party:[],mercOwn:[],guild:null,month:null,cos:{head:null,back:null},cosOwn:[],spouse:null,gm:false,rate:{exp:1,drop:1},items2:{}}}
 let S,migrated=null,migratedV2=false;
 function clampJ(v,a,b){return Math.max(a,Math.min(b,v))}
@@ -498,7 +509,7 @@ function kill(){const m=mob;if(!m)return;mob=null;RT.cast=null;hideCast();RT.dot
  const dm=(1+t.drop/100)*(['thief','assassin','rogue'].includes(S.job)?1.3:1)*S.rate.drop;
  if(m.boss||Math.random()<.05*dm){const pool=DROPS[S.map];const id=m.boss&&Math.random()<.5?BOSSDROP[S.map]:pool[Math.floor(Math.random()*pool.length)];addItem(id);log(`🎁 掉落 ${ITEMS[id].ic}${ITEMS[id].n}`,'r2')}
  if(Math.random()<(m.boss?.5:.008*dm)){S.cards[m.card]=(S.cards[m.card]||0)+1;S.seen[m.card]=1;log(`🃏 獲得【${CARDS[m.card][0]}】！`,'r3')}
- if(Math.random()<.004*dm){const sc=['c_crab','c_frog','c_turtle'][Math.floor(Math.random()*3)];S.cards[sc]=(S.cards[sc]||0)+1;S.seen[sc]=1;log(`🃏 獲得【${CARDS[sc][0]}】！`,'r3')}if(Math.random()<.08*dm)addItem(['ore1','ore1','ore2','eore','ore'][Math.floor(Math.random()*5)]);if(Math.random()<.12)addItem('pot');
+ if(Math.random()<.004*dm){const sc=['c_crab','c_frog','c_turtle','c_wisp','c_mole'][Math.floor(Math.random()*5)];S.cards[sc]=(S.cards[sc]||0)+1;S.seen[sc]=1;log(`🃏 獲得【${CARDS[sc][0]}】！`,'r3')}if(Math.random()<.08*dm)addItem(['ore1','ore1','ore2','eore','ore'][Math.floor(Math.random()*5)]);if(Math.random()<.12)addItem('pot');
  if(m.boss){const dd=5+Math.floor(Math.random()*11);S.dia+=dd;log(`💎 MVP 獎勵 鑽石 +${dd}`,'r4');S.bossKills[S.map]++;if(S.unlocked<=S.map+1&&S.map+1<MAPS.length){S.unlocked=S.map+2;log(`🗺️ 新地圖解鎖：${MAPS[S.map+1].n}`,'r4')}}
  log(`⚔️ 擊敗 ${m.n}，Base+${Math.floor(m.exp*em)} Job+${Math.floor(m.exp*.7*em)} 💰+${m.gold}`);
  if(S.total.kills%10===0)save()}
@@ -713,21 +724,24 @@ function leaveGuild(){S.guild=null;render();panel()}
 const isEq=it=>it.uid&&Object.values(S.eq).includes(it.uid);
 function eqDesc(it){const d=ITEMS[it.id],rf=it.ref||0;const o=[];if(d.wt)o.push(`<b>武器Lv${wlv(d)}</b> `+WT[d.wt].n+(WT[d.wt].h===2?'（雙手）':''));if(d.atk)o.push('ATK '+d.atk+(rf&&d.wt?`<span class="r3">+${refAtk(d,rf)}</span>`:''));if(d.matk)o.push('MATK '+d.matk+(rf&&d.wt?`<span class="r3">+${refAtk(d,rf)}</span>`:''));if(!d.wt&&(d.def||rf))o.push('DEF '+(d.def||0)+(rf?`<span class="r3">+${rf}</span>`:''));if(rf&&refOver(d,rf))o.push(`<span class="r2">過精 1~${refOver(d,rf)}</span>`);
  for(const k of['hp','sp','str','agi','vit','int','dex','luk','flee','crit'])if(d[k])o.push(BN[k]+'+'+d[k]);if(d.wEl)o.push(etag(d.wEl)+'屬性');if(d.race)o.push(fxText({race:d.race}));
- const sl=[];for(let i=0;i<(d.slots||0);i++)sl.push(it.cards&&it.cards[i]?'🃏'+CARDS[it.cards[i]][0]:'⬜');return o.join(' ')+(d.slots?`<br>插槽 ${sl.join(' ')}`:'')}
+ o.push(`<br><span class="small" style="color:${eqOk(d)?'#e53935':'#888'}">可裝備：${jobsTxt(d)}｜需求 Base Lv.${d.lv||1}</span>`);const sl=[];for(let i=0;i<(d.slots||0);i++)sl.push(it.cards&&it.cards[i]?'🃏'+CARDS[it.cards[i]][0]:'⬜');return o.join(' ')+(d.slots?`<br>插槽 ${sl.join(' ')}`:'')}
 function itemLine(it,btns,pre){const d=ITEMS[it.id];return `<div class="it"><span class="ic ${glowCls(it.ref||0)}">${d.ic}</span><div class="sp r${d.r||1}">${pre||''}<b>${it.ref?'+'+it.ref+' ':''}${d.n}${d.slots?` [${d.slots}]`:''}</b>${d.t!=='eq'?' ×'+it.q:` <span class="small">[${d.wt?WT[d.wt].n+(WT[d.wt].h===2?'·雙手':'·單手'):SLOTL[d.slot]}]</span>`}<div class="small">${d.t==='eq'?eqDesc(it):d.desc}</div></div>${btns}</div>`}
-function panelBag(){const t=stats(),rw=getEq('weapon'),two=rw&&WT[ITEMS[rw.id].wt].h===2;const eqs=Object.keys(SLOTN).map(s=>{const it=getEq(s);const lab=`<span class="tag" style="background:${s==='weapon'?'#e57373':s==='shield'?'#64b5f6':'#bdbdbd'}">${SLOTN[s]}${s==='shield'&&it?(ITEMS[it.id].wt?'·副手':'·盾'):''}</span> `;return it?itemLine(it,`<button class="g" onclick="unequip('${s}')">卸下</button>`,lab):`<div class="it small"><span class="ic">⬜</span>${lab}${s==='shield'&&two?'（雙手武器佔用）':'未裝備'}</div>`}).join('');
+function panelBag(){const t=stats(),rw=getEq('weapon'),two=rw&&WT[ITEMS[rw.id].wt].h===2;const eqs=Object.keys(SLOTN).map(s=>{const it=getEq(s);const lab=`<span class="tag" style="background:${s==='weapon'?'#e57373':s==='shield'?'#64b5f6':'#bdbdbd'}">${SLOTN[s]}${s==='shield'&&it?(ITEMS[it.id].wt?'·副手':'·盾'):''}</span> `;return it?itemLine(it,`<div style="display:flex;flex-direction:column;gap:4px"><button class="alt" onclick="goRef('${it.uid}')">精煉</button><button class="g" onclick="unequip('${s}')">卸下</button></div>`,lab):`<div class="it small"><span class="ic">⬜</span>${lab}${s==='shield'&&two?'（雙手武器佔用）':'未裝備'}</div>`}).join('');
  const info=`<p class="small">可用武器：${(WPN[S.job]||[]).map(w=>WT[w].n+(WT[w].h===2?'(雙手)':'')).join('、')}｜盾牌：${canShield()?'可':'不可'}${DUALJ.includes(S.job)?'｜可二刀流（左手：短劍/單手劍/單手斧）':''}${t.dual?`<br>⚔️ 二刀流中：右手 ${t.mR}%／左手 ${t.mL}%（右手修練 Lv${slv('rhmast')}・左手修練 Lv${slv('lhmast')}），ASPD ${t.aspd.toFixed(1)}`:''}${t.hasSh?`<br>🛡️ 裝備盾牌：ASPD −${SHIELD_ASPD}`:''}</p>`;
  const rest=S.inv.filter(i=>!isEq(i)).map(it=>{const d=ITEMS[it.id],i=S.inv.indexOf(it);let b='';if(d.t==='eq'){const e=eqOk(d,false),dl=d.wt&&!eqOk(d,true);b=(e?`<span class="small" style="color:#e53935">${e}</span> `:`<button onclick="equip(${i})">${d.wt?'右手':'裝備'}</button> `)+(dl?`<button class="alt" onclick="equip(${i},true)">左手</button> `:'')+`<button class="g" onclick="sell(${i})">賣</button>`}else if(d.t==='use')b=`<button onclick="useItem(${i})">使用</button>`;else b=`<button class="g" onclick="sell(${i})">賣</button>`;return itemLine(it,b)}).join('');
  P(`<h3>🧩 裝備中</h3>${info}${eqs}<h3 style="margin-top:10px">🎒 背包</h3>${rest||'<p class="small">空空的</p>'}`)}
-function eqOk(d,left){if(d.wt){if(!canWpn(d.wt))return'此職業無法裝備';if(left&&!(DUALJ.includes(S.job)&&DUALW.includes(d.wt)))return'此職業無法左手持此武器';return''}if(d.slot==='shield'&&!canShield())return'此職業無法裝備';return''}
+const jobAnc=(j=S.job)=>{const a=[];while(j){a.push(j);j=JOBS[j].from}return a};
+const canJobs=d=>d.wt?Object.keys(WPN).filter(j=>WPN[j].includes(d.wt)):d.jobs?Object.keys(JOBS).filter(j=>jobAnc(j).some(x=>d.jobs.includes(x))):null;
+const jobsTxt=d=>{const c=canJobs(d);return c?c.map(j=>JOBS[j].n).join('、'):'全職業'};
+function eqOk(d,left){if(d.lv&&S.lv<d.lv)return`需求 Base Lv.${d.lv}`;if(d.jobs&&!jobAnc().some(x=>d.jobs.includes(x)))return'此職業無法裝備';if(d.wt){if(!canWpn(d.wt))return'此職業無法裝備';if(left&&!(DUALJ.includes(S.job)&&DUALW.includes(d.wt)))return'此職業無法左手持此武器';return''}if(d.slot==='shield'&&!canShield())return'此職業無法裝備';return''}
 function equip(i,left){const it=S.inv[i],d=ITEMS[it.id];const e=eqOk(d,left);if(e){log('🚫 '+d.n+'：'+e);return false}
  const rw=getEq('weapon');if((left||d.slot==='shield')&&rw&&rw.uid!==it.uid&&WT[ITEMS[rw.id].wt].h===2){log(`🚫 右手持雙手武器（${WT[ITEMS[rw.id].wt].n}），左手無法裝備`);return false}
  for(const s in S.eq)if(S.eq[s]===it.uid)S.eq[s]=null;
  if(d.wt&&!left){S.eq.weapon=it.uid;if(WT[d.wt].h===2&&S.eq.shield){S.eq.shield=null;log('雙手武器佔用左手，已卸下左手裝備')}}
  else if(left||d.slot==='shield')S.eq.shield=it.uid;else S.eq[d.slot]=it.uid;
  log(`裝備 ${d.n}${left?'（左手）':''}`);render();panel();return true}
-function fixEq(quiet){if(!('shield' in S.eq))S.eq.shield=null;const bad=[];const rw=getEq('weapon'),lw=getEq('shield');
- if(rw&&!canWpn(ITEMS[rw.id].wt)){S.eq.weapon=null;bad.push(ITEMS[rw.id].n)}
+function fixEq(quiet){for(const k in SLOTN)if(!(k in S.eq))S.eq[k]=null;const bad=[];for(const k of['head','armor','garment','shoes','acc']){const it=getEq(k);if(it&&eqOk(ITEMS[it.id])){S.eq[k]=null;bad.push(ITEMS[it.id].n)}}const rw=getEq('weapon'),lw=getEq('shield');
+ if(rw&&eqOk(ITEMS[rw.id])){S.eq.weapon=null;bad.push(ITEMS[rw.id].n)}
  if(lw){const d=ITEMS[lw.id],r2=getEq('weapon');if(eqOk(d,!!d.wt)||(r2&&WT[ITEMS[r2.id].wt].h===2)){S.eq.shield=null;bad.push(d.n)}}
  if(bad.length&&!quiet)log('🎒 不符裝備規則，已卸下放回背包：'+bad.join('、'),'r1');return bad}
 function unequip(s){S.eq[s]=null;render();panel()}
@@ -766,11 +780,12 @@ function wearCos(k){const sl=COS[k].slot;S.cos[sl]=S.cos[sl]===k?null:k;lastJob=
 function claimDaily(){const today=new Date().toDateString();if(!monthOn()||S.month.claimed===today)return false;S.month.claimed=today;S.gold+=20000;S.dia+=30;log('🎫 月卡每日獎勵：💰20,000＋💎30','r4');save();render();panel();return true}
 const refCost=r=>({gold:200*(r+1)*(r+1),ore:1+Math.floor(r/3)});
 let refOpt={hi:false,ab:false,pr:false};const qty=id=>(S.inv.find(i=>i.id===id)||{q:0}).q;
-function panelRef(){const eqs=S.inv.filter(i=>ITEMS[i.id].t==='eq');
+let refFocus=null;function goRef(u){refFocus=u;goTab('ref')}
+function panelRef(){const on=Object.keys(SLOTN).map(k=>getEq(k)).filter(Boolean);const eqs=[...on,...S.inv.filter(i=>ITEMS[i.id].t==='eq'&&!on.includes(i))];if(refFocus){const f=eqs.find(i=>i.uid===refFocus);if(f){eqs.splice(eqs.indexOf(f),1);eqs.unshift(f)}}
  P(`<h3>🔨 精煉（Renewal）</h3><div class="small">🪨Lv1 ${qty('ore1')}　🔷Lv2 ${qty('ore2')}　💎Lv3/4 ${qty('ore')}　🔶防具 ${qty('eore')}　💠高級 ${qty('hiore')}　🛡️防爆 ${qty('antibreak')}　🔰保護 ${qty('protect')}</div>
  <p class="small">武器 Lv1~4 每 +1 ATK +2/+3/+5/+7，安全上限 +7/+6/+5/+4，超過安全值有隨機過精傷害；防具每 +1 DEF +1，安全 +4。安全值內必成功；超過安全值失敗會<b>損壞</b>（防爆券改為 -1、保護券不變）。上限 +10。</p>
- <div class="row small"><label><input type="checkbox" ${refOpt.hi?'checked':''} onchange="refOpt.hi=this.checked;panel()"> 用高級鋼石取代礦石</label><label><input type="checkbox" ${refOpt.ab?'checked':''} onchange="refOpt.ab=this.checked;panel()"> 用防爆券</label><label><input type="checkbox" ${refOpt.pr?'checked':''} onchange="refOpt.pr=this.checked;panel()"> 用保護券</label></div>`+(eqs.map(it=>{const d=ITEMS[it.id],r=it.ref||0,k=refKey(d);if(r>=10)return itemLine(it,'<span class="small">已滿 +10</span>');const hi=refOpt.hi&&qty('hiore')>0,ore=hi?'hiore':REF_ORE[k],rate=refRate(d,r,hi),g=REF_GOLD[k],safe=r<REF_SAFE[k];
-  return itemLine(it,`<div class="small" style="text-align:right">${d.wt?'武器Lv'+k:'防具'}・安全+${REF_SAFE[k]}<br>成功率 ${Math.round(rate*100)}%${safe?'':'<br><span class="r1">⚠️失敗會損壞</span>'}<br>💰${fmt(g)} ${ITEMS[ore].ic}${ITEMS[ore].n}×1<br><button ${S.gold<g||qty(ore)<1?'disabled':''} onclick="refine(${S.inv.indexOf(it)})">精煉</button></div>`)}).join('')||'<p class="small">沒有裝備</p>'))}
+ <div class="row small"><label><input type="checkbox" ${refOpt.hi?'checked':''} onchange="refOpt.hi=this.checked;panel()"> 用高級鋼石取代礦石</label><label><input type="checkbox" ${refOpt.ab?'checked':''} onchange="refOpt.ab=this.checked;panel()"> 用防爆券</label><label><input type="checkbox" ${refOpt.pr?'checked':''} onchange="refOpt.pr=this.checked;panel()"> 用保護券</label></div>`+(eqs.map(it=>{const d=ITEMS[it.id],r=it.ref||0,k=refKey(d);const slotOn=Object.keys(SLOTN).find(k=>S.eq[k]===it.uid),pre=(slotOn?`<span class="tag" style="background:#ab47bc">已裝備·${SLOTN[slotOn]}</span> `:'')+(it.uid===refFocus?'👉 ':'');if(r>=10)return itemLine(it,'<span class="small">已滿 +10</span>',pre);const hi=refOpt.hi&&qty('hiore')>0,ore=hi?'hiore':REF_ORE[k],rate=refRate(d,r,hi),g=REF_GOLD[k],safe=r<REF_SAFE[k];
+  return itemLine(it,`<div class="small" style="text-align:right">${d.wt?'武器Lv'+k:'防具'}・安全+${REF_SAFE[k]}<br>成功率 ${Math.round(rate*100)}%${safe?'':'<br><span class="r1">⚠️失敗會損壞</span>'}<br>💰${fmt(g)} ${ITEMS[ore].ic}${ITEMS[ore].n}×1<br><button ${S.gold<g||qty(ore)<1?'disabled':''} onclick="refine(${S.inv.indexOf(it)})">精煉</button></div>`,pre)}).join('')||'<p class="small">沒有裝備</p>'))}
 function useQ(id){const o=S.inv.find(x=>x.id===id);if(!o)return false;o.q--;if(!o.q)S.inv.splice(S.inv.indexOf(o),1);return true}
 function refine(i,opt){if(opt)refOpt=Object.assign({hi:false,ab:false,pr:false},opt);const it=S.inv[i];if(!it||ITEMS[it.id].t!=='eq')return null;const d=ITEMS[it.id],r=it.ref||0,k=refKey(d);
  const hi=refOpt.hi&&qty('hiore')>0,ore=hi?'hiore':REF_ORE[k],g=REF_GOLD[k];if(r>=10||S.gold<g||qty(ore)<1)return null;
@@ -779,7 +794,7 @@ function refine(i,opt){if(opt)refOpt=Object.assign({hi:false,ab:false,pr:false},
  if(safe||Math.random()<rate){it.ref=r+1;res='ok';log(`🔨✨ 精煉成功！+${it.ref} ${d.n}`,'r4')}
  else if(pr){res='protect';log(`🔨🔰 精煉失敗，保護券生效，維持 +${r} ${d.n}`,'r2')}
  else if(ab){it.ref=r-1;res='down';log(`🔨💔 精煉失敗，防爆券生效，降為 +${it.ref} ${d.n}`,'r1')}
- else{res='break';for(const s in S.eq)if(S.eq[s]===it.uid)S.eq[s]=null;S.inv.splice(i,1);log(`🔨💥 精煉失敗… +${r} ${d.n} 損壞了！`,'r1')}
+ else{res='break';const wasOn=Object.keys(S.eq).filter(s=>S.eq[s]===it.uid);for(const s of wasOn)S.eq[s]=null;S.inv.splice(i,1);if(wasOn.length){const t2=stats();S.hp=Math.min(S.hp,t2.mhp);S.spv=Math.min(S.spv,t2.msp);log('🧩 損壞的裝備已從「'+wasOn.map(x=>SLOTN[x]).join('、')+'」卸除','r1')}log(`🔨💥 精煉失敗… +${r} ${d.n} 損壞了！`,'r1')}
  refAnim(res,d,it.ref);save();lastWt='';render();panel();return res}
 function refAnim(res,d,n){const o=document.createElement('div');o.className='refx '+res;o.innerHTML=res==='ok'?`<div class="rb"></div><div class="rt">✨ 精煉成功 ✨<br><b>+${n} ${d.n}</b></div>`:res==='break'?`<div class="rt">💥 精煉失敗<br><b>${d.n} 損壞了</b></div>`:res==='protect'?`<div class="rt">🔰 失敗（保護券）<br><b>維持不變</b></div>`:`<div class="rt">💔 精煉失敗<br><b>降為 +${n}</b></div>`;document.body.appendChild(o);setTimeout(()=>o.remove(),1500)}
 let gmMsg='';
