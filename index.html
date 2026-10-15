@@ -39,7 +39,7 @@ button{font:inherit;cursor:pointer}.b{background:#3d6bd8;color:#fff;border:0;bor
 <script>
 'use strict';
 // ===================== 第 1 層：靜態資料（DATA）—— 前後端共用 =====================
-const VER='1.0.0',SKEY='xyexp_save_v1';
+const VER='1.1.0',SKEY='xyexp_save_v1';
 const STATN={str:'STR',agi:'AGI',vit:'VIT',int:'INT',dex:'DEX',luk:'LUK'};
 const STATD={str:'近戰ATK、負重',agi:'ASPD、FLEE',vit:'HP、DEF、MDEF',int:'MATK、SP、MDEF',dex:'HIT、遠程ATK、詠唱',luk:'暴擊、完全迴避'};
 const ROLE={tank:'坦克',dps:'輸出',heal:'治療',sup:'輔助'};
@@ -206,11 +206,11 @@ function calc(S,h,buff){const j=J[h.job],b=eqBonus(S,h);if(buff)for(const k in b
  const hit=175+lv+s.dex+s.luk/3+(b.hit||0),flee=100+lv+s.agi+s.luk/5+(b.flee||0);
  const crit=(1+s.luk*.3+(b.crit||0))*(wt==='katar'?2:1),pd=1+s.luk/10+(b.pd||0);
  const bR=j.base+WT[wt].a+(h.trans?2:0);let baseA=dual?200-((200-bR)+(200-(j.base+WT[wtL].a))/4):bR;if(hasSh)baseA-=5;
- const corr=baseA>=145?1-(baseA-144)/50:1;let aspd=baseA+Math.sqrt(s.agi*9.9987+s.dex*.1922)*corr;aspd=200-(200-aspd)*(1-Math.min(60,b.aspdP||0)/100);aspd=Math.min(193,aspd);
+ const corr=baseA>=145?1-(baseA-144)/50:1;let aspd=baseA+Math.sqrt(s.agi*9.9987+s.dex*.1922)*corr;aspd=200-(200-aspd)*(1-Math.min(60,b.aspdP||0)/100);const ovA=Math.max(0,aspd-193);aspd=Math.min(193,aspd);
  const aps=50/(200-aspd);
  const castV=Math.max(0,1-Math.sqrt((s.dex*2+s.int)/530))*.8*(1-Math.min(60,b.castP||0)/100),castF=Math.max(0,.2-(b.castF||0)*.2);
  const mhp=Math.floor((35+lv*5*j.hp+lv*lv*j.hp*.22)*(1+s.vit/100)*(h.trans?1.25:1)*(1+(b.hpP||0)/100))+(b.hp||0),msp=Math.floor((10+lv*2*j.sp+lv*lv*j.sp*.02)*(1+s.int/100)*(1+(b.spP||0)/100))+(b.sp||0);
- const jk=J[h.job].src||h.job;return{jdm:(typeof JDM!=='undefined'&&JDM[jk])||1,s,b,wt,wtL,dual,hasSh,rg,atk,matk,hdef,sdef,mdef,hit,flee,crit,pd,aspd,aps,castV,castF,mhp,msp,over:overA(w)+(dual?overA(L):0),statusAtk,watk,statusMatk}}
+ const jk=J[h.job].src||h.job;return{ovA,jdm:(typeof JDM!=='undefined'&&JDM[jk])||1,s,b,wt,wtL,dual,hasSh,rg,atk,matk,hdef,sdef,mdef,hit,flee,crit,pd,aspd,aps,castV,castF,mhp,msp,over:overA(w)+(dual?overA(L):0),statusAtk,watk,statusMatk}}
 const hitRate=(t,m)=>Math.max(5,Math.min(100,80+t.hit-m.flee));
 const evRate=(t,m)=>Math.max(0,Math.min(95,t.flee-m.hit+80)-0)// FLEE 迴避率
 ;const defRed=d=>(4000+d)/(4000+d*10);
@@ -292,13 +292,16 @@ function pickSkill(S,B,h,t,rt,T){const ks=Object.keys(h.sk).filter(k=>h.sk[k]>0&
 function autoAtk(S,B,h,t,rt,m){const R=B.rng;const hr=hitRate(t,m);
  if(R.n()*100>=hr){B.ev.push({t:'atk',id:h.id,miss:1,mob:B.mobs.indexOf(m)});return}
  const crit=R.n()*100<t.crit;let parts=[];const dbl=t.b.dbl&&t.wt==='dagger'&&R.n()*100<t.b.dbl,tri=t.b.tri&&R.n()*100<t.b.tri;
- const nh=tri?3:dbl?2:1;for(let i=0;i<nh;i++)parts.push(physDmg(B,t,m,tri?100+h.sk.o_triple*20:100,null,crit));
+ // 攻速流成長線：溢出攻速 → 普攻傷害 +2%/點；同目標連續命中疊層（每層 +3%，最多 10 層）；LUK/10% 機率多重打擊
+ const rt0=B.hr[h.id];if(rt0.stkT===m){rt0.stk=Math.min(10,(rt0.stk||0)+1)}else{rt0.stk=0;rt0.stkT=m}
+ const amul=(100+(t.ovA||0)*2+rt0.stk*1)*(tri?1+h.sk.o_triple*.2:1);const multi=R.n()*100<t.s.luk/30+(t.ovA||0)*.5;
+ const nh=(tri?3:dbl?2:1)+(multi?1:0);for(let i=0;i<nh;i++)parts.push(physDmg(B,t,m,amul,null,crit));
  if(t.dual){const L=physDmg(B,t,m,30+((h.sk.x_cloak||0)),null,crit);parts.push(L)}
  if(tri)B.hr[h.id].spirit=Math.min(5,B.hr[h.id].spirit+1);
  hurt(S,B,m,parts,h.id,{crit,fx:t.rg?'arrow':(J[h.job].mag?'staff':'swing'),k:null,multi:parts.length>1});
  if(t.b.spsteal)B.hr[h.id].sp=Math.min(t.msp,B.hr[h.id].sp+parts.reduce((a,b)=>a+b,0)*.01);if(t.b.stunP&&R.n()*100<t.b.stunP*(m.boss?.5:1)){m.stun=1.5;B.ev.push({t:'stun',mob:B.mobs.indexOf(m)})}
  if(t.b.lifesteal)B.hr[h.id].hp=Math.min(t.mhp,B.hr[h.id].hp+parts.reduce((a,b)=>a+b,0)*.03);
- if((t.b.proc_fire||t.b.proc_bolt)&&R.n()<.06&&m.hp>0){const el=t.b.proc_fire?'火':'風',ps=[];for(let i=0;i<5;i++)ps.push(magDmg(B,t,m,100,el));hurt(S,B,m,ps,h.id,{fx:t.b.proc_fire?'fire':'bolt',k:t.b.proc_fire?'m_fire':'m_bolt',multi:1})}
+ if(typeof fireProcs==='function'&&m.hp>0)fireProcs(S,B,h,t,m);
  // 鳥獵流：普攻有 LUK/3% 機率鷹擊
  if(h.sk.r_falcon&&t.wt==='bow'&&R.n()*100<t.s.luk/3+1){const fd=Math.floor(((t.s.dex/10+t.s.int/2)*2+40)*h.sk.r_falcon*(1+B.rng.n()*.2)*3);hurt(S,B,m,[fd],h.id,{fx:'falcon',k:'r_falcon'})}}
 function doSkill(S,B,h,t,rt,k,T){const d=SK[k],lv=(h.sk[k]||5)+(t.b['sk_'+k]||0),R=B.rng;rt.dl=(d.acd||0)*(1-Math.min(80,t.b.acdP||0)/100);B.ev.push({t:'skill',id:h.id,k});
@@ -587,6 +590,33 @@ rebirth=function(S,h){if(!canRebirth(h))return`需等級 ${RBMAX}`;const c=rbCos
 resetStats=function(h){const bs=statBase(h);h.st={str:bs,agi:bs,vit:bs,int:bs,dex:bs,luk:bs};h.pts=statPtsTotal(h)};
 // 轉生點：六維 + 特化（遞減）
 Object.assign(RBP,{str:['STR',1],agi:['AGI',1],vit:['VIT',1],int:['INT',1],dex:['DEX',1],luk:['LUK',1]});
+
+// ===== 卡片定案：一怪一卡，效果符合怪物特性，強度隨章節；頭目卡極稀有 =====
+const SIZE={blob:'小型',bunny:'小型',shroom:'小型',sprout:'小型',fish:'小型',crab:'小型',bat:'小型',fairy:'小型',eye:'中型',wolf:'中型',fox:'中型',scorp:'中型',skel:'中型',ghost:'中型',yeti:'中型',mummy:'中型',vamp:'中型',golem:'大型',treant:'大型',octo:'大型',dragon:'大型',demon:'大型',angel:'大型'};
+// 外型 → [部位, 基礎效果, 觸發技能(可選)]
+const CTRAIT={blob:['arm',{hpP:2,vit:1}],bunny:['shoe',{agi:1,flee:3}],shroom:['head',{vit:1,mdef:2}],sprout:['gar',{hpP:2,int:1}],wolf:['wpn',{atk:6,crit:1}],fox:['acc1',{matkP:2,int:1}],
+ scorp:['wpn',{e_毒:4,atk:4}],fish:['acc1',{int:1,spP:3}],crab:['sh',{def:4,block:1}],yeti:['arm',{vit:2,defP:3}],golem:['sh',{def:6,dr:1}],bat:['acc1',{lifesteal:1},['m_bolt',2,3]],
+ skel:['wpn',{critD:4,atk:5}],ghost:['gar',{flee:4},['m_cold',3,3]],treant:['arm',{hpP:4,vit:2}],mummy:['head',{r_不死:5}],octo:['acc1',{dex:2},['m_wall',2,3]],dragon:['wpn',{atkP:3,matkP:3},['w_meteor',1,2]],
+ vamp:['acc1',{lifesteal:1,agi:1},['h_heal',2,3]],demon:['wpn',{atkP:3,crit:2},['m_fire',3,3]],angel:['arm',{dr:1,hpP:3},['h_heal',3,3]],fairy:['acc1',{aspdP:1,dex:1},['m_bolt',3,3]],eye:['head',{hit:5,dex:1}]};
+const CARDRATE=.0012,BCARDRATE=.012;
+for(const k in CARDS)delete CARDS[k];
+CH.forEach((c,ci)=>{[...c.mob,c.boss].forEach((m,mi)=>{const tr=CTRAIT[m[1]]||['acc1',{luk:1}];const boss=mi===3,mul=(1+ci*.45)*(boss?3:1),fx={};for(const k in tr[1])fx[k]=Math.round(tr[1][k]*mul*10)/10;
+ const pr=tr[2]?{k:tr[2][0],lv:Math.min(10,tr[2][1]+Math.floor(ci/3)+(boss?3:0)),ch:tr[2][2]+(boss?1:0)}:null;if(boss){fx['r_'+CH[Math.min(CH.length-1,ci+1)].race]=10+ci*2}
+ CARDS['c'+ci+'_'+mi]={n:m[0]+'卡片',sh:m[1],c:m[2],slot:tr[0],fx,boss,proc:pr,src:{ch:ci,mi,mob:m[0]},rate:boss?BCARDRATE:CARDRATE}})});
+// 卡片掉落改為極低機率（頭目卡極稀有）
+const _ok=onKill;onKill=function(S,B,m){const cid='c'+m.ch+'_'+m.mi;const before=S.cards[cid]||0;const R=B.rng;const _n=R.n.bind(R);_ok(S,B,m);
+ // 原 onKill 的卡片判定已移除，這裡重新判定
+ if((S.cards[cid]||0)>before){S.cards[cid]=before;B.ev=B.ev.filter(e=>e.t!=='card')}
+ const pb=partyBonus(S);if(R.n()<CARDS[cid].rate*(1+pb.drop/100)){S.cards[cid]=(S.cards[cid]||0)+1;(S.codex=S.codex||{})[cid]=1;B.ev.push({t:'card',n:CARDS[cid].n})}
+ (S.seen=S.seen||{})['m'+m.ch+'_'+m.mi]=(S.seen['m'+m.ch+'_'+m.mi]||0)+1};
+// ===== 機率觸發技能：不佔普攻頻率、不取代原攻擊；每張卡/每件裝備獨立判定 =====
+function procList(S,h){const L=[];for(const sl in h.eq){const it=S.inv.find(i=>i.u===h.eq[sl]);if(!it)continue;(it.cards||[]).forEach(c=>{const p=CARDS[c]&&CARDS[c].proc;if(p)L.push({...p,src:CARDS[c].n})});
+  const sp=it.aff&&it.aff.sp;if(sp&&!sp.lock&&(sp.k==='proc_fire'||sp.k==='proc_bolt'))L.push({k:sp.k==='proc_fire'?'m_fire':'m_bolt',lv:5,ch:6,src:it.n})}
+ const chs={};for(const sl in h.eq){const it=S.inv.find(i=>i.u===h.eq[sl]);(it&&it.cards||[]).forEach(c=>{const ch=c.split('_')[0];chs[ch]=(chs[ch]||0)+1})}for(const c in chs)if(chs[c]>=3)L.push({k:'w_meteor',lv:5,ch:4,src:'同章套卡'});
+ if(h.job==='sg'||h.job==='pf')if(h.sk.m_fire)L.push({k:'m_fire',lv:Math.min(10,h.sk.m_fire),ch:3+((h.sk.g_ende||0)),src:'自動施法（賢者流）'});return L}
+function fireProcs(S,B,h,t,m){const R=B.rng;for(const p of procList(S,h)){if(m.hp<=0)break;if(R.n()*100>=p.ch+(t.ovA||0)*.5)continue;const d=SK[p.k];if(d.ty==='heal'){const id=S.party.filter(i=>B.hr[i]&&B.hr[i].hp>0).sort((a,b)=>B.hr[a].hp-B.hr[b].hp)[0];const amt=Math.floor(t.matk*(1+p.lv*.3));if(id){B.hr[id].hp+=amt;B.ev.push({t:'heal',id,d:amt,src:h.id})}continue}
+  const nh=nHits(p.k,p.lv),mul=d.m[0]+d.m[1]*p.lv,parts=[];const tg=d.ty==='aoe'?B.mobs.filter(x=>x.hp>0):[m];for(const mm of tg){parts.length=0;for(let i=0;i<nh;i++)parts.push(d.mag?Math.floor(magDmg(B,t,mm,mul,d.el)*(R.n()*100<t.crit?1.4:1)):physDmg(B,t,mm,mul,d.el,R.n()*100<t.crit));hurt(S,B,mm,[...parts],h.id,{fx:d.fx,k:p.k,multi:nh>1,proc:1})}
+  S.stat.proc=(S.stat.proc||0)+1}}
 
 // ===================== 第 5 層：繪製（像素 sprite，程式繪製）=====================
 const cv=document.getElementById("cv");let X=cv.getContext("2d");X.imageSmoothingEnabled=false;const W=320,H=180;
