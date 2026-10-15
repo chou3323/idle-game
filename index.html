@@ -105,7 +105,7 @@ html,body{touch-action:manipulation}*{-webkit-touch-callout:none}
 <script>
 'use strict';
 // ===================== 第 1 層：靜態資料（DATA）—— 前後端共用 =====================
-const VER='1.2.0',SKEY='xyexp_save_v1';
+const VER='1.4.2',SKEY='xyexp_save_v1';
 const STATN={str:'STR',agi:'AGI',vit:'VIT',int:'INT',dex:'DEX',luk:'LUK'};
 const STATD={str:'近戰ATK、負重',agi:'ASPD、FLEE',vit:'HP、DEF、MDEF',int:'MATK、SP、MDEF',dex:'HIT、遠程ATK、詠唱',luk:'暴擊、完全迴避'};
 const ROLE={tank:'坦克',dps:'輸出',heal:'治療',sup:'輔助'};
@@ -293,6 +293,7 @@ function mkMob(ch,st,mi,boss,rng){const i=stageIdx(ch,st),c=CH[ch],t=boss?c.boss
  return{n:t[0],sh:t[1],c:t[2],el:t[3],lv,hp,mhp:hp,atk,def:Math.floor(lv*1.6),vdef:Math.floor(lv*.8),mdef:Math.floor(lv*.7),hit:Math.floor(150+lv*2.2+Math.max(0,lv-95)*1.2),flee:Math.floor(110+lv*2+Math.max(0,lv-95)*1.0),aspd:boss?.8:.6+rng.n()*.2,
   exp:Math.floor((6+lv*lv*.9+lv*5)*(boss?6:1)),jexp:Math.floor((5+lv*lv*.7+lv*4)*(boss?6:1)),gold:Math.floor((3+lv*2.5)*(boss?8:1)),boss,mi:boss?3:mi%3,ch,at:rng.n()}}
 
+let ULTX=1.5;// 可打斷大招沒被打斷的懲罰倍率
 // 段數（官方：箭類=技能等級、雙重攻擊2、音速投擲8、雷鳴光球=Lv+2、暴風雪/隕石多段、阿修羅單段大字）
 const HITS={m_fire:'lv',m_cold:'lv',m_bolt:'lv',w_jupi:'lv2',w_storm:4,w_meteor:'met',a_double:2,t_double:2,x_sonic:8,o_combo:4,o_triple:3,k_bowl:1,g_heaven:5,h_magnus:5,m_wall:3,r_blitz:1,b_arrow:3,a_shower:1,l_bomb:2,x_soul:1,o_asura:1,o_tiger:1,r_sharp:1};
 // 每段倍率覆蓋（官方：箭類每段 100% MATK，雷鳴光球每段 100%）
@@ -313,7 +314,7 @@ const monthOn=S=>S.month>Date.now();
 // ===================== 第 3 層：戰鬥模擬（確定性 seed，可搬到伺服器）=====================
 function newBattle(S,ch,st,seed){const boss=st===STAGES-1;const B={ch,st,boss,wave:0,need:boss?1:WAVES,mobs:[],hr:{},t:0,timer:boss?BOSS_T:0,rng:RNG(seed),ev:[],pause:0,taunt:null,tauntT:0,petT:0,done:0};
  S.party.forEach(id=>{B.hr[id]={hp:1e9,sp:1e9,at:0,cast:null,cd:{},buf:{},dl:0,spirit:0}});spawn(S,B);return B}
-function spawn(S,B){B.mobs=[];const np=S.party.length;const n=B.boss?3:3+(B.rng.n()<.3?1:0)+(np>=2?Math.round((np-1)*MOBX):0);const ps=B.boss?PSC(np):PSCM(np);for(let i=0;i<n;i++){const m=mkMob(B.ch,B.st,Math.floor(B.rng.n()*3),B.boss&&i===0,B.rng);m.hp=m.mhp=Math.floor(m.mhp*ps.hp);m.atk=Math.floor(m.atk*ps.atk);B.mobs.push(m)}B.ev.push({t:'spawn'})}
+function spawn(S,B){B.mobs=[];const np=S.party.length;const n=B.boss?3:3+(B.rng.n()<.3?1:0)+(np>=2?Math.round((np-1)*MOBX):0);const ps=B.boss?PSC(np):PSCM(np);const bA=B.boss?1+(BOSSATK-1)*Math.min(1,Math.max(0,np-1)/3):1;B.ultx=np>=3?ULTX:1;for(let i=0;i<n;i++){const m=mkMob(B.ch,B.st,Math.floor(B.rng.n()*3),B.boss&&i===0,B.rng);m.hp=m.mhp=Math.floor(m.mhp*ps.hp);m.atk=Math.floor(m.atk*ps.atk*(m.boss?bA:1));B.mobs.push(m)}B.ev.push({t:'spawn'})}
 function heroStats(S,B){const r={};const pb=partyBonus(S);S.party.forEach(id=>{const h=S.heroes.find(x=>x.id===id),rt=B.hr[id];const buf={};for(const k in rt.buf){const x=rt.buf[k];for(const q in x.b)buf[q]=(buf[q]||0)+x.b[q]}
   if(pb.atk){buf.atkP=(buf.atkP||0)+pb.atk;buf.matkP=(buf.matkP||0)+pb.atk;buf.defP=(buf.defP||0)+pb.atk}if(S.guild)buf.atkP=(buf.atkP||0)+S.guild.lv;
   const t=calc(S,h,buf);r[id]=t;if(rt.hp>t.mhp)rt.hp=t.mhp;if(rt.sp>t.msp)rt.sp=t.msp});return r}
@@ -404,7 +405,7 @@ function bossTick(S,B,dt,T){const m=B.mobs[0];if(!B.boss||!m||m.hp<=0||!m.boss)r
  m.at=0;m.bc.left-=dt;if(B.manual){B.manual=0;tryInterrupt(S,B,T,1)}
  if(m.bc.left<=0){const u=m.bc;m.bc=null;m.ucd=10+B.rng.n()*4;const alive=S.party.filter(i=>B.hr[i]&&B.hr[i].hp>0);
   const tg=u.aoe?alive:[alive.find(i=>J[S.heroes.find(h=>h.id===i).job].role==='tank')||alive[0]].filter(Boolean);
-  tg.forEach(i=>{const t=T[i];let d=Math.floor(m.atk*u.mul*(.9+B.rng.n()*.2)*defRed(t.hdef));if(t.b.block&&B.rng.n()*100<t.b.block*2)d=Math.floor(d*.3);if(t.b.dr)d=Math.floor(d*Math.max(0,1-t.b.dr/100));
+  tg.forEach(i=>{const t=T[i];let d=Math.floor(m.atk*u.mul*(u.gold?1:(B.ultx||1))*(.9+B.rng.n()*.2)*defRed(t.hdef));if(t.b.block&&B.rng.n()*100<t.b.block*2)d=Math.floor(d*.3);if(t.b.dr)d=Math.floor(d*Math.max(0,1-t.b.dr/100));
    B.hr[i].hp-=d;B.ev.push({t:'hhit',id:i,d,ult:1});if(B.hr[i].hp<=0){B.hr[i].hp=0;B.hr[i].cast=null;B.ev.push({t:'hdie',id:i})}});B.ev.push({t:'bult',n:u.n});S.stat.ult=(S.stat.ult||0)+1}}
 // 打斷判定：累積打斷值（含命中/抗性隨機），≥100 成功 → 中斷+暈眩 2 秒；金色讀條不可打斷
 function intrHit(S,B,h,k,lv,t){const m=B.mobs[0];if(!m||!m.bc||m.bc.gold||!INTR[k])return;const v=(INTR[k]+lv*6)*(.6+B.rng.n()*.8)*(1+t.s.dex/300)*100/(100+m.res);m.bc.im+=v;
@@ -438,7 +439,7 @@ const MOBX=1.0;const HPX=.1;// 組隊每多一人多 1.5 隻怪（10人≈17隻/
 const PSCM=n=>{n=Math.max(1,Math.min(10,n));return{hp:.3+HPX*(n-1),atk:.35+.07*(n-1)}};
 const PSC=n=>({hp:[0,.3,.55,.78,1,1.2,1.4,1.6,1.8,2,2.2][Math.min(10,n)],atk:[0,.35,.6,.85,1,1.05,1.1,1.15,1.2,1.25,1.3][Math.min(10,n)]});
 
-const CHB=[1.89,1.378,1.425,0.821,0.728,0.728,0.913,0.913,0.681,1.006,1.564,1.378,1.704,1.75,1.518,2.029,1.75,1.564,1.936,2.215].concat(Array(10).fill(1));
+let BOSSATK=1.9;const CHB=[1.89,1.378,1.425,0.821,0.728,0.728,0.913,0.913,0.681,1.006,1.564,1.378,1.704,1.75,1.518,2.029,1.75,1.564,1.936,2.215].concat(Array(10).fill(1));
 // ===== 種族、BOSS 多階段、狂暴 =====
 const RACE=['動物','植物','無形','魚貝','人形','無形','不死','惡魔','天使','惡魔','動物','植物','無形','魚貝','龍族','無形','不死','惡魔','天使','惡魔'];const RACES=[...new Set(RACE.concat(['龍族']))];
 CH[4].race='龍族';CH.forEach((c,i)=>c.race=c.race||RACE[i]);
@@ -777,6 +778,11 @@ function saleSlot(S){const slot=Math.floor(Date.now()/216e5);S.sale=S.sale||{};i
  if((S.recyc||[]).length&&R.n()<.5)for(let i=0;i<3&&S.recyc.length;i++){const x=S.recyc.splice(Math.floor(R.n()*S.recyc.length),1)[0];const p=x.item?Math.max(2,Math.floor(eqBase(x.item)*.7)):Math.max(1,Math.floor(band(S,x.mat).mid*.7))*x.qty;L.push({id:'s'+slot+'_'+i,...x,price:p})}
  S.sale={slot,end:(slot+1)*216e5,list:L};return S.sale}
 function saleBuy(S,id){const sl=saleSlot(S),x=sl.list.find(y=>y.id===id);if(!x)return'已售完';if(S.dia<x.price)return'鑽石不足';S.dia-=x.price;if(x.item){x.item.u=nu(S);x.item.tr=(x.item.tr||0);S.inv.push(x.item)}else gAdd(S,x.mat,x.qty);sl.list=sl.list.filter(y=>y!==x);return''}
+// ===== 存檔遷移：舊版存檔缺欄位時補上預設值 =====
+function migrate(s){if(!s)return s;const d=newState(s.name||'冒險者',(s.heroes&&s.heroes[0]&&s.heroes[0].sex)||'m');
+ for(const k in d){if(s[k]===undefined||s[k]===null&&d[k]!==null)s[k]=d[k];else if(d[k]&&typeof d[k]==='object'&&!Array.isArray(d[k])&&typeof s[k]==='object'&&!Array.isArray(s[k]))for(const k2 in d[k])if(s[k][k2]===undefined)s[k][k2]=d[k][k2]}
+ s.stat.dmg=s.stat.dmg||{};(s.heroes||[]).forEach(h=>{const nh=newHero(h.id,h.name,h.job||'nov',h.sex);for(const k in nh)if(h[k]===undefined||h[k]===null&&nh[k]!==null)h[k]=nh[k];if(!J[h.job])h.job='nov';h.rb=h.rb||0;h.rp=h.rp||0;h.rpl=h.rpl||{}});
+ s.party=(s.party||[1]).filter(id=>s.heroes.some(h=>h.id===id));if(!s.party.length)s.party=[s.heroes[0].id];s.ver=VER;return s}
 
 // ===================== 第 5 層：繪製（像素 sprite，程式繪製）=====================
 const cv=document.getElementById("cv");let X=cv.getContext("2d");X.imageSmoothingEnabled=false;const W=320,H=180;
@@ -937,7 +943,7 @@ const fxSnd={fire:'fire',meteor:'fire',ice:'ice',bolt:'bolt',holy:'holy',arrow:'
 // ===================== 第 7 層：主程式與 UI =====================
 const G={S:null,B:null};const $=id=>document.getElementById(id);const fmt=n=>n>=1e6?(n/1e6).toFixed(1)+'M':n>=1e4?(n/1e3).toFixed(1)+'K':Math.floor(n)+'';
 function save(){const S=G.S;S.t=Date.now();const ev=S.ev;S.ev=[];localStorage.setItem(SKEY,JSON.stringify(S));S.ev=ev}
-function load(){try{const s=JSON.parse(localStorage.getItem(SKEY));if(s&&s.v)return s}catch(e){}return null}
+function load(){try{const s=JSON.parse(localStorage.getItem(SKEY));if(s&&s.v)return migrate(s)}catch(e){}return null}
 function toast(t,ms){const e=$('toast');e.innerHTML=curI(t);e.style.display='block';clearTimeout(e._t);e._t=setTimeout(()=>e.style.display='none',ms||1600)}
 const LOG=[];function log(t,c){LOG.unshift(`<div class="${c||''}">${curI(t)}</div>`);if(LOG.length>40)LOG.pop();if(TAB==='battle'&&$('log'))$('log').innerHTML=LOG.join('')}
 // 位置

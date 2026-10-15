@@ -1,5 +1,5 @@
 // 版本號每次部署更新 → 舊快取自動清除、頁面自動刷新
-const V='xy-fusion-v1.4.1-20261015g';
+const V='xy-fusion-v1.4.2-20261015h';
 const ASSETS=['./','./index.html','./manifest.json?v=141','./icons/icon-192.png?v=141','./icons/icon-512.png?v=141','./icons/maskable-192.png?v=141','./icons/maskable-512.png?v=141','./icons/apple-touch-icon.png?v=141','./icons/favicon-64.png?v=141'];
 self.addEventListener('install',e=>{e.waitUntil(caches.open(V).then(c=>c.addAll(ASSETS)).then(()=>self.skipWaiting()))});
 self.addEventListener('activate',e=>{e.waitUntil(caches.keys().then(ks=>Promise.all(ks.filter(k=>k!==V).map(k=>caches.delete(k)))).then(()=>self.clients.claim()))});
