@@ -278,7 +278,7 @@ body.nobt #stagebar,body.nobt #cv,body.nobt #dock,body.nobt #pbar.ov{display:non
 <script>
 'use strict';
 // ===================== 第 1 層：靜態資料（DATA）—— 前後端共用 =====================
-const VER='1.7.16',SKEY='xj_cache_v2',LEGACY='xyexp_save_v1';
+const VER='1.7.17',SKEY='xj_cache_v2',LEGACY='xyexp_save_v1';
 const STATN={str:'力量',agi:'敏捷',vit:'體力',int:'智力',dex:'靈巧',luk:'幸運'};
 const STATD={str:'近戰攻擊、負重',agi:'攻速、迴避',vit:'HP、防禦、魔防',int:'魔攻、SP、魔防',dex:'命中、遠程攻擊、詠唱',luk:'暴擊、完全迴避'};
 const ROLE={tank:'坦克',dps:'輸出',heal:'治療',sup:'輔助'};
@@ -673,7 +673,7 @@ function onKill(S,B,m){const pb=partyBonus(S),R=B.rng,meal=S.meal>Date.now()?20:
  const pet=S.pets.find(x=>x.u===S.petOn);if(pet){petExp(S,pet,Math.ceil(m.exp/12));if(B.rng.n()<.02)pet.int=Math.min(1000,(pet.int||0)+1)}
  const g=Math.floor(m.gold/np*(1+(pb.gold||0)/100)*(1+(S.party.reduce((a,id)=>a+(S.heroes.find(x=>x.id===id).sk.c_disc||0)*2,0))/100));S.gold+=g;B.ev.push({t:'gold',mob:B.mobs.indexOf(m),g});
  const dm=1+pb.drop/100;
- if(R.n()<(m.boss?.7:.035)*dm){const it=genEquip(S,m.ch,R);S.inv.push(it);it.owner=who();B.ev.push({t:'drop',n:it.n,it,who:it.owner});}
+ if(R.n()<(m.boss?.7:.035)*dm){S._bd=m.boss?1:0;const it=genEquip(S,m.ch,R);S._bd=0;S.inv.push(it);it.owner=who();B.ev.push({t:'drop',n:it.n,it,who:it.owner});}
  if(R.n()<(m.boss?.12:.004)*dm){const id='c'+m.ch+'_'+m.mi;S.cards[id]=(S.cards[id]||0)+1;B.ev.push({t:'card',n:CARDS[id].n})}
  rfDrop(S,m,R,dm);if(R.n()<.05)addMat(S,'blue',1);if(R.n()<.04)addMat(S,'poison',1);if(R.n()<.03)addMat(S,'acid',1);
  for(const k in FARMD)if(R.n()<FARMD[k][m.boss?1:0]*(1+pb.drop/100)){addMat(S,k,1);B.ev.push({t:'mat',n:(DSHOP.find(x=>x.k===k)||{n:MAT[k]||k}).n,who:who()})}
@@ -754,12 +754,13 @@ function rollAdd(it,R){const p=ADDP[Math.floor(R.n()*ADDP.length)];
 function rollSpecial(it,R){let p;for(let g=0;g<20;g++){p=SPP[Math.floor(R.n()*SPP.length)];if(!p[3]||R.n()<p[3]*4)break}
  const v=p[0]==='idef'||p[0]==='mpen'?Math.round(p[1]+it.ch*1.5+R.n()*it.ch):p[0]==='alldmg'?Math.round(p[1]+it.ch*.5):p[1];return{k:p[0],v,d:p[2]}}
 // 七色品質：機率（累積）、主屬性條數、附加條數、主屬性倍率。彩＝綠＋1 洞（飾品 +2）＋1 主屬性＋1 附加＋彩虹特殊屬性（鑽石解鎖/重洗，費用很高）
-const QW=[.4013,.27,.17,.10,.045,.0135,.0002],QMAIN=[1,2,2,3,3,3,4],QADD=[0,0,1,1,2,2,3],QMUL=[1,1.1,1.2,1.3,1.45,1.6,1.8];
+// chou 規則：主/附 白0/0 藍1/0 紫1/1 橘2/1 紅2/2 綠3/2 彩4/3；綠只有頭目會掉；彩不掉落（只能製作）
+const QW=[.42,.29,.17,.09,.03,0,0],QWB=[.28,.28,.2,.13,.08,.03,0],QMAIN=[0,1,1,2,2,3,4],QADD=[0,0,1,1,2,2,3],QMUL=[1,1.1,1.2,1.3,1.45,1.6,1.8];
 const SPCOST2={un:300,re:200};
-function rollQ(R){const x=R.n();let a=0;for(let q=0;q<QW.length;q++){a+=QW[q];if(x<a)return q}return 0}
-function rollAffix(S,it,R){const q=rollQ(R);it.q=q;const qm=QMUL[q];
+function rollQ(R,boss){const W=boss?QWB:QW;const x=R.n();let a=0;for(let q=0;q<W.length;q++){a+=W[q];if(x<a)return q}return 0}
+function rollAffix(S,it,R){const q=rollQ(R,S&&S._bd);it.q=q;const qm=QMUL[q];
  const lns=Object.keys(MAINST);let ln=lns[Math.floor(R.n()*6)];if(it.wt){const ok=lns.filter(l=>J[l].w.includes(it.wt));if(ok.length)ln=ok[Math.floor(R.n()*ok.length)]}it.ln=ln;
- const ms=MAINST[ln][Math.floor(R.n()*MAINST[ln].length)];const main=[rollLine(it,R,ms,1)];
+ const ms=MAINST[ln][Math.floor(R.n()*MAINST[ln].length)];const main=QMAIN[q]>0?[rollLine(it,R,ms,1)]:[];
  while(main.length<QMAIN[q]){const k=SIX[Math.floor(R.n()*6)];if(!main.some(x=>x[0]===k))main.push(rollLine(it,R,k,1))}
  const add=[];let g=0;while(add.length<QADD[q]&&g++<50){const l=rollAdd(it,R);if(!add.some(x=>x[0]===l[0]))add.push(l)}
  main.forEach(l=>l[1]=Math.round(l[1]*qm));it.aff={main,add,sp:{lock:1,...rollSpecial(it,R)}};
@@ -1133,6 +1134,24 @@ const WTRAIT={
 {const _e=eqBonus;eqBonus=function(S,h){const b=_e(S,h);if(!S||!S.inv||!h||!h.eq)return b;const w=S.inv.find(i=>i.u===h.eq.wpn);const tr=w&&WTRAIT[w.wt];if(tr)for(const k in tr.b)b[k]=(b[k]||0)+tr.b[k];return b}}
 // 派遣中的寵物不給戰鬥加成（伺服器存檔時也會強制取消參戰）
 {const W=fn=>function(S,...a){if(S&&S.petOn!=null&&pdBusy(S,S.petOn)){const o=S.petOn;S.petOn=null;try{return fn(S,...a)}finally{S.petOn=o}}return fn(S,...a)};petBonus=W(petBonus);stepBattle=W(stepBattle)}
+// ===== 製作（升階）：橘→紅（一般怪材料＋紅裝製作圖＋金幣）、綠→彩（王之結晶＋彩裝製作圖）=====
+// 升階時詞條全部重骰；可先花鑽石鎖住要保留的詞條（主 m0..、附 a0..、特殊 sp）
+MAT.mfrag='怪物碎片';MAT.bcry='王之結晶';MAT.bp_r='紅裝製作圖';MAT.bp_c='彩裝製作圖';
+const CRAFT={3:{to:4,n:'紅裝',mats:{mfrag:30,bp_r:1},gold:ch=>8000*(1+ch),lock:10},5:{to:6,n:'彩裝',mats:{bcry:10,bp_c:1},gold:()=>0,lock:50}};
+function craftCost(it,locks){const c=CRAFT[it&&it.q];if(!c)return null;return{to:c.to,n:c.n,mats:c.mats,gold:c.gold(it.ch||0),dia:(locks||[]).length*c.lock,lockP:c.lock}}
+function craft(S,u,locks,rng){const it=S.inv.find(i=>i.u===u);if(!it||!it.aff)return'找不到裝備';const c=CRAFT[it.q];if(!c)return'只有橘裝（→紅）或綠裝（→彩）可以製作升階';
+ locks=[...new Set((locks||[]).map(String))].filter(k=>/^(m\d|a\d|sp)$/.test(k));const a=it.aff;const valid=k=>k==='sp'?!!a.sp:k[0]==='m'?!!a.main[+k[1]]:!!a.add[+k[1]];locks=locks.filter(valid);
+ const cost=craftCost(it,locks);for(const k in cost.mats)if((S.mat[k]||0)<cost.mats[k])return(MAT[k]||k)+'不足（需要 '+cost.mats[k]+'）';if((S.gold||0)<cost.gold)return'金幣不足';if((S.dia||0)<cost.dia)return'鑽石不足（鎖詞條需要 '+cost.dia+'）';
+ for(const k in cost.mats)S.mat[k]-=cost.mats[k];S.gold-=cost.gold;S.dia-=cost.dia;
+ const R=rng||RNG((Math.random()*1e9)|0),q=c.to,qm=QMUL[q];const main=a.main.filter((l,i)=>locks.includes('m'+i)).slice(0,QMAIN[q]),add=a.add.filter((l,i)=>locks.includes('a'+i)).slice(0,QADD[q]);
+ let g=0;if(!main.length&&QMAIN[q]>0){const ms=MAINST[it.ln]||MAINST.sw;const l=rollLine(it,R,ms[Math.floor(R.n()*ms.length)],1);l[1]=Math.round(l[1]*qm);main.push(l)}
+ while(main.length<QMAIN[q]&&g++<80){const k=SIX[Math.floor(R.n()*6)];if(!main.some(x=>x[0]===k)){const l=rollLine(it,R,k,1);l[1]=Math.round(l[1]*qm);main.push(l)}}
+ g=0;while(add.length<QADD[q]&&g++<80){const l=rollAdd(it,R);if(!add.some(x=>x[0]===l[0]))add.push(l)}
+ const sp=locks.includes('sp')?a.sp:{lock:a.sp?a.sp.lock:1,...rollSpecial(it,R)};const na={main,add,sp};
+ if(q===6){it.slots=(it.slots||0)+(it.slot==='acc'?2:1);let s2,g2=0;do{s2=rollSpecial(it,R)}while(s2.k===sp.k&&g2++<20);na.sp2={lock:1,...s2}}
+ it.aff=na;const old=QUAL[it.q];it.q=q;it.n=String(it.n).replace(old+'之','');it.n=(q>=3?QUAL[q]+'之':'')+it.n;applyAff(it);return''}
+// 材料掉落：一般怪 → 怪物碎片、紅裝製作圖（稀有）；頭目 → 王之結晶、紅/彩裝製作圖
+{const _ok=onKill;onKill=function(S,B,m){const r=_ok(S,B,m);try{const x=Math.random();if(m.boss){addMat(S,'bcry',1+(x<.4?1:0));if(Math.random()<.05)addMat(S,'bp_c',1);if(Math.random()<.2)addMat(S,'bp_r',1)}else{if(x<.3)addMat(S,'mfrag',1);if(Math.random()<.003)addMat(S,'bp_r',1)}}catch(e){}return r}}
 
 // ===================== 第 5 層：繪製（像素 sprite，程式繪製）=====================
 const cv=document.getElementById("cv");let X=cv.getContext("2d");X.imageSmoothingEnabled=false;const W=320,H=180;
@@ -2120,5 +2139,29 @@ setInterval(()=>{try{showNotice()}catch(e){}},3000);
 // 組隊時喝藥水：由伺服器戰鬥執行（扣藥水、回血並廣播），數量顯示伺服器值
 {const _pe2=partyEv;partyEv=function(m){_pe2(m);if(m.pm&&ON.id&&m.pm[ON.id]){const o=JSON.stringify(ON.pm||{}),n=m.pm[ON.id];ON.pm=n;if(o!==JSON.stringify(n)&&TAB==='battle'){const pb=document.querySelector('.potb');if(pb)pb.querySelectorAll('[data-a=drink]').forEach(b=>{const x=b.querySelector('b');if(x)x.textContent=n[b.dataset.k]||0})}}}}
 {const _dr=ACT.drink;ACT.drink=d=>{if(mirOn()){const n=(ON.pm||{})[d.k];if(n===0)return toast(({pot:'治療藥水',hpot:'高級治療藥水',spp:'魔力藥水'})[d.k]+'不足');wsSend({t:'party.drink',k:d.k});return}return _dr(d)}}
+
+// ===== 製作頁（裝備 → 製作）：橘→紅、綠→彩，詞條全部重骰，可花鑽石鎖住要保留的詞條 =====
+if(SUBT.equip&&!SUBT.equip.some(x=>x[0]==='craft'))SUBT.equip.push(['craft','製作']);
+let CR={u:null,locks:[]};
+function crLines(it){const a=it.aff||{main:[],add:[]};const L=[];a.main.forEach((l,i)=>L.push(['m'+i,'主',fmtS(l[0],l[1])]));a.add.forEach((l,i)=>L.push(['a'+i,'附',fmtS(l[0],l[1])]));if(a.sp)L.push(['sp','特殊',a.sp.lock?'特殊屬性（未解鎖）':(a.sp.d||fmtS(a.sp.k,a.sp.v))]);return L}
+function craftPage(S){const cand=S.inv.filter(i=>i.aff&&CRAFT[i.q]);let h=`<div class="card sm">製作升階：<b class="nq3">橘裝</b> ＋ 怪物碎片 ×30 ＋ 紅裝製作圖 ＋ 金幣 → <b class="nq4">紅裝</b>；<b class="nq5">綠裝</b>（只有頭目會掉）＋ 王之結晶 ×10 ＋ 彩裝製作圖 → <b class="nq6 rainbow">彩裝</b>（彩裝不會掉落）。升階時詞條全部重骰，可先花鑽石鎖住想保留的詞條。<br>持有：怪物碎片 ${S.mat.mfrag||0}・紅裝製作圖 ${S.mat.bp_r||0}・王之結晶 ${S.mat.bcry||0}・彩裝製作圖 ${S.mat.bp_c||0}</div>`;
+ if(!cand.length)return h+`<div class="card sm c">目前沒有可升階的橘裝或綠裝。</div>`;
+ if(!cand.some(i=>i.u===CR.u)){CR.u=cand[0].u;CR.locks=[]}
+ h+=`<div class="card"><b>選擇裝備</b>${cand.map(i=>`<div class="it ${i.u===CR.u?'on':''}" data-a="crSel" data-v="${i.u}" style="cursor:pointer"><div class="sp"><span class="${QC[i.q]}">${esc(i.n)}</span> <span class="sm">${owner(S,i.u)?'（穿戴中）':''}→ ${CRAFT[i.q].n}</span></div></div>`).join('')}</div>`;
+ const it=S.inv.find(i=>i.u===CR.u),c=craftCost(it,CR.locks);
+ const own=Object.entries(c.mats).map(([k,n])=>`<span class="${(S.mat[k]||0)>=n?'':'rd'}">${MAT[k]} ${S.mat[k]||0}/${n}</span>`).join('・');
+ h+=`<div class="card"><b>${esc(it.n)} → <span class="${QC[c.to]}">${QUAL[c.to]}</span></b><div class="sm" style="margin:6px 0">勾選要保留的詞條（每條 💎${c.lockP}），其餘全部重骰${c.to===6?'；彩裝另外 +1 主屬性、+1 附加、+'+(it.slot==='acc'?2:1)+' 洞、彩虹特殊屬性':'；紅裝 2 主屬性、2 附加'}。</div>
+ ${crLines(it).map(([k,t,d])=>`<label class="ifr" style="display:flex;gap:8px;align-items:center"><input type="checkbox" data-a="crLock" data-k="${k}" ${CR.locks.includes(k)?'checked':''}><span class="tag">${t}</span><span>${esc(d)}</span></label>`).join('')}
+ <div class="sm" style="margin-top:8px">消耗：${own}${c.gold?`・<span class="${S.gold>=c.gold?'':'rd'}">金幣 ${fmt(c.gold)}</span>`:''}${c.dia?`・<span class="${S.dia>=c.dia?'':'rd'}">💎${c.dia}</span>`:''}</div>
+ <button class="b y" style="width:100%;margin-top:8px" data-a="crGo">製作升階</button></div>`;return h}
+{const _r=render;render=function(...a){const r=_r(...a);try{if(TAB==='equip'&&SUB.equip==='craft'&&G.S)$('app').innerHTML=subBar()+craftPage(G.S)}catch(e){console.warn(e)}return r}}
+ACT.crSel=d=>{CR.u=+d.v;CR.locks=[];render()};
+ACT.crLock=(e,d)=>{const k=(d&&d.k)||e.k;const on=typeof e.checked==='boolean'?e.checked:!CR.locks.includes(k);CR.locks=CR.locks.filter(x=>x!==k);if(on)CR.locks.push(k);render()};
+ACT.crGo=async()=>{const S=G.S,it=S.inv.find(i=>i.u===CR.u);if(!it)return;const c=craftCost(it,CR.locks);if(!confirm(`將 ${it.n} 升階為${c.n}？未鎖住的詞條會全部重骰。`))return;
+ try{if(ON.token){await onUpload(true);await onApi('POST','/api/craft',{u:it.u,locks:CR.locks});await after({rev:1})}else{const e=craft(S,it.u,CR.locks);if(e)throw new Error(e);save()}
+  SFX.ok&&SFX.ok();CR.locks=[];const n=G.S.inv.find(i=>i.u===it.u);toast('製作成功！'+(n?n.n:''));render();if(n)modal(itemInfo(G.S,n))}catch(e){toast(e.message)}};
+// 道具視窗加「製作升階」入口
+{const _ii=itemInfo;itemInfo=function(S,it){let h=_ii(S,it);if(it&&it.aff&&CRAFT[it.q])h=h.replace('<div class="ifg">',`<div class="ifr" style="margin:6px 0"><span class="sm">可製作升階為${CRAFT[it.q].n}</span><button class="b s y" data-a="crFrom" data-v="${it.u}">前往製作</button></div><div class="ifg">`);return h}}
+ACT.crFrom=d=>{closeModal();CR.u=+d.v;CR.locks=[];TAB='equip';SUB.equip='craft';render()};
 
 </script></body></html>
