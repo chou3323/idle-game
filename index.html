@@ -262,7 +262,7 @@ body.fixh .soc>.card.chat .say{flex:none;margin-top:8px}
 #modal .ifo.full .cmpg{display:grid;grid-template-columns:1fr 1fr;column-gap:10px}
 .pbar{background:linear-gradient(90deg,#fff3f9,#eef6ff);border-radius:14px;padding:6px 8px;margin-bottom:6px;box-shadow:0 2px 8px #f4c6da44}.pbar-h{font-size:13px;display:flex;align-items:center;gap:6px}.pbar-l{display:flex;gap:6px;overflow-x:auto;margin-top:4px}
 .pbm{min-width:92px;background:#fff;border-radius:10px;padding:4px 6px;display:flex;flex-direction:column;gap:2px;cursor:pointer;border:2px solid transparent}.pbm.me{border-color:#ffb3d0}.pbm.off{opacity:.5}.pbm b{font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.pbm small{font-size:10px;color:#998}
-.pbh,.pbs{display:block;height:4px;background:#eee;border-radius:3px;overflow:hidden}.pbh u,.pbs u{display:block;height:100%;text-decoration:none}.pbh u{background:#4cd07a}.pbs u{background:#5aa8ff}
+.pbh,.pbs{display:block;height:4px;background:#eee;border-radius:3px;overflow:hidden}.pbh u,.pbs u{display:block;height:100%;text-decoration:none}.pbh u{background:#4cd07a;transition:width .2s}.pbs u{background:#5aa8ff}
 #pbar.ov .pbar{background:#ffffffd0;backdrop-filter:blur(4px);margin:0}
 .bdg{background:#ff3b4f!important;box-shadow:0 1px 3px #0003}.subs .bdg{top:-6px;left:auto;right:-6px}
 /* 非戰鬥分頁：隱藏戰鬥畫面（背景照跑），整頁只給功能 */
@@ -278,7 +278,7 @@ body.nobt #stagebar,body.nobt #cv,body.nobt #dock,body.nobt #pbar.ov{display:non
 <script>
 'use strict';
 // ===================== 第 1 層：靜態資料（DATA）—— 前後端共用 =====================
-const VER='1.7.13',SKEY='xj_cache_v2',LEGACY='xyexp_save_v1';
+const VER='1.7.14',SKEY='xj_cache_v2',LEGACY='xyexp_save_v1';
 const STATN={str:'力量',agi:'敏捷',vit:'體力',int:'智力',dex:'靈巧',luk:'幸運'};
 const STATD={str:'近戰攻擊、負重',agi:'攻速、迴避',vit:'HP、防禦、魔防',int:'魔攻、SP、魔防',dex:'命中、遠程攻擊、詠唱',luk:'暴擊、完全迴避'};
 const ROLE={tank:'坦克',dps:'輸出',heal:'治療',sup:'輔助'};
@@ -1071,6 +1071,12 @@ const RESU_HP=[0,.1,.3,.5,.8];
     else if(ap.leaf!==0&&(S.mat.ygg||0)>0)useCons(S,h,'ygg',B)}}}catch(e){}return ev}}
 // 原創卡：劍旗魚卡片（飾品）— 詠唱不會被打斷，但詠唱時間 +25%（第 3 章頭目低機率掉落）
 CARDS.swf={n:'劍旗魚卡片',sh:'blob',c:'#7fc8ff',slot:'acc',fx:{noIntr:1,castP:-25},boss:true,proc:null,src:{ch:2,mi:3,mob:(CH[2]&&CH[2].boss[0])||'第 3 章頭目'},rate:.004};
+// 亂碼修復：舊版伺服器分段解碼把中文切壞（U+FFFD）。道具名依模板重建，其餘字串移除亂碼字元；失敗建議直接重算
+function fixFFFD(d){if(!d||typeof d!=='object')return d;const BAD=/\uFFFD/;
+ for(const it of d.inv||[]){if(typeof it.n==='string'&&BAD.test(it.n)){const t=Math.min(4,Math.floor((it.ch||0)/2));const nn=it.slot==='wpn'&&it.wt&&WNAMES[it.wt]?WNAMES[it.wt][t]:(ARMN[it.slot==='acc'?'acc1':it.slot]||ARMN.acc1)[t];if(nn)it.n=nn}}
+ if(Array.isArray(d.lastFail)&&d.lastFail.some(x=>BAD.test(String(x))))delete d.lastFail;
+ const walk=(o,dep)=>{if(dep>8||!o||typeof o!=='object')return;for(const k in o){const v=o[k];if(typeof v==='string'){if(BAD.test(v))o[k]=v.replace(/\uFFFD+/g,'')}else if(v&&typeof v==='object')walk(v,dep+1)}};walk(d,0);return d}
+{const _mg=migrate;migrate=function(d){return fixFFFD(_mg(d))}}
 
 // ===== 寵物派遣（v1.7.8）：選寵物 → 地點 → 時間 → 到時領收穫；伺服器計時（S.srvst.pd）=====
 // 表格驅動：新增地點只要在 PDLOC 加一筆。sp＝專精寵物（收穫 ×PD_SPEC），mats＝[材料, 權重]，rare＝每小時一次的稀有掉落 [材料, 機率]
@@ -1364,7 +1370,8 @@ const POSE={};
 function startStage(){const S=G.S;G.B=newBattle(S,S.prog.ch,S.prog.st,(S.seed+S.prog.ch*977+S.prog.st*131+S.stat.kill)>>>0);if(G.B.boss){SFX.boss();toast(`頭目關！${CH[S.prog.ch].boss[0]}（限時 ${BOSS_T} 秒）`)}hud()}
 function onEvents(ev){const S=G.S,B=G.B,P=heroPos(S);
  for(const e of ev){if(e.t==='atk'||e.t==='dmg'&&e.src!=='pet'&&!e.k){const id=e.id||e.src;POSE[id]={p:1,t:.2}}
-  if(e.t==='cast'){POSE[e.id]={p:2,t:e.dur};SFX.cast()}if(e.t==='stun')SFX.stun();
+  if(e.t==='cast'){POSE[e.id]={p:2,t:e.dur};SFX.cast();const pc=P[e.id];if(pc&&e.k&&SK[e.k])num(pc[0],pc[1]-30,'詠唱 '+SK[e.k].n,'#d8b8ff')}
+  if(e.t==='card'||e.t==='hold'||e.t==='taunt'||e.t==='resu'){const id=e.id||e.src||e.by,pc=P[id];const nm=e.n||(e.k&&CARDS[e.k]&&CARDS[e.k].n)||(e.t==='taunt'?'挑釁':e.t==='hold'?'固守':'');if(pc&&nm)num(pc[0],pc[1]-30,nm,'#ffe28a')}if(e.t==='stun')SFX.stun();
   if(e.t==='skill'){POSE[e.id]={p:SK[e.k].mag?2:1,t:.3};if(SK[e.k].ty==='heal');else if(['dmg','aoe'].includes(SK[e.k].ty))SFX.rel();else SFX.buff();const h=S.heroes.find(x=>x.id===e.id),p=P[e.id];if(p&&!['dmg','aoe'].includes(SK[e.k].ty))num(p[0],p[1]-22,SK[e.k].n,'#bff')}
   if(e.t==='dmg'){const mp=mobPos(B,e.mob),src=P[e.src]||[150,120];const k=e.fx||'swing',n=e.parts.length;const step=n>6?.08:.13;
    e.parts.forEach((d,i)=>{fx(k,src[0]+6,src[1],mp[0]+(i%3-1)*4,mp[1]-4,i*step);num(mp[0]+((i*7)%15-7),mp[1]-14-i*2,fmt(d),e.crit?'#ffd23f':'#fff',false,i*step+.05);if(i<12)dmgSnd(e,i,i*step)});
@@ -1402,7 +1409,7 @@ function draw(dt){const S=G.S,B=G.B;applyArt();X.save();if(shake>0){shake-=dt;X.
   const tp=B.boss?threatPct(S,B,id):0;if(tp>=90&&B.mobs[0]&&B.mobs[0].tg!==id){X.fillStyle='#ff4040';X.font='bold 9px sans-serif';X.fillText('!',p[0],p[1]-28)}
   const rt_=rbTitle(h.rb);{let mr=0;for(const sl in h.eq){const it=S.inv.find(i=>i.u===h.eq[sl]);if(it&&(it.rf||0)>mr)mr=it.rf}const gl=rfGlow(mr);if(gl){X.save();X.globalCompositeOperation='lighter';const k=gl==='g20'?1:gl==='g15'?.7:.45,ph=T0*(gl==='g20'?5:3);X.globalAlpha=k*(.5+.25*Math.sin(ph));const gr=X.createRadialGradient(p[0],p[1]+2,2,p[0],p[1]+2,gl==='g20'?22:gl==='g15'?18:14);const c0=gl==='g20'?`hsla(${(T0*160)%360},100%,70%,.9)`:gl==='g15'?'rgba(200,120,255,.85)':'rgba(120,200,255,.8)';gr.addColorStop(0,c0);gr.addColorStop(1,'rgba(0,0,0,0)');X.fillStyle=gr;X.beginPath();X.arc(p[0],p[1]+2,gl==='g20'?22:18,0,6.3);X.fill();if(gl==='g20'){for(let q=0;q<5;q++){const a=T0*2+q*1.26;X.fillStyle=`hsla(${(T0*200+q*70)%360},100%,80%,.9)`;X.fillRect(p[0]+Math.cos(a)*14-1,p[1]+2+Math.sin(a)*14-1,2,2)}}X.restore()}}X.font='7px sans-serif';X.textAlign='center';if(rt_.aura){X.globalAlpha=.35+.15*Math.sin(T0*4);X.fillStyle=rt_.aura==='rainbow'?`hsl(${(T0*120)%360},90%,60%)`:rt_.aura;X.beginPath();X.ellipse(p[0],p[1]+14,11,4,0,0,6.3);X.fill();X.globalAlpha=1}X.fillStyle=rt_.c==='rainbow'?`hsl(${(T0*120)%360},90%,70%)`:rt_.c;X.fillText(h.name,p[0],p[1]+27);{const tt=typeof titleOn==='function'&&titleOn(G.S);if(tt){X.save();X.font='bold 7px sans-serif';X.textAlign='center';X.fillStyle='#ffd86b';X.strokeStyle='#5a3a7a';X.lineWidth=2;X.strokeText('《'+tt.n+'》',p[0],p[1]-24);X.fillText('《'+tt.n+'》',p[0],p[1]-24);X.restore()}}if(h.rb){X.font='6px sans-serif';X.fillText('★'+h.rb+'轉',p[0],p[1]-30)}});
  drawFX(dt);X.restore();$('bossBtn').textContent=canIntrNow(S,B)?'打斷！':B.boss?'頭目戰中':'挑戰頭目';$('bossBtn').className='b s '+(canIntrNow(S,B)?'r':'y')}
-function hud(){const S=G.S,B=G.B;if(!$("tG").innerHTML){$("tG").innerHTML=GOLDI;$("tD").innerHTML=DIAI}$('tGold').textContent=fmt(S.gold);$('tDia').textContent=fmt(S.dia);$('tName').textContent=`戰力 ${fmt(partyPower(S))}`;
+function hud(){const S=G.S,B=(typeof mirOn==='function'&&mirOn()&&ON.mir&&ON.mir.B)||G.B;if(!$("tG").innerHTML){$("tG").innerHTML=GOLDI;$("tD").innerHTML=DIAI}$('tGold').textContent=fmt(S.gold);$('tDia').textContent=fmt(S.dia);$('tName').textContent=`戰力 ${fmt(partyPower(S))}`;
  if(B){$('sbT').textContent=`${B.ch+1}-${B.st+1} ${CH[B.ch].n}${B.boss?' 頭目':''}`;$('sbP').style.width=(B.boss?(B.mobs[0]?100*(1-B.mobs[0].hp/B.mobs[0].mhp):0):100*(B.wave/B.need))+'%';$('sbX').textContent=B.boss?`⏱${Math.ceil(B.timer)}s`:`波 ${B.wave}/${B.need}｜推薦 ${fmt(recPower(B.ch,B.st))}`}}
 
 let TAB='battle',SUB={team:'stat',equip:'eq',adv:'stage',more:'shop',social:'chat'},SEL=1,PICK=null,EXQ='';
@@ -1428,7 +1435,7 @@ function partyBox(){const S=G.S,B=G.B;const e=$('pbox');if(!e||!B)return;e.inner
  return`<div class="row" style="margin:2px 0"><span style="width:96px">${nameHtml(h)} <span class="sm">${jobName(h.job,h.sex)}</span></span><span class="sm" style="width:52px">Lv${h.bl}</span><div class="sp"><div class="hb"><i style="width:${100*Math.max(0,rt?rt.hp:0)/t.mhp}%;background:#5d5"></i></div><div class="hb" style="height:3px"><i style="width:${100*Math.max(0,rt?rt.sp:0)/t.msp}%;background:#59f"></i></div></div>${B.boss?`<span class="sm ${tp>=90?'rd':''}" style="width:44px;text-align:right">仇${tp}%</span>`:''}</div>`}).join('')}
 function render(){const S=G.S;document.body.classList.toggle('nobt',TAB!=='battle');nav();let h=subBar();const s=SUB[TAB];
  if(TAB==='battle'){const pb=partyBonus(S);h+=`<div class="card"><div class="row"><b>角色</b><span class="sp"></span><span class="sm">${ON.party?'線上隊伍 '+ON.party.members.length+' 人':'在「社交 › 隊伍」邀請好友共推'}</span></div><div id="pbox"></div></div>
-  <div class="row"><label class="sm"><input type="checkbox" data-a="autopush" ${S.prog.auto?'checked':''}> 自動推進</label><label class="sm"><input type="checkbox" data-a="autoboss" ${S.prog.autoBoss?'checked':''}> 自動挑頭目</label><label class="sm"><input type="checkbox" data-a="autoint" ${S.autoInt!==false?'checked':''}> 自動打斷</label></div>${potBar(S)}
+  <div class="row"><label class="sm"><input type="checkbox" data-a="autopush" ${S.prog.auto?'checked':''}> 自動推進</label><label class="sm"><input type="checkbox" data-a="autoboss" ${S.prog.autoBoss?'checked':''}> 自動挑頭目</label><label class="sm"><input type="checkbox" data-a="autoint" ${S.autoInt!==false?'checked':''}> 自動打斷</label></div><div class="sm" style="opacity:.8;margin:2px 4px 6px">⚔️ 技能全自動施放：依「角色 → 技能」頁學會的技能，冷卻好且 SP 足夠就會放，施放時角色頭上會顯示技能名（被動觸發也會顯示）。頭目詠唱時按上方「打斷！」可手動打斷。</div>${potBar(S)}
   ${S.lastFail?`<div class="card sm"><b class="rd">上次頭目失敗建議：</b>${S.lastFail.join('；')}</div>`:''}<div id="log">${LOG.join('')}</div>`}
  if(TAB==='team'){h+=heroSel();if(s==='stat')h+=pnoCard();const hr=curH(),t=calc(S,hr),j=J[hr.job];
   if(s==='stat'){h+=`<div class="card"><div class="row">${nameHtml(hr)} <span class="tag">${jobName(hr.job,hr.sex)}</span><span class="tag">${ROLE[j.role]}</span><span class="sp"></span><span class="c">戰力 ${fmt(heroPower(S,hr))}</span></div>
