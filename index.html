@@ -1,8 +1,8 @@
 <!DOCTYPE html><html lang="zh-Hant"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
-<meta name="theme-color" content="#1e2147"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#15172e"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="仙境冒險">
-<link rel="manifest" href="manifest.json"><link rel="apple-touch-icon" href="icons/apple-touch-icon.png"><link rel="icon" href="icons/icon-192.png">
+<link rel="manifest" href="manifest.json?v=141"><link rel="apple-touch-icon" sizes="180x180" href="icons/apple-touch-icon.png?v=141"><link rel="icon" type="image/png" sizes="64x64" href="icons/favicon-64.png?v=141"><meta name="format-detection" content="telephone=no"><meta name="application-name" content="仙境冒險">
 <title>仙境冒險</title>
 <style>
 *{box-sizing:border-box}html,body{margin:0;height:100%;background:#141a30;color:#eef;font:14px/1.45 system-ui,-apple-system,"PingFang TC","Noto Sans TC",sans-serif;overscroll-behavior:none;-webkit-tap-highlight-color:transparent;-webkit-user-select:none;user-select:none}
@@ -67,25 +67,39 @@ progress{accent-color:#0a84ff;height:6px}
 html{background:#15172e}body,body.q{background:transparent!important}
 label{display:inline-flex;align-items:center;gap:7px;padding:7px 12px;margin:3px 4px 3px 0;background:rgba(255,255,255,.07);border:1px solid var(--line);border-radius:12px;font-size:13px;cursor:pointer}label:active{transform:scale(.97)}
 input[type=checkbox]{min-height:0;width:18px;height:18px;margin:0;padding:0;accent-color:#0a84ff}
+#dock{display:none}
+
+html,body{touch-action:manipulation}*{-webkit-touch-callout:none}
+#top{padding-left:max(14px,env(safe-area-inset-left));padding-right:max(14px,env(safe-area-inset-right))}#app{padding-left:max(8px,env(safe-area-inset-left));padding-right:max(8px,env(safe-area-inset-right))}
+#a2hs{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(70px + env(safe-area-inset-bottom));z-index:30;display:flex;align-items:center;gap:10px;max-width:92%;padding:8px 8px 8px 12px;font-size:12.5px;background:rgba(30,32,62,.82);-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px);border:1px solid var(--line);border-radius:14px;box-shadow:var(--sh)}
+#a2hs{width:max-content}#a2hs span{white-space:nowrap}#a2hs img{width:28px;height:28px;border-radius:7px}#a2hs .x{background:none;border:0;color:var(--tx2);font-size:16px;min-width:32px;min-height:32px}
+@media (display-mode:standalone){#top{padding-top:calc(10px + env(safe-area-inset-top))}}
+@media (min-width:1000px){#a2hs{bottom:20px;left:auto;right:20px;transform:none}}
 /* 桌面版：側邊欄＋戰鬥畫面＋資訊面板 */
 @media (min-width:1000px){
  html,body{height:100%;overflow:hidden}
- body{display:grid;grid-template-columns:200px minmax(0,1fr) minmax(380px,34vw);grid-template-rows:auto auto 1fr;grid-template-areas:"nav top top" "nav stage app" "nav cv app";gap:0 18px}
+ body{display:grid;grid-template-columns:200px minmax(0,1fr) minmax(380px,34vw);grid-template-rows:auto auto auto minmax(0,1fr);grid-template-areas:"nav top top" "nav stage app" "nav cv app" "nav dock app";gap:0 18px}
  #top{grid-area:top;border-radius:0}
  #stagebar{grid-area:stage;padding:14px 4px 10px}
  #cv{grid-area:cv;align-self:start;border-radius:20px;box-shadow:0 20px 60px rgba(0,0,0,.45);border:1px solid var(--line)}
- #app{grid-area:app;overflow:auto;padding:6px 18px 24px 0;height:100%}
+ #app{grid-area:app;overflow:auto;padding:6px 18px 24px 0;min-height:0}
  #nav,body.q #nav{grid-area:nav;position:static;flex-direction:column;justify-content:flex-start;gap:4px;padding:18px 12px;border-top:0;border-right:1px solid var(--line);height:100vh}
  #nav::before{content:"仙境冒險";font-weight:700;font-size:20px;letter-spacing:-.01em;padding:4px 12px 16px;background:linear-gradient(90deg,#64d2ff,#bf5af2);-webkit-background-clip:text;background-clip:text;color:transparent}
  #nav button{flex:0 0 auto;flex-direction:row;justify-content:flex-start;gap:12px;font-size:15px;padding:10px 12px;min-height:46px}
  #nav button:hover{background:rgba(255,255,255,.06);color:#fff}#nav button.on{background:rgba(10,132,255,.18);color:#fff}
  #nav canvas{width:24px;height:24px}
+ #app #log{display:none}
+ #dock{grid-area:dock;display:grid;grid-template-columns:1fr 1fr;gap:14px;min-height:0;padding:14px 0 18px}
+ #dock .dk{margin:0;display:flex;flex-direction:column;min-height:0;overflow:hidden}
+ #dock .dsc{flex:1;min-height:0;overflow:auto;margin-top:8px;font-size:12.5px;scrollbar-width:thin}
+ #dock .dsc>div{padding:2px 0}
 }
 @media (min-width:1000px) and (max-height:700px){#cv{max-height:60vh;width:auto;justify-self:center}}
 </style></head><body>
 <div id="top"><span id="tName"></span><span class="sp"></span><span id="tG"></span><b id="tGold">0</b><span id="tD"></span><b id="tDia">0</b><button class="b s" id="snd" data-a="snd">音</button></div>
 <div id="stagebar"><span id="sbT"></span><div class="pb"><i id="sbP"></i></div><span id="sbX"></span><button class="b s y" data-a="boss" id="bossBtn">挑戰頭目</button></div>
 <canvas id="cv" width="320" height="180"></canvas>
+<div id="dock"><div class="card dk"><b>戰鬥紀錄</b><div id="dlog" class="dsc"></div></div><div class="card dk"><div class="row"><b>DPS 面板</b><span class="sp"></span><button class="b s" data-a="dpsreset">重置</button></div><div id="ddps" class="dsc"></div></div></div>
 <div id="app"></div>
 <div id="nav"></div><div id="toast"></div><div id="modal"><div id="mbody"></div></div>
 <script>
@@ -1129,5 +1143,16 @@ G.S=load();nav();if(G.S){boot()}else create();requestAnimationFrame(frame);
 if('serviceWorker' in navigator&&location.protocol!=='file:')navigator.serviceWorker.register('sw.js').catch(()=>{});
 window.G=G;Object.assign(window,{ACT,refine,stepBattle,calc});
 {const _id=itemDesc;itemDesc=function(it){return _id(it)+` <span class="sm">${trTxt(it)}</span>`}}
+
+// 桌面版下方面板：戰鬥紀錄＋DPS（每秒更新，手機版隱藏）
+function dpsHtml(S){const d=S.stat.dmg||{};const tot=Object.values(d).reduce((a,b)=>a+b,0)||1;const tm=Math.max(1,(S.stat.dmgT||0));return Object.entries(d).sort((a,b)=>b[1]-a[1]).map(([k,v])=>`<div class="row sm"><span style="width:76px;overflow:hidden;white-space:nowrap">${k==='pet'?'寵物':(S.heroes.find(h=>h.id==k)||{name:k}).name}</span><div class="sp hb"><i style="width:${v/tot*100}%;background:linear-gradient(90deg,#64d2ff,#bf5af2)"></i></div><span style="min-width:96px;text-align:right">${fmt(v)}（${(v/tot*100).toFixed(0)}%）</span></div>`).join('')||'<div class="sm">尚無資料</div>'}
+setInterval(()=>{if(!G.S||innerWidth<1000)return;const l=$('dlog'),p=$('ddps');if(!l)return;const top=l.scrollTop<4;l.innerHTML=curI(LOG.join(''));if(top)l.scrollTop=0;p.innerHTML=dpsHtml(G.S)},1000);
+
+// 加到主畫面提示（可關閉，不再顯示）
+(function(){const sa=matchMedia('(display-mode: standalone)').matches||navigator.standalone;if(sa||localStorage.getItem('a2hs_off'))return;let dp=null;
+ const show=(txt,btn)=>{if(document.getElementById('a2hs'))return;const d=document.createElement('div');d.id='a2hs';d.innerHTML=`<img src="icons/icon-192.png?v=141" alt=""><span>${txt}</span>${btn?'<button class="b s" id="a2go">安裝</button>':''}<button class="x" id="a2x" aria-label="關閉">✕</button>`;document.body.appendChild(d);
+  document.getElementById('a2x').onclick=()=>{localStorage.setItem('a2hs_off',1);d.remove()};if(btn)document.getElementById('a2go').onclick=async()=>{d.remove();if(dp){dp.prompt();await dp.userChoice;dp=null}}};
+ addEventListener('beforeinstallprompt',e=>{e.preventDefault();dp=e;setTimeout(()=>show('把仙境冒險裝成 App，全螢幕更好玩',1),4000)});
+ const ios=/iphone|ipad|ipod/i.test(navigator.userAgent);if(ios)setTimeout(()=>show('分享 →「加入主畫面」全螢幕玩'),5000)})();
 
 </script></body></html>
