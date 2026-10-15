@@ -30,8 +30,9 @@ button{font:inherit;cursor:pointer}.b{background:#3d6bd8;color:#fff;border:0;bor
 .hb{height:6px;background:#0b1022;border-radius:3px;overflow:hidden}.hb i{display:block;height:100%}
 .tag{font-size:11px;background:#33407a;border-radius:6px;padding:1px 5px}
 #modal{position:fixed;inset:0;background:#0009;z-index:40;display:none;align-items:flex-end}#modal>div{background:#1b2340;width:100%;max-height:80vh;overflow:auto;border-radius:16px 16px 0 0;padding:12px 12px calc(12px + env(safe-area-inset-bottom))}
-.rainbow{background:linear-gradient(90deg,#f55,#fd5,#5f8,#5cf,#c7f);-webkit-background-clip:text;background-clip:text;color:transparent!important}body.q{background:#2a2346}body.q #top,body.q #nav{background:linear-gradient(#3b3366,#2e2852);border-color:#5b4f8f}body.q .card{background:linear-gradient(#352d5e,#2c2650);border:1px solid #5b4f8f;border-radius:14px;box-shadow:0 2px 6px #0003}body.q .b{border-radius:12px;box-shadow:inset 0 -2px 0 #0003;background:linear-gradient(#6f8cff,#4a64d8)}body.q .b.g{background:linear-gradient(#5fd38a,#2f9a57)}body.q .b.y{background:linear-gradient(#ffc64a,#d69a1c)}body.q .b.r{background:linear-gradient(#ff7a6a,#c2453a)}body.q .subs button{border-radius:16px}body.q #stagebar{background:#3a3166}body.q .ic{border-radius:10px;image-rendering:auto}</style></head><body>
-<div id="top"><span id="tName"></span><span class="sp"></span><span>金 <b id="tGold">0</b></span><span>鑽 <b id="tDia">0</b></span><button class="b s" id="snd" data-a="snd">音</button></div>
+.rainbow{background:linear-gradient(90deg,#f55,#fd5,#5f8,#5cf,#c7f);-webkit-background-clip:text;background-clip:text;color:transparent!important}body.q{background:#2a2346}body.q #top,body.q #nav{background:linear-gradient(#3b3366,#2e2852);border-color:#5b4f8f}body.q .card{background:linear-gradient(#352d5e,#2c2650);border:1px solid #5b4f8f;border-radius:14px;box-shadow:0 2px 6px #0003}body.q .b{border-radius:12px;box-shadow:inset 0 -2px 0 #0003;background:linear-gradient(#6f8cff,#4a64d8)}body.q .b.g{background:linear-gradient(#5fd38a,#2f9a57)}body.q .b.y{background:linear-gradient(#ffc64a,#d69a1c)}body.q .b.r{background:linear-gradient(#ff7a6a,#c2453a)}body.q .subs button{border-radius:16px}body.q #stagebar{background:#3a3166}body.q .ic{border-radius:10px;image-rendering:auto}.cur{width:1.05em;height:1.05em;vertical-align:-.18em;margin:0 1px;display:inline-block}#top .cur{width:18px;height:18px}
+</style></head><body>
+<div id="top"><span id="tName"></span><span class="sp"></span><span id="tG"></span><b id="tGold">0</b><span id="tD"></span><b id="tDia">0</b><button class="b s" id="snd" data-a="snd">音</button></div>
 <div id="stagebar"><span id="sbT"></span><div class="pb"><i id="sbP"></i></div><span id="sbX"></span><button class="b s y" data-a="boss" id="bossBtn">挑戰頭目</button></div>
 <canvas id="cv" width="320" height="180"></canvas>
 <div id="app"></div>
@@ -295,7 +296,7 @@ function autoAtk(S,B,h,t,rt,m){const R=B.rng;const hr=hitRate(t,m);
  const crit=R.n()*100<t.crit;let parts=[];const dbl=t.b.dbl&&t.wt==='dagger'&&R.n()*100<t.b.dbl,tri=t.b.tri&&R.n()*100<t.b.tri;
  // 攻速流成長線：溢出攻速 → 普攻傷害 +2%/點；同目標連續命中疊層（每層 +3%，最多 10 層）；LUK/10% 機率多重打擊
  const rt0=B.hr[h.id];if(rt0.stkT===m){rt0.stk=Math.min(10,(rt0.stk||0)+1)}else{rt0.stk=0;rt0.stkT=m}
- const amul=(100+(t.ovA||0)*2+rt0.stk*.5)*(tri?1+h.sk.o_triple*.2:1);const multi=R.n()*100<t.s.luk/30+(t.ovA||0)*.5;
+ const amul=(100+(t.ovA||0)*2+rt0.stk*.4)*(tri?1+h.sk.o_triple*.2:1);const multi=R.n()*100<t.s.luk/30+(t.ovA||0)*.5;
  const nh=(tri?3:dbl?2:1)+(multi?1:0);for(let i=0;i<nh;i++)parts.push(physDmg(B,t,m,amul,null,crit));
  if(t.dual){const L=physDmg(B,t,m,30+((h.sk.x_cloak||0)),null,crit);parts.push(L)}
  if(tri)B.hr[h.id].spirit=Math.min(5,B.hr[h.id].spirit+1);
@@ -778,6 +779,11 @@ drawHero=function(...a){return qart()?drawHeroQ(...a):_dhP(...a)};drawMob=functi
 // Q 版用 2 倍解析度與平滑；像素版保持 320×180 pixelated
 function applyArt(){const q=qart();const want=q?2:1;if(cv.width!==W*want){cv.width=W*want;cv.height=H*want}X.setTransform(want,0,0,want,0,0);X.imageSmoothingEnabled=q;cv.style.imageRendering=q?'auto':'pixelated';document.body.classList.toggle('q',q)}
 
+// 原創貨幣圖示（SVG）：H 金幣、藍紫切面寶石
+const GOLDI='<svg class="cur" viewBox="0 0 24 24" aria-label="金幣"><defs><radialGradient id="gg" cx="35%" cy="30%" r="75%"><stop offset="0" stop-color="#fff6c2"/><stop offset=".45" stop-color="#ffcf3a"/><stop offset="1" stop-color="#c47d00"/></radialGradient></defs><circle cx="12" cy="12" r="11" fill="#8a5300"/><circle cx="12" cy="12" r="9.6" fill="url(#gg)" stroke="#ffe27a" stroke-width="1"/><circle cx="12" cy="12" r="7" fill="none" stroke="#b87300" stroke-width=".9" opacity=".7"/><path d="M8.6 7.5v9M15.4 7.5v9M8.6 12h6.8" stroke="#8a5300" stroke-width="2.1" stroke-linecap="round"/><ellipse cx="8.5" cy="6.8" rx="2.6" ry="1.3" fill="#fff" opacity=".75" transform="rotate(-30 8.5 6.8)"/></svg>';
+const DIAI='<svg class="cur" viewBox="0 0 24 24" aria-label="鑽石"><defs><linearGradient id="dg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#c9b8ff"/><stop offset=".5" stop-color="#7a6cff"/><stop offset="1" stop-color="#3b2fa8"/></linearGradient></defs><path d="M6 3h12l4 6-10 13L2 9z" fill="url(#dg)" stroke="#2a1f80" stroke-width=".8" stroke-linejoin="round"/><path d="M2 9h20M6 3l3 6 3-6 3 6 3-6M9 9l3 13 3-13" fill="none" stroke="#e8e2ff" stroke-width=".6" opacity=".8"/><path d="M7 4.2h3.5L8.6 8H3.8z" fill="#fff" opacity=".55"/></svg>';
+try{document.getElementById('tG').innerHTML=GOLDI;document.getElementById('tD').innerHTML=DIAI}catch(e){}
+function curI(h){return String(h).replace(/(\d[\d,.]*\s*[萬億]?)\s*(鑽石|鑽|金幣|金)(?![色牌庫幣屬])/g,(a,n,u)=>n+(u[0]==='鑽'?DIAI:GOLDI))}
 // ===================== 第 6 層：音效（Web Audio，原創合成）=====================
 let AC=null;const SND={on:1};function ac(){if(!AC){try{AC=new(window.AudioContext||window.webkitAudioContext)()}catch(e){}}return AC}
 function tone(f,d,type,v,slide,delay){const a=ac();if(!a||!G.S.set.snd)return;const t=a.currentTime+(delay||0),o=a.createOscillator(),g=a.createGain();o.type=type||'square';o.frequency.setValueAtTime(f,t);if(slide)o.frequency.exponentialRampToValueAtTime(Math.max(30,f*slide),t+d);g.gain.setValueAtTime(v||.06,t);g.gain.exponentialRampToValueAtTime(.001,t+d);o.connect(g);g.connect(a.destination);o.start(t);o.stop(t+d+.02)}
@@ -791,8 +797,8 @@ const fxSnd={fire:'fire',meteor:'fire',ice:'ice',bolt:'bolt',holy:'holy',arrow:'
 const G={S:null,B:null};const $=id=>document.getElementById(id);const fmt=n=>n>=1e6?(n/1e6).toFixed(1)+'M':n>=1e4?(n/1e3).toFixed(1)+'K':Math.floor(n)+'';
 function save(){const S=G.S;S.t=Date.now();const ev=S.ev;S.ev=[];localStorage.setItem(SKEY,JSON.stringify(S));S.ev=ev}
 function load(){try{const s=JSON.parse(localStorage.getItem(SKEY));if(s&&s.v)return s}catch(e){}return null}
-function toast(t,ms){const e=$('toast');e.innerHTML=t;e.style.display='block';clearTimeout(e._t);e._t=setTimeout(()=>e.style.display='none',ms||1600)}
-const LOG=[];function log(t,c){LOG.unshift(`<div class="${c||''}">${t}</div>`);if(LOG.length>40)LOG.pop();if(TAB==='battle'&&$('log'))$('log').innerHTML=LOG.join('')}
+function toast(t,ms){const e=$('toast');e.innerHTML=curI(t);e.style.display='block';clearTimeout(e._t);e._t=setTimeout(()=>e.style.display='none',ms||1600)}
+const LOG=[];function log(t,c){LOG.unshift(`<div class="${c||''}">${curI(t)}</div>`);if(LOG.length>40)LOG.pop();if(TAB==='battle'&&$('log'))$('log').innerHTML=LOG.join('')}
 // 位置
 const ROLEORD={tank:0,dps:1,sup:2,heal:3};
 function heroPos(S){const ids=[...S.party].sort((a,b)=>ROLEORD[J[S.heroes.find(h=>h.id===a).job].role]-ROLEORD[J[S.heroes.find(h=>h.id===b).job].role]);const P={};ids.forEach((id,i)=>P[id]=[118-i*20,128+(i%2?12:-4)]);return P}
@@ -839,7 +845,7 @@ function draw(dt){const S=G.S,B=G.B;applyArt();X.save();if(shake>0){shake-=dt;X.
   const tp=B.boss?threatPct(S,B,id):0;if(tp>=90&&B.mobs[0]&&B.mobs[0].tg!==id){X.fillStyle='#ff4040';X.font='bold 9px sans-serif';X.fillText('!',p[0],p[1]-28)}
   const rt_=rbTitle(h.rb);X.font='7px sans-serif';X.textAlign='center';if(rt_.aura){X.globalAlpha=.35+.15*Math.sin(T0*4);X.fillStyle=rt_.aura==='rainbow'?`hsl(${(T0*120)%360},90%,60%)`:rt_.aura;X.beginPath();X.ellipse(p[0],p[1]+14,11,4,0,0,6.3);X.fill();X.globalAlpha=1}X.fillStyle=rt_.c==='rainbow'?`hsl(${(T0*120)%360},90%,70%)`:rt_.c;X.fillText(h.name,p[0],p[1]+27);if(h.rb){X.font='6px sans-serif';X.fillText('★'+h.rb+'轉',p[0],p[1]-30)}});
  drawFX(dt);X.restore();$('bossBtn').textContent=canIntrNow(S,B)?'打斷！':B.boss?'頭目戰中':'挑戰頭目';$('bossBtn').className='b s '+(canIntrNow(S,B)?'r':'y')}
-function hud(){const S=G.S,B=G.B;$('tGold').textContent=fmt(S.gold);$('tDia').textContent=fmt(S.dia);$('tName').textContent=`戰力 ${fmt(partyPower(S))}`;
+function hud(){const S=G.S,B=G.B;if(!$("tG").innerHTML){$("tG").innerHTML=GOLDI;$("tD").innerHTML=DIAI}$('tGold').textContent=fmt(S.gold);$('tDia').textContent=fmt(S.dia);$('tName').textContent=`戰力 ${fmt(partyPower(S))}`;
  if(B){$('sbT').textContent=`${B.ch+1}-${B.st+1} ${CH[B.ch].n}${B.boss?' 頭目':''}`;$('sbP').style.width=(B.boss?(B.mobs[0]?100*(1-B.mobs[0].hp/B.mobs[0].mhp):0):100*(B.wave/B.need))+'%';$('sbX').textContent=B.boss?`⏱${Math.ceil(B.timer)}s`:`波 ${B.wave}/${B.need}｜推薦 ${fmt(recPower(B.ch,B.st))}`}}
 
 let TAB='battle',SUB={team:'stat',equip:'eq',adv:'stage',more:'shop'},SEL=1,PICK=null,EXQ='';
@@ -939,7 +945,7 @@ function render(){const S=G.S;nav();let h=subBar();const s=SUB[TAB];
    <div class="row"><button class="b s" data-a="export">匯出存檔</button><button class="b s r" data-a="wipe">刪除存檔重來</button></div>
    <div class="row" style="margin-top:6px"><input id="gmpw" type="password" placeholder="GM 密碼" style="width:120px"><button class="b s" data-a="gmon">GM</button></div></div>
    ${G.gm?`<div class="card"><b>GM 面板</b><div class="row">${[['gold','金幣+100萬'],['dia','鑽石+5000'],['mat','材料全+50'],['cards','每種卡+1'],['egg','寵物蛋+3'],['lv','全隊+10等'],['gear','發本章裝備×8'],['stage','解鎖下一章'],['boss','直接挑頭目'],['spd','速度×1/×3'],['month','月卡+30天'],['rb','全隊轉生一次']].map(([k,n])=>`<button class="b s" data-a="gm" data-k="${k}">${n}</button>`).join('')}</div></div>`:''}`}}
- $('app').innerHTML=h;partyBox();document.querySelectorAll('canvas[data-mob]').forEach(c=>{const [ci,mi]=c.dataset.mob.split('_').map(Number);const m=mi==3?CH[ci].boss:CH[ci].mob[mi];X_SWAP(c.getContext('2d'),()=>drawMob(16,18,{sh:m[1],c:m[2],at:0,boss:0},0))});document.querySelectorAll('canvas[data-pet]').forEach(c=>{const p=G.S.pets.find(x=>x.u==c.dataset.pet);if(!p)return;const x=c.getContext('2d');const d=PETS[p.k];X_SWAP(x,()=>drawMob(16,18,{sh:d.sh,c:d.c[p.ev],at:0},0))})}
+ $('app').innerHTML=curI(h);partyBox();document.querySelectorAll('canvas[data-mob]').forEach(c=>{const [ci,mi]=c.dataset.mob.split('_').map(Number);const m=mi==3?CH[ci].boss:CH[ci].mob[mi];X_SWAP(c.getContext('2d'),()=>drawMob(16,18,{sh:m[1],c:m[2],at:0,boss:0},0))});document.querySelectorAll('canvas[data-pet]').forEach(c=>{const p=G.S.pets.find(x=>x.u==c.dataset.pet);if(!p)return;const x=c.getContext('2d');const d=PETS[p.k];X_SWAP(x,()=>drawMob(16,18,{sh:d.sh,c:d.c[p.ev],at:0},0))})}
 function X_SWAP(ctx,fn){const o=X;X=ctx;try{fn()}finally{X=o}}
 
 G.ro={prot:0,safe:0,hammer:0};G.gm=0;
