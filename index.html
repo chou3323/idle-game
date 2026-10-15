@@ -265,6 +265,9 @@ body.fixh .soc>.card.chat .say{flex:none;margin-top:8px}
 .pbh,.pbs{display:block;height:4px;background:#eee;border-radius:3px;overflow:hidden}.pbh u,.pbs u{display:block;height:100%;text-decoration:none}.pbh u{background:#4cd07a}.pbs u{background:#5aa8ff}
 #pbar.ov .pbar{background:#ffffffd0;backdrop-filter:blur(4px);margin:0}
 .bdg{background:#ff3b4f!important;box-shadow:0 1px 3px #0003}.subs .bdg{top:-6px;left:auto;right:-6px}
+/* 非戰鬥分頁：隱藏戰鬥畫面（背景照跑），整頁只給功能 */
+body.nobt #stagebar,body.nobt #cv,body.nobt #dock,body.nobt #pbar.ov{display:none!important}
+@media (min-width:1000px){body.nobt{grid-template-columns:200px minmax(0,1fr);grid-template-rows:auto minmax(0,1fr);grid-template-areas:"nav top" "nav app"}body.nobt #app{padding:6px 24px 24px 6px}}
 </style></head><body>
 <div id="top"><span id="tName"></span><span class="sp"></span><span id="tG"></span><b id="tGold">0</b><span id="tD"></span><b id="tDia">0</b><button class="b s" id="snd" data-a="snd">音</button></div>
 <div id="stagebar"><span id="sbT"></span><div class="pb"><i id="sbP"></i></div><span id="sbX"></span><button class="b s y" data-a="boss" id="bossBtn">挑戰頭目</button></div>
@@ -275,7 +278,7 @@ body.fixh .soc>.card.chat .say{flex:none;margin-top:8px}
 <script>
 'use strict';
 // ===================== 第 1 層：靜態資料（DATA）—— 前後端共用 =====================
-const VER='1.7.11',SKEY='xj_cache_v2',LEGACY='xyexp_save_v1';
+const VER='1.7.12',SKEY='xj_cache_v2',LEGACY='xyexp_save_v1';
 const STATN={str:'STR',agi:'AGI',vit:'VIT',int:'INT',dex:'DEX',luk:'LUK'};
 const STATD={str:'近戰攻擊、負重',agi:'攻速、迴避',vit:'HP、防禦、魔防',int:'魔攻、SP、魔防',dex:'命中、遠程攻擊、詠唱',luk:'暴擊、完全迴避'};
 const ROLE={tank:'坦克',dps:'輸出',heal:'治療',sup:'輔助'};
@@ -1387,7 +1390,7 @@ function battleDone(){const S=G.S,B=G.B,i=stageIdx(B.ch,B.st);
 function checkUnlocks(){const S=G.S;[].forEach(c=>{if(!S.heroes.find(h=>h.id===c.id)&&S.prog.max>=stageIdx(c.unlock[0],c.unlock[1])){const h=newHero(c.id,c.name,c.job,c.sex);h.bl=Math.max(10,S.heroes[0].bl-2);h.pts=statPtsTotal(h);autoAlloc(h);autoSkill(h);S.heroes.push(h);if(S.party.length<5)S.party.push(h.id);log(`<b class="gr">${c.name}（${J[c.job].n}）加入了冒險團！</b>`);toast(`新夥伴：${c.name}（${J[c.job].n}）`)}});
  for(const k in UNLOCK)if(unl(S,k)&&!(S.unl||(S.unl={}))[k]){S.unl[k]=1;toast('解鎖系統：'+{pet:'寵物',life:'生活/派遣',guild:'公會',star:'星力強化',pot:'潛能',dungeon:'副本'}[k]);if(k==='pet'){S.mat.egg=(S.mat.egg||0)+1}}}
 let last=performance.now(),acc=0,T0=0,shake=0,rateT=0;
-function frame(now){const dt=Math.min(.25,(now-last)/1000);last=now;T0+=dt;const S=G.S,B=G.B;if(S&&B){acc+=dt*(S.spd||1);let n=0;while(acc>=.1&&n<20){acc-=.1;n++;const ev=stepBattle(S,B,.1);onEvents(ev);if(B.done){battleDone();break}}draw(dt);rateT+=dt;if(rateT>1){rateT=0;hud();if(TAB==='battle')partyBox()}}requestAnimationFrame(frame)}
+function frame(now){const dt=Math.min(.25,(now-last)/1000);last=now;T0+=dt;const S=G.S,B=G.B;if(typeof mirTick==='function'&&mirTick()){mirFrame(dt)}else if(S&&B){acc+=dt*(S.spd||1);let n=0;while(acc>=.1&&n<20){acc-=.1;n++;const ev=stepBattle(S,B,.1);onEvents(ev);if(B.done){battleDone();break}}draw(dt);rateT+=dt;if(rateT>1){rateT=0;hud();if(TAB==='battle')partyBox()}}requestAnimationFrame(frame)}
 function draw(dt){const S=G.S,B=G.B;applyArt();X.save();if(shake>0){shake-=dt;X.translate((Math.random()-.5)*4,(Math.random()-.5)*4)}drawBG(B.ch,T0);const P=heroPos(S);
  B.mobs.forEach((m,i)=>{if(m.hp<=0)return;const [x,y]=mobPos(B,i);drawMob(x,y,m,T0);const w=m.boss?40:20;R_(x-w/2,y+(m.boss?24:14),w,2,'#300');R_(x-w/2,y+(m.boss?24:14),w*m.hp/m.mhp,2,m.boss?'#f33':'#e55');
   if(m.boss){if(m.bc){const p=1-m.bc.left/m.bc.t;R_(x-30,y-46,60,6,'#000');R_(x-29,y-45,58*p,4,m.bc.gold?'#ffd23f':'#c040ff');X.font='bold 8px sans-serif';X.textAlign='center';X.fillStyle=m.bc.gold?'#ffd23f':'#fff';X.fillText(m.bc.n+(m.bc.gold?'（不可打斷）':''),x,y-49)}
@@ -1423,7 +1426,7 @@ const curH=()=>G.S.heroes[0];
 function subBar(){return SUBT[TAB]?`<div class="subs">${SUBT[TAB].map(([k,n])=>`<button class="${SUB[TAB]===k?'on':''}" data-a="sub" data-v="${k}">${n}</button>`).join('')}</div>`:''}
 function partyBox(){const S=G.S,B=G.B;const e=$('pbox');if(!e||!B)return;e.innerHTML=S.party.map(id=>{const h=S.heroes.find(x=>x.id===id),rt=B.hr[id],t=calc(S,h);const tp=B.boss?threatPct(S,B,id):0;
  return`<div class="row" style="margin:2px 0"><span style="width:96px">${nameHtml(h)} <span class="sm">${jobName(h.job,h.sex)}</span></span><span class="sm" style="width:52px">Lv${h.bl}</span><div class="sp"><div class="hb"><i style="width:${100*Math.max(0,rt?rt.hp:0)/t.mhp}%;background:#5d5"></i></div><div class="hb" style="height:3px"><i style="width:${100*Math.max(0,rt?rt.sp:0)/t.msp}%;background:#59f"></i></div></div>${B.boss?`<span class="sm ${tp>=90?'rd':''}" style="width:44px;text-align:right">仇${tp}%</span>`:''}</div>`}).join('')}
-function render(){const S=G.S;nav();let h=subBar();const s=SUB[TAB];
+function render(){const S=G.S;document.body.classList.toggle('nobt',TAB!=='battle');nav();let h=subBar();const s=SUB[TAB];
  if(TAB==='battle'){const pb=partyBonus(S);h+=`<div class="card"><div class="row"><b>角色</b><span class="sp"></span><span class="sm">${ON.party?'線上隊伍 '+ON.party.members.length+' 人':'在「社交 › 隊伍」邀請好友共推'}</span></div><div id="pbox"></div></div>
   <div class="row"><label class="sm"><input type="checkbox" data-a="autopush" ${S.prog.auto?'checked':''}> 自動推進</label><label class="sm"><input type="checkbox" data-a="autoboss" ${S.prog.autoBoss?'checked':''}> 自動挑頭目</label><label class="sm"><input type="checkbox" data-a="autoint" ${S.autoInt!==false?'checked':''}> 自動打斷</label></div>${potBar(S)}
   ${S.lastFail?`<div class="card sm"><b class="rd">上次頭目失敗建議：</b>${S.lastFail.join('；')}</div>`:''}<div id="log">${LOG.join('')}</div>`}
@@ -1779,7 +1782,7 @@ function nqUpd(){const it=NPCSHOP.find(x=>x.k===document.querySelector('[data-a=
 ACT.nq=d=>{document.getElementById('nqv').value=d.v;nqUpd()};
 ACT.nbuyGo=d=>{const n=+document.getElementById('nqv').value||0,it=NPCSHOP.find(x=>x.k===d.k);if(!confirm(`購買 ${it.n} ×${n}，共 ${fmt(it.p*n)} 金？`))return;const e=npcBuy(G.S,d.k,n);toast(e||`已購買 ${it.n} ×${n}`);if(!e){closeModal();save();render()}};
 // ===== 組隊：同畫面顯示隊友（外觀、武器、精煉發光、稱號），點擊查看裝備 =====
-function allyList(){const p=ON&&ON.party;if(!p||!p.look||!G.S||!p.members||p.members.length<2)return[];const on=new Set(p.members.filter(m=>m.on!==false).map(m=>m.id));return p.look.filter(l=>l.id!==ON.id&&on.has(l.id))}
+function allyList(){if(typeof mirOn==='function'&&mirOn())return[];const p=ON&&ON.party;if(!p||!p.look||!G.S||!p.members||p.members.length<2)return[];const on=new Set(p.members.filter(m=>m.on!==false).map(m=>m.id));return p.look.filter(l=>l.id!==ON.id&&on.has(l.id))}
 function allyPos(i){return[96-i*18,134+(i%2?10:-6)]}
 {const _d=draw;draw=function(dt){_d(dt);try{const L=allyList();if(!L.length)return;const S=G.S,inv=S.inv,T=performance.now()/1000;
  L.slice(0,9).forEach((l,i)=>{const p=allyPos(i);const W=l.eq.find(e=>e.sl==='wpn');S.inv=W?[{...W,u:-1}]:[];const h={id:1000+l.id,name:l.name,job:J[l.job]?l.job:'nov',sex:l.sex||'m',eq:W?{wpn:-1}:{},rb:l.rb};
@@ -1839,7 +1842,7 @@ async function onEnter(){try{await pendFlush();const s=await onApi('GET','/api/s
  applySave(s);gate(null);boot();if(s.off&&s.off.kills>0)toast(`歡迎回來！離線 ${Math.floor(s.off.sec/60)} 分鐘<br>擊殺 ${s.off.kills}・金幣 +${fmt(s.off.g)}・經驗 +${fmt(s.off.be)}`,4000);onConnect();onLists()}
  catch(e){if(e.message==='登入已過期')return;authView(e.message);if(!ON.net)setTimeout(onEnter,4000)}}
 function solo(d){if(d&&d.set&&!d.set.sfx2){d.set.snd=1;if(!(d.set.vol>0))d.set.vol=.7;d.set.sfx2=1}if(d&&d.heroes&&d.heroes.length>1){const m=d.heroes[0];d.heroes=[m];d.party=[m.id]}else if(d&&d.heroes&&d.heroes[0])d.party=[d.heroes[0].id];return d}
-function applySave(s){const d=solo(migrate(s.data));d.ev=[];G.S=d;ON.rev=s.rev;ON.dia0=d.dia;ON.applying=1;save();ON.applying=0;pendClear();if(G.booted)startStage()}
+function applySave(s){const d=solo(migrate(s.data));d.ev=[];G.S=d;ON.rev=s.rev;ON.dia0=d.dia;ON.applying=1;save();ON.applying=0;pendClear();if(G.booted){const B=G.B;if(B&&!B.done&&B.ch===d.prog.ch&&B.st===d.prog.st&&d.party.every(id=>B.hr[id]))return;startStage()}}// 同步存檔不重開戰鬥（避免頭目血量每 10 秒重置）
 // ---------- 防掉檔：本機待上傳標記、重要動作立即上傳、關頁補存 ----------
 function pendMark(){if(ON.token&&ON.rev&&!ON.applying)localStorage.setItem('xj_pend',JSON.stringify({rev:ON.rev,tk:ON.token.slice(-16),t:Date.now()}))}
 function pendClear(){localStorage.removeItem('xj_pend')}
@@ -1870,6 +1873,7 @@ function onWs(m){const t=m.t;
  else if(t==='pinv'){ON.pinv=ON.pinv.filter(x=>x.pid!==m.pid);ON.pinv.push(m);toast(`🎈 ${esc(m.name)} 邀請你加入隊伍<br><span class="sm">到「社交 › 隊伍」接受</span>`,3000)}
  else if(t==='stage'){log(`[組隊] ${m.win?'過關':'失敗'} → ${m.prog.ch+1}-${m.prog.st+1}`,'c');if(ON.party)ON.party.prog=m.prog;return}
  else if(t==='ev'){partyEv(m);return}
+ else if(t==='proster'){ON.ros=m;return}
  else if(t==='saved'){onDownload();return}
  else if(t==='presence'){if(ON.soc)for(const f of ON.soc.friends)if(f.id===m.id)f.on=m.on}
  else if(t==='friend'){toast(m.kind==='req'?`👋 ${esc(m.name)} 想加你好友`:`🎉 你和 ${esc(m.name)} 成為好友`,2500);onSocial()}
@@ -2085,5 +2089,16 @@ ACT.rfFill=async d=>{const it=G.S.inv.find(i=>i.u===+d.v);const n=rfNeed(it,G.ro
 // 精煉動畫：鐵鎚敲擊 → 成功光芒／失敗煙霧／爆裝碎裂
 {const _ref=ACT.ref;ACT.ref=async d=>{const a=$('rfAnv');if(a){a.classList.remove('ok','down','brk');a.classList.add('hit');await new Promise(r=>setTimeout(r,650))}
  const rf0=(G.S.inv.find(i=>i.u===+d.v)||{}).rf||0;await _ref(d);const it=G.S.inv.find(i=>i.u===+d.v);const r=!it?'brk':(it.rf||0)>rf0?'ok':(it.rf||0)<rf0?'down':'same';const b=$('rfAnv');if(b){b.classList.add(r==='ok'?'ok':r==='brk'?'brk':'down');const f=$('rfFx');if(f)f.textContent=r==='ok'?'✨ 成功！':r==='brk'?'💥 損壞…':r==='down'?'💨 失敗':'💨 失敗（保護）';setTimeout(()=>{const c=$('rfAnv');c&&c.classList.remove('ok','down','brk','hit')},1600)}}}
+
+// 組隊鏡像模式：隊伍戰鬥由伺服器權威執行，全隊畫面顯示同一場戰鬥（最低進度者的關卡）；本地戰鬥暫停、不重複發獎勵
+ON.ros=null;ON.mir=null;
+function mirOn(){const p=ON.party;return !!(p&&p.running&&ON.ros&&ON.mir&&Date.now()-ON.mir.t<4000)}
+{const _pe=partyEv;partyEv=function(m){_pe(m);try{if(!m.snap||!ON.ros||!G.S)return;const R=ON.ros;const M=ON.mir||(ON.mir={q:[]});
+ if(!M.S||M.rv!==R){M.rv=R;M.S=Object.assign({},G.S,{heroes:R.heroes,inv:R.inv,party:R.party,pets:[],petOn:null,ev:[]})}
+ M.B=Object.assign(M.B&&M.B.ch===m.snap.ch&&M.B.st===m.snap.st?M.B:{},m.snap);M.q.push(...(m.ev||[]));M.t=Date.now()}catch(e){console.warn('mir',e)}}}
+let _mirWas=0;
+function mirFrame(dt){const M=ON.mir,rs=G.S,rb=G.B;G.S=M.S;G.B=M.B;try{const q=M.q;M.q=[];if(q.length)try{onEvents(q)}catch(e){}draw(dt)}finally{G.S=rs;G.B=rb}
+ rateT+=dt;if(rateT>1){rateT=0;G.B=M.B;try{hud()}finally{G.B=rb}}}
+function mirTick(){const on=mirOn();if(_mirWas&&!on&&G.S){ON.mir=null;try{startStage()}catch(e){}}_mirWas=on;return on}
 
 </script></body></html>
