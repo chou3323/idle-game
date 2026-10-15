@@ -179,6 +179,23 @@ body.gated>*:not(#gate):not(#toast){visibility:hidden}
 @media (min-width:1500px){#dock{grid-template-columns:1fr 1fr 1.3fr;grid-template-rows:1fr;grid-template-areas:"log dps chat"}}
 @media (min-width:1800px){html{font-size:16px}#cv{max-height:calc(100vh - 380px)}}
 progress{-webkit-appearance:none;appearance:none;height:8px;border:0;border-radius:99px;background:#efe8fb;overflow:hidden}progress::-webkit-progress-bar{background:#efe8fb;border-radius:99px}progress::-webkit-progress-value{background:linear-gradient(90deg,#ff9fc8,#b89bff);border-radius:99px}progress::-moz-progress-bar{background:linear-gradient(90deg,#ff9fc8,#b89bff)}
+
+/* v1.7.2 社交單頁：固定視窗高度，訊息區自己捲動，輸入框固定底部 */
+.soc .msgs{overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
+@media (max-width:999px){
+body.fixh{position:fixed;inset:0;height:var(--vvh,100dvh);overflow:hidden;display:flex;flex-direction:column}
+body.fixh #stagebar,body.fixh #cv{display:none}
+body.fixh #app{flex:1;min-height:0;display:flex;flex-direction:column;overflow:hidden;padding-bottom:calc(72px + env(safe-area-inset-bottom))}
+body.fixh.kb #app{padding-bottom:6px}body.fixh.kb #nav{display:none}
+}
+body.fixh #app{display:flex;flex-direction:column}
+body.fixh #app>.subs{flex:none}
+body.fixh .soc{flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;display:flex;flex-direction:column}
+body.fixh .soc>.card{flex:none}
+body.fixh .soc>.card.chat{flex:1;min-height:220px;display:flex;flex-direction:column;margin-bottom:0}
+body.fixh #a2hs{display:none}body.fixh .soc .msgs{scroll-behavior:auto}body.fixh .soc>.card.chat .msgs{flex:1;height:auto;min-height:0;max-height:none;overflow-y:auto}
+body.fixh .soc>.card.chat .say{flex:none;margin-top:8px}
+@media (min-width:1000px){body.fixh #app{overflow:hidden;padding-bottom:18px}}
 </style></head><body>
 <div id="top"><span id="tName"></span><span class="sp"></span><span id="tG"></span><b id="tGold">0</b><span id="tD"></span><b id="tDia">0</b><button class="b s" id="snd" data-a="snd">音</button></div>
 <div id="stagebar"><span id="sbT"></span><div class="pb"><i id="sbP"></i></div><span id="sbX"></span><button class="b s y" data-a="boss" id="bossBtn">挑戰頭目</button></div>
@@ -189,7 +206,7 @@ progress{-webkit-appearance:none;appearance:none;height:8px;border:0;border-radi
 <script>
 'use strict';
 // ===================== 第 1 層：靜態資料（DATA）—— 前後端共用 =====================
-const VER='1.7.1',SKEY='xj_cache_v2',LEGACY='xyexp_save_v1';
+const VER='1.7.2',SKEY='xj_cache_v2',LEGACY='xyexp_save_v1';
 const STATN={str:'STR',agi:'AGI',vit:'VIT',int:'INT',dex:'DEX',luk:'LUK'};
 const STATD={str:'近戰ATK、負重',agi:'ASPD、FLEE',vit:'HP、DEF、MDEF',int:'MATK、SP、MDEF',dex:'HIT、遠程ATK、詠唱',luk:'暴擊、完全迴避'};
 const ROLE={tank:'坦克',dps:'輸出',heal:'治療',sup:'輔助'};
@@ -1078,6 +1095,16 @@ function volCard(S){return`<div class="card"><b>音效與音量</b>${VOLS.map(([
 const TRY={vol:['crit','fire','heal'],vAtk:['blade','blunt','bow','fist','staff','crit'],vSk:['fire','ice','bolt','earth','wind','holy','dark'],vUi:['lv','drop','card','ok']};
 function sfxTry(k){ac();sv();(TRY[k]||TRY.vol).forEach((s,i)=>play(s,i*.32,1,1))}
 document.addEventListener('input',ev=>{const t=ev.target;if(t.dataset&&t.dataset.a==='vol'&&G.S){G.S.set[t.dataset.k]=+t.value/100;ac();sv()}});
+// iOS 解鎖：首次觸控 resume + 播放靜音 buffer；切回前景重新 resume；靜音開關下仍可播放（audioSession=playback，舊版用 <audio> 靜音 loop）
+let AU_OK=0,SILEL=null;function silWav(){const n=4410,b=new Uint8Array(44+n*2),v=new DataView(b.buffer);const w=(o,s)=>{for(let i=0;i<s.length;i++)b[o+i]=s.charCodeAt(i)};w(0,'RIFF');v.setUint32(4,36+n*2,true);w(8,'WAVEfmt ');v.setUint32(16,16,true);v.setUint16(20,1,true);v.setUint16(22,1,true);v.setUint32(24,44100,true);v.setUint32(28,88200,true);v.setUint16(32,2,true);v.setUint16(34,16,true);w(36,'data');v.setUint32(40,n*2,true);let s='';for(const x of b)s+=String.fromCharCode(x);return'data:audio/wav;base64,'+btoa(s)}
+function auUnlock(){try{if(navigator.audioSession)navigator.audioSession.type='playback'}catch(e){}const a=ac();if(!a)return;try{if(a.state!=='running')a.resume();const b=a.createBuffer(1,1,22050),s=a.createBufferSource();s.buffer=b;s.connect(a.destination);s.start(0)}catch(e){}
+ if(!navigator.audioSession&&/iP(hone|ad|od)|Macintosh.*Mobile/.test(navigator.userAgent)&&!SILEL){try{SILEL=new Audio(silWav());SILEL.loop=true;SILEL.setAttribute('playsinline','');SILEL.volume=.01;const p=SILEL.play();p&&p.catch(()=>{SILEL=null})}catch(e){SILEL=null}}
+ if(a.state==='running')AU_OK=1}
+['touchstart','touchend','pointerdown','mousedown','keydown','click'].forEach(t=>document.addEventListener(t,()=>{if(!AU_OK||!AC||AC.state!=='running')auUnlock()},{capture:true,passive:true}));
+document.addEventListener('visibilitychange',()=>{if(!document.hidden&&AC){AU_OK=0;try{AC.resume()}catch(e){}if(SILEL)SILEL.play().catch(()=>{})}});
+window.addEventListener('pageshow',()=>{if(AC)try{AC.resume()}catch(e){}});
+// 鍵盤彈出：以 visualViewport 高度固定版面，輸入框不被擋
+(function(){const vv=window.visualViewport;const up=()=>{const h=vv?vv.height:innerHeight;document.documentElement.style.setProperty('--vvh',h+'px');const kb=vv&&innerHeight-vv.height>120;document.body&&document.body.classList.toggle('kb',!!kb&&/INPUT|TEXTAREA/.test((document.activeElement||{}).tagName||''));if(kb&&document.body.classList.contains('fixh')){window.scrollTo(0,0);const m=document.querySelector('.soc .msgs');if(m)m.scrollTop=1e9}};if(vv){vv.addEventListener('resize',up);vv.addEventListener('scroll',up)}addEventListener('resize',up);document.addEventListener('focusin',()=>setTimeout(up,50));document.addEventListener('focusout',()=>setTimeout(up,80));up()})();
 
 // 原創貨幣圖示（SVG）：H 金幣、藍紫切面寶石
 const GOLDI='<svg class="cur" viewBox="0 0 24 24" aria-label="金幣"><defs><radialGradient id="gg" cx="35%" cy="30%" r="75%"><stop offset="0" stop-color="#fff6c2"/><stop offset=".45" stop-color="#ffcf3a"/><stop offset="1" stop-color="#c47d00"/></radialGradient></defs><circle cx="12" cy="12" r="11" fill="#8a5300"/><circle cx="12" cy="12" r="9.6" fill="url(#gg)" stroke="#ffe27a" stroke-width="1"/><circle cx="12" cy="12" r="7" fill="none" stroke="#b87300" stroke-width=".9" opacity=".7"/><path d="M8.6 7.5v9M15.4 7.5v9M8.6 12h6.8" stroke="#8a5300" stroke-width="2.1" stroke-linecap="round"/><ellipse cx="8.5" cy="6.8" rx="2.6" ry="1.3" fill="#fff" opacity=".75" transform="rotate(-30 8.5 6.8)"/></svg>';
@@ -1087,7 +1114,7 @@ function curI(h){return String(h).replace(/(\d[\d,.]*\s*[萬億]?)\s*(鑽石|鑽
 // ===================== 第 6 層：音效（Web Audio，原創合成）=====================
 // ===================== 第 7 層：主程式與 UI =====================
 const G={S:null,B:null};const $=id=>document.getElementById(id);const fmt=n=>n>=1e6?(n/1e6).toFixed(1)+'M':n>=1e4?(n/1e3).toFixed(1)+'K':Math.floor(n)+'';
-function save(){const S=G.S;S.t=Date.now();const ev=S.ev;S.ev=[];localStorage.setItem(SKEY,JSON.stringify(S));S.ev=ev}
+function save(){const S=G.S;S.t=Date.now();const ev=S.ev;S.ev=[];localStorage.setItem(SKEY,JSON.stringify(S));S.ev=ev;if(typeof pendMark==='function')pendMark()}
 function load(){try{const s=JSON.parse(localStorage.getItem(SKEY));if(s&&s.v)return migrate(s)}catch(e){}return null}
 function toast(t,ms){const e=$('toast');e.innerHTML=curI(t);e.style.display='block';clearTimeout(e._t);e._t=setTimeout(()=>e.style.display='none',ms||1600)}
 const LOG=[];function log(t,c){LOG.unshift(`<div class="${c||''}">${curI(t)}</div>`);if(LOG.length>40)LOG.pop();if(TAB==='battle'&&$('log'))$('log').innerHTML=LOG.join('')}
@@ -1114,9 +1141,9 @@ function onEvents(ev){const S=G.S,B=G.B,P=heroPos(S);
   if(e.t==='bcast'){SFX.boss();log(`頭目讀條：<b class="rd">${e.n}</b>${e.gold?'（金色：不可打斷）':''}`)}
   if(e.t==='intr'){if(e.ok){SFX.intr();num(232,80,'打斷成功！','#7fe08f',true);log(`<span class="gr">打斷成功：${e.n}</span>`)}else num(232,86,'打斷 '+e.v+'%','#ffd866')}
   if(e.t==='bult'){shake=.4;log(`<span class="rd">頭目施放 ${e.n}！</span>`)}if(e.t==='phase')log(`<span class="pu">頭目進入第二階段，屬性變為「${e.el}」</span>`);if(e.t==='rage')log('<span class="rd">頭目狂暴了！ATK×2</span>');
-  if(e.t==='drop'){log(`${e.who||''} 獲得 <span class="${QC[e.it.q||0]}">${e.it.n}</span>`);SFX.drop()}if(e.t==='mat'){log(`<b class="c">${e.who||''} 獲得：${e.n}</b>`);SFX.drop()}if(e.t==='card'){log(`<b class="c">${e.who||''} 獲得卡片：${e.n}</b>`);SFX.card();toast('獲得 '+e.n)}
+  if(e.t==='drop'){log(`${e.who||''} 獲得 <span class="${QC[e.it.q||0]}">${e.it.n}</span>`);SFX.drop();onSoon(1500)}if(e.t==='mat'){log(`<b class="c">${e.who||''} 獲得：${e.n}</b>`);SFX.drop()}if(e.t==='card'){log(`<b class="c">${e.who||''} 獲得卡片：${e.n}</b>`);SFX.card();onSoon&&onSoon();toast('獲得 '+e.n)}
   if(e.t==='petsh'){const p=P[S.party[0]];if(p)num(p[0],p[1]-36,'寵物護盾','#9fd0ff')}if(e.t==='hdie'){const h=S.heroes.find(x=>x.id===e.id);log(`<span class="rd">${h.name} 倒下了</span>`)}}
- for(const e of S.ev){if(e.t==='lvup'){const h=S.heroes.find(x=>x.id===e.id);const p=P[e.id];if(p)num(p[0],p[1]-30,'LV UP','#ffd866',true);SFX.lv();log(`${h.name} Lv${e.lv}`,'c')}}S.ev=[]}
+ for(const e of S.ev){if(e.t==='lvup'){const h=S.heroes.find(x=>x.id===e.id);const p=P[e.id];if(p)num(p[0],p[1]-30,'LV UP','#ffd866',true);SFX.lv();onSoon(1500);log(`${h.name} Lv${e.lv}`,'c')}}S.ev=[]}
 function battleDone(){const S=G.S,B=G.B,i=stageIdx(B.ch,B.st);
  if(B.done===1){if(i>=S.prog.max){S.prog.max=i+1;if(B.boss){toast(`<b>擊敗 ${CH[B.ch].boss[0]}！</b><br>第 ${B.ch+2} 章開啟`,2500);SFX.ok()}checkUnlocks()}
   if(S.prog.auto&&i+1<=S.prog.max&&i+1<CH.length*STAGES){const n=i+1;if((n%STAGES)!==STAGES-1||S.prog.autoBoss){S.prog.ch=Math.floor(n/STAGES);S.prog.st=n%STAGES}}}
@@ -1238,7 +1265,7 @@ function render(){const S=G.S;nav();let h=subBar();const s=SUB[TAB];
   if(s==='set'){h+=volCard(S)+`<div class="card"><div class="row"><label><input type="checkbox" data-a="snd" ${S.set.snd?'checked':''}> 音效</label><label><input type="checkbox" data-a="art" ${S.set.art!=='px'?'checked':''}> Q 版美術（取消＝像素版）</label></div><div class="sm">版本 ${VER}｜存檔以伺服器為準，每分鐘自動上傳。</div>
    <div class="row"><span class="sm">帳號 ${esc(ON.user||"")}</span><span class="sp"></span><button class="b s r" data-a="onOut">登出</button></div>
 </div>`}}
- if(TAB==='social')h+=socialHtml(S,s);if(TAB==='battle'&&innerWidth>=1000)h+=battleSide(S);
+ document.body.classList.toggle('fixh',TAB==='social');if(TAB==='social')h+='<div class="soc">'+socialHtml(S,s)+'</div>';if(TAB==='battle'&&innerWidth>=1000)h+=battleSide(S);
  $('app').innerHTML=curI(h);partyBox();document.querySelectorAll('canvas[data-mob]').forEach(c=>{const [ci,mi]=c.dataset.mob.split('_').map(Number);const m=mi==3?CH[ci].boss:CH[ci].mob[mi];X_SWAP(c.getContext('2d'),()=>drawMob(16,18,{sh:m[1],c:m[2],at:0,boss:0},0))});document.querySelectorAll('canvas[data-pet]').forEach(c=>{const p=G.S.pets.find(x=>x.u==c.dataset.pet);if(!p)return;const x=c.getContext('2d');const d=PETS[p.k];X_SWAP(x,()=>drawMob(16,18,{sh:d.sh,c:d.c[p.ev],at:0},0))})}
 function X_SWAP(ctx,fn){const o=X;X=ctx;try{fn()}finally{X=o}}
 
@@ -1302,7 +1329,7 @@ const ACT={
  art:e=>{G.S.set.art=e.checked?'q':'px'},cq:()=>{G.cq=$('cq').value.trim()},ct:d=>{G.ct=d.k},farm:d=>{const S=G.S,ci=+d.c,mi=+d.m;const st=mi==3?9:0;if(S.prog.max<stageIdx(ci,st))return toast('尚未開放該章節');S.prog.ch=ci;S.prog.st=st;S.prog.auto=0;S.farm=(mi==3?CH[ci].boss:CH[ci].mob[mi])[0]+`（第${ci+1}章）`;startStage();toast('開始農：'+S.farm)},
  dpsreset:()=>{G.S.stat.dmg={}},claim:()=>{toast(claimMonth(G.S)?'領取 20,000 金 + 30 鑽':'今天已領')},
 };
-document.addEventListener('click',ev=>{ac();const t=ev.target.closest('[data-t],[data-a]');if(!t)return;if(t.dataset.t){TAB=t.dataset.t;render();window.scrollTo(0,0);return}const a=t.dataset.a;if(!ACT[a]||t.tagName==='INPUT'||t.tagName==='SELECT')return;ACT[a](t.dataset);if(!G.S)return;render();hud();save()});
+document.addEventListener('click',ev=>{ac();const t=ev.target.closest('[data-t],[data-a]');if(!t)return;if(t.dataset.t){TAB=t.dataset.t;render();window.scrollTo(0,0);return}const a=t.dataset.a;if(!ACT[a]||t.tagName==='INPUT'||t.tagName==='SELECT')return;ACT[a](t.dataset);if(!G.S)return;if(!/^(sub|sel|snd|sfxTry|vol|ct|cq|pick|on[A-Z].*|[a-z]Open|dmBack|uMenu)$/.test(a)&&typeof onSoon==='function')onSoon();render();hud();save()});
 document.addEventListener('change',ev=>{const t=ev.target;const a=t.dataset&&t.dataset.a;if(!a||!ACT[a])return;ACT[a](t,t.dataset);render();save()});
 function create(){$('app').innerHTML=`<div class="card"><h2 style="margin:4px 0">仙境冒險</h2><p class="sm">組一支冒險團一起推圖！Lv10 一轉（六系）→ Lv30 二轉 → Lv70 三轉，滿等 Lv200 可轉生（可無限轉生）。卡片、精煉、星力、潛能、寵物、生活技能、公會、交易所。</p>
  <input id="crn" placeholder="主角名字" maxlength="8" value="冒險者"><div class="row" style="margin:6px 0"><button class="b" data-a="crs" data-k="m" id="crm">男</button><button class="b" data-a="crs" data-k="f">女</button></div><button class="b g" data-a="crok" style="width:100%">開始冒險</button></div>`;
@@ -1356,14 +1383,21 @@ function charView(msg){const L=legacy();const sx=G.csex||'f',jb=G.cjob||'';
  <div class="gmsg">${esc(msg||'')}</div><button class="lnk" data-a="onOut">登出</button>`)}
 function legacy(){try{const s=JSON.parse(localStorage.getItem(LEGACY));return s&&s.heroes&&!localStorage.getItem('xj_legacy_done')?migrate(s):null}catch(e){return null}}
 function onLogout(msg){ON.token='';localStorage.removeItem('xj_tk');sessionStorage.removeItem('xj_tk');try{ON.ws&&ON.ws.close()}catch(e){}ON.ws=null;ON.party=null;G.S=null;G.B=null;localStorage.removeItem(SKEY);ON.mode='login';authView(msg);netState(1)}
-async function onEnter(){try{const s=await onApi('GET','/api/save?login=1');ON.nick=s.nick||'';if(s.data.needChar){G.cname=G.cname||(legacy()||{heroes:[{}]}).heroes[0].name||'';charView();return}
+async function onEnter(){try{await pendFlush();const s=await onApi('GET','/api/save?login=1');ON.nick=s.nick||'';if(s.data.needChar){G.cname=G.cname||(legacy()||{heroes:[{}]}).heroes[0].name||'';charView();return}
  applySave(s);gate(null);boot();if(s.off&&s.off.kills>0)toast(`歡迎回來！離線 ${Math.floor(s.off.sec/60)} 分鐘<br>擊殺 ${s.off.kills}・金幣 +${fmt(s.off.g)}・經驗 +${fmt(s.off.be)}`,4000);onConnect();onLists()}
  catch(e){if(e.message==='登入已過期')return;authView(e.message);if(!ON.net)setTimeout(onEnter,4000)}}
-function solo(d){if(d&&d.heroes&&d.heroes.length>1){const m=d.heroes[0];d.heroes=[m];d.party=[m.id]}else if(d&&d.heroes&&d.heroes[0])d.party=[d.heroes[0].id];return d}
-function applySave(s){const d=solo(migrate(s.data));d.ev=[];G.S=d;ON.rev=s.rev;ON.dia0=d.dia;save();if(G.booted)startStage()}
+function solo(d){if(d&&d.set&&!d.set.sfx2){d.set.snd=1;if(!(d.set.vol>0))d.set.vol=.7;d.set.sfx2=1}if(d&&d.heroes&&d.heroes.length>1){const m=d.heroes[0];d.heroes=[m];d.party=[m.id]}else if(d&&d.heroes&&d.heroes[0])d.party=[d.heroes[0].id];return d}
+function applySave(s){const d=solo(migrate(s.data));d.ev=[];G.S=d;ON.rev=s.rev;ON.dia0=d.dia;ON.applying=1;save();ON.applying=0;pendClear();if(G.booted)startStage()}
+// ---------- 防掉檔：本機待上傳標記、重要動作立即上傳、關頁補存 ----------
+function pendMark(){if(ON.token&&ON.rev&&!ON.applying)localStorage.setItem('xj_pend',JSON.stringify({rev:ON.rev,tk:ON.token.slice(-16),t:Date.now()}))}
+function pendClear(){localStorage.removeItem('xj_pend')}
+async function pendFlush(){let p;try{p=JSON.parse(localStorage.getItem('xj_pend')||'null')}catch(e){}if(!p||!ON.token||p.tk!==ON.token.slice(-16))return;const d=load();if(!d||!d.heroes)return;d.ev=[];try{await onApi('PUT','/api/save',{data:d,rev:p.rev});ON.flushed=1}catch(e){}pendClear()}
+let SOON=0;function onSoon(ms){if(!ON.token||!G.S||SOON)return;SOON=setTimeout(()=>{SOON=0;if(ON.busy)return onSoon(800);save();onUpload(true)},ms||1200)}
+function bye(){if(G.S&&ON.token){save();onUpload(true,1)}}
+document.addEventListener('visibilitychange',()=>{if(document.hidden)bye()});
 // ---------- 存檔上傳 ----------
 async function onUpload(quiet,keep){if(!ON.token||!G.S||ON.busy)return;ON.busy=1;try{const S=G.S;const ev=S.ev;S.ev=[];const data=JSON.parse(JSON.stringify(S));S.ev=ev;const sent=S.dia;
-  const j=await onApi('PUT','/api/save',{data,rev:ON.rev},keep);ON.rev=j.rev;S.dia=j.dia+(S.dia-sent);ON.lastUp=Date.now();if(!quiet)toast('已同步')}
+  const j=await onApi('PUT','/api/save',{data,rev:ON.rev},keep);ON.rev=j.rev;S.dia=j.dia+(S.dia-sent);ON.lastUp=Date.now();if(!ON.dirtyAfter)pendClear();if(!quiet)toast('已同步')}
  catch(e){if(e.st===409){await onDownload()}else if(e.st===422){toast('存檔驗證失敗，已還原伺服器進度');await onDownload()}else if(!quiet)toast(e.message)}finally{ON.busy=0}}
 async function onDownload(){try{const s=await onApi('GET','/api/save');if(s.rev!==ON.rev)applySave(s);render();hud()}catch(e){}}
 // ---------- WebSocket ----------
@@ -1472,7 +1506,7 @@ Object.assign(ACT,{gMode:d=>{ON.mode=d.k;authView()},
  mSellM:onTry(async()=>{await onUpload(true);await onApi('POST','/api/market/list',{mat:$('mM').value,qty:+$('mQ').value,price:+$('mP').value,days:7});toast('已上架');await after({rev:1})})});
 function modal(h){$('mbody').innerHTML=h;$('modal').style.display='flex'}function closeModal(){$('modal').style.display='none'}
 document.addEventListener('keydown',e=>{if(e.key!=='Enter')return;const id=e.target&&e.target.id;if(id==='chatI')ACT.onSay();else if(id==='dmI')ACT.dmSay();else if(id==='fQ')ACT.fFind();else return;render()});
-setInterval(()=>{if(ON.token&&G.S&&Date.now()-ON.lastUp>55000)onUpload(true)},10000);
+setInterval(()=>{if(ON.token&&G.S&&Date.now()-ON.lastUp>15000){save();onUpload(true)}},5000);
 if(ON.token)onEnter();else authView();
 
 // 桌面下方聊天面板
