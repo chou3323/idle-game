@@ -240,7 +240,7 @@ body.fixh .soc>.card.chat .say{flex:none;margin-top:8px}
 <script>
 'use strict';
 // ===================== 第 1 層：靜態資料（DATA）—— 前後端共用 =====================
-const VER='1.7.5',SKEY='xj_cache_v2',LEGACY='xyexp_save_v1';
+const VER='1.7.6',SKEY='xj_cache_v2',LEGACY='xyexp_save_v1';
 const STATN={str:'STR',agi:'AGI',vit:'VIT',int:'INT',dex:'DEX',luk:'LUK'};
 const STATD={str:'近戰ATK、負重',agi:'ASPD、FLEE',vit:'HP、DEF、MDEF',int:'MATK、SP、MDEF',dex:'HIT、遠程ATK、詠唱',luk:'暴擊、完全迴避'};
 const ROLE={tank:'坦克',dps:'輸出',heal:'治療',sup:'輔助'};
@@ -1688,6 +1688,13 @@ ACT.arw=d=>{G.S.arrow=d.k||'';save();toast(d.k?'已裝上 '+ARROWS[d.k].n:'已�
 for(const k in CONS){MATD[k]=CONS[k].d;MATSRC[k]=CONS[k].buy==='dia'?'鑽石商城（只能用鑽石購買）':'一般商店（金幣），頭目低機率掉落'}
 for(const k in ARROWS){MATD[k]=`弓的普攻消耗 1 支，攻擊變成「${ARROWS[k].el}」屬性；屬性克制時傷害大幅提高（例：水克火、火克地、地克風、風克水，聖克暗）`;MATSRC[k]='一般商店（金幣），可批量購買'}
 MATD.hpot='戰鬥中回復 50% HP（自動喝水可設定）';MATD.pot='戰鬥中回復 25% HP（自動喝水可設定）';MATD.spp='戰鬥中回復 30% SP';MATSRC.hpot='一般商店（金幣）';
+// 點數商城批量購買（可堆疊道具）
+const DNOQ=new Set(['month','rename','sex','ring']);
+{const _db=ACT.dbuy;ACT.dbuy=d=>{if(DNOQ.has(d.k))return _db(d);const S=G.S,it=DSHOP.find(x=>x.k===d.k);const mx=Math.max(0,Math.min(999,Math.floor(S.dia/it.p)));
+ modal(infoBox('💎',it.n,`${it.p} 鑽石／個・你有 ${fmt(S.dia)} 鑽石`,sec('用途',`<div>${it.d||''}</div>`)+sec('數量',`<div class="qbtn">${[1,5,10,50].map(n=>`<button class="b s" data-a="dq" data-v="${n}" ${n>mx?'disabled':''}>${n}</button>`).join('')}<button class="b s" data-a="dq" data-v="${mx}" ${mx<1?'disabled':''}>MAX(${mx})</button></div><div class="ifr" style="margin-top:8px"><span>自訂</span><input id="dqv" type="number" min="1" max="${mx}" value="${Math.min(1,mx)}" style="width:90px" oninput="dqUpd()"></div><div class="ifr"><span>總價</span><b id="dqt">${it.p*Math.min(1,mx)} 鑽石</b></div>`)).replace('data-a="mClose">知道了',`data-a="dbuyGo" data-k="${it.k}">確認購買`))}}
+function dqUpd(){const it=DSHOP.find(x=>x.k===document.querySelector('[data-a=dbuyGo]').dataset.k);document.getElementById('dqt').textContent=it.p*(+document.getElementById('dqv').value||0)+' 鑽石'}
+ACT.dq=d=>{document.getElementById('dqv').value=d.v;dqUpd()};
+ACT.dbuyGo=d=>{const n=Math.floor(+document.getElementById('dqv').value||0),it=DSHOP.find(x=>x.k===d.k);if(n<1)return toast('數量不正確');if(G.S.dia<it.p*n)return toast('鑽石不足');if(!confirm(`用 ${it.p*n} 鑽石購買 ${it.n} ×${n}？`))return;for(let i=0;i<n;i++)buyDia(G.S,d.k);toast(`已購買 ${it.n} ×${n}`);SFX.ok();closeModal();save();render()};
 
 // ===== 線上版（v1.7）：登入/註冊、建角、匯入舊存檔、伺服器存檔、斷線重連、社交（聊天/好友/隊伍/公會/密語）、線上交易所 =====
 const QP=new URLSearchParams(location.search);
