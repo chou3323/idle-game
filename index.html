@@ -279,7 +279,7 @@ body.nobt #stagebar,body.nobt #cv,body.nobt #dock,body.nobt #pbar.ov{display:non
 <script>
 'use strict';
 // ===================== 第 1 層：靜態資料（DATA）—— 前後端共用 =====================
-const VER='1.7.19',SKEY='xj_cache_v2',LEGACY='xyexp_save_v1';
+const VER='1.7.20',SKEY='xj_cache_v2',LEGACY='xyexp_save_v1';
 const STATN={str:'力量',agi:'敏捷',vit:'體力',int:'智力',dex:'靈巧',luk:'幸運'};
 const STATD={str:'近戰攻擊、負重',agi:'攻速、迴避',vit:'HP、防禦、魔防',int:'魔攻、SP、魔防',dex:'命中、遠程攻擊、詠唱',luk:'暴擊、完全迴避'};
 const ROLE={tank:'坦克',dps:'輸出',heal:'治療',sup:'輔助'};
@@ -1140,7 +1140,7 @@ const WTRAIT={
 MAT.mfrag='怪物碎片';MAT.bcry='王之結晶';MAT.bp_r='紅裝製作圖';MAT.bp_c='彩裝製作圖';
 const CRAFT={3:{to:4,n:'紅裝',mats:{mfrag:30,bp_r:1},gold:ch=>8000*(1+ch),lock:10},5:{to:6,n:'彩裝',mats:{bcry:10,bp_c:1},gold:()=>0,lock:50}};
 function craftCost(it,locks){const c=CRAFT[it&&it.q];if(!c)return null;return{to:c.to,n:c.n,mats:c.mats,gold:c.gold(it.ch||0),dia:(locks||[]).length*c.lock,lockP:c.lock}}
-function craft(S,u,locks,rng){const it=S.inv.find(i=>i.u===u);if(!it||!it.aff)return'找不到裝備';const c=CRAFT[it.q];if(!c)return'只有橘裝（→紅）或綠裝（→彩）可以製作升階';
+function eqCraft(S,u,locks,rng){const it=S.inv.find(i=>i.u===u);if(!it||!it.aff)return'找不到裝備';const c=CRAFT[it.q];if(!c)return'只有橘裝（→紅）或綠裝（→彩）可以製作升階';
  locks=[...new Set((locks||[]).map(String))].filter(k=>/^(m\d|a\d|sp)$/.test(k));const a=it.aff;const valid=k=>k==='sp'?!!a.sp:k[0]==='m'?!!a.main[+k[1]]:!!a.add[+k[1]];locks=locks.filter(valid);
  const cost=craftCost(it,locks);for(const k in cost.mats)if((S.mat[k]||0)<cost.mats[k])return(MAT[k]||k)+'不足（需要 '+cost.mats[k]+'）';if((S.gold||0)<cost.gold)return'金幣不足';if((S.dia||0)<cost.dia)return'鑽石不足（鎖詞條需要 '+cost.dia+'）';
  for(const k in cost.mats)S.mat[k]-=cost.mats[k];S.gold-=cost.gold;S.dia-=cost.dia;
@@ -1153,6 +1153,15 @@ function craft(S,u,locks,rng){const it=S.inv.find(i=>i.u===u);if(!it||!it.aff)re
  it.aff=na;const old=QUAL[it.q];it.q=q;it.n=String(it.n).replace(old+'之','');it.n=(q>=3?QUAL[q]+'之':'')+it.n;applyAff(it);return''}
 // 材料掉落：一般怪 → 怪物碎片、紅裝製作圖（稀有）；頭目 → 王之結晶、紅/彩裝製作圖
 {const _ok=onKill;onKill=function(S,B,m){const r=_ok(S,B,m);try{const x=Math.random();if(m.boss){addMat(S,'bcry',1+(x<.4?1:0));if(Math.random()<.05)addMat(S,'bp_c',1);if(Math.random()<.2)addMat(S,'bp_r',1)}else{if(x<.3)addMat(S,'mfrag',1);if(Math.random()<.003)addMat(S,'bp_r',1)}}catch(e){}return r}}
+
+// ===== 稱號事件追蹤（核心，伺服器與前端共用）=====
+function tst(S){return S.tst=S.tst||{rs:0,rsMax:0,brk15:0,rf20:0,bl:{},never:0,gold0:0,g0:0}}
+{const _rf=refine;refine=function(S,u,o){const it=S.inv.find(i=>i.u===u);const rf0=it?it.rf:0,f0=it&&it._f;const r=_rf(S,u,o);const t=tst(S);
+ if(r.r==='ok'){t.rs=0;if(it){if(it.rf>=20&&!f0&&rf0===19)t.rf20=1;it._f=0}}else if(r.r==='fail'||r.r==='break'||r.r==='down'){t.rs++;t.rsMax=Math.max(t.rsMax,t.rs);if(it)it._f=1;if(r.r==='break'&&rf0>=15)t.brk15++}return r}}
+{const _sb=stepBattle;stepBattle=function(S,B,dt){const ev=_sb(S,B,dt);if(B&&B.boss){const t=tst(S),k='c'+S.prog.ch;
+ if(ev.some(e=>e.t==='wipe'))t.bl[k]=(t.bl[k]||0)+1;
+ if(B.done===1&&!B._tt){B._tt=1;if((t.bl[k]||0)>=50)t.never=1;if(Math.random()<.0006){const ks=Object.keys(HCARDS),id=ks[Math.floor(Math.random()*ks.length)];S.cards[id]=(S.cards[id]||0)+1;(S.cdx=S.cdx||{})[id]=1;ev.push({t:'card',n:CARDS[id].n})}}}
+ if(S.gold<=0){const t=tst(S);if(!t.g0){t.g0=1;t.gold0++}}else if(S.gold>0&&S.tst&&S.tst.g0)S.tst.g0=0;return ev}}
 
 // ===================== 第 5 層：繪製（像素 sprite，程式繪製）=====================
 const cv=document.getElementById("cv");let X=cv.getContext("2d");X.imageSmoothingEnabled=false;const W=320,H=180;
@@ -1422,7 +1431,7 @@ function battleDone(){const S=G.S,B=G.B,i=stageIdx(B.ch,B.st);
 function checkUnlocks(){const S=G.S;[].forEach(c=>{if(!S.heroes.find(h=>h.id===c.id)&&S.prog.max>=stageIdx(c.unlock[0],c.unlock[1])){const h=newHero(c.id,c.name,c.job,c.sex);h.bl=Math.max(10,S.heroes[0].bl-2);h.pts=statPtsTotal(h);autoAlloc(h);autoSkill(h);S.heroes.push(h);if(S.party.length<5)S.party.push(h.id);log(`<b class="gr">${c.name}（${J[c.job].n}）加入了冒險團！</b>`);toast(`新夥伴：${c.name}（${J[c.job].n}）`)}});
  for(const k in UNLOCK)if(unl(S,k)&&!(S.unl||(S.unl={}))[k]){S.unl[k]=1;toast('解鎖系統：'+{pet:'寵物',life:'生活/派遣',guild:'公會',star:'星力強化',pot:'潛能',dungeon:'副本'}[k]);if(k==='pet'){S.mat.egg=(S.mat.egg||0)+1}}}
 let last=performance.now(),acc=0,T0=0,shake=0,rateT=0;
-function frame(now){const dt=Math.min(.25,(now-last)/1000);last=now;T0+=dt;const S=G.S,B=G.B;if(typeof mirTick==='function'&&mirTick()){mirFrame(dt)}else if(S&&B){acc+=dt*(S.spd||1);let n=0;while(acc>=.1&&n<20){acc-=.1;n++;const ev=stepBattle(S,B,.1);onEvents(ev);if(B.done){battleDone();break}}draw(dt);rateT+=dt;if(rateT>1){rateT=0;hud();if(TAB==='battle')partyBox()}}requestAnimationFrame(frame)}
+function frame(now){const dt=Math.min(.25,(now-last)/1000);last=now;T0+=dt;const S=G.S,B=G.B;if(typeof mirTick==='function'&&mirTick()){mirFrame(dt)}else if(typeof ON!=='undefined'&&ON.token){if(ON.mir&&ON.mir.B&&ON.mir.S)mirFrame(dt)}else if(S&&B){acc+=dt*(S.spd||1);let n=0;while(acc>=.1&&n<20){acc-=.1;n++;const ev=stepBattle(S,B,.1);onEvents(ev);if(B.done){battleDone();break}}draw(dt);rateT+=dt;if(rateT>1){rateT=0;hud();if(TAB==='battle')partyBox()}}requestAnimationFrame(frame)}
 function draw(dt){const S=G.S,B=G.B;applyArt();X.save();if(shake>0){shake-=dt;X.translate((Math.random()-.5)*4,(Math.random()-.5)*4)}drawBG(B.ch,T0);const P=heroPos(S);
  B.mobs.forEach((m,i)=>{if(m.hp<=0)return;const [x,y]=mobPos(B,i);drawMob(x,y,m,T0);const w=m.boss?40:20;R_(x-w/2,y+(m.boss?24:14),w,2,'#300');R_(x-w/2,y+(m.boss?24:14),w*m.hp/m.mhp,2,m.boss?'#f33':'#e55');
   if(m.boss){if(m.bc){const p=1-m.bc.left/m.bc.t;R_(x-30,y-46,60,6,'#000');R_(x-29,y-45,58*p,4,m.bc.gold?'#ffd23f':'#c040ff');X.font='bold 8px sans-serif';X.textAlign='center';X.fillStyle=m.bc.gold?'#ffd23f':'#fff';X.fillText(m.bc.n+(m.bc.gold?'（不可打斷）':''),x,y-49)}
@@ -1744,13 +1753,6 @@ ACT.afUn2=async d=>{const u=+d.v;if(G.S.dia<SPCOST2.un)return toast('鑽石不�
 ACT.afRe2=async d=>{const u=+d.v;if(G.S.dia<SPCOST2.re)return toast('鑽石不足（需要 '+SPCOST2.re+'）');if(!confirm(`花 ${SPCOST2.re} 鑽石重洗彩虹特殊屬性？`))return;if(await afCall('reroll2',u,()=>spReroll(G.S,u,2))){toast('彩虹屬性已重洗');afReopen(u)}};
 
 // ===== 稱號：前端追蹤遊戲內事件（送伺服器驗證整理）＋稱號圖鑑 UI =====
-function tst(S){return S.tst=S.tst||{rs:0,rsMax:0,brk15:0,rf20:0,bl:{},never:0,gold0:0,g0:0}}
-{const _rf=refine;refine=function(S,u,o){const it=S.inv.find(i=>i.u===u);const rf0=it?it.rf:0,f0=it&&it._f;const r=_rf(S,u,o);const t=tst(S);
- if(r.r==='ok'){t.rs=0;if(it){if(it.rf>=20&&!f0&&rf0===19)t.rf20=1;it._f=0}}else if(r.r==='fail'||r.r==='break'||r.r==='down'){t.rs++;t.rsMax=Math.max(t.rsMax,t.rs);if(it)it._f=1;if(r.r==='break'&&rf0>=15)t.brk15++}return r}}
-{const _sb=stepBattle;stepBattle=function(S,B,dt){const ev=_sb(S,B,dt);if(B&&B.boss){const t=tst(S),k='c'+S.prog.ch;
- if(ev.some(e=>e.t==='wipe'))t.bl[k]=(t.bl[k]||0)+1;
- if(B.done===1&&!B._tt){B._tt=1;if((t.bl[k]||0)>=50)t.never=1;if(Math.random()<.0006){const ks=Object.keys(HCARDS),id=ks[Math.floor(Math.random()*ks.length)];S.cards[id]=(S.cards[id]||0)+1;(S.cdx=S.cdx||{})[id]=1;ev.push({t:'card',n:CARDS[id].n})}}}
- if(S.gold<=0){const t=tst(S);if(!t.g0){t.g0=1;t.gold0++}}else if(S.gold>0&&S.tst&&S.tst.g0)S.tst.g0=0;return ev}}
 function titlePage(S){const own=new Set(S.titles||[]);const list=TITLES.filter(t=>!t.hide||own.has(t.k));
  return`<div class="card"><b>稱號圖鑑</b> <span class="sm">已取得 ${list.filter(t=>own.has(t.k)).length}/${list.length}｜裝備中的稱號會顯示在角色頭上，並給予小幅加成</span></div><div class="tts">${list.map(t=>{const o=own.has(t.k),on=S.tsel===t.k;
   return`<div class="card tt ${o?'own':'lock'} ${on?'on':''}" data-a="${o?'tsel':''}" data-k="${t.k}"><div class="tt-i">${o?t.ic:'🔒'}</div><div class="sp"><b>${t.n}</b>${on?' <span class="tag">裝備中</span>':''}<div class="sm">${t.d}</div><div class="sm tt-b">${fmtB(t.b)||'無加成'}</div></div></div>`}).join('')}</div>`}
@@ -1878,12 +1880,12 @@ function applySave(s){const d=solo(migrate(s.data));d.ev=[];G.S=d;ON.rev=s.rev;O
 // ---------- 防掉檔：本機待上傳標記、重要動作立即上傳、關頁補存 ----------
 function pendMark(){if(ON.token&&ON.rev&&!ON.applying)localStorage.setItem('xj_pend',JSON.stringify({rev:ON.rev,tk:ON.token.slice(-16),t:Date.now()}))}
 function pendClear(){localStorage.removeItem('xj_pend')}
-async function pendFlush(){let p;try{p=JSON.parse(localStorage.getItem('xj_pend')||'null')}catch(e){}if(!p||!ON.token||p.tk!==ON.token.slice(-16))return;const d=load();if(!d||!d.heroes)return;d.ev=[];try{await onApi('PUT','/api/save',{data:d,rev:p.rev});ON.flushed=1}catch(e){}pendClear()}
+async function pendFlush(){if(ON.token){pendClear();return}let p;try{p=JSON.parse(localStorage.getItem('xj_pend')||'null')}catch(e){}if(!p||!ON.token||p.tk!==ON.token.slice(-16))return;const d=load();if(!d||!d.heroes)return;d.ev=[];try{await onApi('PUT','/api/save',{data:d,rev:p.rev});ON.flushed=1}catch(e){}pendClear()}
 let SOON=0;function onSoon(ms){if(!ON.token||!G.S||SOON)return;SOON=setTimeout(()=>{SOON=0;if(ON.busy)return onSoon(800);save();onUpload(true)},ms||1200)}
 function bye(){if(G.S&&ON.token){save();onUpload(true,1)}}
 document.addEventListener('visibilitychange',()=>{if(document.hidden)bye()});
 // ---------- 存檔上傳 ----------
-async function onUpload(quiet,keep){if(!ON.token||!G.S||ON.busy)return;ON.busy=1;try{const S=G.S;const ev=S.ev;S.ev=[];const data=JSON.parse(JSON.stringify(S));S.ev=ev;const sent=S.dia;
+async function onUpload(quiet,keep){if(ON.token){ON.lastUp=Date.now();return}if(!ON.token||!G.S||ON.busy)return;ON.busy=1;try{const S=G.S;const ev=S.ev;S.ev=[];const data=JSON.parse(JSON.stringify(S));S.ev=ev;const sent=S.dia;
   const j=await onApi('PUT','/api/save',{data,rev:ON.rev},keep);ON.rev=j.rev;S.dia=j.dia+(S.dia-sent);ON.lastUp=Date.now();if(!ON.dirtyAfter)pendClear();if(!quiet)toast('已同步')}
  catch(e){if(e.st===409){await onDownload()}else if(e.st===422){toast('存檔驗證失敗，已還原伺服器進度');await onDownload()}else if(!quiet)toast(e.message)}finally{ON.busy=0}}
 async function onDownload(){try{const s=await onApi('GET','/api/save');if(s.rev!==ON.rev)applySave(s);render();hud()}catch(e){}}
@@ -1905,6 +1907,7 @@ function onWs(m){const t=m.t;
  else if(t==='pinv'){ON.pinv=ON.pinv.filter(x=>x.pid!==m.pid);ON.pinv.push(m);toast(`🎈 ${esc(m.name)} 邀請你加入隊伍<br><span class="sm">到「社交 › 隊伍」接受</span>`,3000)}
  else if(t==='stage'){log(`[組隊] ${m.win?'過關':'失敗'} → ${m.prog.ch+1}-${m.prog.st+1}`,'c');if(ON.party)ON.party.prog=m.prog;return}
  else if(t==='ev'){partyEv(m);return}
+ else if(t==='S'||t==='actr'||t==='toast'||t==='bfail'){srvMsg(m);return}
  else if(t==='proster'){ON.ros=m;return}
  else if(t==='saved'){onDownload();return}
  else if(t==='presence'){if(ON.soc)for(const f of ON.soc.friends)if(f.id===m.id)f.on=m.on}
@@ -2124,14 +2127,14 @@ ACT.rfFill=async d=>{const it=G.S.inv.find(i=>i.u===+d.v);const n=rfNeed(it,G.ro
 
 // 組隊鏡像模式：隊伍戰鬥由伺服器權威執行，全隊畫面顯示同一場戰鬥（最低進度者的關卡）；本地戰鬥暫停、不重複發獎勵
 ON.ros=null;ON.mir=null;
-function mirOn(){const p=ON.party;return !!(p&&p.running&&ON.ros&&ON.mir&&Date.now()-ON.mir.t<4000)}
-{const _pe=partyEv;partyEv=function(m){_pe(m);try{if(!m.snap||!ON.ros||!G.S)return;const R=ON.ros;const M=ON.mir||(ON.mir={q:[]});
+function mirOn(){const p=ON.party;if(ON.mir&&ON.mir.solo&&Date.now()-ON.mir.t<4000)return true;return !!(p&&p.running&&ON.ros&&ON.mir&&Date.now()-ON.mir.t<4000)}
+{const _pe=partyEv;partyEv=function(m){_pe(m);try{if(m.snap&&m.solo&&G.S){const M=ON.mir&&ON.mir.solo?ON.mir:(ON.mir={q:[],solo:1});M.S=G.S;M.B=Object.assign(M.B&&M.B.ch===m.snap.ch&&M.B.st===m.snap.st?M.B:{},m.snap);M.q.push(...(m.ev||[]));M.t=Date.now();return}if(!m.snap||!ON.ros||!G.S)return;const R=ON.ros;const M=ON.mir&&!ON.mir.solo?ON.mir:(ON.mir={q:[]});
  if(!M.S||M.rv!==R){M.rv=R;M.S=Object.assign({},G.S,{heroes:R.heroes,inv:R.inv,party:R.party,pets:[],petOn:null,ev:[]})}
  M.B=Object.assign(M.B&&M.B.ch===m.snap.ch&&M.B.st===m.snap.st?M.B:{},m.snap);M.q.push(...(m.ev||[]));M.t=Date.now()}catch(e){console.warn('mir',e)}}}
 let _mirWas=0;
-function mirFrame(dt){const M=ON.mir,rs=G.S,rb=G.B;G.S=M.S;G.B=M.B;try{const q=M.q;M.q=[];if(q.length)try{onEvents(q)}catch(e){}draw(dt)}finally{G.S=rs;G.B=rb}
+function mirFrame(dt){const M=ON.mir,rs=G.S,rb=G.B;if(M.solo)M.S=G.S;G.S=M.S;G.B=M.B;try{const q=M.q;M.q=[];if(q.length){const lv=q.filter(e=>e.t==='lvup');if(lv.length)M.S.ev=lv;try{onEvents(q.filter(e=>e.t!=='lvup'))}catch(e){}M.S.ev=[]}draw(dt)}finally{G.S=rs;G.B=rb}
  rateT+=dt;if(rateT>1){rateT=0;G.B=M.B;try{hud()}finally{G.B=rb}}}
-function mirTick(){const on=mirOn();if(_mirWas&&!on&&G.S){ON.mir=null;try{startStage()}catch(e){}}_mirWas=on;return on}
+function mirTick(){const on=mirOn();if(_mirWas&&!on&&G.S&&!ON.token){ON.mir=null;try{startStage()}catch(e){}}_mirWas=on;return on}
 // 系統通知（例如星力/潛能移除退還）：登入後跳出一次，看過即清除
 function showNotice(){const S=G.S;if(!S||!S.notice||!S.notice.length||document.getElementById('modal').style.display==='flex')return;const n=S.notice.slice();
  modal(`<div class="card"><b>📮 系統通知</b>${n.map(x=>`<div class="sm" style="margin-top:8px;line-height:1.6">${esc(x.txt)}</div>`).join('')}<button class="b y" style="margin-top:12px;width:100%" data-a="noticeOk">知道了</button></div>`)}
@@ -2159,7 +2162,7 @@ function craftPage(S){const cand=S.inv.filter(i=>i.aff&&CRAFT[i.q]);let h=`<div 
 ACT.crSel=d=>{CR.u=+d.v;CR.locks=[];render()};
 ACT.crLock=(e,d)=>{const k=(d&&d.k)||e.k;const on=typeof e.checked==='boolean'?e.checked:!CR.locks.includes(k);CR.locks=CR.locks.filter(x=>x!==k);if(on)CR.locks.push(k);render()};
 ACT.crGo=async()=>{const S=G.S,it=S.inv.find(i=>i.u===CR.u);if(!it)return;const c=craftCost(it,CR.locks);if(!confirm(`將 ${it.n} 升階為${c.n}？未鎖住的詞條會全部重骰。`))return;
- try{if(ON.token){await onUpload(true);await onApi('POST','/api/craft',{u:it.u,locks:CR.locks});await after({rev:1})}else{const e=craft(S,it.u,CR.locks);if(e)throw new Error(e);save()}
+ try{if(ON.token){await onUpload(true);await onApi('POST','/api/craft',{u:it.u,locks:CR.locks});await after({rev:1})}else{const e=eqCraft(S,it.u,CR.locks);if(e)throw new Error(e);save()}
   SFX.ok&&SFX.ok();CR.locks=[];const n=G.S.inv.find(i=>i.u===it.u);toast('製作成功！'+(n?n.n:''));render();if(n)modal(itemInfo(G.S,n))}catch(e){toast(e.message)}};
 // 道具視窗加「製作升階」入口
 {const _ii=itemInfo;itemInfo=function(S,it){let h=_ii(S,it);if(it&&it.aff&&CRAFT[it.q])h=h.replace('<div class="ifg">',`<div class="ifr" style="margin:6px 0"><span class="sm">可製作升階為${CRAFT[it.q].n}</span><button class="b s y" data-a="crFrom" data-v="${it.u}">前往製作</button></div><div class="ifg">`);return h}}
@@ -2181,11 +2184,11 @@ ACT.skAuto=(e,d)=>{const h=curH();const k=(d&&d.k)||e.k;h.skOff=h.skOff||{};cons
 // 組隊時天果/天地樹葉子也由伺服器執行
 {const _uc=ACT.useC;ACT.useC=d=>{if(mirOn()&&CONS[d.k]){const n=(ON.pm||{})[d.k];if(n===0)return toast(CONS[d.k].n+'不足');wsSend({t:'party.drink',k:d.k});const c=CONS[d.k];if(c.b){G.S.cbuf=G.S.cbuf||{};const now=Date.now();G.S.cbuf[d.k]=Math.max(now,G.S.cbuf[d.k]||0)+c.dur*1000;toast(c.n+' 已由隊伍伺服器生效');setTimeout(render,300)}return}return _uc(d)}}
 // 藥水/天果/天地樹葉子/復活術 冷卻倒數
-function myRt(){const M=typeof mirOn==='function'&&mirOn()&&ON.mir;const B=M?M.B:G.B;if(!B||!B.hr)return null;const id=M?ON.id:(curH()||{}).id;return B.hr[id]}
+function myRt(){const M=typeof mirOn==='function'&&mirOn()&&ON.mir;const B=M?M.B:G.B;if(!B||!B.hr)return null;const id=M&&!M.solo?ON.id:(curH()||{}).id;return B.hr[id]}
 setInterval(()=>{try{if(TAB!=='battle')return;const pb=document.querySelector('.potb');if(!pb)return;const rt=myRt()||{};const pc=rt.pcd||{};
  pb.querySelectorAll('[data-a=drink],[data-a=useC]').forEach(b=>{const k=b.dataset.k;const s=Math.ceil(pc[k]||0);let e=b.querySelector('.cdn');if(s>0){if(!e){e=document.createElement('em');e.className='cdn';b.appendChild(e)}e.textContent=s+'s';b.classList.add('oncd')}else{if(e)e.remove();b.classList.remove('oncd')}
   if(typeof mirOn==='function'&&mirOn()&&ON.pm&&ON.pm[k]!=null){const x=b.querySelector('b');if(x)x.textContent=ON.pm[k]}});
- const S=G.S;const pr=S&&S.heroes.find(h=>(h.sk||{}).h_resu>0);let r=pb.querySelector('.resucd');if(pr){const M=typeof mirOn==='function'&&mirOn()&&ON.mir;const B=M?M.B:G.B;const t=Math.ceil(((B&&B.hr&&B.hr[M?ON.id:pr.id])||{}).rcd||0);if(!r){r=document.createElement('span');r.className='potq resucd';r.title='祭司復活術：隊友倒下時自動施放';pb.appendChild(r)}r.innerHTML=`✝️ 復活術 <b>${t>0?t+'s':'就緒'}</b>`}else if(r)r.remove()}catch(e){}},250);
+ const S=G.S;const pr=S&&S.heroes.find(h=>(h.sk||{}).h_resu>0);let r=pb.querySelector('.resucd');if(pr){const M=typeof mirOn==='function'&&mirOn()&&ON.mir;const B=M?M.B:G.B;const t=Math.ceil(((B&&B.hr&&B.hr[M&&!M.solo?ON.id:pr.id])||{}).rcd||0);if(!r){r=document.createElement('span');r.className='potq resucd';r.title='祭司復活術：隊友倒下時自動施放';pb.appendChild(r)}r.innerHTML=`✝️ 復活術 <b>${t>0?t+'s':'就緒'}</b>`}else if(r)r.remove()}catch(e){}},250);
 // ===== 原創 Q 版道具圖示（SVG）：治療藥水/高級治療藥水/魔力藥水/天果/天地樹葉子 =====
 const ICONS={
  bottle:(c1,c2)=>`<svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><rect x="12" y="3" width="8" height="5" rx="1.5" fill="#b07a4a"/><rect x="11" y="7" width="10" height="3" rx="1" fill="#e8e1d6"/><path d="M11 10h10v3c4 2 6 5 6 9a11 9 0 0 1-22 0c0-4 2-7 6-9z" fill="#eef6ff" stroke="#6b5a7a" stroke-width="1.4"/><path d="M7 21c3-2 15-2 18 0a10 7.5 0 0 1-18 0z" fill="${c1}"/><ellipse cx="16" cy="25" rx="7" ry="3" fill="${c2}" opacity=".55"/><ellipse cx="11.5" cy="16" rx="2" ry="3" fill="#fff" opacity=".8"/><circle cx="13" cy="21.5" r="1" fill="#3a2a3a"/><circle cx="19" cy="21.5" r="1" fill="#3a2a3a"/><path d="M14.5 23.5q1.5 1.2 3 0" stroke="#3a2a3a" stroke-width=".9" fill="none"/></svg>`,
@@ -2198,5 +2201,31 @@ const icoURI=k=>ICONS[k]?'data:image/svg+xml;utf8,'+encodeURIComponent(ICONS[k](
 function potImg(k,sz){const u=icoURI(k);return u?`<img src="${u}" width="${sz||22}" height="${sz||22}" alt="" style="vertical-align:middle">`:''}
 // 套用到藥水列與道具資訊
 setInterval(()=>{try{document.querySelectorAll('.potb [data-a=drink] span,.potb [data-a=useC] span').forEach(s=>{const k=s.parentNode.dataset.k;if(ICONS[k]&&!s.dataset.ic){s.dataset.ic=1;s.innerHTML=potImg(k,22)}})}catch(e){}},300);
+
+// ===== v1.7.20 伺服器權威：遊戲狀態只由伺服器改變；前端送出操作、顯示伺服器回傳的存檔與戰鬥 =====
+const SRVA=['vol','snd','art','autopush','autoboss','autoint','aihold','auto','noint','skAuto','apSave','arw','tsel','noticeOk','dpsreset',
+ 'boss','go','farm','drink','useC','st','learn','skreset','job','rebirth','rbp','rsst','rsrbp','rename','sex','cos','marry',
+ 'eq','eqL','uneq','eqM','eqLM','uneqM','sell','sellM','sellall','ins','hatch','feed','evo','peton','disp','gather','collect','eat','dun','craft',
+ 'nbuy','nbuyGo','dbuy','dbuyGo','salebuy','claim','recyc','exbuy','excancel','exsell','exsellm','exorder'];
+// 需要先確認的操作（確認後才送出）
+const SRVCF={sellM:()=>'確定賣出？',nbuyGo:d=>{const n=+($('nqv')||{}).value||0,it=NPCSHOP.find(x=>x.k===d.k);return it&&`購買 ${it.n} ×${n}，共 ${fmt(it.p*n)} 金？`},
+ dbuyGo:d=>{const n=Math.floor(+($('dqv')||{}).value||0),it=DSHOP.find(x=>x.k===d.k);return it&&`用 ${it.p*n} 鑽石購買 ${it.n} ×${n}？`},
+ skreset:()=>'花 100 鑽石重置技能？',rsst:()=>'花 50 鑽石重置素質？',rsrbp:()=>'花 50 鑽石重置轉生點？',rebirth:()=>'確定轉生？'};
+// 前端畫面部分（切頁等）
+const SRVUI={go:()=>{TAB='battle'},farm:()=>{TAB='battle'},eqM:()=>closeModal(),eqLM:()=>closeModal(),uneqM:()=>closeModal(),sellM:()=>closeModal()};
+let ACTN=0;const ACTW={};
+function srvInputs(){const v={};document.querySelectorAll('input[id],select[id],textarea[id]').forEach(e=>{v[e.id]={v:e.value,c:!!e.checked}});return v}
+function srvAct(a,d){if(!ON.ws||ON.ws.readyState!==1){toast('連線中，請稍候');return}const id=++ACTN;ACTW[id]=a;ON.ws.send(JSON.stringify({t:'act',a,d,v:srvInputs(),id}))}
+{for(const a of SRVA){const loc=ACT[a];ACT[a]=(x,y)=>{if(!ON.token)return loc&&loc(x,y);
+  let d={};if(x&&x.nodeType===1){Object.assign(d,x.dataset);d._c=!!x.checked;d._v=x.value}else if(x)Object.assign(d,x);if(y)Object.assign(d,y);
+  if(SRVCF[a]){const q=SRVCF[a](d);if(q&&!confirm(q))return}
+  if(a==='drink'||a==='useC'){if(typeof mirOn==='function'&&mirOn()&&!(ON.mir&&ON.mir.solo)){wsSend({t:'party.drink',k:d.k});return}}
+  if(SRVUI[a])SRVUI[a](d);srvAct(a,d)}}}
+const SFXK={ok:'ok',fail:'fail',lv:'lv',job:'job',boss:'boss'};
+function srvMsg(m){const t=m.t;
+ if(t==='S'){const d=solo(migrate(m.S));d.ev=[];const first=!G.S;G.S=d;ON.rev=m.rev;ON.dia0=d.dia;ON.srvS=Date.now();if(first){render()}try{hud()}catch(e){}if(TAB==='battle'&&typeof partyBox==='function')try{partyBox()}catch(e){}return}
+ if(t==='actr'){delete ACTW[m.id];if(m.e)toast(m.e);else if(m.m)toast(m.m);if(m.sfx&&SFX[m.sfx])try{SFX[m.sfx]()}catch(e){}if(m.close)closeModal();if(typeof onSoon==='function');render();try{hud()}catch(e){}return}
+ if(t==='toast'){toast(m.m,m.ms);if(m.sfx&&SFX[m.sfx])try{SFX[m.sfx]()}catch(e){}return}
+ if(t==='bfail'){try{SFX.fail()}catch(e){}const h=m.hint||[];toast('<b>挑戰失敗</b><br>'+h.slice(0,3).join('<br>'),4000);log('<span class="rd">頭目挑戰失敗：</span>'+h.join('；'));return}}
 
 </script></body></html>
