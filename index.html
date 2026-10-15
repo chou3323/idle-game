@@ -824,7 +824,7 @@ function onEvents(ev){const S=G.S,B=G.B,P=heroPos(S);
   if(e.t==='bult'){shake=.4;log(`<span class="rd">頭目施放 ${e.n}！</span>`)}if(e.t==='phase')log(`<span class="pu">頭目進入第二階段，屬性變為「${e.el}」</span>`);if(e.t==='rage')log('<span class="rd">頭目狂暴了！ATK×2</span>');
   if(e.t==='drop'){log(`${e.who||''} 獲得 <span class="${QC[e.it.q||0]}">${e.it.n}</span>`);SFX.drop()}if(e.t==='card'){log(`<b class="c">${e.who||''} 獲得卡片：${e.n}</b>`);SFX.drop();toast('獲得 '+e.n)}
   if(e.t==='petsh'){const p=P[S.party[0]];if(p)num(p[0],p[1]-36,'寵物護盾','#9fd0ff')}if(e.t==='hdie'){const h=S.heroes.find(x=>x.id===e.id);log(`<span class="rd">${h.name} 倒下了</span>`)}}
- for(const e of S.ev){if(e.t==='lvup'){const h=S.heroes.find(x=>x.id===e.id);const p=P[e.id];if(p)num(p[0],p[1]-30,(e.k==='base'?'Base ':'Job ')+'LV UP','#ffd866',true);SFX.lv();log(`${h.name} ${e.k==='base'?'Base':'Job'} Lv${e.lv}`,'c')}}S.ev=[]}
+ for(const e of S.ev){if(e.t==='lvup'){const h=S.heroes.find(x=>x.id===e.id);const p=P[e.id];if(p)num(p[0],p[1]-30,'LV UP','#ffd866',true);SFX.lv();log(`${h.name} Lv${e.lv}`,'c')}}S.ev=[]}
 function battleDone(){const S=G.S,B=G.B,i=stageIdx(B.ch,B.st);
  if(B.done===1){if(i>=S.prog.max){S.prog.max=i+1;if(B.boss){toast(`<b>擊敗 ${CH[B.ch].boss[0]}！</b><br>第 ${B.ch+2} 章開啟`,2500);SFX.ok()}checkUnlocks()}
   if(S.prog.auto&&i+1<=S.prog.max&&i+1<CH.length*STAGES){const n=i+1;if((n%STAGES)!==STAGES-1||S.prog.autoBoss){S.prog.ch=Math.floor(n/STAGES);S.prog.st=n%STAGES}}}
@@ -958,7 +958,7 @@ const ACT={
  job:d=>{const h=curH(),e=changeJob(G.S,h,d.k);toast(e||`轉職成功：${jobName(d.k,h.sex)}！`);if(!e){SFX.lv();autoSkill(h)}},
  rebirth:()=>{const h=curH();const e=rebirth(G.S,h);toast(e||`轉生成功！${rbTitle(h.rb).t}`);if(!e)SFX.lv()},rbp:d=>{const e=rbpAdd(curH(),d.k);if(e)toast(e)},
  rsst:()=>{const S=G.S;if(S.dia<50)return toast('鑽石不足');S.dia-=50;resetStats(curH())},rsrbp:()=>{const S=G.S;if(S.dia<50)return toast('鑽石不足');S.dia-=50;resetRbp(curH())},
- party:d=>{const S=G.S,id=+d.v;if(S.party.includes(id))S.party=S.party.filter(x=>x!==id);else if(S.party.length<5)S.party.push(id);else return toast('隊伍已滿 5 人');startStage()},
+ party:d=>{const S=G.S,id=+d.v;if(S.party.includes(id))S.party=S.party.filter(x=>x!==id);else if(S.party.length<10)S.party.push(id);else return toast('隊伍已滿 10 人');startStage()},
  noint:(e,d)=>{const S=G.S;S.noInt=S.noInt||{};S.noInt[d.v]=!e.checked},
  eq:d=>{const e=equip(G.S,curH().id,+d.v);if(e)toast(e)},eqL:d=>{const e=equip(G.S,curH().id,+d.v,'sh');if(e)toast(e)},uneq:d=>{delete curH().eq[d.k]},
  sell:d=>{const e=npcSell(G.S,+d.v);if(e)toast(e)},sellall:()=>{const S=G.S;let n=0;S.inv.filter(i=>!owner(S,i.u)&&!(i.q>0)&&!i.cards.length&&!i.rf).forEach(i=>{npcSell(S,i.u);n++});toast('出售 '+n+' 件')},
@@ -991,7 +991,7 @@ const ACT={
   if(k==='boss'){S.prog.max=Math.max(S.prog.max,stageIdx(S.prog.ch,9));S.prog.st=9;startStage()}if(k==='spd')S.spd=S.spd===3?1:3;if(k==='rb')S.party.forEach(id=>{const h=S.heroes.find(x=>x.id===id);h.bl=baseMax;S.dia+=999;S.gold+=1e7;rebirth(S,h)});if(k==='month')S.month=Math.max(Date.now(),S.month)+30*864e5;toast('GM：'+k,700)}};
 document.addEventListener('click',ev=>{ac();const t=ev.target.closest('[data-t],[data-a]');if(!t)return;if(t.dataset.t){TAB=t.dataset.t;render();window.scrollTo(0,0);return}const a=t.dataset.a;if(!ACT[a]||t.tagName==='INPUT'||t.tagName==='SELECT')return;ACT[a](t.dataset);if(!G.S)return;render();hud();save()});
 document.addEventListener('change',ev=>{const t=ev.target;const a=t.dataset&&t.dataset.a;if(!a||!ACT[a])return;ACT[a](t,t.dataset);render();save()});
-function create(){$('app').innerHTML=`<div class="card"><h2 style="margin:4px 0">星芽遠征團：放置冒險</h2><p class="sm">組一支冒險團一起推圖！初心者→六系一轉→二轉→轉生→進階二轉。卡片、精煉、星力、潛能、寵物、生活技能、公會、交易所。</p>
+function create(){$('app').innerHTML=`<div class="card"><h2 style="margin:4px 0">星芽遠征團：放置冒險</h2><p class="sm">組一支冒險團一起推圖！Lv10 一轉（六系）→ Lv30 二轉 → Lv70 三轉，滿等 Lv200 可轉生（可無限轉生）。卡片、精煉、星力、潛能、寵物、生活技能、公會、交易所。</p>
  <input id="crn" placeholder="主角名字" maxlength="8" value="冒險者"><div class="row" style="margin:6px 0"><button class="b" data-a="crs" data-k="m" id="crm">男</button><button class="b" data-a="crs" data-k="f">女</button></div><button class="b g" data-a="crok" style="width:100%">開始冒險</button></div>`;
  ACT.crs=d=>{G.sex=d.k;toast(d.k==='m'?'男':'女',500)};ACT.crok=()=>{G.S=newState(($('crn').value||'冒險者').slice(0,8),G.sex||'m');save();boot()}}
 function boot(){const S=G.S;const off=offline(S,Date.now());S.ev=[];if(off&&off.kills>0){toast(`離線 ${Math.floor(off.sec/60)} 分鐘（上限 ${monthOn(S)?12:8} 小時）<br>擊殺 ${off.kills}・金幣 +${fmt(off.g)}・經驗 +${fmt(off.be)}`,3500)}
