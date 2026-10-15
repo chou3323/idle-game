@@ -95,6 +95,15 @@ html,body{overscroll-behavior:none;-webkit-tap-highlight-color:transparent;touch
 
 #inst{position:fixed;left:8px;right:8px;bottom:calc(70px + env(safe-area-inset-bottom));z-index:30;display:none;align-items:center;gap:8px;background:#fff;border-radius:14px;padding:10px 12px;box-shadow:0 4px 16px #0003;font-size:13px}#inst span{flex:1}#inst button{min-height:40px}
 @media(max-width:899px){button{min-height:36px}}
+.ic.gl1{filter:drop-shadow(0 0 3px #fff59d)}.ic.gl2{filter:drop-shadow(0 0 4px #ffd54f) drop-shadow(0 0 8px #ffb300)}
+.ic.gl3{position:relative;filter:drop-shadow(0 0 5px #80d8ff) drop-shadow(0 0 10px #29b6f6)}.ic.gl3::after,.ic.gl4::after{content:'✦';position:absolute;right:-4px;top:-6px;font-size:12px;color:#fff;text-shadow:0 0 4px #29b6f6;animation:twk 1s infinite}
+.ic.gl4{position:relative;animation:glw 1s ease-in-out infinite}.ic.gl4::after{color:#ffe0ff;text-shadow:0 0 6px #ff40ff}
+@keyframes glw{0%,100%{filter:drop-shadow(0 0 5px #ff80ff) drop-shadow(0 0 10px #ffd54f)}50%{filter:drop-shadow(0 0 10px #ff40ff) drop-shadow(0 0 18px #ffd54f)}}@keyframes twk{0%,100%{opacity:.2;transform:scale(.6)}50%{opacity:1;transform:scale(1.2)}}
+.refx{position:fixed;left:50%;top:40%;transform:translate(-50%,-50%);z-index:50;pointer-events:none;text-align:center}.refx .rt{background:#fffe;border-radius:16px;padding:14px 22px;font-size:16px;box-shadow:0 6px 24px #0004;animation:rpop 1.5s forwards}
+.refx.ok .rt{color:#b8860b;border:3px solid #ffd54f}.refx.ok .rb{position:absolute;left:50%;top:50%;width:260px;height:260px;margin:-130px;background:radial-gradient(circle,#fff8 0,#ffd54f88 30%,transparent 65%);animation:rburst 1s forwards}
+.refx.break .rt,.refx.down .rt{color:#c62828;border:3px solid #ef9a9a;animation:rshake .5s,rpop 1.5s forwards}.refx.protect .rt{color:#1565c0;border:3px solid #90caf9}
+@keyframes rpop{0%{transform:scale(.4);opacity:0}15%{transform:scale(1.1);opacity:1}80%{opacity:1}100%{transform:scale(1);opacity:0}}@keyframes rburst{0%{transform:scale(.2) rotate(0);opacity:1}100%{transform:scale(1.6) rotate(90deg);opacity:0}}
+@keyframes rshake{0%,100%{translate:0}20%,60%{translate:-10px}40%,80%{translate:10px}}
 </style></head><body>
 <div id="app">
 <div id="left">
@@ -272,7 +281,7 @@ const SPOUSES=['艾莉絲','雷歐','小櫻','凱恩','露娜','亞瑟'];
 const GM_PASS='chou-gm-2026';
 function fxText(e){const o=[];for(const k in e){const v=e[k];if(k==='race')for(const r in v)o.push(`對${r}族傷害+${v[r]}%`);else if(k==='size')for(const z in v)o.push(`對${SIZES[z]}傷害+${v[z]}%`);else if(k==='resEl')for(const r in v)o.push(`${r}屬性抗性+${v[r]}%`);else if(k==='armEl')o.push(`鎧甲變為${v}屬性`);else if(k==='wEl')o.push(`武器${v}屬性`);else if(k==='vamp')o.push(`攻擊${v[0]}%機率吸收${v[1]}%傷害`);else if(BN[k])o.push(BN[k]+(v>0?'+':'')+v)}return o.join('、')}
 const ITEMS={
- pot:{n:'紅色藥水',ic:'🧪',t:'use',price:25,desc:'回復 30% HP'},bluepot:{n:'藍色藥水',ic:'💧',t:'use',price:60,desc:'回復 30% SP'},ore:{n:'精煉鋼石',ic:'💎',t:'mat',price:150,desc:'精煉裝備用'},
+ pot:{n:'紅色藥水',ic:'🧪',t:'use',price:25,desc:'回復 30% HP'},bluepot:{n:'藍色藥水',ic:'💧',t:'use',price:60,desc:'回復 30% SP'},ore:{n:'精煉鋼石',ic:'💎',t:'mat',price:1000,desc:'Lv3/Lv4 武器精煉用'},
  knife:{n:'短匕',ic:'🔪',slot:'weapon',wt:'dagger',atk:17,slots:3,price:60},sword1:{n:'練習長劍',ic:'🗡️',slot:'weapon',wt:'sword',atk:25,slots:2,price:120},
  bow1:{n:'獵人短弓',ic:'🏹',slot:'weapon',wt:'bow',atk:18,slots:2,price:120},staff1:{n:'橡木法杖',ic:'🪄',slot:'weapon',wt:'staff',atk:10,matk:25,slots:2,price:120},
  mace1:{n:'木槌',ic:'🔨',slot:'weapon',wt:'mace',atk:22,slots:2,price:120},katar1:{n:'拳刃',ic:'🗡️',slot:'weapon',wt:'katar',atk:60,slots:1,price:2500,r:2},
@@ -290,7 +299,7 @@ const ITEMS={
  kingblade:{n:'王者之劍',ic:'⚔️',slot:'weapon',wt:'sword',atk:230,slots:1,r:4},arcanest:{n:'奧術之杖',ic:'🔮',slot:'weapon',wt:'staff',atk:60,matk:230,slots:1,r:4},galebow:{n:'疾風神弓',ic:'🏹',slot:'weapon',wt:'bow',atk:200,dex:5,slots:1,r:4},
  shadowkat:{n:'暗影拳刃',ic:'🗡️',slot:'weapon',wt:'katar',atk:210,crit:10,slots:1,r:4},giantaxe:{n:'泰坦巨斧',ic:'🪓',slot:'weapon',wt:'axe',atk:290,slots:1,r:4},dragonfist:{n:'龍牙拳套',ic:'🥊',slot:'weapon',wt:'knuckle',atk:220,slots:1,r:4},
  dragonmail:{n:'龍鱗鎧',ic:'🐲',slot:'armor',def:50,hp:1500,slots:1,r:4},bioeye:{n:'研究員護目鏡',ic:'🥽',slot:'head',def:15,int:5,dex:5,slots:1,r:4},ancring:{n:'遠古戒指',ic:'💍',slot:'acc',str:3,dex:3,agi:3,slots:1,r:4},
- hiore:{n:'高級鋼石',ic:'💠',t:'mat',desc:'精煉成功率 +20%（鑽石商城）'},antibreak:{n:'防爆券',ic:'🛡️',t:'mat',desc:'+7 以上精煉失敗不會損壞（改為 -1）'},protect:{n:'保護券',ic:'🔰',t:'mat',desc:'精煉失敗完全不掉級、不損壞'},
+ hiore:{n:'高級鋼石',ic:'💠',t:'mat',desc:'取代一般礦石，任何武器/防具皆可用，提高成功率（鑽石商城）'},ore1:{n:'粗製精煉石',ic:'🪨',t:'mat',price:50,desc:'Lv1 武器精煉用'},ore2:{n:'精製精煉石',ic:'🔷',t:'mat',price:200,desc:'Lv2 武器精煉用'},eore:{n:'防具鋼石',ic:'🔶',t:'mat',price:1000,desc:'防具精煉用'},antibreak:{n:'防爆券',ic:'🛡️',t:'mat',desc:'+7 以上精煉失敗不會損壞（改為 -1）'},protect:{n:'保護券',ic:'🔰',t:'mat',desc:'精煉失敗完全不掉級、不損壞'},
  glove:{n:'靈巧手套',ic:'🧤',slot:'acc',dex:2,slots:0,price:3000},boots:{n:'疾風之靴',ic:'👢',slot:'acc',agi:2,flee:5,slots:0,price:3000},
 };
 Object.assign(ITEMS,{
@@ -304,13 +313,21 @@ Object.assign(ITEMS,{
  whip1:{n:'皮鞭',ic:'➰',slot:'weapon',wt:'whip',atk:45,slots:2,price:1500},rosewhip:{n:'玫瑰荊鞭',ic:'🌹',slot:'weapon',wt:'whip',atk:120,luk:2,slots:1,r:3},
  stiletto:{n:'細身短劍',ic:'🔪',slot:'weapon',wt:'dagger',atk:60,slots:3,r:2},
 });
+Object.assign(ITEMS.claymore,{wl:2});Object.assign(ITEMS.battleaxe,{wl:2});ITEMS.book1.wl=2;ITEMS.lute.wl=2;ITEMS.whip1.wl=2;
 ['flame','kingblade'].forEach(k=>ITEMS[k].wt='tsword');ITEMS.giantaxe.wt='taxe';['wizstaff','bapstaff','arcanest'].forEach(k=>ITEMS[k].wt='tstaff');
 for(const k in ITEMS){if(ITEMS[k].slot)ITEMS[k].t='eq'}
 const DROPS=[['knife','sword1','bow1','staff1','mace1','cotton','porihat'],['katar1','leather','xbow','bunny','clip','goggles'],['flame','wizstaff','jur','robe','ninja','tiara'],['icefal','hbow','holymace','mithril','chain'],['bloodsword','bapstaff','horn','ninja','mithril'],['kingblade','ancring','shadowkat','galebow'],['arcanest','bioeye','giantaxe','dragonfist'],['dragonmail','kingblade','giantaxe','shadowkat']];
 [['guard','spear1'],['orcaxe','buckler','stiletto','pike'],['bigshield','bible','lute','whip1'],['mirrorsh','harp','rosewhip'],['lance'],['dragonsh']].forEach((a,i)=>DROPS[i]&&DROPS[i].push(...a));
 const BOSSDROP=['porihat','clip','tiara','mithril','horn','ancring','bioeye','dragonmail'];
-const SHOP=['pot','bluepot','ore','knife','sword1','bow1','staff1','mace1','axe1','knuckle1','katar1','xbow','spear1','guard','buckler','claymore','battleaxe','book1','lute','whip1','cotton','leather','chain','bunny','goggles','clip','ring','brooch','glove','boots'];
-const REF_RATE=[1,1,1,1,.9,.75,.6,.45,.3,.2];
+const SHOP=['pot','bluepot','ore1','ore2','eore','ore','knife','sword1','bow1','staff1','mace1','axe1','knuckle1','katar1','xbow','spear1','guard','buckler','claymore','battleaxe','book1','lute','whip1','cotton','leather','chain','bunny','goggles','clip','ring','brooch','glove','boots'];
+// ===== Renewal 精煉（官方表）=====
+const wlv=d=>d.wl||Math.min(4,d.r||1);
+const REF_TBL={1:[1,1,1,1,1,1,1,.6,.5,.2],2:[1,1,1,1,1,1,.6,.4,.2,.2],3:[1,1,1,1,1,.6,.5,.2,.2,.2],4:[1,1,1,1,.6,.4,.4,.2,.2,.1],A:[1,1,1,1,.6,.4,.4,.2,.2,.1]};
+const HI_MAP={1:1,.6:.9,.5:.8,.4:.7,.2:.4,.1:.2};
+const REF_SAFE={1:7,2:6,3:5,4:4,A:4},REF_ATK={1:2,2:3,3:5,4:7},REF_OVER={1:3,2:5,3:8,4:14},REF_ORE={1:'ore1',2:'ore2',3:'ore',4:'ore',A:'eore'},REF_GOLD={1:50,2:200,3:5000,4:20000,A:2000};
+const refKey=d=>d.wt?wlv(d):'A';const refAtk=(d,r)=>d.wt?(r||0)*REF_ATK[wlv(d)]:0;const refOver=(d,r)=>d.wt?Math.max(0,(r||0)-REF_SAFE[wlv(d)])*REF_OVER[wlv(d)]:0;
+const refRate=(d,r,hi)=>{const x=REF_TBL[refKey(d)][r];return hi?HI_MAP[x]:x};
+const glowCls=r=>r>=10?'gl4':r>=9?'gl3':r>=7?'gl2':r>=4?'gl1':'';
 const MERCS={
  m_sw:{n:'雷恩',job:'swordsman',role:'近戰',price:2000,lv:10},
  m_ar:{n:'莉亞',job:'archer',role:'遠程',price:3000,lv:15},
@@ -353,7 +370,7 @@ const slv=k=>S.skl[k]||0;const lvM=k=>1+.2*(slv(k)-1);
 function bonus(){const b={race:{},size:{},resEl:{},vamp:[0,0]};
  const add=e=>{for(const k in e){const v=e[k];if(k==='race'||k==='size'||k==='resEl'){for(const r in v)b[k][r]=(b[k][r]||0)+v[r]}else if(k==='armEl'||k==='wEl')b[k]=v;else if(k==='vamp'){b.vamp=[b.vamp[0]+v[0],Math.max(b.vamp[1],v[1])]}else if(typeof v==='number')b[k]=(b[k]||0)+v}};
  b.hand={R:{race:{},size:{},atk:0},L:{race:{},size:{},atk:0}};for(const s in SLOTN){const it=getEq(s);if(!it)continue;const d=ITEMS[it.id];const r=1+.1*(it.ref||0);const hk=d.wt?(s==='shield'?'L':'R'):null;
-  const e={};for(const k of['str','agi','vit','int','dex','luk','hp','sp','flee','crit'])if(d[k])e[k]=d[k];if(d.def)e.def=Math.round(d.def*r);if(d.matk&&!d.wt)e.matk=Math.round(d.matk*r);if(d.race&&!hk)e.race=d.race;add(e);const H=hk&&b.hand[hk];const addH=x=>{for(const k in x){if(k==='race'||k==='size')for(const r2 in x[k])H[k][r2]=(H[k][r2]||0)+x[k][r2];else if(k==='atk')H.atk+=x[k];else if(k==='wEl')H.wEl=x[k];else add({[k]:x[k]})}};
+  const e={};for(const k of['str','agi','vit','int','dex','luk','hp','sp','flee','crit'])if(d[k])e[k]=d[k];if(d.def||(!d.wt&&it.ref))e.def=(d.def||0)+(d.wt?0:(it.ref||0));if(d.matk&&!d.wt)e.matk=d.matk;if(d.race&&!hk)e.race=d.race;add(e);const H=hk&&b.hand[hk];const addH=x=>{for(const k in x){if(k==='race'||k==='size')for(const r2 in x[k])H[k][r2]=(H[k][r2]||0)+x[k][r2];else if(k==='atk')H.atk+=x[k];else if(k==='wEl')H.wEl=x[k];else add({[k]:x[k]})}};
   if(H&&d.race)addH({race:d.race});(it.cards||[]).forEach(c=>H?addH(CARDS[c][3]):add(CARDS[c][3]))}
  if(S.spouse)add({expP:5,hpP:5});if(monthOn())add({expP:20,drop:20});
  if(RT.buff.adren)add({aspdP:30});if(RT.buff.song)add({aspdP:15,crit:10});if(RT.buff.edp)add({atkP:50});
@@ -366,8 +383,9 @@ function stats(){const b=bonus(),J=JOBS[S.job],g=guildB(),s={};const all=g.all+(
  // Renewal Status ATK：近戰 BaseLv/4+STR+DEX/5+LUK/3；遠程 BaseLv/4+DEX+STR/5+LUK/3
  const statusAtk=Math.floor(L/4)+(ranged?s.dex+Math.floor(s.str/5):s.str+Math.floor(s.dex/5))+Math.floor(s.luk/3);
  // Renewal 武器 ATK：武器攻擊×(1+STR/200)（遠程用 DEX），精煉每級 +10%（簡化）
- const wBase=wd?wd.atk*(1+.1*(W.ref||0)):0,wAtk=Math.round(wBase*(1+(ranged?s.dex:s.str)/200));
- const atk=statusAtk*2+wAtk+(b.atk||0)+b.hand.R.atk;const wAtkL=dual?Math.round(ld.atk*(1+.1*(LH.ref||0))*(1+s.str/200)):0;
+ // Renewal 精煉：武器Lv1~4 每 +1 ATK +2/+3/+5/+7（不受 STR 加成）；超過安全值另有隨機過精傷害
+ const refA=wd?refAtk(wd,W.ref):0,overR=wd?refOver(wd,W.ref):0,wAtk=wd?Math.round(wd.atk*(1+(ranged?s.dex:s.str)/200))+refA:0;
+ const atk=statusAtk*2+wAtk+(b.atk||0)+b.hand.R.atk;const wAtkL=dual?Math.round(ld.atk*(1+s.str/200))+refAtk(ld,LH.ref):0,overL=dual?refOver(ld,LH.ref):0;
  const mR=dual?Math.min(100,50+10*slv('rhmast')):100,mL=dual?Math.min(80,30+10*slv('lhmast')):0;
  // Renewal Status MATK：BaseLv/4+INT+INT/2+DEX/5+LUK/3；武器 MATK 另加
  const statusMatk=Math.floor(L/4)+s.int+Math.floor(s.int/2)+Math.floor(s.dex/5)+Math.floor(s.luk/3);
@@ -386,7 +404,7 @@ function stats(){const b=bonus(),J=JOBS[S.job],g=guildB(),s={};const all=g.all+(
  // Renewal 詠唱：變動 80%×(1−√((DEX×2+INT)/530))（≥530 時為 0）＋固定 20%（只受裝備詠唱%影響）
  const vcF=Math.max(0,1-Math.sqrt(Math.min(530,s.dex*2+s.int)/530)),castV=.8*vcF*(1+(b.castP||0)/100),castFix=.2*(1+Math.min(0,b.castP||0)/200),castM=Math.max(0,castV+castFix);
  const pb=partyB();
- return{s,b,wt,wd,dual,wtL,ld,wAtkL,mR,mL,hasSh,wElL:(b.hand.L.wEl)||(ld&&ld.wEl)||'中性',ranged,mhp,msp,statusAtk,statusMatk,vmdef,castV,castFix,wAtk,atk,batk:b.atk||0,atkP:b.atkP||0,matk,def,vdef,mdef,hit,flee,crit,pdodge,aspd,aps,castM,
+ return{s,b,wt,wd,refA,overR,overL,dual,wtL,ld,wAtkL,mR,mL,hasSh,wElL:(b.hand.L.wEl)||(ld&&ld.wEl)||'中性',ranged,mhp,msp,statusAtk,statusMatk,vmdef,castV,castFix,wAtk,atk,batk:b.atk||0,atkP:b.atkP||0,matk,def,vdef,mdef,hit,flee,crit,pdodge,aspd,aps,castM,
   wEl:b.hand.R.wEl||b.wEl||(wd&&wd.wEl)||'中性',armEl:b.armEl||'中性',expP:(b.expP||0)+g.expP+pb.expP,drop:(b.drop||0)+g.drop+pb.drop,spcost:b.spcost||0}}
 const statCost=v=>Math.floor((v-1)/10)+2;const lvPts=l=>Math.floor(l/5)+3;
 const needExp=l=>Math.floor((20*Math.pow(l,1.8)+10)*(S&&S.trans?1.25:1));
@@ -408,10 +426,10 @@ function physHit(m,mul,o={}){const t=stats();const L=o.hand==='L',H=t.b.hand[L?'
  const crit=(o.canCrit!==false)&&Math.random()*100<critRate(t,m);
  if(!crit&&!o.sure&&Math.random()*100>hitRate(t,m))return{miss:1,d:0};
  // Renewal：(StatusATK×2 + 武器ATK×體型 + 裝備ATK)×ATK%×種族/體型×屬性；暴擊×1.4（Renewal 暴擊不無視防禦）
- let d=(t.statusAtk*2+((L?t.wAtkL:t.wAtk)*(.95+Math.random()*.1))*sz+t.batk+H.atk)*(1+t.atkP/100)*(1+((t.b.race[m.race]||0)+(H.race[m.race]||0))/100)*(1+((t.b.size[m.size]||0)+(H.size[m.size]||0))/100)*emul(el,m.el)*mul*(t.dual?(L?t.mL:t.mR)/100:1);
+ const ov=L?t.overL:t.overR;let d=(t.statusAtk*2+((L?t.wAtkL:t.wAtk)*(.95+Math.random()*.1)+(ov?1+Math.floor(Math.random()*ov):0))*sz+t.batk+H.atk)*(1+t.atkP/100)*(1+((t.b.race[m.race]||0)+(H.race[m.race]||0))/100)*(1+((t.b.size[m.size]||0)+(H.size[m.size]||0))/100)*emul(el,m.el)*mul*(t.dual?(L?t.mL:t.mR)/100:1);
  if(crit)d*=1.4;if(!o.ignoreDef)d=d*hardDef(m.def)-Math.floor(m.lv/2);
  d=emul(el,m.el)===0?0:Math.max(1,Math.floor(d));return{d,crit,el,hand:o.hand}}
-function magHit(m,mul,el){const t=stats();const W=getEq('weapon'),wd=W?ITEMS[W.id]:null;const wm=wd&&wd.matk?wd.matk*(1+.1*(W.ref||0))*(.9+Math.random()*.2):0;
+function magHit(m,mul,el){const t=stats();const W=getEq('weapon'),wd=W?ITEMS[W.id]:null;const wm=wd&&wd.matk?(wd.matk+refAtk(wd,W.ref))*(.9+Math.random()*.2):0;
  // Renewal：(StatusMATK + 武器MATK±變動)×MATK%×倍率×屬性×硬MDEF − 軟MDEF
  const d=((t.matk+wm)*mul*emul(el,m.el))*hardMdef(m.def*.5)-Math.floor(m.lv/4);return{d:emul(el,m.el)===0?0:Math.max(1,Math.floor(d)),el}}
 function dealDmg(d,src){if(!mob||!d)return;mob.hp-=d;const t=stats();if(src!=='merc'&&t.b.vamp[0]&&Math.random()*100<t.b.vamp[0]){const h=Math.floor(d*t.b.vamp[1]/100);if(h>0){S.hp=Math.min(t.mhp,S.hp+h);num(h,'h')}}
@@ -480,7 +498,7 @@ function kill(){const m=mob;if(!m)return;mob=null;RT.cast=null;hideCast();RT.dot
  const dm=(1+t.drop/100)*(['thief','assassin','rogue'].includes(S.job)?1.3:1)*S.rate.drop;
  if(m.boss||Math.random()<.05*dm){const pool=DROPS[S.map];const id=m.boss&&Math.random()<.5?BOSSDROP[S.map]:pool[Math.floor(Math.random()*pool.length)];addItem(id);log(`🎁 掉落 ${ITEMS[id].ic}${ITEMS[id].n}`,'r2')}
  if(Math.random()<(m.boss?.5:.008*dm)){S.cards[m.card]=(S.cards[m.card]||0)+1;S.seen[m.card]=1;log(`🃏 獲得【${CARDS[m.card][0]}】！`,'r3')}
- if(Math.random()<.004*dm){const sc=['c_crab','c_frog','c_turtle'][Math.floor(Math.random()*3)];S.cards[sc]=(S.cards[sc]||0)+1;S.seen[sc]=1;log(`🃏 獲得【${CARDS[sc][0]}】！`,'r3')}if(Math.random()<.08*dm)addItem('ore');if(Math.random()<.12)addItem('pot');
+ if(Math.random()<.004*dm){const sc=['c_crab','c_frog','c_turtle'][Math.floor(Math.random()*3)];S.cards[sc]=(S.cards[sc]||0)+1;S.seen[sc]=1;log(`🃏 獲得【${CARDS[sc][0]}】！`,'r3')}if(Math.random()<.08*dm)addItem(['ore1','ore1','ore2','eore','ore'][Math.floor(Math.random()*5)]);if(Math.random()<.12)addItem('pot');
  if(m.boss){const dd=5+Math.floor(Math.random()*11);S.dia+=dd;log(`💎 MVP 獎勵 鑽石 +${dd}`,'r4');S.bossKills[S.map]++;if(S.unlocked<=S.map+1&&S.map+1<MAPS.length){S.unlocked=S.map+2;log(`🗺️ 新地圖解鎖：${MAPS[S.map+1].n}`,'r4')}}
  log(`⚔️ 擊敗 ${m.n}，Base+${Math.floor(m.exp*em)} Job+${Math.floor(m.exp*.7*em)} 💰+${m.gold}`);
  if(S.total.kills%10===0)save()}
@@ -494,7 +512,9 @@ function offline(){const sec=Math.min(8*3600,(Date.now()-(S.last||Date.now()))/1
  const res={sec,kills,exp:Math.floor(Math.min(ex*kills*em*.5,needExp(S.lv)*1.5)),jexp:Math.floor(Math.min(ex*.7*kills*em*.5,needJob(S.jlv)*1.5)),gold:Math.floor(g*kills*.5),ore:Math.floor(kills/300),pot:Math.floor(kills/60)};
  const lv0=S.lv,j0=S.jlv;gainExp(res.exp);gainJob(res.jexp);S.gold+=res.gold;if(res.ore)addItem('ore',res.ore);if(res.pot)addItem('pot',res.pot);
  S.kills[S.map]=Math.min(999,S.kills[S.map]+kills);S.total.kills+=kills;if(S.guild){S.guild.exp+=kills;guildLv()}res.lvup=S.lv-lv0;res.jlvup=S.jlv-j0;return res}
-function chibi(job,wt,sex,cos,lh){const L=JOBS[job].look,skin='#ffe3cc',c=L.c,h=L.h;sex=sex||'M';cos=cos||{};
+let GLID=0;function wGlow(svg,r){const c=glowCls(r);if(!c)return svg;const id='wg'+(++GLID),sd={gl1:1.5,gl2:3,gl3:3.5,gl4:5}[c],col={gl1:'#fff59d',gl2:'#ffd54f',gl3:'#80d8ff',gl4:'#ff80ff'}[c];
+ return `<defs><filter id="${id}" x="-80%" y="-80%" width="260%" height="260%"><feDropShadow dx="0" dy="0" stdDeviation="${sd}" flood-color="${col}" flood-opacity="1">${c==='gl4'?`<animate attributeName="stdDeviation" values="3;7;3" dur="1s" repeatCount="indefinite"/>`:''}</feDropShadow>${c!=='gl1'?`<feDropShadow dx="0" dy="0" stdDeviation="${sd/2}" flood-color="#fff"/>`:''}</filter></defs><g filter="url(#${id})" class="${c}">${svg}</g>`+(c==='gl3'||c==='gl4'?[0,1,2,3,4].map(i=>`<circle cx="${64+i*5}" cy="${40+i*11}" r="${c==='gl4'?2.2:1.6}" fill="${i%2?'#fff':col}"><animate attributeName="cy" values="${86-i*8};${30-i*4}" dur="${1+i*.2}s" repeatCount="indefinite"/><animate attributeName="opacity" values="1;0" dur="${1+i*.2}s" repeatCount="indefinite"/></circle>`).join(''):'')}
+function chibi(job,wt,sex,cos,lh,rR,rL){const L=JOBS[job].look,skin='#ffe3cc',c=L.c,h=L.h;sex=sex||'M';cos=cos||{};
  const W0={sword:'<rect x="69" y="38" width="7" height="48" rx="2" fill="#e3ecf7" stroke="#7d8da3"/><rect x="63" y="84" width="19" height="5" rx="2" fill="#d4a63a"/><rect x="70.5" y="88" width="4" height="10" fill="#7a4b2a"/>',
   dagger:'<path d="M70 62 L76 62 L73 50Z" fill="#e3ecf7"/><rect x="70" y="60" width="6" height="26" rx="2" fill="#e3ecf7" stroke="#7d8da3"/><rect x="66" y="84" width="14" height="4" fill="#d4a63a"/>',
   katar:'<path d="M72 82 L106 80 L72 70Z" fill="#dfe6ee" stroke="#6d7b8c"/><rect x="66" y="70" width="8" height="18" rx="2" fill="#5b3f7a"/>',
@@ -502,8 +522,8 @@ function chibi(job,wt,sex,cos,lh){const L=JOBS[job].look,skin='#ffe3cc',c=L.c,h=
   staff:'<line x1="73" y1="36" x2="73" y2="108" stroke="#8b5a2b" stroke-width="5" stroke-linecap="round"/><circle cx="73" cy="33" r="8" fill="#7fd3ff" stroke="#fff" stroke-width="2"/>',
   mace:'<rect x="70.5" y="56" width="5" height="40" fill="#8b5a2b"/><circle cx="73" cy="54" r="10" fill="#c9a24a" stroke="#7a5a1a"/><circle cx="73" cy="54" r="4" fill="#fff6"/>',
   axe:'<rect x="70.5" y="44" width="5" height="52" fill="#8b5a2b"/><path d="M75 46 Q96 50 92 70 Q84 60 75 62Z" fill="#cfd8dc" stroke="#78909c"/>',
-  knuckle:'<rect x="64" y="82" width="16" height="12" rx="4" fill="#b0bec5" stroke="#546e7a"/><circle cx="67" cy="82" r="2" fill="#eceff1"/><circle cx="72" cy="81" r="2" fill="#eceff1"/><circle cx="77" cy="82" r="2" fill="#eceff1"/>',tsword:'<rect x="68" y="18" width="9" height="68" rx="2" fill="#e3ecf7" stroke="#7d8da3"/><rect x="60" y="84" width="25" height="6" rx="2" fill="#d4a63a"/><rect x="70" y="89" width="5" height="14" fill="#7a4b2a"/>',taxe:'<rect x="70" y="30" width="6" height="72" fill="#8b5a2b"/><path d="M76 32 Q104 36 100 64 Q88 52 76 56Z M70 32 Q48 36 52 60 Q62 50 70 54Z" fill="#cfd8dc" stroke="#78909c"/>',tstaff:'<line x1="73" y1="22" x2="73" y2="112" stroke="#6b4423" stroke-width="6" stroke-linecap="round"/><circle cx="73" cy="20" r="10" fill="#ce93d8" stroke="#fff" stroke-width="2"/>',spear:'<line x1="73" y1="30" x2="73" y2="106" stroke="#8b5a2b" stroke-width="4"/><path d="M73 14 L79 32 L67 32Z" fill="#e3ecf7" stroke="#7d8da3"/>',tspear:'<line x1="73" y1="18" x2="73" y2="114" stroke="#5d4037" stroke-width="5"/><path d="M73 0 L81 22 L65 22Z" fill="#e3ecf7" stroke="#7d8da3"/><rect x="66" y="22" width="14" height="4" fill="#d4a63a"/>',inst:'<ellipse cx="78" cy="84" rx="10" ry="12" fill="#c68642" stroke="#7a4b2a"/><rect x="76" y="50" width="4" height="26" fill="#7a4b2a"/><circle cx="78" cy="84" r="3" fill="#3e2723"/>',whip:'<rect x="70" y="80" width="5" height="14" fill="#7a4b2a"/><path d="M72 80 Q96 60 86 40 Q78 30 92 20" stroke="#a1887f" stroke-width="3" fill="none"/>',book:'<rect x="64" y="72" width="20" height="24" rx="2" fill="#8e24aa" stroke="#4a148c"/><rect x="67" y="75" width="14" height="18" fill="#f3e5f5"/>',fist:''};const WS=W0;const W=WS[wt]||'';
- const LHS=lh==='shield'?'<g><ellipse cx="26" cy="84" rx="13" ry="16" fill="#90a4ae" stroke="#455a64" stroke-width="2"/><path d="M26 72 L26 96 M16 84 L36 84" stroke="#ffd54f" stroke-width="3"/></g>':lh&&WS[lh]?`<g transform="translate(100,0) scale(-1,1)">${WS[lh]}</g><circle cx="28" cy="90" r="5.5" fill="#ffe3cc"/>`:'';
+  knuckle:'<rect x="64" y="82" width="16" height="12" rx="4" fill="#b0bec5" stroke="#546e7a"/><circle cx="67" cy="82" r="2" fill="#eceff1"/><circle cx="72" cy="81" r="2" fill="#eceff1"/><circle cx="77" cy="82" r="2" fill="#eceff1"/>',tsword:'<rect x="68" y="18" width="9" height="68" rx="2" fill="#e3ecf7" stroke="#7d8da3"/><rect x="60" y="84" width="25" height="6" rx="2" fill="#d4a63a"/><rect x="70" y="89" width="5" height="14" fill="#7a4b2a"/>',taxe:'<rect x="70" y="30" width="6" height="72" fill="#8b5a2b"/><path d="M76 32 Q104 36 100 64 Q88 52 76 56Z M70 32 Q48 36 52 60 Q62 50 70 54Z" fill="#cfd8dc" stroke="#78909c"/>',tstaff:'<line x1="73" y1="22" x2="73" y2="112" stroke="#6b4423" stroke-width="6" stroke-linecap="round"/><circle cx="73" cy="20" r="10" fill="#ce93d8" stroke="#fff" stroke-width="2"/>',spear:'<line x1="73" y1="30" x2="73" y2="106" stroke="#8b5a2b" stroke-width="4"/><path d="M73 14 L79 32 L67 32Z" fill="#e3ecf7" stroke="#7d8da3"/>',tspear:'<line x1="73" y1="18" x2="73" y2="114" stroke="#5d4037" stroke-width="5"/><path d="M73 0 L81 22 L65 22Z" fill="#e3ecf7" stroke="#7d8da3"/><rect x="66" y="22" width="14" height="4" fill="#d4a63a"/>',inst:'<ellipse cx="78" cy="84" rx="10" ry="12" fill="#c68642" stroke="#7a4b2a"/><rect x="76" y="50" width="4" height="26" fill="#7a4b2a"/><circle cx="78" cy="84" r="3" fill="#3e2723"/>',whip:'<rect x="70" y="80" width="5" height="14" fill="#7a4b2a"/><path d="M72 80 Q96 60 86 40 Q78 30 92 20" stroke="#a1887f" stroke-width="3" fill="none"/>',book:'<rect x="64" y="72" width="20" height="24" rx="2" fill="#8e24aa" stroke="#4a148c"/><rect x="67" y="75" width="14" height="18" fill="#f3e5f5"/>',fist:''};const WS=W0;const W=wGlow(WS[wt]||'',rR||0);
+ const LHS=lh==='shield'?'<g><ellipse cx="26" cy="84" rx="13" ry="16" fill="#90a4ae" stroke="#455a64" stroke-width="2"/><path d="M26 72 L26 96 M16 84 L36 84" stroke="#ffd54f" stroke-width="3"/></g>':lh&&WS[lh]?`<g transform="translate(100,0) scale(-1,1)">${wGlow(WS[lh],rL||0)}</g><circle cx="28" cy="90" r="5.5" fill="#ffe3cc"/>`:'';
  const hats={nov:`<path d="M48 22 Q56 10 60 16" stroke="${h}" stroke-width="3" fill="none"/>`,
   sword:'<path d="M25 40 Q50 14 75 40 L75 45 L25 45Z" fill="#b8c4d6" stroke="#7d8da3"/><path d="M50 18 Q60 4 70 10" stroke="#e53935" stroke-width="5" fill="none"/>',
   knight:'<path d="M23 44 Q50 8 77 44 L77 48 L23 48Z" fill="#90a4c4" stroke="#455a7a"/><path d="M30 26 L22 12 L36 22Z M70 26 L78 12 L64 22Z" fill="#ffd54f"/>',
@@ -618,7 +638,7 @@ let pDown=0;
 const fmt=n=>Math.floor(n).toLocaleString();
 const etag=e=>`<span class="tag" style="background:${ELC[e]}">${e}</span>`;
 let lastJob='',lastWt='',lastParty=null;
-function drawActors(){const t=stats();const lk=t.wt+'|'+(t.wtL||(t.hasSh?'shield':''));if(lastJob!==S.job||lastWt!==lk){$('pl').innerHTML=chibi(S.job,t.wt,S.sex,S.cos,t.wtL||(t.hasSh?'shield':''));lastJob=S.job;lastWt=lk}
+function drawActors(){const t=stats();const rR=(getEq('weapon')||{}).ref||0,rL=(getEq('shield')||{}).ref||0;const lk=t.wt+'|'+(t.wtL||(t.hasSh?'shield':''))+'|'+rR+'|'+rL;if(lastJob!==S.job||lastWt!==lk){$('pl').innerHTML=chibi(S.job,t.wt,S.sex,S.cos,t.wtL||(t.hasSh?'shield':''),rR,rL);lastJob=S.job;lastWt=lk}
  const pk=S.party.join();if(pk!==lastParty){lastParty=pk;$('mercs').innerHTML=S.party.map((k,i)=>{const M=MERCS[k];return `<div class="merc" id="merc${i}" style="left:${[3,30,-1][i]}%;bottom:${[64,96,8][i]}px">${chibi(M.job,JWT[M.job])}</div>`}).join('')}}
 function render(){const t=stats(),J=JOBS[S.job],M=MAPS[S.map];drawActors();
  $('nm').textContent=`${S.name}`;$('jb').textContent=`${jn()} B${S.lv}/J${S.jlv}`;$('dia').textContent=fmt(S.dia);$('mcard').textContent=monthOn()?`🎫${monthDays()}天`:'';$('gold').textContent=fmt(S.gold);$('gtag').textContent=S.guild?`${S.guild.emblem}${S.guild.name}`:'';
@@ -641,7 +661,7 @@ function panelChar(){const t=stats();const m=mob||{lv:1,flee:113,hit:136};
  <label class="small"><input type="checkbox" ${S.autoStat?'checked':''} onchange="S.autoStat=this.checked;if(S.autoStat)autoAlloc();render();panel()"> 自動配點（${Object.entries(jobAuto(S.job)).map(([k,v])=>k.toUpperCase()+':'+v).join(' ')}）</label>
  <div class="grid" style="margin-top:6px">${Object.keys(STATN).map(k=>`<div class="stat"><span>${STATN[k]} <b>${S.st[k]}</b>${t.s[k]>S.st[k]?`<span class="small">+${t.s[k]-S.st[k]}</span>`:''}</span><span><button ${S.pts<statCost(S.st[k])||S.st[k]>=99?'disabled':''} onclick="addSt('${k}',1)">+1</button> <button class="alt" ${S.pts<statCost(S.st[k])||S.st[k]>=99?'disabled':''} onclick="addSt('${k}',5)">+5</button><span class="small"> 需${statCost(S.st[k])}</span></span></div>`).join('')}</div>
  <div class="grid small" style="margin-top:8px">
- <div>⚔️ ATK ${t.statusAtk*2} + ${t.wAtk}${t.batk?'+'+t.batk:''}</div><div>🔮 MATK ${t.matk}${t.wd&&t.wd.matk?' + '+Math.round(t.wd.matk*(1+.1*((getEq('weapon')||{}).ref||0))):''}</div>
+ <div>⚔️ ATK ${t.statusAtk*2} + ${t.wAtk+t.batk+t.b.hand.R.atk}${t.refA?`<span class="small">（含精煉+${t.refA}${t.overR?`，過精 1~${t.overR}`:''}）</span>`:''}${t.dual?`<br><span class="small">左手 + ${t.wAtkL}</span>`:''}</div><div>🔮 MATK ${t.matk}${t.wd&&t.wd.matk?' + '+(t.wd.matk+refAtk(t.wd,(getEq('weapon')||{}).ref)):''}</div>
  <div>🛡️ DEF ${t.def} + ${t.vdef}（減傷 ${(100-hardDef(t.def)*100).toFixed(1)}%）</div><div>✨ MDEF ${t.mdef} + ${t.vmdef}</div>
  <div>🎯 HIT ${t.hit}（命中 ${hitRate(t,m).toFixed(0)}%）</div><div>💨 FLEE ${t.flee}（迴避 ${evadeRate(t,m).toFixed(0)}%）</div>
  <div>💥 CRIT ${t.crit.toFixed(1)}${t.wt==='katar'?'（拳刃×2）':''}</div><div>🍀 完全迴避 ${t.pdodge.toFixed(1)}%</div>
@@ -691,10 +711,10 @@ function donate(n){if(!S.guild||S.gold<n)return;S.gold-=n;S.guild.exp+=n/10;S.gu
 function gskUp(k){const g=S.guild;if(!g||g.pts<1||g.sk[k]>=GSK[k].max)return;g.pts--;g.sk[k]++;save();render();panel()}
 function leaveGuild(){S.guild=null;render();panel()}
 const isEq=it=>it.uid&&Object.values(S.eq).includes(it.uid);
-function eqDesc(it){const d=ITEMS[it.id],r=1+.1*(it.ref||0);const o=[];if(d.wt)o.push(WT[d.wt].n+(WT[d.wt].h===2?'（雙手）':''));if(d.atk)o.push('ATK '+Math.round(d.atk*r));if(d.matk)o.push('MATK '+Math.round(d.matk*(d.wt?1:r)));if(d.def)o.push('DEF '+Math.round(d.def*r));
+function eqDesc(it){const d=ITEMS[it.id],rf=it.ref||0;const o=[];if(d.wt)o.push(`<b>武器Lv${wlv(d)}</b> `+WT[d.wt].n+(WT[d.wt].h===2?'（雙手）':''));if(d.atk)o.push('ATK '+d.atk+(rf&&d.wt?`<span class="r3">+${refAtk(d,rf)}</span>`:''));if(d.matk)o.push('MATK '+d.matk+(rf&&d.wt?`<span class="r3">+${refAtk(d,rf)}</span>`:''));if(!d.wt&&(d.def||rf))o.push('DEF '+(d.def||0)+(rf?`<span class="r3">+${rf}</span>`:''));if(rf&&refOver(d,rf))o.push(`<span class="r2">過精 1~${refOver(d,rf)}</span>`);
  for(const k of['hp','sp','str','agi','vit','int','dex','luk','flee','crit'])if(d[k])o.push(BN[k]+'+'+d[k]);if(d.wEl)o.push(etag(d.wEl)+'屬性');if(d.race)o.push(fxText({race:d.race}));
  const sl=[];for(let i=0;i<(d.slots||0);i++)sl.push(it.cards&&it.cards[i]?'🃏'+CARDS[it.cards[i]][0]:'⬜');return o.join(' ')+(d.slots?`<br>插槽 ${sl.join(' ')}`:'')}
-function itemLine(it,btns,pre){const d=ITEMS[it.id];return `<div class="it"><span class="ic">${d.ic}</span><div class="sp r${d.r||1}">${pre||''}<b>${it.ref?'+'+it.ref+' ':''}${d.n}${d.slots?`[${d.slots}]`:''}</b>${d.t!=='eq'?' ×'+it.q:` <span class="small">[${d.wt?WT[d.wt].n+(WT[d.wt].h===2?'·雙手':'·單手'):SLOTL[d.slot]}]</span>`}<div class="small">${d.t==='eq'?eqDesc(it):d.desc}</div></div>${btns}</div>`}
+function itemLine(it,btns,pre){const d=ITEMS[it.id];return `<div class="it"><span class="ic ${glowCls(it.ref||0)}">${d.ic}</span><div class="sp r${d.r||1}">${pre||''}<b>${it.ref?'+'+it.ref+' ':''}${d.n}${d.slots?` [${d.slots}]`:''}</b>${d.t!=='eq'?' ×'+it.q:` <span class="small">[${d.wt?WT[d.wt].n+(WT[d.wt].h===2?'·雙手':'·單手'):SLOTL[d.slot]}]</span>`}<div class="small">${d.t==='eq'?eqDesc(it):d.desc}</div></div>${btns}</div>`}
 function panelBag(){const t=stats(),rw=getEq('weapon'),two=rw&&WT[ITEMS[rw.id].wt].h===2;const eqs=Object.keys(SLOTN).map(s=>{const it=getEq(s);const lab=`<span class="tag" style="background:${s==='weapon'?'#e57373':s==='shield'?'#64b5f6':'#bdbdbd'}">${SLOTN[s]}${s==='shield'&&it?(ITEMS[it.id].wt?'·副手':'·盾'):''}</span> `;return it?itemLine(it,`<button class="g" onclick="unequip('${s}')">卸下</button>`,lab):`<div class="it small"><span class="ic">⬜</span>${lab}${s==='shield'&&two?'（雙手武器佔用）':'未裝備'}</div>`}).join('');
  const info=`<p class="small">可用武器：${(WPN[S.job]||[]).map(w=>WT[w].n+(WT[w].h===2?'(雙手)':'')).join('、')}｜盾牌：${canShield()?'可':'不可'}${DUALJ.includes(S.job)?'｜可二刀流（左手：短劍/單手劍/單手斧）':''}${t.dual?`<br>⚔️ 二刀流中：右手 ${t.mR}%／左手 ${t.mL}%（右手修練 Lv${slv('rhmast')}・左手修練 Lv${slv('lhmast')}），ASPD ${t.aspd.toFixed(1)}`:''}${t.hasSh?`<br>🛡️ 裝備盾牌：ASPD −${SHIELD_ASPD}`:''}</p>`;
  const rest=S.inv.filter(i=>!isEq(i)).map(it=>{const d=ITEMS[it.id],i=S.inv.indexOf(it);let b='';if(d.t==='eq'){const e=eqOk(d,false),dl=d.wt&&!eqOk(d,true);b=(e?`<span class="small" style="color:#e53935">${e}</span> `:`<button onclick="equip(${i})">${d.wt?'右手':'裝備'}</button> `)+(dl?`<button class="alt" onclick="equip(${i},true)">左手</button> `:'')+`<button class="g" onclick="sell(${i})">賣</button>`}else if(d.t==='use')b=`<button onclick="useItem(${i})">使用</button>`;else b=`<button class="g" onclick="sell(${i})">賣</button>`;return itemLine(it,b)}).join('');
@@ -746,19 +766,22 @@ function wearCos(k){const sl=COS[k].slot;S.cos[sl]=S.cos[sl]===k?null:k;lastJob=
 function claimDaily(){const today=new Date().toDateString();if(!monthOn()||S.month.claimed===today)return false;S.month.claimed=today;S.gold+=20000;S.dia+=30;log('🎫 月卡每日獎勵：💰20,000＋💎30','r4');save();render();panel();return true}
 const refCost=r=>({gold:200*(r+1)*(r+1),ore:1+Math.floor(r/3)});
 let refOpt={hi:false,ab:false,pr:false};const qty=id=>(S.inv.find(i=>i.id===id)||{q:0}).q;
-function panelRef(){const eqs=S.inv.filter(i=>ITEMS[i.id].t==='eq');const ore=qty('ore');
- P(`<h3>🔨 精煉 <span class="small">💎礦石 ${ore}　💠高級 ${qty('hiore')}　🛡️防爆 ${qty('antibreak')}　🔰保護 ${qty('protect')}</span></h3>
- <p class="small">每 +1 基礎 ATK/DEF +10%。+5 起可能失敗：+5、+6 失敗 -1；挑戰 +7 以上失敗會<b>損壞消失</b>（防爆券改為 -1，保護券完全不掉）。</p>
- <div class="row small"><label><input type="checkbox" ${refOpt.hi?'checked':''} onchange="refOpt.hi=this.checked;panel()"> 用高級鋼石(+20%)</label><label><input type="checkbox" ${refOpt.ab?'checked':''} onchange="refOpt.ab=this.checked;panel()"> 用防爆券</label><label><input type="checkbox" ${refOpt.pr?'checked':''} onchange="refOpt.pr=this.checked;panel()"> 用保護券</label></div>`+(eqs.map(it=>{const r=it.ref||0;if(r>=10)return itemLine(it,'<span class="small">已滿</span>');const c=refCost(r);const rate=Math.min(1,REF_RATE[r]+(refOpt.hi&&qty('hiore')?.2:0));return itemLine(it,`<div class="small" style="text-align:right">成功率 ${Math.round(rate*100)}%${r>=6?'<br><span class="r1">⚠️失敗會損壞</span>':''}<br>💰${fmt(c.gold)} 💎${c.ore}<br><button ${S.gold<c.gold||ore<c.ore?'disabled':''} onclick="refine(${S.inv.indexOf(it)})">精煉</button></div>`)}).join('')||'<p class="small">沒有裝備</p>'))}
+function panelRef(){const eqs=S.inv.filter(i=>ITEMS[i.id].t==='eq');
+ P(`<h3>🔨 精煉（Renewal）</h3><div class="small">🪨Lv1 ${qty('ore1')}　🔷Lv2 ${qty('ore2')}　💎Lv3/4 ${qty('ore')}　🔶防具 ${qty('eore')}　💠高級 ${qty('hiore')}　🛡️防爆 ${qty('antibreak')}　🔰保護 ${qty('protect')}</div>
+ <p class="small">武器 Lv1~4 每 +1 ATK +2/+3/+5/+7，安全上限 +7/+6/+5/+4，超過安全值有隨機過精傷害；防具每 +1 DEF +1，安全 +4。安全值內必成功；超過安全值失敗會<b>損壞</b>（防爆券改為 -1、保護券不變）。上限 +10。</p>
+ <div class="row small"><label><input type="checkbox" ${refOpt.hi?'checked':''} onchange="refOpt.hi=this.checked;panel()"> 用高級鋼石取代礦石</label><label><input type="checkbox" ${refOpt.ab?'checked':''} onchange="refOpt.ab=this.checked;panel()"> 用防爆券</label><label><input type="checkbox" ${refOpt.pr?'checked':''} onchange="refOpt.pr=this.checked;panel()"> 用保護券</label></div>`+(eqs.map(it=>{const d=ITEMS[it.id],r=it.ref||0,k=refKey(d);if(r>=10)return itemLine(it,'<span class="small">已滿 +10</span>');const hi=refOpt.hi&&qty('hiore')>0,ore=hi?'hiore':REF_ORE[k],rate=refRate(d,r,hi),g=REF_GOLD[k],safe=r<REF_SAFE[k];
+  return itemLine(it,`<div class="small" style="text-align:right">${d.wt?'武器Lv'+k:'防具'}・安全+${REF_SAFE[k]}<br>成功率 ${Math.round(rate*100)}%${safe?'':'<br><span class="r1">⚠️失敗會損壞</span>'}<br>💰${fmt(g)} ${ITEMS[ore].ic}${ITEMS[ore].n}×1<br><button ${S.gold<g||qty(ore)<1?'disabled':''} onclick="refine(${S.inv.indexOf(it)})">精煉</button></div>`)}).join('')||'<p class="small">沒有裝備</p>'))}
 function useQ(id){const o=S.inv.find(x=>x.id===id);if(!o)return false;o.q--;if(!o.q)S.inv.splice(S.inv.indexOf(o),1);return true}
-function refine(i,opt){if(opt)refOpt=Object.assign({hi:false,ab:false,pr:false},opt);const it=S.inv[i];if(!it||ITEMS[it.id].t!=='eq')return null;const r=it.ref||0,c=refCost(r);if(r>=10||S.gold<c.gold||qty('ore')<c.ore)return null;
- S.gold-=c.gold;for(let k=0;k<c.ore;k++)useQ('ore');let rate=REF_RATE[r];if(refOpt.hi&&useQ('hiore'))rate+=.2;
- const pr=refOpt.pr&&r>=4&&useQ('protect'),ab=!pr&&refOpt.ab&&r>=6&&useQ('antibreak');let res;
- if(Math.random()<rate){it.ref=r+1;res='ok';log(`🔨✨ 精煉成功！${ITEMS[it.id].n} +${it.ref}`,'r4')}
- else if(pr){res='protect';log(`🔨🔰 精煉失敗，保護券生效，維持 +${r}`,'r2')}
- else if(r>=6&&!ab){res='break';for(const s in S.eq)if(S.eq[s]===it.uid)S.eq[s]=null;S.inv.splice(i,1);log(`🔨💥 精煉失敗… ${ITEMS[it.id].n} 損壞了！`,'r1')}
- else{it.ref=Math.max(0,r-1);res='down';log(`🔨💔 精煉失敗… ${ITEMS[it.id].n} 降為 +${it.ref}${ab?'（防爆券生效）':''}`,'r1')}
- save();render();panel();return res}
+function refine(i,opt){if(opt)refOpt=Object.assign({hi:false,ab:false,pr:false},opt);const it=S.inv[i];if(!it||ITEMS[it.id].t!=='eq')return null;const d=ITEMS[it.id],r=it.ref||0,k=refKey(d);
+ const hi=refOpt.hi&&qty('hiore')>0,ore=hi?'hiore':REF_ORE[k],g=REF_GOLD[k];if(r>=10||S.gold<g||qty(ore)<1)return null;
+ S.gold-=g;useQ(ore);const rate=refRate(d,r,hi),safe=r<REF_SAFE[k];
+ const pr=!safe&&refOpt.pr&&useQ('protect'),ab=!safe&&!pr&&refOpt.ab&&useQ('antibreak');let res;
+ if(safe||Math.random()<rate){it.ref=r+1;res='ok';log(`🔨✨ 精煉成功！+${it.ref} ${d.n}`,'r4')}
+ else if(pr){res='protect';log(`🔨🔰 精煉失敗，保護券生效，維持 +${r} ${d.n}`,'r2')}
+ else if(ab){it.ref=r-1;res='down';log(`🔨💔 精煉失敗，防爆券生效，降為 +${it.ref} ${d.n}`,'r1')}
+ else{res='break';for(const s in S.eq)if(S.eq[s]===it.uid)S.eq[s]=null;S.inv.splice(i,1);log(`🔨💥 精煉失敗… +${r} ${d.n} 損壞了！`,'r1')}
+ refAnim(res,d,it.ref);save();lastWt='';render();panel();return res}
+function refAnim(res,d,n){const o=document.createElement('div');o.className='refx '+res;o.innerHTML=res==='ok'?`<div class="rb"></div><div class="rt">✨ 精煉成功 ✨<br><b>+${n} ${d.n}</b></div>`:res==='break'?`<div class="rt">💥 精煉失敗<br><b>${d.n} 損壞了</b></div>`:res==='protect'?`<div class="rt">🔰 失敗（保護券）<br><b>維持不變</b></div>`:`<div class="rt">💔 精煉失敗<br><b>降為 +${n}</b></div>`;document.body.appendChild(o);setTimeout(()=>o.remove(),1500)}
 let gmMsg='';
 function panelGM(){if(!S.gm){P('<p class="small">未開啟</p>');return}
  const opt=(o,f)=>Object.entries(o).map(([k,v])=>`<option value="${k}">${f(v,k)}</option>`).join('');
