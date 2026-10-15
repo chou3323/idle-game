@@ -80,6 +80,14 @@ button.alt{background:var(--pri2)}button.g{background:#c9c0d3}button:disabled{op
 .sparkle{color:#7dff9a;font-size:18px;animation:up 1s forwards;text-shadow:0 0 6px #fff}
 .rise{animation:rise .5s forwards}@keyframes rise{0%{transform:translate(-50%,0) scaleY(.1)}50%{transform:translate(-50%,-60%) scaleY(1.2)}100%{transform:translate(-50%,-50%);opacity:0}}
 .lvup{font-weight:900;font-size:22px;color:#ffd54f;-webkit-text-stroke:1px #e65100;animation:up 1.6s forwards}
+#nav{flex-wrap:nowrap!important;justify-content:stretch!important;padding:4px 4px calc(4px + env(safe-area-inset-bottom))!important;z-index:20!important}
+#nav button{flex:1;display:flex;flex-direction:column;align-items:center;gap:1px;min-height:54px;padding:4px 0!important;font-size:12px!important;border-radius:10px;touch-action:manipulation}
+#nav button b{font-size:22px;line-height:1}#nav button.on{background:#f6e8fb}
+#subnav{display:flex;gap:6px;overflow-x:auto;padding:2px 2px 8px;scrollbar-width:none}#subnav::-webkit-scrollbar{display:none}
+#subnav button{flex:0 0 auto;min-height:40px;padding:6px 14px;border-radius:20px;background:#fff;color:var(--mut);font-size:14px;box-shadow:0 1px 4px #0001;touch-action:manipulation}#subnav button.on{background:#b05cc9;color:#fff}
+@media(max-width:899px){body.bt #main>#subnav,body.bt #main>#panel{display:none}}
+#app{padding-bottom:calc(84px + env(safe-area-inset-bottom))!important}
+button{touch-action:manipulation}
 </style></head><body>
 <div id="app">
 <div id="left">
@@ -104,7 +112,7 @@ button.alt{background:var(--pri2)}button.g{background:#c9c0d3}button:disabled{op
 <div class="row small" style="margin-top:4px"><label><input type="checkbox" id="autoPot" onchange="S.autoPot=this.checked"> HP&lt;40% 自動喝藥</label><span class="sp"></span><span id="partyline"></span></div></div>
 <div class="card"><h3>📜 戰鬥紀錄</h3><div id="log"></div></div>
 </div>
-<div id="main"><div id="nav"></div><div class="card" id="panel"></div></div>
+<div id="main"><div id="nav"></div><div id="subnav"></div><div class="card" id="panel"></div></div>
 </div>
 <div id="modal"><div class="card" id="mbody"></div></div>
 <script>
@@ -564,7 +572,13 @@ function fxNotes(){const p=pos($('pl'));['🎵','🎶','♪','🎵'].forEach((n,
 function fxJobUp(){const p=pos($('pl'));addFx('JOB UP!',p.x,p.y-20,'lvup',1600).style.color='#b388ff';fxRing($('pl'),'#b388ff')}
 let TAB='char';
 const TABS={char:'🧑角色',job:'🌟轉職',skill:'📘技能',mall:'💎商城',party:'👥隊伍',guild:'🏰公會',bag:'🎒背包',card:'🃏卡片',ref:'🔨精煉',shop:'🏪商店',map:'🗺️地圖',set:'⚙️設定'};
-function nav(){$('nav').innerHTML=Object.entries(TABS).map(([k,v])=>`<button class="${k===TAB?'on':''}" onclick="TAB='${k}';nav();panel()">${v}</button>`).join('')}
+const GROUPS=[['battle','⚔️','戰鬥',[]],['ch','🧑','角色',['char','skill','job']],['eq','🎒','裝備',['bag','card','ref']],['mp','🗺️','地圖',['map']],['more','☰','更多',['shop','mall','party','guild','set','gm']]];
+let GRP='ch';const grpOf=k=>(GROUPS.find(g=>g[3].includes(k))||GROUPS[1])[0];
+function goTab(k){if(k==='battle'){GRP='battle';document.body.classList.add('bt');scrollTo({top:0,behavior:'smooth'});nav();return}document.body.classList.remove('bt');GRP=grpOf(k);TAB=k;lastP='';nav();panel();if(innerWidth<900)$('main').scrollIntoView({block:'start'})}
+function goGrp(g){if(g==='battle')return goTab('battle');const G=GROUPS.find(x=>x[0]===g);goTab(G[3].includes(TAB)&&GRP!==g?TAB:(G[3].includes(TAB)?TAB:G[3][0]))}
+function nav(){if(GRP!=='battle')GRP=grpOf(TAB);$('nav').innerHTML=GROUPS.map(([k,ic,n])=>`<button class="${k===GRP?'on':''}" data-g="${k}"><b>${ic}</b><span>${n}</span></button>`).join('');
+ const G=GROUPS.find(x=>x[0]===GRP),subs=GRP==='battle'?[]:G[3].filter(k=>TABS[k]);$('subnav').innerHTML=subs.length>1?subs.map(k=>`<button class="${k===TAB?'on':''}" data-t="${k}">${TABS[k]}</button>`).join(''):'';$('subnav').style.display=subs.length>1?'':'none'}
+let pDown=0;
 const fmt=n=>Math.floor(n).toLocaleString();
 const etag=e=>`<span class="tag" style="background:${ELC[e]}">${e}</span>`;
 let lastJob='',lastWt='',lastParty=null;
@@ -585,7 +599,7 @@ function render(){const t=stats(),J=JOBS[S.job],M=MAPS[S.map];drawActors();
  const pb=partyB();$('partyline').textContent=`👥隊伍${pb.n}人 經驗+${pb.expP}% 掉寶+${pb.drop}%`;
  if(TAB==='char')panelChar()}
 function panel(){({gm:panelGM,skill:panelSkill,mall:panelMall,char:panelChar,job:panelJob,party:panelParty,guild:panelGuild,bag:panelBag,card:panelCard,ref:panelRef,shop:panelShop,map:panelMap,set:panelSet})[TAB]()}
-let lastP='';function P(h){if(h!==lastP){lastP=h;$('panel').innerHTML=h}}
+let lastP='';function P(h){if(h!==lastP&&(!pDown||performance.now()-pDown>1500)){lastP=h;$('panel').innerHTML=h}}
 function panelChar(){const t=stats();const m=mob||{lv:1,flee:113,hit:136};
  P(`<h3>🧑 能力值　<span class="small">剩餘點數 <b>${S.pts}</b></span></h3>
  <label class="small"><input type="checkbox" ${S.autoStat?'checked':''} onchange="S.autoStat=this.checked;if(S.autoStat)autoAlloc();render();panel()"> 自動配點（${Object.entries(jobAuto(S.job)).map(([k,v])=>k.toUpperCase()+':'+v).join(' ')}）</label>
@@ -710,7 +724,7 @@ function panelGM(){if(!S.gm){P('<p class="small">未開啟</p>');return}
  <div class="row" style="margin-top:4px"><button onclick="gm('skp')">+10 技能點</button><button onclick="gm('pts')">+50 屬性點</button></div></div>
  <div class="job"><b>世界</b><div class="row"><select id="gmMap">${MAPS.map((m,i)=>`<option value="${i}">${m.n}</option>`).join('')}</select><button onclick="gm('tp')">傳送（並解鎖）</button><button onclick="gm('mvp')">召喚 MVP</button></div>
  <div class="row" style="margin-top:4px"><span>經驗×</span><input id="gmRE" type="number" step="0.5" value="${S.rate.exp}" style="width:60px"><span>掉落×</span><input id="gmRD" type="number" step="0.5" value="${S.rate.drop}" style="width:60px"><button onclick="gm('rate')">套用倍率</button></div></div>
- <button class="g" onclick="S.gm=false;delete TABS.gm;TAB='set';nav();panel()">關閉 GM 模式</button>`)}
+ <button class="g" onclick="S.gm=false;delete TABS.gm;goTab('set')">關閉 GM 模式</button>`)}
 function gm(a,arg){const N=arg!==undefined?arg:Math.max(0,+(($('gmN')||{}).value||0));
  if(a==='dia')S.dia+=N;else if(a==='gold')S.gold+=N;else if(a==='month'){const b=monthOn()?S.month.until:Date.now();S.month={until:b+30*86400000,claimed:''}}
  else if(a==='item'){const id=typeof arg==='object'?arg.id:$('gmItem').value;addItem(id,typeof arg==='object'?arg.n:Math.max(1,N))}
@@ -722,7 +736,7 @@ function gm(a,arg){const N=arg!==undefined?arg:Math.max(0,+(($('gmN')||{}).value
  else if(a==='mvp')callBoss(true);
  else if(a==='rate'){const o=typeof arg==='object'?arg:{exp:+$('gmRE').value,drop:+$('gmRD').value};S.rate={exp:Math.max(0,o.exp||1),drop:Math.max(0,o.drop||1)}}
  gmMsg=`✔ ${a} 完成 ${new Date().toTimeString().slice(0,8)}`;log(`🛠️ GM：${a}`);save();render();panel()}
-function gmLogin(p){if((p!==undefined?p:$('gmPw').value)===GM_PASS){S.gm=true;TABS.gm='🛠️GM';TAB='gm';nav();panel();save();return true}log('❌ GM 密碼錯誤');return false}
+function gmLogin(p){if((p!==undefined?p:$('gmPw').value)===GM_PASS){S.gm=true;TABS.gm='🛠️GM';goTab('gm');save();return true}log('❌ GM 密碼錯誤');return false}
 function panelShop(){P(`<h3>🏪 商店 <span class="small">💰 ${fmt(S.gold)}</span></h3>`+SHOP.map(k=>{const d=ITEMS[k];return `<div class="it"><span class="ic">${d.ic}</span><div class="sp"><b>${d.n}${d.slots?`[${d.slots}]`:''}</b><div class="small">${d.t==='eq'?eqDesc({id:k,ref:0,cards:[]}):d.desc}</div></div><span class="small">💰${fmt(d.price)}</span> <button ${S.gold<d.price?'disabled':''} onclick="buy('${k}',1)">買</button>${d.t!=='eq'?` <button class="alt" ${S.gold<d.price*10?'disabled':''} onclick="buy('${k}',10)">×10</button>`:''}</div>`}).join(''))}
 function buy(k,n){const d=ITEMS[k];if(S.gold<d.price*n)return;S.gold-=d.price*n;if(d.t==='eq')for(let i=0;i<n;i++)addItem(k);else addItem(k,n);log(`購買 ${d.n}×${n}`);render();panel()}
 function panelMap(){P(`<h3>🗺️ 世界地圖</h3>`+MAPS.map((m,i)=>`<div class="map ${i>=S.unlocked?'lock':''}"><span style="font-size:30px">${i<S.unlocked?m.ic:'🔒'}</span><div class="sp"><b>${m.n}</b> <span class="small">Lv.${m.mobs[0][2]}~${m.boss[2]}</span>
@@ -736,6 +750,9 @@ function panelSet(){P(`<h3>⚙️ 設定</h3><div class="row"><span>角色名稱
  <p class="small">每 10 隻怪／15 秒／關閉頁面自動存檔。離線收益最多 8 小時，效率約線上 10%，Base/Job 經驗各最多 1.5 級。<br>本作為原創致敬作品，名稱與美術皆為自製。</p>`)}
 function reset(){localStorage.removeItem(KEY);S=fresh();mob=null;LOG=[];lastJob='';lastParty=null;$('mo').innerHTML='';log('已重置，歡迎新的冒險者！');save();render();panel()}
 function modal(h){$('mbody').innerHTML=h+'<div style="text-align:center;margin-top:10px"><button onclick="$(\'modal\').style.display=\'none\'">太棒了！</button></div>';$('modal').style.display='flex'}
+
+document.addEventListener('click',e=>{const b=e.target.closest('#nav button,#subnav button');if(!b)return;if(b.dataset.g)goGrp(b.dataset.g);else goTab(b.dataset.t)});
+$('panel').addEventListener('pointerdown',()=>pDown=performance.now());addEventListener('pointerup',()=>setTimeout(()=>pDown=0,50));addEventListener('pointercancel',()=>pDown=0);document.addEventListener('click',()=>pDown=0,true);
 load();if(S.gm)TABS.gm='🛠️GM';nav();render();panel();
 const off=offline();let msg='';
 if(migratedV2)msg+=`<h3>🎊 已更新到 v3</h3><p class="small">裝備、卡片、進度全部保留。新增 Job 等級（依原進度換算為 Job ${S.jlv}）、技能點 ${S.skp}、商人系、二轉分支、轉生、點數商城（贈送 💎100）。</p>`;
