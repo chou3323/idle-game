@@ -614,6 +614,33 @@ body.ringc #rbtns .rbs[data-k="h"]{display:none!important}
 .v6 .tw6{overflow-x:auto}.v6 .tw6 table{border-collapse:collapse;font:12px var(--fnum);white-space:nowrap}.v6 .tw6 th,.v6 .tw6 td{padding:3px 7px;border:1px solid rgba(232,195,106,.18);text-align:center;color:#f3e6c8}.v6 .tw6 th{color:#d9c393;text-align:left;background:rgba(0,0,0,.2)}
 @media (max-width:760px){.v6 .lgm6{grid-template-columns:1fr}.v6 .lgl6 .pt6{height:120px}.v6 .lgl6 .pt6 .jp6{height:115px}.v6 .lgr6{max-height:none;overflow:visible}}
 .v6 .skc.lk{opacity:.55;filter:grayscale(.6)}.v6 .skc.lk .st{color:var(--rd)!important}
+/* ===== 世界地圖 ===== */
+.v6 .wm6{display:grid;grid-template-columns:1fr 290px;gap:10px;height:min(70vh,620px)}
+.v6 .wmv{position:relative;border-radius:12px;overflow:hidden;border:1px solid var(--lnG);background:#0d2238;min-height:260px}
+.v6 #wmc{width:100%;height:100%;display:block;touch-action:none;cursor:grab}
+.v6 .wmh{position:absolute;left:10px;bottom:8px;font-size:11px;color:#fff;background:rgba(0,0,0,.45);padding:3px 8px;border-radius:8px;pointer-events:none}
+.v6 .wmfit{position:absolute;right:8px;top:8px;width:34px;height:34px;padding:0}
+.v6 .wmp{display:flex;flex-direction:column;gap:7px;min-height:0;overflow-y:auto}
+.v6 .wmt{display:flex;align-items:baseline;gap:8px}.v6 .wmt b{font:700 20px var(--fcjk);color:var(--au2)}.v6 .wmt .lv{font:600 12px var(--fnum);color:var(--gn)}
+.v6 .wtag{display:flex;flex-wrap:wrap;gap:4px}.v6 .wtag em{font-style:normal;font-size:11px;padding:2px 8px;border-radius:9px;border:1px solid var(--ln2);color:var(--t2)}
+.v6 .wloc{border:1px solid var(--ln2);border-radius:10px;padding:6px;background:rgba(0,0,0,.3);text-align:center}.v6 #wml{max-width:100%;image-rendering:pixelated;border-radius:6px}
+.v6 .wleg{display:flex;gap:10px;justify-content:center;font-size:11px;color:var(--t3);margin-top:4px}.v6 .wleg i{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:4px;vertical-align:0}
+.v6 .wld{padding:24px;color:var(--t3);text-align:center}
+.v6 .wls{font-size:12.5px}.v6 .wsh{font:700 11px var(--fui);letter-spacing:.12em;color:var(--t3);margin:6px 0 2px}.v6 .wr{padding:3px 2px;color:var(--t1)}.v6 .wr small{color:var(--t3)}.v6 .wr.lk{cursor:pointer;color:var(--az)}.v6 .wr.mut{color:var(--t3)}
+.v6 .wr .bs{font:700 9px var(--fnum);background:var(--vi);color:#fff;border-radius:6px;padding:1px 5px;margin-right:5px}
+@media (max-width:760px){.v6 .wm6{grid-template-columns:1fr;height:auto}.v6 .wmv{height:46vh}.v6 .wmp{overflow:visible}}
+/* ===== 頻道 ===== */
+.v6 .ch6 .srv{display:flex;justify-content:space-between;align-items:center;padding:8px 10px;border:1px solid var(--lnG);border-radius:10px;margin-bottom:8px}.v6 .ch6 .pg{font:700 12px var(--fnum);color:var(--gn)}.v6 .ch6 .pg.mid{color:var(--or)}.v6 .ch6 .pg.bad{color:var(--rd)}
+.v6 .chg{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}.v6 .chb{display:flex;flex-direction:column;gap:4px;padding:8px;border-radius:10px;border:1px solid var(--ln2);background:rgba(255,255,255,.04);color:var(--t1);cursor:pointer;text-align:left}.v6 .chb.on{border-color:var(--au);background:rgba(232,195,106,.14)}
+.v6 .chb b{font:700 13px var(--fnum)}.v6 .chb small{color:var(--t3);font-size:11px}.v6 .cbar{height:5px;border-radius:3px;background:rgba(0,0,0,.4);overflow:hidden}.v6 .cbar i{display:block;height:100%}
+/* ===== 小地圖：金框、名稱、放大 ===== */
+.v6 #mmw{border:1.5px solid rgba(232,195,106,.75)!important;box-shadow:0 0 0 1px rgba(0,0,0,.5),0 8px 24px rgba(0,0,0,.45),inset 0 0 12px rgba(232,195,106,.15)!important}
+.v6 #mmw .mmname{flex:1;text-align:center;font:700 12px var(--fcjk);color:var(--au2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.v6 #mmw .chbtn{cursor:pointer;border:1px solid var(--lnG)!important}
+.v6 #mmw #mm{cursor:crosshair}
+.v6 #mmw.mmx{position:fixed!important;left:50%!important;top:50%!important;right:auto!important;bottom:auto!important;transform:translate(-50%,-50%);width:min(86vw,720px)!important;z-index:80!important;padding:10px!important}
+.v6 #mmw.mmx #mm{width:100%!important;height:auto!important;max-height:70vh;object-fit:contain}
+#mmbk{position:fixed;inset:0;z-index:79;background:rgba(0,0,0,.35)}
 </style></head><body>
 <canvas id="cv"></canvas>
 <div id="hud" style="display:none">
@@ -1019,7 +1046,7 @@ function pick(cx,cy){const wx=(cx*G.dpr+G.cam.x)/G.zoom,wy=(cy*G.dpr+G.cam.y)/G.
  for(const k in G.M){const m=G.M[k];const md=G.D.mobs[m.k]||{};const h=(window.HD&&HD.MOB[m.k]?HD.MOB[m.k][1]:16)*(md.boss&&!(window.HD&&HD.MOB[m.k])?2:1);const d=hit(m.x,m.y,h);if(d<bd){bd=d;best=['m',m]}}
  for(const n of G.map.npcs){const d=hit(n.x,n.y,30);if(d<bd){bd=d;best=['n',n]}}return best||['g',[Math.round(X),Math.round(Y+.3)]]}
 cv.addEventListener('pointerdown',e=>{SFX.unlock();UI.wake&&UI.wake();if(!G.map)return;const [t,o]=pick(e.clientX,e.clientY);if(t==='m'){G.sel=o.id;send({op:'atk',mob:o.id})}else if(t==='n'){UI.npc(o.id)}else{G.dest=o;G.sel=null;send({op:'move',x:o[0],y:o[1]})}});
-const KEYS=Object.assign({bag:'i',equip:'e',skill:'k',quest:'q',stat:'a',market:'m',exchange:'x',settings:'o',auto:'f',jobc:'j'},JSON.parse(localStorage.robKeys||'{}'));
+const KEYS=Object.assign({bag:'i',equip:'e',skill:'k',quest:'q',stat:'a',market:'b',world:'m',exchange:'x',settings:'o',auto:'f',jobc:'j'},JSON.parse(localStorage.robKeys||'{}'));
 addEventListener('keydown',e=>{UI.wake&&UI.wake();if(e.target.tagName==='INPUT'||e.target.tagName==='TEXTAREA'||e.target.tagName==='SELECT'){if(e.key==='Enter'&&e.target.id==='chatin')UI.sendChat();if(e.key==='Escape')e.target.blur();return}if(UI.rebind&&UI.rebind(e))return;const n=+e.key;if(n>=1&&n<=9)return UI.useHot(UI.hpg*9+n-1);const k=e.key.toLowerCase();for(const w in KEYS)if(KEYS[w]===k){if(w==='auto')UI.toggleAuto();else UI.win(w);return}if(k==='escape')UI.closeTop();if(e.key==='Enter'){e.preventDefault();document.getElementById('chatin').focus()}
  if(MVK[k]){MV.keys.add(k);e.preventDefault&&e.key.startsWith('Arrow')&&e.preventDefault()}});
 addEventListener('keyup',e=>MV.keys.delete(e.key.toLowerCase()));addEventListener('blur',()=>MV.keys.clear());
@@ -1269,6 +1296,15 @@ window.CFX=CFX;
 // ===== HD 32px 管線：生成美術（/hd）→ 地表貼圖柔邊混合、角色/魔物剪影＋程序動畫、工具列圖示 =====
 const HD={on:SET.hd!==0,img:{},ok:{},T:32,
  TEX:{town:{0:'t_grass',6:'t_grass',5:'t_grass',1:'t_path',4:'t_pave',7:'t_pave',8:'t_pave',3:'t_plank',2:'t_water'},swamp:{0:'m_grass',6:'m_grass',5:'m_grass',1:'m_mud',4:'t_pave',7:'t_pave',8:'t_pave',3:'m_plank',2:'m_water'}},
+ BIOT:{meadow:['t_grass','t_path','t_water','t_pave'],forest:['f_grass','m_mud','m_water','t_pave'],snow:['s_snow','s_path','s_ice','sh_pave'],desert:['d_sand','d_path','t_water','sh_pave'],deep:['dp_grass','m_mud','m_water','t_pave'],dunes:['r_sand','r_path','v_lava','sh_pave'],shrine:['sh_grass','t_path','t_water','sh_pave'],glacier:['g_ice','s_path','s_ice','sh_pave'],volcano:['v_ash','v_rock','v_lava','ci_pave'],moor:['mo_heath','m_mud','m_water','ci_pave'],crystal:['c_floor','c_path','c_pool','c_pave'],storm:['st_rock','s_path','t_water','ci_pave'],citadel:['ci_ground','ci_path','ci_moat','ci_pave'],city:['t_grass','t_path','t_water','t_pave']},
+ texFor(M){const b=M.biome||M.gen;if(M.id==='town')return this.TEX.town;if(M.id==='field'||b==='swamp')return this.TEX.swamp;const T=this.BIOT[b]||this.BIOT.meadow;const pl=b==='desert'||b==='dunes'||b==='snow'||b==='glacier'?'t_plank':'m_plank';return{0:T[0],6:T[0],5:T[0],1:T[1],2:T[2],4:T[3],7:T[3],8:T[3],3:pl}},
+ // 依生態的地物變體與色調 [hue°, sat, bright]
+ BIOP:{meadow:{tree:['p_oak','p_blossom'],mush:['p_mush_b']},forest:{tree:['p_oak'],tt:[0,1.05,.82]},snow:{tree:['p_oak'],tt:[150,.25,1.35],rt:[190,.3,1.25],mush:[]},desert:{tree:['p_mangrove2'],tt:[-25,.55,1.15],rt:[-15,.5,1.25],ct:[-40,.6,1.2]},deep:{tree:['p_mangrove1','p_mangrove2'],tt:[0,.9,.7]},dunes:{tree:['p_mangrove2'],tt:[-40,.8,.85],rt:[-30,1.1,.9]},shrine:{tree:['p_oak','p_blossom'],rt:[0,.3,1.25]},glacier:{tree:['p_oak'],tt:[160,.2,1.4],rt:[190,.35,1.3]},volcano:{tree:['p_mangrove2'],tt:[0,.15,.45],rt:[-20,.9,.6]},moor:{tree:['p_mangrove1'],tt:[0,.3,.8],ct:[-30,.5,.9]},crystal:{tree:[],rt:[250,1.6,.95],mt:[0,1.3,1.1]},storm:{tree:['p_mangrove2'],tt:[0,.2,.8],rt:[0,.4,.85]},citadel:{tree:['p_mangrove1'],tt:[260,.5,.55],rt:[250,.3,.6]},city:{tree:['p_oak','p_blossom']}},
+ tintC:{},
+ tint(n,t){if(!t)return this.img[n];const k=n+'|'+t.join(',');if(this.tintC[k])return this.tintC[k];const im=this.img[n];const c=document.createElement('canvas');c.width=im.naturalWidth;c.height=im.naturalHeight;const x=c.getContext('2d');x.drawImage(im,0,0);const d=x.getImageData(0,0,c.width,c.height),a=d.data;
+  const h=t[0]*Math.PI/180,co=Math.cos(h),si=Math.sin(h);const M=[.213+co*.787-si*.213,.715-co*.715-si*.715,.072-co*.072+si*.928,.213-co*.213+si*.143,.715+co*.285+si*.140,.072-co*.072-si*.283,.213-co*.213-si*.787,.715-co*.715+si*.715,.072+co*.928+si*.072];const S=t[1],B=t[2];
+  for(let i=0;i<a.length;i+=4){if(!a[i+3])continue;let r=a[i],g=a[i+1],b=a[i+2];let R=M[0]*r+M[1]*g+M[2]*b,G2=M[3]*r+M[4]*g+M[5]*b,B2=M[6]*r+M[7]*g+M[8]*b;const L=.2126*R+.7152*G2+.0722*B2;R=(L+(R-L)*S)*B;G2=(L+(G2-L)*S)*B;B2=(L+(B2-L)*S)*B;a[i]=R;a[i+1]=G2;a[i+2]=B2}
+  x.putImageData(d,0,0);return this.tintC[k]=c},
  CH:{nov:'ch_nov',kni:'ch_kni',arc:'ch_arc',rgr:'ch_rgr',acl:'ch_acl',thf:'ch_thf',mer:'ch_mer',msw:'ch_msw',hsn:'ch_hsn',smg:'ch_smg',mnk:'ch_mnk',brd:'ch_brd',lnc:'ch_lnc'},
  MOB:{crab:['mob_crab',15],frog:['mob_frog',24],wisp:['mob_wisp',26],kingcrab:['mob_kingcrab',54]},
  IC:['stat','skill','equip','market','lore','world','bag','autobs','premium','more','quest','codex','party','guild','mail','settings'],
@@ -1276,9 +1312,9 @@ const HD={on:SET.hd!==0,img:{},ok:{},T:32,
  ready(n){return this.ok[n]},
  preload(){for(const g of Object.values(this.TEX))for(const n of Object.values(g))this.load(n);for(const n of new Set([...Object.values(this.CH),...Object.values(this.NPCI)]))this.load(n);for(const P of Object.values(this.PROP))for(const n of [...P.v,...(P.swamp||[])])this.load(n);for(const n of this.TREEM)this.load(n);for(const k in this.MOB)this.load(this.MOB[k][0])},
  // 地表：底層整片鋪滿；其他類型以低解析遮罩放大（柔邊）疊上；鋪面/木棧保持硬邊加陰影；最後大尺度明暗打破重複
- renderMap(M,old){const T=this.T,set=this.TEX[M.gen==='town'||M.id==='town'?'town':'swamp'];const need=new Set([...Object.values(set),...this.propsFor(M)]);for(const n of need)if(!this.ready(n))return null;
+ renderMap(M,old){const T=this.T,set=this.texFor(M);const need=new Set([...Object.values(set),...this.propsFor(M)]);let miss=0;for(const n of need)if(!this.ready(n)){this.load(n);miss=1}if(miss)return null;
   const W=M.W*T,H=M.H*T;const cv=document.createElement('canvas');cv.width=W;cv.height=H;const c=cv.getContext('2d');
-  const SC={t_pave:.36,t_grass:.5,m_grass:.5,t_path:.5,m_mud:.5,t_water:.6,m_water:.6,t_plank:.45,m_plank:.45};const pat=n=>{const p=c.createPattern(this.img[n],'repeat');try{p.setTransform(new DOMMatrix().scale(SC[n]||.5))}catch(e){}return p};const at=(x,y)=>x<0||y<0||x>=M.W||y>=M.H?-1:M.tiles[y*M.W+x];
+  const SC={t_pave:.36,t_grass:.5,m_grass:.5,t_path:.5,m_mud:.5,t_water:.6,m_water:.6,t_plank:.45,m_plank:.45};const pat=n=>{const im=this.img[n];const p=c.createPattern(im,'repeat');try{p.setTransform(new DOMMatrix().scale((SC[n]||.5)*512/(im.naturalWidth||512)))}catch(e){}return p};const at=(x,y)=>x<0||y<0||x>=M.W||y>=M.H?-1:M.tiles[y*M.W+x];
   c.fillStyle=pat(set[0]);c.fillRect(0,0,W,H);
   const mask=(types,soft,grow)=>{const m=document.createElement('canvas');m.width=M.W;m.height=M.H;const x=m.getContext('2d');const d=x.createImageData(M.W,M.H);for(let i=0;i<M.W*M.H;i++){if(types.includes(M.tiles[i]))d.data[i*4+3]=255}x.putImageData(d,0,0);
    const L=document.createElement('canvas');L.width=W;L.height=H;const lc=L.getContext('2d');if(soft){const s2=document.createElement('canvas');s2.width=M.W*4;s2.height=M.H*4;const sc=s2.getContext('2d');sc.imageSmoothingEnabled=true;sc.drawImage(m,0,0,s2.width,s2.height);lc.imageSmoothingEnabled=true;if(grow){lc.globalAlpha=1;for(const [dx,dy] of [[-grow,0],[grow,0],[0,-grow],[0,grow]])lc.drawImage(s2,dx,dy,W,H)}lc.drawImage(s2,0,0,W,H)}else{lc.imageSmoothingEnabled=false;lc.drawImage(m,0,0,W,H)}return L};
@@ -1295,7 +1331,7 @@ const HD={on:SET.hd!==0,img:{},ok:{},T:32,
   // 大尺度明暗（柔光）＋輕微暗角
   const n=document.createElement('canvas');n.width=Math.ceil(M.W/3);n.height=Math.ceil(M.H/3);const nc=n.getContext('2d');let sd=M.W*7+M.H;const R=()=>(sd=(sd*16807)%2147483647)/2147483647;for(let y=0;y<n.height;y++)for(let x=0;x<n.width;x++){const v=R();nc.fillStyle=v<.5?`rgba(0,0,0,${(.5-v)*.5})`:`rgba(255,240,200,${(v-.5)*.35})`;nc.fillRect(x,y,1,1)}
   c.save();c.imageSmoothingEnabled=true;c.globalCompositeOperation='soft-light';c.drawImage(n,0,0,W,H);c.restore();
-  if(M.id!=='town'){c.save();c.globalCompositeOperation='multiply';c.fillStyle='rgba(150,175,160,.25)';c.fillRect(0,0,W,H);c.restore()}
+  if(M.id==='field'||M.biome==='deep'||M.biome==='moor'){c.save();c.globalCompositeOperation='multiply';c.fillStyle='rgba(150,175,160,.25)';c.fillRect(0,0,W,H);c.restore()}
   // 原本程序繪製的房子/噴泉等地物沿用
   const o=old||{decoL:[]};c.save();c.scale(T/16,T/16);const px=(x,y,w,h,col)=>{c.fillStyle=col;c.fillRect(x|0,y|0,w,h)};c.restore();const decoL=(o.decoL||[]).slice();for(const d of M.deco||[]){if(d[0]==='house')decoL.push(['house',d[1],d[2]+d[4]-1,d[3],d[4]]);else if(d[0]==='fountain')decoL.push(['fountain',d[1],d[2]+1])}o.decoL=decoL;
   return{cv,decoL:o.decoL,hd:1,smooth:1}},
@@ -1309,23 +1345,23 @@ const HD={on:SET.hd!==0,img:{},ok:{},T:32,
   c.imageSmoothingEnabled=true;c.imageSmoothingQuality='high';c.drawImage(im,-w/2,-h-bob,w,h);
   if(cast){c.globalCompositeOperation='lighter';c.globalAlpha=.25+.15*Math.sin(now/80);c.drawImage(im,-w/2,-h-bob,w,h)}
   c.restore();return true},
- mob(c,k,x,y,s,boss,o){const m=this.MOB[k];if(!m||!this.ready(m[0]))return false;const im=this.img[m[0]];const now=performance.now();const h=m[1]*s,w=h*im.width/im.height;const ph=now/(k==='wisp'?400:150)+((o&&o.id)||0)%7;
+ mob(c,k,x,y,s,boss,o){const md=(G.D&&G.D.mobs[k])||{};const bk=this.MOB[k]?k:md.spr;const m=this.MOB[bk];if(!m||!this.ready(m[0]))return false;const im=md.hue?this.tint(m[0],[md.hue,1.1,1]):this.img[m[0]];k=bk;const now=performance.now();const h=m[1]*s,w=h*im.width/im.height;const ph=now/(k==='wisp'?400:150)+((o&&o.id)||0)%7;
   const mv=o&&o.moving;const fl=k==='wisp';const bob=fl?(4+Math.sin(ph)*2.5)*s:mv?Math.abs(Math.sin(ph))*1.6*s:0;const sq=fl?1:1+Math.sin(now/(mv?90:420)+(o?o.x:0))*(mv?.05:.025);
   c.fillStyle='rgba(0,0,0,.3)';c.beginPath();c.ellipse(x,y-s*.5,w*(fl?.22:.36),s*(boss?4:2.2),0,0,7);c.fill();
   c.save();c.translate(x,y);if(o&&o.flip)c.scale(-1,1);if(mv&&!fl)c.rotate(Math.sin(ph)*.05);c.scale(1/sq,sq);c.imageSmoothingEnabled=true;c.imageSmoothingQuality='high';if(fl)c.globalAlpha*=.92;c.drawImage(im,-w/2,-h-bob,w,h);c.restore();return true},
  // 地物：w=寬(格)或 h=高(格)，錨點=底部中央；v=變體
  PROP:{house:{v:['p_house','p_house_b','p_house_g','p_house_p'],w:6.4,flip:1},fountain:{v:['p_fountain'],w:5.6},tree:{v:['p_oak','p_blossom'],h:4.2,flip:1,town:1},stall:{v:['p_stall'],w:3.4},forge:{v:['p_forge'],w:3.2},gate:{v:['p_gate'],h:3.8},boat:{v:['p_boat'],h:4.2},lamp:{v:['p_lamp'],h:2.9,swamp:['p_lantern']},bench:{v:['p_bench'],w:2},crates:{v:['p_crates'],w:1.9},planter:{v:['p_planter'],w:1.8},bush:{v:['p_planter'],w:1.5},boulder:{v:['p_boulder1','p_boulder2'],w:1.9,flip:1},mush:{v:['p_mush_p'],h:2.3,flip:1},mushb:{v:['p_mush_b'],h:2.1,flip:1},cattail:{v:['p_cattail'],h:1.8,flip:1},fence:{v:['p_fence'],w:2.2,flip:1}},
  TREEM:['p_mangrove1','p_mangrove2'],
- pickProp(d,town){const P=this.PROP[d[0]];if(!P)return null;let v=P.v;if(d[0]==='tree'&&!town)v=this.TREEM;if(P.swamp&&!town)v=P.swamp;const hsh=(d[1]*73856093^d[2]*19349663)>>>0;return {P,n:v[hsh%v.length],fl:P.flip&&(hsh>>3)%2}},
- propsFor(M){const town=M.id==='town';const s=new Set();for(const d of M.deco||[]){const r=this.pickProp(d,town);if(r)s.add(r.n)}return s},
- deco(c,d,ox,oy,s){const town=G.map&&G.map.id==='town';const r=this.pickProp(d,town);if(!r||!this.ready(r.n))return false;const im=this.img[r.n],P=r.P;let w,h;if(P.w){w=P.w*16*s;h=w*im.height/im.width}else{h=P.h*16*s;w=h*im.width/im.height}
+ pickProp(d,town,bio){const P=this.PROP[d[0]];if(!P)return null;let v=P.v,tn=null;const BP=this.BIOP[bio];if(d[0]==='tree'&&!town)v=BP&&BP.tree?BP.tree:this.TREEM;if(P.swamp&&!town&&bio!=='city'&&bio!=='shrine')v=P.swamp;if(BP){if(d[0]==='tree')tn=BP.tt;else if(d[0]==='boulder')tn=BP.rt;else if(d[0]==='cattail')tn=BP.ct;else if(d[0]==='mush'||d[0]==='mushb'){tn=BP.mt;if(BP.mush&&d[0]==='mush')v=BP.mush.length?BP.mush:v}}if(!v.length)return null;const hsh=(d[1]*73856093^d[2]*19349663)>>>0;return {P,n:v[hsh%v.length],fl:P.flip&&(hsh>>3)%2,tn}},
+ propsFor(M){const town=M.id==='town';const b=M.biome||M.gen;const s=new Set();for(const d of M.deco||[]){const r=this.pickProp(d,town,b);if(r)s.add(r.n)}return s},
+ deco(c,d,ox,oy,s){const town=G.map&&G.map.id==='town';const r=this.pickProp(d,town,G.map&&(G.map.biome||G.map.gen));if(!r)return d[0]!=='house'&&d[0]!=='fountain'&&!!this.PROP[d[0]];if(!this.ready(r.n))return false;const im=this.tint(r.n,r.tn),P=r.P;const iw=im.naturalWidth||im.width,ih=im.naturalHeight||im.height;let w,h;if(P.w){w=P.w*16*s;h=w*ih/iw}else{h=P.h*16*s;w=h*iw/ih}
   let cx=(d[1]*16+8)*s+ox,by=(d[2]*16+15)*s+oy;if(d[0]==='house'){cx=(d[1]+d[3]/2)*16*s+ox;by=(d[2]+1)*16*s+oy+4*s}if(d[0]==='fountain')by=(d[2]+1)*16*s+oy+6*s;if(d[0]==='boat')by+=10*s;
   if(d[0]!=='boat'&&d[0]!=='fence'&&d[0]!=='cattail'){c.fillStyle='rgba(0,0,0,.22)';c.beginPath();c.ellipse(cx,by-2*s,w*.38,Math.max(3*s,w*.09),0,0,7);c.fill()}
   c.save();c.imageSmoothingEnabled=true;c.imageSmoothingQuality='high';if(d[0]==='tree'||d[0]==='cattail'){const sw=Math.sin(performance.now()/1400+d[1])*.012;c.translate(cx,by);c.transform(1,0,sw,1,0,0);c.translate(-cx,-by)}if(r.fl){c.translate(cx*2,0);c.scale(-1,1)}c.drawImage(im,cx-w/2,by-h,w,h);c.restore();return true},
  icon(k,s){return this.IC.includes(k)?`<img class="hdic" src="hd/ic_${k}.webp" width="${s}" height="${s}" alt="" draggable="false">`:null}};
 (()=>{if(!HD.on)return;HD.preload();
- const r0=ART.renderMap;ART.renderMap=function(M){const old=r0.call(ART,M);const h=HD.renderMap(M,old);return h||old};
- HD.onload=()=>{clearTimeout(HD._t);HD._t=setTimeout(()=>{if(window.G&&G.map&&G.mapArt&&!G.mapArt.hd){const h=HD.renderMap(G.map,G.mapArt);if(h)G.mapArt=h}},120)};
+ const r0=ART.renderMap;ART.renderMap=function(M){let old;try{old=r0.call(ART,M)}catch(e){console.warn("old renderMap",e);const cv=document.createElement("canvas");cv.width=M.W*16;cv.height=M.H*16;old={cv,decoL:[]}}const h=HD.renderMap(M,old);if(!h){let k=0;const tk=()=>{if(typeof G!=="undefined"&&G.map&&G.map.id===M.id&&G.mapArt&&!G.mapArt.hd){const r=HD.renderMap(G.map,G.mapArt);if(r)G.mapArt=r;else if(++k<40)setTimeout(tk,300)}};setTimeout(tk,300)}return h||old};
+ HD.onload=()=>{clearTimeout(HD._t);HD._t=setTimeout(()=>{if(typeof G!=="undefined"&&G.map&&G.mapArt&&!G.mapArt.hd){const h=HD.renderMap(G.map,G.mapArt);if(h)G.mapArt=h}},120)};
  const h0=ART.hero;ART.hero=function(c,x,y,s,job,wt,frame,flip,look){const o=ART._o,np=ART._npc;ART._o=null;ART._npc=null;if(HD.hero(c,x,y,s,job,frame,flip,o,np))return;return h0.apply(ART,arguments)};
  const m0=ART.mob;ART.mob=function(c,k,x,y,s,f,boss){const o=ART._m;ART._m=null;if(HD.mob(c,k,x,y,s,boss,o))return;return m0.apply(ART,arguments)};
  const d0=ART.deco;ART.deco=function(c,d,ox,oy,s){if(HD.deco(c,d,ox,oy,s))return;if(d[0]==='house'||d[0]==='fountain')return;return d0.apply(ART,arguments)};
@@ -1845,6 +1881,90 @@ WINS.legend={title:'職業傳說',w:880,html(o){const D=G.D;const ks=Object.keys
   b.querySelectorAll('.sh6').forEach(x=>x.onclick=()=>{const k=x.parentNode.dataset.sk;o.open[k]=!o.open[k];const sc=b.querySelector('.lgr6').scrollTop;UI.renderWin('legend');const r=document.querySelector('#w-legend .lgr6');if(r)r.scrollTop=sc});
   const d=b.querySelector('.pro6');if(d)d.ontoggle=()=>{o.pro=d.open}}};
 (()=>{if(window.HD){const h=ART.hero;ART._hero0=function(){const on=HD.on;HD.on=false;const sv=HD.CH;HD.CH={};try{return h.apply(ART,arguments)}finally{HD.CH=sv;HD.on=on}}}})();
+
+// ===== v6 世界地圖（M）：程序繪製大陸（拖曳/縮放、羊皮紙標籤、所在位置、海上船隻）＋右側區域資訊與自動旅行；小地圖（N 放大、隱藏、頻道）；頻道選擇 =====
+const W6={BIO:{meadow:['草原','#7fbf5a'],forest:['森林','#3f8a3c'],swamp:['沼澤','#4f7a4a'],snow:['雪地','#dfe8f2'],desert:['沙漠','#e2c27e'],deep:['深林','#2b5a32'],dunes:['赤砂','#c46a45'],shrine:['神殿','#b9c29a'],glacier:['冰原','#bcd9ee'],volcano:['火山','#6b3a30'],moor:['荒原','#7d6670'],crystal:['晶洞','#6a58a8'],storm:['高峰','#8a958e'],citadel:['城塞','#4a4458'],city:['城鎮','#d8c79a'],town:['城鎮','#d8c79a']},
+ VW:1100,VH:700,mi:{},chn:1,
+ bio(id){const m=G.D.maps[id];return m.biome||(id==='field'?'swamp':m.gen==='town'?'town':'meadow')},
+ lvTxt(m){return m.lv?(m.lv[0]===1&&m.lv[1]>=99?'城鎮':`Lv ${m.lv[0]}–${m.lv[1]}`):''},
+ paint(){if(this.cv&&this.cvH===G.D._hash)return this.cv;const c=document.createElement('canvas');c.width=this.VW*2;c.height=this.VH*2;const x=c.getContext('2d');x.scale(2,2);const D=G.D.maps;const ids=Object.keys(D).filter(k=>D[k].wx!=null);
+  let sd=12345;const R=()=>(sd=(sd*16807)%2147483647)/2147483647;
+  const sea=x.createLinearGradient(0,0,0,this.VH);sea.addColorStop(0,'#1d4e78');sea.addColorStop(1,'#123552');x.fillStyle=sea;x.fillRect(0,0,this.VW,this.VH);
+  x.strokeStyle='rgba(255,255,255,.07)';x.lineWidth=1;for(let i=0;i<260;i++){const a=R()*this.VW,b=R()*this.VH;x.beginPath();x.moveTo(a,b);x.quadraticCurveTo(a+6,b-3,a+12,b);x.stroke()}
+  // 陸地遮罩：每區一團不規則圓
+  const land=document.createElement('canvas');land.width=this.VW;land.height=this.VH;const l=land.getContext('2d');l.fillStyle='#000';
+  for(const k of ids){const m=D[k];const r=k==='arena'||k==='castle'||k==='train'?46:78;l.beginPath();for(let i=0;i<=24;i++){const a=i/24*Math.PI*2,rr=r*(.82+R()*.36);l.lineTo(m.wx+Math.cos(a)*rr,m.wy+Math.sin(a)*rr*.82)}l.fill()}
+  for(const k of ids)for(const p of D[k].portals||[]){const b=D[p.to];if(!b||b.wx==null)continue;l.lineWidth=70;l.lineCap='round';l.strokeStyle='#000';l.beginPath();l.moveTo(D[k].wx,D[k].wy);l.lineTo(b.wx,b.wy);l.stroke()}
+  // 海岸光暈
+  x.save();x.shadowColor='rgba(170,220,255,.55)';x.shadowBlur=18;x.drawImage(land,0,0);x.restore();
+  // 生態上色（最近區域）
+  const col=document.createElement('canvas');col.width=this.VW/4;col.height=this.VH/4;const cc=col.getContext('2d');const img=cc.createImageData(col.width,col.height);
+  const P=ids.map(k=>[D[k].wx/4,D[k].wy/4,this.BIO[this.bio(k)]?this.BIO[this.bio(k)][1]:'#7fbf5a']).map(([a,b,h])=>[a,b,parseInt(h.slice(1,3),16),parseInt(h.slice(3,5),16),parseInt(h.slice(5,7),16)]);
+  for(let y=0;y<col.height;y++)for(let xx=0;xx<col.width;xx++){let bi=0,bd=1e9;for(let i=0;i<P.length;i++){const d=(P[i][0]-xx)**2+(P[i][1]-y)**2+R()*6;if(d<bd){bd=d;bi=i}}const o=(y*col.width+xx)*4,n=.9+R()*.2;img.data[o]=P[bi][2]*n;img.data[o+1]=P[bi][3]*n;img.data[o+2]=P[bi][4]*n;img.data[o+3]=255}
+  cc.putImageData(img,0,0);const tex=document.createElement('canvas');tex.width=this.VW;tex.height=this.VH;const t=tex.getContext('2d');t.imageSmoothingEnabled=true;t.drawImage(col,0,0,this.VW,this.VH);t.globalCompositeOperation='destination-in';t.drawImage(land,0,0);x.drawImage(tex,0,0);
+  // 地形小圖示
+  for(const k of ids){const m=D[k],b=this.bio(k);for(let i=0;i<14;i++){const a=R()*Math.PI*2,r=R()*58,px=m.wx+Math.cos(a)*r,py=m.wy+Math.sin(a)*r*.8;if(!l.getImageData(px|0,py|0,1,1).data[3])continue;
+   if(['forest','deep','meadow','moor','shrine','swamp'].includes(b)){x.fillStyle=b==='deep'?'#1d3d22':b==='moor'?'#5a4a52':'#2f6a32';x.beginPath();x.arc(px,py,4+R()*2,0,7);x.fill();x.fillStyle='rgba(255,255,255,.12)';x.beginPath();x.arc(px-1.5,py-1.5,2,0,7);x.fill()}
+   else if(['snow','glacier','storm','volcano','citadel'].includes(b)){x.fillStyle=b==='volcano'?'#4a2620':b==='citadel'?'#2c2838':'#7d8790';x.beginPath();x.moveTo(px-7,py+5);x.lineTo(px,py-7);x.lineTo(px+7,py+5);x.fill();x.fillStyle=b==='volcano'?'#ff7a2a':'#fff';x.beginPath();x.moveTo(px-2.5,py-3);x.lineTo(px,py-7);x.lineTo(px+2.5,py-3);x.fill()}
+   else if(['desert','dunes'].includes(b)){x.strokeStyle='rgba(120,70,30,.45)';x.lineWidth=1.5;x.beginPath();x.moveTo(px-6,py);x.quadraticCurveTo(px,py-5,px+6,py);x.stroke()}
+   else if(b==='crystal'){x.fillStyle='#b9a6ff';x.beginPath();x.moveTo(px,py-6);x.lineTo(px+3,py);x.lineTo(px,py+4);x.lineTo(px-3,py);x.fill()}}}
+  // 道路
+  x.setLineDash([5,5]);x.strokeStyle='rgba(90,60,30,.75)';x.lineWidth=2;const done={};for(const k of ids)for(const p of D[k].portals||[]){const b=D[p.to];const key=[k,p.to].sort().join();if(!b||b.wx==null||done[key])continue;done[key]=1;x.beginPath();x.moveTo(D[k].wx,D[k].wy);x.lineTo(b.wx,b.wy);x.stroke()}x.setLineDash([]);
+  // 羊皮紙外框
+  x.strokeStyle='rgba(232,195,106,.7)';x.lineWidth=6;x.strokeRect(3,3,this.VW-6,this.VH-6);
+  this.cv=c;this.cvH=G.D._hash;return c},
+ ships:[[60,120,0],[540,640,1],[1000,80,2],[880,660,3]],
+ draw(){const cv=this.view;if(!cv||!document.body.contains(cv))return;const x=cv.getContext('2d');const dp=devicePixelRatio||1;const r=cv.getBoundingClientRect();if(cv.width!==Math.round(r.width*dp)){cv.width=Math.round(r.width*dp);cv.height=Math.round(r.height*dp)}
+  const v=this.v;x.setTransform(1,0,0,1,0,0);x.fillStyle='#0d2238';x.fillRect(0,0,cv.width,cv.height);x.setTransform(v.z*dp,0,0,v.z*dp,v.x*dp,v.y*dp);x.imageSmoothingEnabled=true;x.drawImage(this.paint(),0,0,this.VW,this.VH);
+  const now=performance.now();for(const [sx,sy,i] of this.ships){const bx=sx+Math.sin(now/3000+i)*14,by=sy+Math.sin(now/700+i)*1.5;x.fillStyle='#6b4423';x.beginPath();x.moveTo(bx-9,by);x.lineTo(bx+9,by);x.lineTo(bx+6,by+5);x.lineTo(bx-6,by+5);x.fill();x.fillStyle='#f3ead2';x.beginPath();x.moveTo(bx,by-13);x.lineTo(bx+8,by-2);x.lineTo(bx,by-2);x.fill();x.strokeStyle='#4a2e16';x.lineWidth=1;x.beginPath();x.moveTo(bx,by-14);x.lineTo(bx,by);x.stroke()}
+  const D=G.D.maps;for(const k in D){const m=D[k];if(m.wx==null)continue;const sel=k===this.sel,me=k===G.map.id;
+   x.font=`700 ${12}px 'Noto Sans TC',sans-serif`;const t1=m.n,t2=this.lvTxt(m);const w=Math.max(x.measureText(t1).width,40)+18;const h=t2?32:20;const lx=m.wx-w/2,ly=m.wy-h/2;
+   x.fillStyle=sel?'rgba(255,236,180,.98)':'rgba(243,226,184,.92)';x.strokeStyle=sel?'#c9973e':'rgba(120,80,30,.8)';x.lineWidth=sel?2.2:1.2;x.beginPath();x.roundRect?x.roundRect(lx,ly,w,h,6):x.rect(lx,ly,w,h);x.fill();x.stroke();
+   x.fillStyle='#3a2410';x.textAlign='center';x.fillText(t1,m.wx,ly+14);if(t2){x.font=`600 10px Inter,sans-serif`;x.fillStyle='#7a5222';x.fillText(t2,m.wx,ly+27)}
+   if(me){const a=(now/600)%1;x.strokeStyle=`rgba(90,220,140,${1-a})`;x.lineWidth=3;x.beginPath();x.arc(m.wx,m.wy,20+a*16,0,7);x.stroke();x.fillStyle='#5CD68C';x.beginPath();x.moveTo(m.wx,ly-4);x.lineTo(m.wx-6,ly-14);x.lineTo(m.wx+6,ly-14);x.fill()}}
+  this.raf=requestAnimationFrame(()=>this.draw())},
+ hitR(cx,cy){const r=this.view.getBoundingClientRect();const wx=(cx-r.left-this.v.x)/this.v.z,wy=(cy-r.top-this.v.y)/this.v.z;let best=null,bd=40;for(const k in G.D.maps){const m=G.D.maps[k];if(m.wx==null)continue;const d=Math.hypot(m.wx-wx,m.wy-wy);if(d<bd){bd=d;best=k}}return best},
+ fit(){const r=this.view.getBoundingClientRect();const z=Math.min(r.width/this.VW,r.height/this.VH);this.v={z,x:(r.width-this.VW*z)/2,y:(r.height-this.VH*z)/2}},
+ clampV(){const r=this.view.getBoundingClientRect();const v=this.v;v.z=Math.max(Math.min(r.width/this.VW,r.height/this.VH)*.9,Math.min(4,v.z));v.x=Math.min(r.width*.5,Math.max(r.width*.5-this.VW*v.z,v.x));v.y=Math.min(r.height*.5,Math.max(r.height*.5-this.VH*v.z,v.y))},
+ bindView(cv){this.view=cv;this.fit();cancelAnimationFrame(this.raf);this.draw();const pts=new Map();let moved=0,pd=0;
+  cv.addEventListener('pointerdown',e=>{cv.setPointerCapture(e.pointerId);pts.set(e.pointerId,[e.clientX,e.clientY]);moved=0;if(pts.size===2){const [a,b]=[...pts.values()];pd=Math.hypot(a[0]-b[0],a[1]-b[1])}});
+  cv.addEventListener('pointermove',e=>{if(!pts.has(e.pointerId))return;const p=pts.get(e.pointerId);const dx=e.clientX-p[0],dy=e.clientY-p[1];if(pts.size===1){this.v.x+=dx;this.v.y+=dy;if(Math.abs(dx)+Math.abs(dy)>1)moved+=Math.abs(dx)+Math.abs(dy)}pts.set(e.pointerId,[e.clientX,e.clientY]);if(pts.size===2){const [a,b]=[...pts.values()];const d=Math.hypot(a[0]-b[0],a[1]-b[1]);if(pd){this.zoomAt((a[0]+b[0])/2,(a[1]+b[1])/2,d/pd)}pd=d;moved=99}this.clampV()});
+  const up=e=>{pts.delete(e.pointerId);if(!pts.size&&moved<6&&e.type==='pointerup'){const k=this.hitR(e.clientX,e.clientY);if(k){this.sel=k;UI.renderWin('world');}}if(pts.size<2)pd=0};cv.addEventListener('pointerup',up);cv.addEventListener('pointercancel',up);
+  cv.addEventListener('wheel',e=>{e.preventDefault();this.zoomAt(e.clientX,e.clientY,e.deltaY<0?1.15:1/1.15)},{passive:false})},
+ zoomAt(cx,cy,f){const r=this.view.getBoundingClientRect();const v=this.v;const px=cx-r.left,py=cy-r.top;const nz=Math.max(.3,Math.min(4,v.z*f));v.x=px-(px-v.x)*nz/v.z;v.y=py-(py-v.y)*nz/v.z;v.z=nz;this.clampV()},
+ async info(id){if(this.mi[id])return this.mi[id];const r=await act({op:'mapinfo',map:id});if(r&&r.mi){this.mi[id]=r.mi;return r.mi}return null},
+ local(cv,mi){const x=cv.getContext('2d');const s=Math.max(2,Math.floor(Math.min(240/mi.W,170/mi.H)));cv.width=mi.W*s;cv.height=mi.H*s;const C={0:'#5d8f45',1:'#a98a5c',2:'#3a78a8',3:'#8a5a30',4:'#c9b48a',5:'#6b4a3a',6:'#2f5e2c',7:'#7ab8d8',8:'#a8946a'};
+  const b=this.bio(mi.id);const tint={snow:'#e6eef6',glacier:'#d4e6f2',desert:'#e0c07a',dunes:'#c06a44',volcano:'#4a3530',crystal:'#4a3c78',citadel:'#3c3846',moor:'#6e5a62',storm:'#7c8680',deep:'#2e5233'}[b];
+  for(let y=0;y<mi.H;y++)for(let xx=0;xx<mi.W;xx++){const v=mi.tiles[y*mi.W+xx];x.fillStyle=(v===0&&tint)?tint:(v===6&&tint)?'#00000055':C[v]||'#555';x.fillRect(xx*s,y*s,s,s)}
+  const dot=(px,py,c,r)=>{x.fillStyle=c;x.beginPath();x.arc((px+.5)*s,(py+.5)*s,r,0,7);x.fill();x.strokeStyle='#000a';x.lineWidth=1;x.stroke()};for(const p of mi.portals)dot(p.x,p.y,'#5ff0ff',s*1.6);for(const n of mi.npcs)dot(n.x,n.y,'#ffd34d',s*1.4);if(mi.id===G.map.id&&G.me){const me=G.P[G.me.name];if(me)dot(me.x,me.y,'#fff',s*1.6)}},
+ travel(id){const m=G.D.maps[id];if(!m)return;const sp=m.spawn||[2,2];send({op:'goto',map:id,x:sp[0],y:sp[1]});toast(t('自動前往')+' '+m.n+'…');UI.close('world')}};
+WINS.world={title:'世界地圖',w:1060,html(o){const D=G.D.maps;W6.sel=W6.sel&&D[W6.sel]?W6.sel:G.map.id;const m=D[W6.sel];const b=W6.bio(W6.sel);const bn=(W6.BIO[b]||['?'])[0];const mi=W6.mi[W6.sel];
+  const tags=[bn,m.gen==='city'||m.gen==='town'?'安全區':'野外',m.gen==='arena'?'PvP 競技':'',(m.spawns||[]).some(s=>(G.D.mobs[s.mob]||{}).boss)?'有首領':''].filter(Boolean);
+  return `<div class="wm6"><div class="wmv"><canvas id="wmc"></canvas><div class="wmh">${t('拖曳移動 · 滾輪/雙指縮放 · 點選區域')}</div><button class="btn wmfit" id="wmfit">⤢</button></div>
+  <div class="wmp"><div class="wmt"><b>${esc(m.n)}</b><span class="lv">${W6.lvTxt(m)||''}</span></div><div class="wtag">${tags.map(x=>`<em>${esc(x)}</em>`).join('')}</div>
+   <div class="wloc">${mi?'<canvas id="wml"></canvas>':`<div class="wld">${t('載入中…')}</div>`}<div class="wleg"><span><i style="background:#fff"></i>${t('你')}</span><span><i style="background:#ffd34d"></i>NPC</span><span><i style="background:#5ff0ff"></i>${t('傳送門')}</span></div></div>
+   ${mi?`<div class="wls">${mi.npcs.length?`<div class="wsh">NPC</div>${mi.npcs.map(n=>`<div class="wr">🟡 ${esc(n.n)}</div>`).join('')}`:''}${mi.mobs.length?`<div class="wsh">${t('魔物')}</div>${mi.mobs.map(x=>`<div class="wr">${x.boss?'<b class="bs">BOSS</b>':''}${esc(x.n)} <small>Lv${x.lv}</small></div>`).join('')}`:''}<div class="wsh">${t('相鄰區域')}</div>${mi.portals.map(p=>`<div class="wr lk" data-go="${p.to}">➜ ${esc(p.n||p.to)}</div>`).join('')}<div class="wr mut">${t('線上玩家')}：${mi.online}</div></div>`:''}
+   <button class="btn g wide" id="wmgo" ${W6.sel===G.map.id?'disabled':''}>${W6.sel===G.map.id?t('你在這裡'):t('旅行')+' ➜'}</button></div></div>`},
+ bind(b,o){const cv=b.querySelector('#wmc');requestAnimationFrame(()=>{const keep=W6.v&&W6.view&&W6._keep;W6.bindView(cv);if(keep)W6.v=keep});b.querySelector('#wmfit').onclick=()=>{W6.fit()};
+  const id=W6.sel;if(!W6.mi[id])W6.info(id).then(()=>{if(UI.open.world&&W6.sel===id){W6._keep=W6.v;UI.renderWin('world')}});else{const l=b.querySelector('#wml');if(l)W6.local(l,W6.mi[id])}
+  b.querySelectorAll('[data-go]').forEach(x=>x.onclick=()=>{W6.sel=x.dataset.go;W6._keep=W6.v;UI.renderWin('world')});const g=b.querySelector('#wmgo');g.onclick=()=>W6.travel(W6.sel);W6._keep=null}};
+// 頻道
+WINS.chan={title:'頻道',w:420,html(o){if(!o.cd){act({op:'chans'}).then(r=>{if(r&&r.n)o.cd=r;else return;UI.renderWin('chan')});const t0=performance.now();act({op:'chans'}).then(()=>{o.ping=Math.round(performance.now()-t0);if(o.cd)UI.renderWin('chan')});return `<div class="wld">${t('載入中…')}</div>`}
+  const d=o.cd;const cap=50;return `<div class="ch6"><div class="srv"><b>${esc(d.region||'')}</b><span class="pg ${o.ping>150?'bad':o.ping>80?'mid':''}">${o.ping!=null?o.ping+' ms':'…'}</span></div><div class="chg">${(d.n||[]).map((n,i)=>{const c=i+1,p=Math.min(1,n/cap);return `<button class="chb ${c===d.chn?'on':''}" data-c="${c}"><b>CH ${c}</b><span class="cbar"><i style="width:${(p*100).toFixed(0)}%;background:${p>.8?'var(--rd)':p>.5?'var(--or)':'var(--gn)'}"></i></span><small>${n} ${t('人')}</small></button>`}).join('')}</div><p class="mut6">${t('同頻道的玩家才會互相看見；魔物與掉落為地圖共用。')}</p></div>`},
+ bind(b,o){b.querySelectorAll('[data-c]').forEach(x=>x.onclick=async()=>{const r=await act({op:'chan',c:+x.dataset.c});if(r&&!r.e){W6.chn=r.chn;W6.chip();o.cd=null;UI.renderWin('chan')}})}};
+W6.chip=function(){const c=document.querySelector('#mmw .mh .chip');if(c)c.textContent='CH '+(W6.chn||1)};
+// 小地圖強化
+W6.initMini=function(){const mw=document.getElementById('mmw');if(!mw||mw._w6)return;mw._w6=1;const mh=mw.querySelector('.mh');const chip=mh.querySelector('.chip');chip.classList.add('chbtn');chip.onclick=e=>{e.stopPropagation();UI.win('chan')};
+ const sp=mh.querySelector('span:not(.chip):not(.mmb)');if(sp&&sp.textContent.includes('🧭')){sp.className='mmname';sp.textContent=''}
+ const mmb=mh.querySelector('.mmb');if(mmb){mmb.innerHTML='<button data-mx title="放大 (N)">⤢</button><button data-wm title="世界地圖 (M)">🗺</button><button data-mc title="隱藏">–</button>';
+  mmb.querySelector('[data-mx]').onclick=e=>{e.stopPropagation();W6.mx()};mmb.querySelector('[data-wm]').onclick=e=>{e.stopPropagation();UI.win('world')};mmb.querySelector('[data-mc]').onclick=e=>{e.stopPropagation();mw.classList.remove('mmx','mmz');mw.classList.add('mmc');localStorage.v6mmc=1;document.getElementById('mmbk')&&document.getElementById('mmbk').remove()}}
+ addEventListener('keydown',e=>{if(/INPUT|TEXTAREA|SELECT/.test(e.target.tagName))return;if(e.key==='n'||e.key==='N'){e.preventDefault();W6.mx()}},true)};
+W6.mx=function(){const mw=document.getElementById('mmw');mw.classList.remove('mmc','mmz');const on=mw.classList.toggle('mmx');let bk=document.getElementById('mmbk');if(on&&!bk){bk=document.createElement('div');bk.id='mmbk';bk.onclick=()=>W6.mx();document.getElementById('hud').appendChild(bk)}else if(!on&&bk)bk.remove();UI.mmBase=0};
+(()=>{const mm0=UI.minimap.bind(UI);UI.minimap=function(){const mm=document.getElementById('mm');if(!mm||!G.map||!G.mapArt)return;const big=document.getElementById('mmw').classList.contains('mmx');const s=big?8:4;const key=G.map.id+s;if(this._mmk!==key){this._mmk=key;mm.width=G.map.W*s;mm.height=G.map.H*s}const x=mm.getContext('2d');x.imageSmoothingEnabled=true;x.drawImage(G.mapArt.cv,0,0,mm.width,mm.height);
+  const dot=(px,py,c,r)=>{x.fillStyle=c;x.beginPath();x.arc((px+.5)*s,(py+.5)*s,r,0,7);x.fill();x.lineWidth=1;x.strokeStyle='rgba(0,0,0,.6)';x.stroke()};
+  for(const p of G.map.portals)dot(p.x,p.y,'#5ff0ff',s*.9);for(const n of G.map.npcs)dot(n.x,n.y,'#ffd34d',s*.7);if(big)for(const k in G.M){const m=G.M[k];const md=G.D.mobs[m.k]||{};dot(m.x,m.y,md.boss?'#c07cff':'#ff5d6c',md.boss?s*.9:s*.4)}
+  for(const k in G.P){const p=G.P[k];if(k===G.me.name)continue;dot(p.x,p.y,G.party&&G.party.m.some(q=>q.n===k)?'#5aa9ff':'#e8e8e8',s*.45)}const me=G.P[G.me.name];if(me){dot(me.x,me.y,'#5CD68C',s*.9);const a=(performance.now()/700)%1;x.strokeStyle=`rgba(92,214,140,${1-a})`;x.lineWidth=2;x.beginPath();x.arc((me.x+.5)*s,(me.y+.5)*s,s*(1+a*2.5),0,7);x.stroke()}
+  const n=document.querySelector('#mmw .mmname');if(n&&n.textContent!==G.map.n)n.textContent=G.map.n;const c=document.getElementById('coord');if(c&&me)c.textContent=Math.round(me.x)+','+Math.round(me.y);const on=document.getElementById('mmon');if(on)on.textContent=Object.keys(G.P).length;if(!this._w6i){this._w6i=1;W6.initMini()}}})();
 
 // ===== 啟動 =====
 const MENU=[['stat','狀態','owl'],['skill','技能','staff'],['equip','裝備','armor'],['bag','背包','boots'],['quest','任務','card'],['market','市集','coin'],['exchange','鑽石匯兌','dia'],['more','更多','ring']];
