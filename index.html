@@ -1,4 +1,4 @@
-<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover"><meta name="theme-color" content="#0a0f1d"><meta name="apple-mobile-web-app-capable" content="yes"><link rel="manifest" href="manifest.json"><link rel="icon" href="icon.svg"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png"><title>Aurevia Online · 曙光之境</title><link rel="apple-touch-icon" sizes="180x180" href="icon-180.png"><meta name="apple-mobile-web-app-title" content="曙光之境"><style>
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover"><meta name="theme-color" content="#0a0f1d"><meta name="apple-mobile-web-app-capable" content="yes"><link rel="manifest" href="manifest.json"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png"><title>Aurevia Online · 曙光之境</title><link rel="apple-touch-icon" sizes="180x180" href="icon-180.png"><meta name="apple-mobile-web-app-title" content="曙光之境"><style>
 :root{--hud:1;--navy:#14244a;--navy2:#1f3a78;--gold:#c9a24a;--gold2:#e8c060;--paper:#f7f1e1;--ink:#1d2a4a}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}html,body{margin:0;height:100%;overflow:hidden;background:#000;font-family:"Noto Sans TC","Microsoft JhengHei","PingFang TC",sans-serif;color:var(--ink);user-select:none;-webkit-user-select:none;touch-action:none}
 #cv{position:fixed;inset:0;image-rendering:pixelated}button{font-family:inherit;cursor:pointer}input,select{font-family:inherit;user-select:text;-webkit-user-select:text}
@@ -552,6 +552,29 @@ body.ringc #rbtns .rbs[data-k="h"]{display:none!important}
 @media (max-width:640px){.v6 #login .chwrap{grid-template-columns:1fr}.v6 #login .chp{min-height:170px}.v6 #login .chp canvas{width:110px;height:110px}.v6 #login .brand h1{font-size:32px}}
 .v6 #login .brand .logo{display:block;max-width:240px;max-height:110px;margin:0 auto 4px}
 .v6 #login .brand.haslogo small{display:none}.v6 #login .brand.haslogo h1{font-size:20px;letter-spacing:.4em;margin-top:2px}.v6 #login .brand .logo{max-width:min(280px,80%)!important}
+/* ===== v6 聊天側欄 ===== */
+.v6 #cxp{position:fixed;z-index:70;left:var(--sL);top:var(--sT);bottom:var(--sB);width:min(460px,46vw);display:none;flex-direction:column;background:rgba(10,15,30,.80);-webkit-backdrop-filter:blur(18px) saturate(1.3);backdrop-filter:blur(18px) saturate(1.3);border-right:1px solid var(--lnG);box-shadow:8px 0 30px rgba(0,0,0,.45);--cfs:13px;color:var(--t1);font-family:var(--fui)}
+.v6 #cxp.on{display:flex;animation:cxin .18s ease-out}@keyframes cxin{from{transform:translateX(-24px);opacity:0}to{transform:none;opacity:1}}
+.v6 #cxh{display:flex;align-items:center;gap:6px;padding:8px 10px 8px 14px;border-bottom:1px solid var(--ln)}.v6 #cxh b{font-size:15px;color:var(--au2);letter-spacing:.06em}.v6 #cxh .sp{flex:1}
+.v6 #cxh button{min-width:34px;height:30px;border-radius:8px;border:1px solid var(--ln2);background:rgba(255,255,255,.06);color:var(--t1);font:600 13px var(--fnum);cursor:pointer}.v6 #cxh .cxx{border-radius:50%;width:32px;font-size:20px;line-height:1}
+.v6 #cxm{flex:1;display:flex;min-height:0}
+.v6 #cxr{width:66px;flex:none;overflow-y:auto;border-right:1px solid var(--ln);padding:4px 0;scrollbar-width:none}.v6 #cxr::-webkit-scrollbar{display:none}
+.v6 #cxr button{position:relative;display:flex;flex-direction:column;align-items:center;gap:2px;width:100%;padding:7px 0;border:0;background:none;color:var(--t3);font:500 12px var(--fui);cursor:pointer;border-left:3px solid transparent}
+.v6 #cxr button.on{color:var(--au2);background:linear-gradient(90deg,rgba(232,195,106,.18),transparent);border-left-color:var(--au)}.v6 #cxr button svg{filter:drop-shadow(0 1px 1px rgba(0,0,0,.5))}
+.v6 #cxr button i{position:absolute;top:3px;right:8px;min-width:16px;height:16px;border-radius:8px;background:var(--rd);color:#fff;font:700 10px/16px var(--fnum);font-style:normal;padding:0 4px}
+.v6 #cxl{flex:1;overflow-y:auto;padding:6px 10px 10px;font-size:var(--cfs);line-height:1.55;-webkit-user-select:text;user-select:text;overscroll-behavior:contain}
+.v6 #cxl .cm{padding:2px 0;word-break:break-word}.v6 #cxl .ct{color:var(--t3);font-family:var(--fnum);font-size:.88em}.v6 #cxl .cn{font-weight:700;cursor:pointer}.v6 #cxl .cd{color:var(--t3);vertical-align:-1px}.v6 #cxl .cx{color:var(--t1)}.v6 #cxl .cempty{color:var(--t4);text-align:center;padding:30px 0}
+.v6 #cxf{display:flex;gap:6px;padding:8px 10px;border-top:1px solid var(--ln);align-items:center}.v6 #cxf.ro{opacity:.45;pointer-events:none}
+.v6 #cxf select,.v6 #cxf input{height:38px;border-radius:10px;border:1px solid var(--ln2);background:rgba(0,0,0,.4);color:var(--t1);font-size:16px;padding:0 10px;-webkit-user-select:text;user-select:text}
+.v6 #cxf select{width:66px;padding:0 4px;font:600 13px var(--fnum)}.v6 #cxpm{width:84px}.v6 #cxin{flex:1;min-width:0}
+.v6 #cxs{width:42px;height:38px;border-radius:10px;border:1px solid var(--lnG);background:linear-gradient(180deg,#f3d58a,#c9973e);color:#3a2608;cursor:pointer;flex:none}
+.v6 #cxo{position:absolute;right:6px;top:5px;width:26px;height:22px;border-radius:6px;border:1px solid var(--ln2);background:rgba(255,255,255,.06);color:var(--t2);display:none;cursor:pointer;padding:0}.v6 body.lay-d #cxo{display:block}.v6 body.lay-d #logw{padding-right:38px!important}
+.v6 body.lay-d #cxp{width:440px}
+.v6 body.lay-p #cxp{width:auto;right:var(--sR);top:auto;height:min(72vh,620px);border-right:0;border-top:1px solid var(--lnG);border-radius:16px 16px 0 0;box-shadow:0 -10px 30px rgba(0,0,0,.45)}
+.v6 body.lay-p #cxp.on{animation:cxup .18s ease-out}@keyframes cxup{from{transform:translateY(30px);opacity:0}to{transform:none;opacity:1}}
+.v6 body.lay-l #cxp{width:min(440px,52vw)}
+.v6 body.kb #cxp{bottom:var(--kb,0px);top:auto;height:min(calc(100dvh - var(--kb,0px) - 8px),520px)}
+.v6 body.chatx #logw{visibility:hidden}
 </style></head><body>
 <canvas id="cv"></canvas>
 <div id="hud" style="display:none">
@@ -1603,6 +1626,68 @@ WINS.codex={title:'圖鑑',w:640,manual:1,
 (()=>{const L=WINS.lore;if(L){const h=L.html.bind(L);L.html=function(o){o=o||{};if(!o.job||!G.D.jobs[o.job])o.job=G.me.job==='nov'?'kni':G.me.job;return h(o)}}})();
 (()=>{const w0=UI.win.bind(UI);UI.win=function(id,arg){w0(id,arg);const el=document.getElementById('w-'+id);if(!el||el.style.display==='none'||isMob())return;const fit=()=>{if(isMob()||el.style.display==='none')return;const h=el.offsetHeight,w=el.offsetWidth;let y=el.offsetTop,x=el.offsetLeft;if(y+h>innerHeight-8)y=Math.max(8,innerHeight-h-8);if(x+w>innerWidth-8)x=Math.max(8,innerWidth-w-8);el.style.top=y+'px';el.style.left=x+'px'};requestAnimationFrame(fit);if(!el._ro&&window.ResizeObserver){el._ro=new ResizeObserver(fit);el._ro.observe(el)}}})();
 
+// ===== v6 聊天：收合一行 + 展開側欄（頻道列、時間、語言標籤、裝置、字級、語言、輸入） =====
+const CH6={msgs:[],tab:SET.chatTab||'all',fs:SET.chatFs||13,lang:SET.chatLang||'ZH',pm:'',unread:{},
+ TABS:[['all','全部'],['world','世界'],['map','地圖'],['trade','交易'],['lfg','找隊伍'],['party','隊伍'],['guild','公會'],['pm','私聊'],['sys','系統'],['exp','EXP']],
+ COL:{world:'#ffb86b',map:'#9fd0ff',trade:'#ffd36b',lfg:'#7ee0c8',party:'#9fcbff',guild:'#9ef08a',pm:'#ff9fd0',sys:'#E8C36A',exp:'#c6a8ff'},
+ IC:{all:'<circle cx="9" cy="10" r="6" fill="#5AA9FF"/><circle cx="15" cy="14" r="6" fill="#E8C36A" opacity=".9"/>',
+  world:'<circle cx="12" cy="12" r="8" fill="#3d7fe0"/><path d="M5 10c3 1 4-2 7-1s2 4 6 3M8 17c2-2 4 0 6-2" stroke="#7fe08a" stroke-width="2.2" fill="none" stroke-linecap="round"/>',
+  map:'<path d="M4 6l5-2 6 2 5-2v14l-5 2-6-2-5 2z" fill="#e9d29a"/><path d="M9 4v14M15 6v14" stroke="#b08a45" stroke-width="1.4"/><circle cx="12" cy="11" r="2" fill="#e2405a"/>',
+  trade:'<circle cx="12" cy="12" r="8" fill="#f2b33a"/><circle cx="12" cy="12" r="5.5" fill="#ffd970"/><path d="M12 8.5v7M10 10h3.2a1.2 1.2 0 010 2.4h-2.4a1.2 1.2 0 000 2.4H14" stroke="#a46a12" stroke-width="1.5" fill="none"/>',
+  lfg:'<circle cx="10.5" cy="10.5" r="5.5" fill="#bfe9ff" stroke="#3d7fe0" stroke-width="2.2"/><path d="M15 15l5 5" stroke="#8b5a2b" stroke-width="3" stroke-linecap="round"/>',
+  party:'<circle cx="8" cy="9" r="3" fill="#ffd0a8"/><circle cx="16" cy="9" r="3" fill="#ffd0a8"/><path d="M3 19c0-4 3-6 5-6s5 2 5 6zM11 19c0-4 3-6 5-6s5 2 5 6z" fill="#5AA9FF"/>',
+  guild:'<path d="M12 3l8 3v6c0 5-4 8-8 9-4-1-8-4-8-9V6z" fill="#3a8a5a"/><path d="M12 6l5 2v4c0 3-2 5-5 6z" fill="#9ef08a"/>',
+  pm:'<rect x="3" y="6" width="18" height="12" rx="2.5" fill="#ff8fc8"/><path d="M4 7l8 6 8-6" stroke="#fff" stroke-width="1.8" fill="none"/>',
+  sys:'<circle cx="12" cy="12" r="7.5" fill="#8a96ad"/><circle cx="12" cy="12" r="3" fill="#2a3350"/><path d="M12 2.5v3M12 18.5v3M2.5 12h3M18.5 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2" stroke="#8a96ad" stroke-width="2.4" stroke-linecap="round"/>',
+  exp:'<path d="M12 3l2.7 5.6 6.1.8-4.5 4.2 1.1 6-5.4-3-5.4 3 1.1-6-4.5-4.2 6.1-.8z" fill="#ffd34d" stroke="#c98a12" stroke-width="1"/>'},
+ svg(k,s=22){return `<svg viewBox="0 0 24 24" width="${s}" height="${s}" aria-hidden="true">${this.IC[k]||''}</svg>`},
+ DEV:{m:'<svg viewBox="0 0 24 24" width="12" height="12"><rect x="7" y="3" width="10" height="18" rx="2" fill="none" stroke="currentColor" stroke-width="2"/></svg>',d:'<svg viewBox="0 0 24 24" width="13" height="12"><rect x="3" y="4" width="18" height="12" rx="1.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M9 20h6" stroke="currentColor" stroke-width="2"/></svg>'},
+ add(m){m.ts=m.ts||Date.now();this.msgs.push(m);if(this.msgs.length>300)this.msgs.shift();if(this.open&&this.match(m))this.append(m);else if(m.ch!=='sys'&&m.ch!=='exp'){this.unread[m.ch]=(this.unread[m.ch]||0)+1;this.badges()}},
+ match(m){const t=this.tab;return t==='all'?m.ch!=='exp':m.ch===t},
+ hm(ts){const d=new Date(ts);return String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0')},
+ row(m){const L=Object.fromEntries(this.TABS);const c=this.COL[m.ch]||'#9fd0ff';const sys=m.ch==='sys'||m.ch==='exp';
+  return `<div class="cm"><span class="ct">[${this.hm(m.ts)}]</span> ${sys?`<b style="color:${c}">[${t(L[m.ch])}]</b> <span class="cx">${m.html}</span>`:`<b class="cl" style="color:${c}">[${esc(m.lang||'ZH')}]</b> <a class="cn" data-n="${esc(m.from)}" style="color:${c}">${esc(m.from)}${m.ch==='pm'&&m.to?' → '+esc(m.to):''}</a> <span class="cd">${this.DEV[m.dev||'m']}</span>: <span class="cx">${esc(m.text)}</span>`}</div>`},
+ append(m){const l=document.getElementById('cxl');if(!l)return;const near=l.scrollHeight-l.scrollTop-l.clientHeight<60;l.insertAdjacentHTML('beforeend',this.row(m));while(l.children.length>300)l.firstChild.remove();if(near)l.scrollTop=1e9},
+ render(){const l=document.getElementById('cxl');if(!l)return;l.innerHTML=this.msgs.filter(m=>this.match(m)).map(m=>this.row(m)).join('')||`<div class="cempty">${t('尚無訊息')}</div>`;l.scrollTop=1e9;
+  const L=Object.fromEntries(this.TABS);document.getElementById('cxtt').textContent=t('聊天')+' · '+t(L[this.tab]);
+  for(const b of document.querySelectorAll('#cxr button'))b.classList.toggle('on',b.dataset.k===this.tab);
+  delete this.unread[this.tab];if(this.tab==='all')this.unread={};this.badges();
+  const ro=this.tab==='sys'||this.tab==='exp';document.getElementById('cxf').classList.toggle('ro',ro);
+  const pmn=document.getElementById('cxpm');pmn.style.display=this.tab==='pm'?'':'none';
+  const i=document.getElementById('cxin');i.placeholder=t(this.tab==='pm'?'密語內容…':'輸入訊息…');document.getElementById('cxp').style.setProperty('--cfs',this.fs+'px')},
+ badges(){for(const b of document.querySelectorAll('#cxr button')){const n=b.dataset.k==='all'?0:(this.unread[b.dataset.k]||0);let s=b.querySelector('i');if(n){if(!s){s=document.createElement('i');b.appendChild(s)}s.textContent=n>99?'99+':n}else if(s)s.remove()}},
+ show(){const p=document.getElementById('cxp');p.classList.add('on');this.open=1;this.render();document.body.classList.add('chatx')},
+ hide(){const p=document.getElementById('cxp');p.classList.remove('on');this.open=0;document.getElementById('cxin').blur();document.body.classList.remove('chatx','kb')},
+ send(){const i=document.getElementById('cxin');const v=i.value.trim();if(!v){i.blur();return}let ch=this.tab;if(ch==='all'||ch==='sys'||ch==='exp')ch='map';
+  if(v.startsWith('/')){document.getElementById('chatin').value=v;UI.chatSend();i.value='';return}
+  const dev=V6.touch?'m':'d';
+  if(ch==='pm'){const n=document.getElementById('cxpm').value.trim()||this.pm;if(!n){toast('請輸入密語對象');return}this.pm=n;act({op:'pm',n,text:v})}
+  else if(ch==='party'||ch==='guild')act({op:'chat',ch,text:v});
+  else send({op:'chat',ch,text:v,lang:this.lang,dev});
+  i.value='';if(V6.touch)i.blur()},
+ init(){const lang=[['ZH','中文'],['EN','EN'],['JA','日本語'],['KO','한국어']];
+  const p=document.createElement('div');p.id='cxp';p.className='gl6';
+  p.innerHTML=`<div id="cxh"><b id="cxtt"></b><span class="sp"></span><button data-f="-1" class="cxa">A−</button><button data-f="1" class="cxa">A+</button><button id="cxc" class="cxx" aria-label="關閉">×</button></div>
+  <div id="cxm"><nav id="cxr">${this.TABS.map(([k,n])=>`<button data-k="${k}">${this.svg(k)}<span>${t(n)}</span></button>`).join('')}</nav><div id="cxl"></div></div>
+  <div id="cxf"><select id="cxlang">${lang.map(([k,n])=>`<option value="${k}"${k===this.lang?' selected':''}>${k}</option>`).join('')}</select><input id="cxpm" placeholder="${t('對象')}" maxlength="16"><input id="cxin" maxlength="120" enterkeyhint="send" autocomplete="off"><button id="cxs" aria-label="送出"><svg viewBox="0 0 24 24" width="18" height="18"><path d="M3 11l18-8-7 18-2-8z" fill="currentColor"/></svg></button></div>`;
+  document.getElementById('hud').appendChild(p);
+  p.addEventListener('click',e=>{const b=e.target.closest('#cxr button');if(b){this.tab=b.dataset.k;SET.chatTab=this.tab;saveSet&&saveSet();this.render();return}
+   const f=e.target.closest('.cxa');if(f){this.fs=Math.max(11,Math.min(19,this.fs+ +f.dataset.f));SET.chatFs=this.fs;saveSet&&saveSet();p.style.setProperty('--cfs',this.fs+'px');return}
+   if(e.target.closest('#cxc')){this.hide();return}if(e.target.closest('#cxs')){this.send();return}
+   const n=e.target.closest('.cn');if(n&&n.dataset.n!==G.me.name){this.pm=n.dataset.n;document.getElementById('cxpm').value=this.pm;this.tab='pm';this.render();document.getElementById('cxin').focus()}});
+  ['pointerdown','touchstart','wheel'].forEach(ev=>p.addEventListener(ev,e=>e.stopPropagation(),{passive:true}));
+  document.getElementById('cxlang').onchange=e=>{this.lang=e.target.value;SET.chatLang=this.lang;saveSet&&saveSet()};
+  const ci=document.getElementById('cxin');ci.addEventListener('keydown',e=>{e.stopPropagation();if(e.key==='Enter'){e.preventDefault();this.send()}if(e.key==='Escape')this.hide()});
+  document.getElementById('cxpm').addEventListener('keydown',e=>e.stopPropagation());
+  const vv=window.visualViewport;const kb=()=>{if(!vv)return;const kh=Math.max(0,document.documentElement.clientHeight-vv.height-vv.offsetTop);const on=kh>80&&(document.activeElement===ci||document.activeElement.id==='cxpm');document.body.classList.toggle('kb',on);document.body.style.setProperty('--kb',kh+'px');if(on)window.scrollTo(0,0)};
+  if(vv){vv.addEventListener('resize',kb);vv.addEventListener('scroll',kb)}ci.addEventListener('blur',()=>setTimeout(()=>{if(!/cx/.test((document.activeElement||{}).id||'')){document.body.classList.remove('kb');window.scrollTo(0,0)}},60));
+  // 收合列：點擊打開側欄（手機）；桌機加展開鈕
+  const lw=document.getElementById('logw');const ex=document.createElement('button');ex.id='cxo';ex.setAttribute('aria-label','展開聊天');ex.innerHTML='<svg viewBox="0 0 24 24" width="16" height="16"><path d="M4 6h16M4 12h16M4 18h10" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>';lw.appendChild(ex);
+  lw.addEventListener('click',e=>{if(V6.L==='d'&&!e.target.closest('#cxo'))return;e.stopPropagation();lw.classList.remove('open');this.show();if(V6.L==='d')setTimeout(()=>ci.focus(),0)},true);
+  addEventListener('keydown',e=>{if(/INPUT|TEXTAREA|SELECT/.test(e.target.tagName))return;if(e.key==='Escape'&&this.open)this.hide()});
+  const lg=UI.log.bind(UI);UI.log=h=>{lg(h);const s=String(h);this.add({ch:/經驗|EXP|Base|Job ?\+/i.test(s.replace(/<[^>]+>/g,''))?'exp':'sys',html:s})};
+  const ch0=UI.chat;UI.chat=m=>{ch0(m);this.add({...m})};this.render()}};
+
 // ===== 啟動 =====
 const MENU=[['stat','狀態','owl'],['skill','技能','staff'],['equip','裝備','armor'],['bag','背包','boots'],['quest','任務','card'],['market','市集','coin'],['exchange','鑽石匯兌','dia'],['more','更多','ring']];
 const MORE=[['autobs','自動戰鬥'],['mail','信箱'],['settings','設定'],['mall','商城'],['premium','Premium'],['auction','拍賣'],['party','組隊'],['friends','好友'],['guild','公會'],['rank','排行'],['world','世界地圖'],['look','外觀'],['exch','兌換'],['mlog','交易紀錄'],['lore','職業']];
@@ -1637,7 +1722,7 @@ async function boot(){await loadLang(I18N.lang);$('#llang').innerHTML=Object.ent
  $('#lguest').onclick=()=>{let g=JSON.parse(localStorage.robGuest||'null');if(!g){g=['旅人'+Math.random().toString(36).slice(2,7),Math.random().toString(36).slice(2,12)];localStorage.robGuest=JSON.stringify(g)}const last=JSON.parse(localStorage.robAcc||'null');auth({acc:g[0],pw:g[1],guest:1,char:last&&last.acc===g[0]?last.char:''},true)};
  {const a=JSON.parse(localStorage.robAcc||'null');const old=JSON.parse(localStorage.robAuto||'null');if(a){$('#lu').value=a.acc;auth(a,true)}else if(old){$('#lu').value=old[0];auth({acc:old[0],pw:old[1],guest:/^旅人/.test(old[0])?1:0,char:old[0]},true)}}
  if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{})}
-let started=0;function start(){if(started)return;started=1;buildMenus();V6.init();joystick();UI.applySet();
+let started=0;function start(){if(started)return;started=1;buildMenus();V6.init();CH6.init();joystick();UI.applySet();
  $('#autob').onclick=()=>{if(UI._lp)return UI._lp=0;UI.toggleAuto()};{const ab=$('#autob');let tm;ab.oncontextmenu=e=>{e.preventDefault();UI.win('autobs')};ab.addEventListener('pointerdown',()=>{tm=setTimeout(()=>{UI._lp=1;UI.win('autobs')},550)});ab.addEventListener('pointerup',()=>clearTimeout(tm));ab.addEventListener('pointerleave',()=>clearTimeout(tm))}$('#atkb').onclick=e=>{e.stopPropagation();let best=null,bd=9;const me=G.P[G.me.name];for(const k in G.M){const m=G.M[k];const d=Math.hypot(m.x-me.x,m.y-me.y);if(d<bd){bd=d;best=m}}if(best){G.sel=best.id;send({op:'atk',mob:best.id})}else{if(!G.me.auto)UI.toggleAuto();toast(t('附近沒有怪物，自動前往狩獵區…'))}};
  $('#cmin').onclick=()=>{$('#ccard').classList.toggle('min');$('#cmin').textContent=$('#ccard').classList.contains('min')?'+':'–';$('#cname2').textContent=G.me.name};$('#chatbtn').onclick=()=>$('#chatin').focus();$('#fsbtn').onclick=()=>{if(document.fullscreenElement)document.exitFullscreen();else document.documentElement.requestFullscreen&&document.documentElement.requestFullscreen().catch(()=>{})};
  $('#mm').addEventListener('click',e=>{e.stopPropagation();const r=e.target.getBoundingClientRect();const x=Math.floor((e.clientX-r.left)/r.width*G.map.W),y=Math.floor((e.clientY-r.top)/r.height*G.map.H);G.dest=[x,y];send({op:'goto',map:G.map.id,x,y})});
