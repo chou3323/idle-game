@@ -1,1 +1,22 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="12" fill="#14244a"/><rect x="3" y="3" width="58" height="58" rx="10" fill="none" stroke="#c9a24a" stroke-width="3"/><path d="M32 10v34M32 12l16 26H32zM32 16l-12 22h12z" fill="#f7f1e1" stroke="#c9a24a"/><path d="M14 46h36l-6 8H20z" fill="#a86a32"/></svg>
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024"><defs>
+<radialGradient id="bg" cx="50%" cy="38%" r="75%"><stop offset="0" stop-color="#4f7dff"/><stop offset=".55" stop-color="#1d2f8f"/><stop offset="1" stop-color="#0a0f33"/></radialGradient>
+<radialGradient id="glow" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#7fd6ff" stop-opacity=".75"/><stop offset=".5" stop-color="#7fd6ff" stop-opacity=".22"/><stop offset="1" stop-color="#7fd6ff" stop-opacity="0"/></radialGradient>
+<linearGradient id="gold" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff6d0"/><stop offset=".35" stop-color="#f3c962"/><stop offset=".7" stop-color="#b9792a"/><stop offset="1" stop-color="#ffe39a"/></linearGradient>
+<linearGradient id="silver" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset=".45" stop-color="#cfd8e6"/><stop offset=".55" stop-color="#8a97ab"/><stop offset="1" stop-color="#e9eef5"/></linearGradient>
+<linearGradient id="gem" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#e8fffb"/><stop offset=".3" stop-color="#7fd6ff"/><stop offset="1" stop-color="#0a0f33"/></linearGradient>
+<linearGradient id="gloss" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".28"/><stop offset=".45" stop-color="#fff" stop-opacity="0"/></linearGradient>
+<linearGradient id="shade" x1="0" y1="0" x2="0" y2="1"><stop offset=".6" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".45"/></linearGradient>
+</defs>
+<rect width="1024" height="1024" fill="url(#bg)"/><circle cx="512" cy="480" r="470" fill="url(#glow)"/><path d="M250 258Q250 300 292 300Q250 300 250 342Q250 300 208 300Q250 300 250 258Z" fill="#fff" opacity=".85"/><path d="M790 220Q790 250 820 250Q790 250 790 280Q790 250 760 250Q790 250 790 220Z" fill="#fff" opacity=".85"/><path d="M820 652Q820 700 868 700Q820 700 820 748Q820 700 772 700Q820 700 820 652Z" fill="#fff" opacity=".85"/><path d="M200 733Q200 760 227 760Q200 760 200 787Q200 760 173 760Q200 760 200 733Z" fill="#fff" opacity=".85"/><path d="M690 149Q690 170 711 170Q690 170 690 191Q690 170 669 170Q690 170 690 149Z" fill="#fff" opacity=".85"/>
+<g transform="translate(512 512) scale(0.9) translate(-512 -512)"><g transform="translate(14 22)" opacity=".45"><path d="M512 230 L720 300 Q730 560 512 800 Q294 560 304 300 Z" fill="#1b2a6b" stroke="url(#gold)" stroke-width="34" stroke-linejoin="round"/>
+<path d="M512 270 L690 330 Q696 545 512 752 Q328 545 334 330 Z" fill="url(#gem)" opacity=".55"/><g><path d="M512 120 L545 190 L545 640 L479 640 L479 190 Z" fill="url(#silver)" stroke="#2a2440" stroke-width="10"/>
+<path d="M512 140 L512 640" stroke="#fff" stroke-opacity=".6" stroke-width="6"/>
+<path d="M392 640 Q512 690 632 640 L632 672 Q512 720 392 672 Z" fill="url(#gold)" stroke="#3a2410" stroke-width="10"/>
+<rect x="490" y="690" width="44" height="120" rx="12" fill="#5a2f1a" stroke="#2a160a" stroke-width="8"/>
+<circle cx="512" cy="836" r="34" fill="url(#gold)" stroke="#3a2410" stroke-width="8"/></g></g><path d="M512 230 L720 300 Q730 560 512 800 Q294 560 304 300 Z" fill="#1b2a6b" stroke="url(#gold)" stroke-width="34" stroke-linejoin="round"/>
+<path d="M512 270 L690 330 Q696 545 512 752 Q328 545 334 330 Z" fill="url(#gem)" opacity=".55"/><g><path d="M512 120 L545 190 L545 640 L479 640 L479 190 Z" fill="url(#silver)" stroke="#2a2440" stroke-width="10"/>
+<path d="M512 140 L512 640" stroke="#fff" stroke-opacity=".6" stroke-width="6"/>
+<path d="M392 640 Q512 690 632 640 L632 672 Q512 720 392 672 Z" fill="url(#gold)" stroke="#3a2410" stroke-width="10"/>
+<rect x="490" y="690" width="44" height="120" rx="12" fill="#5a2f1a" stroke="#2a160a" stroke-width="8"/>
+<circle cx="512" cy="836" r="34" fill="url(#gold)" stroke="#3a2410" stroke-width="8"/></g></g>
+<rect width="1024" height="1024" fill="url(#shade)"/><path d="M0 0H1024V380Q512 470 0 380Z" fill="url(#gloss)"/></svg>
