@@ -1,1 +1,1 @@
-{"name":"深淵之境","short_name":"深淵之境","start_url":"./","display":"standalone","background_color":"#0b0908","theme_color":"#0b0908","icons":[{"src":"icon.svg","sizes":"any","type":"image/svg+xml"}]}
+{"name": "晨帆物語", "short_name": "晨帆物語", "start_url": "/", "display": "fullscreen", "orientation": "any", "background_color": "#060c1c", "theme_color": "#14244a", "icons": [{"src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable"}], "scope": "/", "id": "/"}
