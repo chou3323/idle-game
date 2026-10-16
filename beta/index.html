@@ -101,6 +101,14 @@ body.touch #joy,body.touch #rpad{display:block}body.touch #hot{display:none}body
 .exl{display:flex;flex-direction:column;gap:6px;max-height:56vh;overflow:auto}.exr{display:grid;grid-template-columns:120px 1fr 90px;gap:8px;align-items:center;border:1px solid #d8c8a0;border-radius:6px;padding:6px;background:#fffdf4}.exn{font-size:12.5px}.exg{display:flex;gap:6px;align-items:center;flex-wrap:wrap}.exi{display:flex;flex-direction:column;align-items:center;font-size:10.5px;min-width:52px}.exi b.lack{color:#c03030}.exi em{font-style:normal;color:#8a7a5a;font-size:9.5px}.exa{font-size:20px;color:#c08a10}.exb{text-align:center;display:flex;flex-direction:column;gap:3px}
 .linkbox{background:linear-gradient(90deg,#fff3c8,#fffbe8);border:2px solid #e0a020;border-radius:8px;padding:8px;margin-bottom:8px}.linkbox small{display:block;color:#7a6a4a}.linkbox.ok{border-color:#3ac05a;background:#effbe8}
 @media (max-height:540px){.lookw{grid-template-columns:120px 1fr}.exr{grid-template-columns:90px 1fr 76px}}
+/* 視窗 v4：手機（含旋轉）置中、最大 92%、內部捲動、X 永遠可見 */
+.win{max-height:calc(var(--vh,100vh) - 16px);max-width:calc(var(--vw,100vw) - 10px)}
+.win .wh{flex:none;position:sticky;top:0;z-index:2}.win .wx{flex:none;min-width:30px}.win .wb{min-height:0;overflow:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
+.win.sheet{left:50%!important;top:50%!important;right:auto!important;bottom:auto!important;transform:translate(-50%,-50%);width:calc(var(--vw,100vw)*.92)!important;max-width:820px;max-height:calc(var(--vh,100vh)*.92)!important;border-radius:10px}
+.win.sheet .wh{padding:5px 10px;font-size:15px}.win.sheet .wb{padding:8px}
+#wback{display:none;position:fixed;inset:0;background:#0006;z-index:99}
+.jrow{grid-template-columns:24px minmax(56px,80px) minmax(0,1fr) auto auto}.jrow>*{min-width:0}.jrow small{overflow:hidden;text-overflow:ellipsis}
+@media (max-height:540px){.jrow{grid-template-columns:22px 64px minmax(0,1fr) auto auto;font-size:11.5px;padding:3px}.jrow small{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}}
 /* ===== HUD 版面 v3（依參考圖位置；不重疊）===== */
 :root{--sl:env(safe-area-inset-left,0px);--sr:env(safe-area-inset-right,0px);--sb:env(safe-area-inset-bottom,0px);--st:env(safe-area-inset-top,0px)}
 #mbar{display:none!important}
@@ -147,7 +155,7 @@ body.touch #joy,body.touch #rpad{display:block}body.touch #hot{display:none}body
  #topmenu .tm{width:44px;font-size:10px}#topmenu .tm .ti{width:30px;height:30px}#topmenu .tm .ti img{width:28px!important;height:28px!important}
  #mmw{top:calc(56px + var(--st));width:132px}#mm{height:70px}#mapn{font-size:10px;margin:0}.mmf{font-size:9.5px}#mmw .mh{display:none}
  #more{top:calc(56px + var(--st));grid-template-columns:repeat(5,50px)}#more .tm{width:50px;font-size:10px}
- #tracker{top:calc(56px + var(--st) + 112px);width:150px;font-size:10px}#tracker .tri:nth-child(n+3){display:none}.tri small{display:none}
+ #tracker{top:calc(56px + var(--st) + 112px);width:150px;font-size:10px}#tracker .tri:nth-child(n+2){display:none}.tri small{display:none}
  #autotag{top:calc(48px + var(--st));font-size:10px}#focus{top:calc(70px + var(--st));min-width:180px;font-size:11px}
  #logw{left:calc(150px + var(--sl));right:calc(330px + var(--sr));width:auto;bottom:calc(22px + var(--sb))}#log{max-height:52px;font-size:10.5px}#chatin{padding:2px 6px;font-size:11px}
  .mwrap{grid-template-columns:1fr}.mrec,.mside .sopt{display:none}.mlh,.mlr{grid-template-columns:1.4fr 80px 70px}.ma{display:none}.sellw,.xpanels{grid-template-columns:1fr}
@@ -155,7 +163,7 @@ body.touch #joy,body.touch #rpad{display:block}body.touch #hot{display:none}body
 /* 觸控控制（弧形技能＋右下攻擊＋AUTO 在上） */
 body.touch #hot{display:none}
 body.touch #joy{left:calc(22px + var(--sl));bottom:calc(26px + var(--sb));width:124px;height:124px}body.touch #joy i{left:32px;top:32px;width:54px;height:54px}
-body.touch #rpad{right:calc(10px + var(--sr));bottom:calc(14px + var(--sb));width:230px;height:200px}
+body.touch #rpad{right:calc(10px + var(--sr));bottom:calc(14px + var(--sb));width:204px;height:182px}
 body.touch #atkb{width:78px;height:78px;right:0;bottom:0;font-size:12px}
 body.touch .rbs{width:46px;height:46px}
 body.touch .rbs.p0{right:105px;bottom:16px}body.touch .rbs.p1{right:94px;bottom:68px}body.touch .rbs.p2{right:61px;bottom:105px}
@@ -168,6 +176,55 @@ body.touch #loots{right:calc(250px + var(--sr));bottom:calc(90px + var(--sb))}
 #rotate .ph{width:54px;height:90px;border:4px solid #e9c46a;border-radius:10px;animation:rot 1.8s infinite ease-in-out}
 @keyframes rot{0%,20%{transform:rotate(0)}60%,100%{transform:rotate(-90deg)}}
 
+
+/* ===== 手機直向版面（不重疊；安全區）===== */
+@media (orientation:portrait) and (max-width:620px){
+ #ccard{left:calc(6px + var(--sl));top:calc(6px + var(--st));transform:scale(.78)}
+ #mmw{right:calc(6px + var(--sr));top:calc(6px + var(--st));width:124px;padding:3px}#mm{height:76px}#mmw .mh{display:none}#mapn{font-size:10px;margin:0}.mmf{font-size:9.5px;gap:8px}
+ #topmenu{left:calc(4px + var(--sl));right:calc(4px + var(--sr));top:calc(var(--st) + 132px);justify-content:space-between;background:linear-gradient(#14244acc,#14244a88);border:1px solid #e9c46a88;border-radius:8px;padding:2px 2px 1px}
+ #topmenu .tm{width:auto;flex:1;font-size:9.5px}#topmenu .tm .ti{width:28px;height:28px}#topmenu .tm .ti img{width:26px!important;height:26px!important}
+ #more{top:calc(var(--st) + 180px);right:calc(6px + var(--sr));grid-template-columns:repeat(5,1fr);width:calc(100vw - 12px - var(--sl) - var(--sr));box-sizing:border-box}#more .tm{width:auto}
+ #lb{left:calc(8px + var(--sl));top:calc(var(--st) + 186px)}.rbtn{width:32px;height:32px;font-size:14px}
+ #phud{left:calc(6px + var(--sl));top:calc(var(--st) + 224px);width:124px}
+ #tracker{right:calc(6px + var(--sr));top:calc(var(--st) + 186px);width:170px;font-size:10.5px}#tracker .tri:nth-child(n+3){display:none}.tri small{display:none}
+ #autotag{top:calc(var(--st) + 186px);font-size:10px;max-width:120px;white-space:normal;text-align:center;left:50%}
+ #focus{top:calc(var(--st) + 254px);min-width:170px;font-size:11px}
+ #toasts{top:42%}.toast{font-size:12px;max-width:86vw}
+ body.touch #joy{left:calc(16px + var(--sl));bottom:calc(30px + var(--sb));width:118px;height:118px}body.touch #joy i{left:30px;top:30px;width:52px;height:52px}
+ body.touch #rpad{right:calc(8px + var(--sr));bottom:calc(22px + var(--sb))}
+ body.touch #autob{bottom:calc(22px + 92px + var(--sb))}
+ body.touch #logw,#logw{left:calc(8px + var(--sl));right:calc(8px + var(--sr));width:auto;bottom:calc(236px + var(--sb))}#log{max-height:66px;font-size:10.5px}#chatin{padding:3px 6px;font-size:11px}
+ #loots{right:calc(10px + var(--sr));bottom:calc(270px + var(--sb))}
+ #sbar{font-size:10px;gap:8px}
+ .mwrap,.wmap,.lookw,.mailw{grid-template-columns:1fr!important}.mrec,.mside .sopt{display:none}.mlh,.mlr{grid-template-columns:1.4fr 70px 60px}.ma{display:none}.sellw,.xpanels{grid-template-columns:1fr}
+ .packs{grid-template-columns:repeat(3,1fr)}.lot{grid-template-columns:1fr}.exr{grid-template-columns:1fr;text-align:center}.exg{justify-content:center}.perks{grid-template-columns:1fr}
+ .eqgrid{grid-template-columns:1fr 1fr}.eqgrid .doll{grid-column:1/3;grid-row:1;flex-direction:row;padding:4px}.cols{flex-direction:column}
+ .jrow{grid-template-columns:22px minmax(0,1fr) auto auto;font-size:12px}.jrow small{display:none!important}
+ .win.sheet{width:calc(var(--vw,100vw)*.94)!important;max-height:calc(var(--vh,100vh)*.82)!important}
+}
+
+/* v4 快捷環（參考圖：攻擊鍵周圍兩圈 9 格、分頁、藥水數量） */
+#hot{display:none!important}
+#rpad{display:block!important;right:calc(14px + var(--sr,0px))!important;bottom:calc(14px + var(--sb,0px))!important;width:250px!important;height:250px!important;pointer-events:none}
+#rpad>*{pointer-events:auto}
+#atkb{width:92px!important;height:92px!important;right:0!important;bottom:0!important;font-size:13px}
+.rbs{position:absolute!important;width:46px!important;height:46px!important;border-radius:50%;padding:0;display:flex;align-items:center;justify-content:center}
+.rbs span{position:absolute;left:2px;top:-2px;font-size:10px;font-weight:800;color:#ffe9a8;text-shadow:0 1px 0 #000,0 0 3px #000}
+.rbs em{position:absolute;right:1px;bottom:-1px;font-style:normal;font-size:10px;font-weight:800;color:#fff;text-shadow:0 1px 0 #000,0 0 3px #000}
+.rbs.empty{background:radial-gradient(circle,#1a2a5299,#0b143099)!important;border-color:#e9c46a77!important;opacity:.8}
+.rbs.cd canvas{filter:grayscale(1) brightness(.6)}
+body.assigning .rbs{animation:asg 1s infinite}@keyframes asg{50%{box-shadow:0 0 0 3px #fff,0 0 14px #ffd040}}
+#hpgb{position:absolute;right:2px;bottom:100px;width:34px;height:22px;border-radius:11px;border:2px solid #e9c46a;background:#132658;color:#ffe9a8;font-size:11px;font-weight:800;padding:0}
+#autob{right:calc(14px + var(--sr,0px))!important;bottom:calc(14px + 250px + var(--sb,0px))!important;width:54px!important;height:54px!important}
+.hotpick{display:grid;grid-template-columns:repeat(9,1fr);gap:4px}.hotpick .hpl{grid-column:1/-1;font-size:11px;color:#c9b27a}
+@media (max-width:900px){#rpad{width:220px!important;height:220px!important}#atkb{width:80px!important;height:80px!important}.rbs{width:40px!important;height:40px!important}#autob{bottom:calc(10px + 222px + var(--sb,0px))!important;width:46px!important;height:46px!important}}
+@media (orientation:portrait) and (max-width:620px){#autob{bottom:calc(10px + 226px + var(--sb,0px))!important}}
+.abw{display:flex;flex-direction:column;gap:6px;margin:8px 0}.abr{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:6px 8px;background:#0003;border:1px solid #c9a24a33;border-radius:6px}.abr b{min-width:96px}.abr label{display:flex;align-items:center;gap:3px;font-size:12px}.abn{width:56px}.abf{display:flex;justify-content:flex-end;gap:8px}.abr .ok{color:#8fd88f}
+#hpgb{right:184px!important;bottom:4px!important}
+@media (max-width:900px){#hpgb{right:162px!important}}
+@media (max-height:450px){#rpad{width:190px!important;height:190px!important}#atkb{width:72px!important;height:72px!important;font-size:11px}.rbs{width:36px!important;height:36px!important}#hpgb{right:142px!important}#autob{right:calc(14px + 196px + var(--sr,0px))!important;bottom:calc(140px + var(--sb,0px))!important}}
+#hpgb{right:226px!important}@media (max-width:900px){#hpgb{right:198px!important}}@media (max-height:450px){#hpgb{right:176px!important}}
+@media (orientation:portrait) and (max-width:620px){#logw{right:calc(72px + var(--sr))!important;bottom:calc(244px + var(--sb))!important}#hpgb{right:auto!important;left:-150px!important;bottom:4px!important}}
 </style></head><body>
 <canvas id="cv"></canvas>
 <div id="hud" style="display:none">
@@ -186,21 +243,6 @@ body.touch #loots{right:calc(250px + var(--sr));bottom:calc(90px + var(--sb))}
 <div id="rotate"><div class="ph"></div><b>請將手機轉為橫向</b><small style="color:#bcd">晨帆物語僅支援橫向遊玩</small></div><div id="wins"></div><div id="toasts"></div><div id="loots"></div><div id="blackout" style="display:none" onclick="UI.wake()">省電黑屏中 · 點一下恢復（掛機持續進行）</div>
 <div id="login"><div class="box"><h1>晨帆物語<small>MORNING SAIL · BETA</small></h1><input id="lu" placeholder="角色名稱（2–12 字）" maxlength="12"><input id="lp" type="password" placeholder="密碼（至少 4 字）"><div class="err" id="lerr"></div><button class="btn g" id="lgo">登入 / 建立角色</button><button class="btn" id="lguest">遊客進入</button><div class="lg">🌐 <select id="llang"></select></div><div class="tip">首次登入會自動建立角色。遊客帳號存在此裝置，之後可在設定綁定正式帳號。<br>封測版：資料可能重置。全部美術、名稱為原創。</div></div></div>
 <script>
-// ===== 直向鎖定時強制橫向：整個畫面旋轉 90°，並換算座標 =====
-const ROT=(()=>{const de=document.documentElement;const RW=()=>de.clientWidth,RH=()=>de.clientHeight;let on=false;
- const touch='ontouchstart' in window||matchMedia('(pointer:coarse)').matches;
- const def=(o,k,g)=>{try{Object.defineProperty(o,k,{get:g,configurable:true})}catch(e){}};
- def(window,'innerWidth',()=>on?RH():RW());def(window,'innerHeight',()=>on?RW():RH());
- for(const P of [MouseEvent.prototype,window.Touch&&Touch.prototype].filter(Boolean)){const dx=Object.getOwnPropertyDescriptor(P,'clientX'),dy=Object.getOwnPropertyDescriptor(P,'clientY');if(!dx||!dy)continue;
-  def(P,'clientX',function(){return on?dy.get.call(this):dx.get.call(this)});def(P,'clientY',function(){return on?RW()-dx.get.call(this):dy.get.call(this)})}
- const gb=Element.prototype.getBoundingClientRect;Element.prototype.getBoundingClientRect=function(){const r=gb.call(this);if(!on)return r;const W=RW();return new DOMRect(r.top,W-r.right,r.height,r.width)};
- function cloneRules(){const add=[];for(const sh of document.styleSheets){let rs;try{rs=sh.cssRules}catch(e){continue}for(const r of rs)if(r.media&&/max-height:\s*540px/.test(r.conditionText||r.media.mediaText))for(const x of r.cssRules)if(x.selectorText)add.push(x.selectorText.split(',').map(s=>'body.rot '+s.trim()).join(',')+'{'+x.style.cssText+'}')}
-  const st=document.createElement('style');st.textContent=add.join('\n')+`
-body.rot{position:fixed;left:0;top:0;overflow:hidden;transform-origin:0 0;--sl:env(safe-area-inset-top,0px);--sr:env(safe-area-inset-bottom,0px);--st:0px;--sb:0px}`;document.head.appendChild(st)}
- function apply(){const want=touch&&RH()>RW();on=want;const b=document.body;b.classList.toggle('rot',want);if(want){b.style.width=RH()+'px';b.style.height=RW()+'px';b.style.transform=`translateX(${RW()}px) rotate(90deg)`}else{b.style.width=b.style.height=b.style.transform=''}}
- cloneRules();apply();addEventListener('resize',apply,true);addEventListener('orientationchange',()=>setTimeout(()=>{apply();dispatchEvent(new Event('resize'))},300));
- return{get on(){return on},apply}})();
-
 // ===== i18n：zh-TW 為原文（鍵即原文），其他語言放 locales/<lang>.json，新增語言不需改程式 =====
 const I18N={lang:localStorage.robLang||'zh-TW',dict:{},langs:{'zh-TW':'繁體中文','en':'English','ja':'日本語'}};
 async function loadLang(l){I18N.lang=l;localStorage.robLang=l;if(l==='zh-TW'){I18N.dict={};return}try{I18N.dict=await (await fetch('locales/'+l+'.json?v='+Date.now())).json()}catch(e){I18N.dict={}}}
@@ -346,6 +388,7 @@ ART.micon=(()=>{const cache={};const N=24;
  const circ=(c,x,y,r,f)=>{c.beginPath();c.arc(x,y,r,0,7);c.fillStyle=f;c.fill()};
  const head=(c,x,y,s,hair,body)=>{c.fillStyle=lg(c,y+s*1.2,y+s*3,body,'#1a2a60');rr(c,x-s*1.3,y+s*1.1,s*2.6,s*2,s*.8);c.fill();circ(c,x,y,s,'#f6cfa6');c.fillStyle=hair;c.beginPath();c.arc(x,y-s*.15,s*1.05,Math.PI*1.02,Math.PI*1.98);c.fill();c.fillRect(x-s*1.05,y-s*.3,s*.4,s*.8)};
  const D={
+ autobs:c=>{c.fillStyle=lg(c,3,21,'#ffe48a','#c08a20');c.beginPath();c.arc(12,12,9,0,7);c.fill();c.fillStyle='#14244a';c.font='bold 9px sans-serif';c.textAlign='center';c.fillText('AUTO',12,15)},
  stat:c=>{head(c,12,8,5,'#7a4a22','#4a7ae0')},
  skill:c=>{c.fillStyle=lg(c,4,20,'#5a86e0','#1a3a8a');rr(c,2,5,20,15,2);c.fill();c.fillStyle='#fffbe8';c.fillRect(4,6,7.5,12);c.fillRect(12.5,6,7.5,12);c.fillStyle='#c9a24a';c.fillRect(11.5,5,1,15);c.fillStyle='#e8c040';c.beginPath();for(let i=0;i<10;i++){const a=i*Math.PI/5-Math.PI/2,r=i%2?1.6:3.6;c.lineTo(16+Math.cos(a)*r,11.5+Math.sin(a)*r)}c.fill();c.fillStyle='#8aa0c8';for(let i=0;i<4;i++)c.fillRect(5,8+i*2.5,5,1)},
  equip:c=>{c.fillStyle=lg(c,3,21,'#f0f4fa','#7a8698');c.beginPath();c.moveTo(4,6);c.lineTo(8,3);c.lineTo(12,5);c.lineTo(16,3);c.lineTo(20,6);c.lineTo(19,12);c.lineTo(18,21);c.lineTo(6,21);c.lineTo(5,12);c.closePath();c.fill();c.fillStyle='#e8c040';c.fillRect(11,5,2,16);c.fillRect(6,13,12,2);circ(c,12,14,2,'#e04a4a')},
@@ -450,11 +493,13 @@ function FXev(e){const me=G.me&&G.me.name;const D=G.D;
  else if(e.t==='loot'){SFX.play('loot');e.items.forEach(i=>{UI.log(`拾取 <span class="g">${D.items[i].n}</span> ×1`);if(SET.lootBanner)UI.lootBanner(i);if(D.items[i].type==='card'&&SET.cardPopup)UI.cardPopup(i)})}
  else if(e.t==='lvup'){SFX.play('lvup');const p=G.P[me];if(p)G.labels.push({x:p.x,y:p.y,text:(e.k==='base'?'Base':'Job')+' LEVEL UP!',t:0,life:1.6,lv:1});UI.log(`<b>${e.k==='base'?'Base':'Job'} 等級提升到 ${e.lv}！</b>`)}
  else if(e.t==='pdie'){if(e.id===me){SFX.play('die');toast('你倒下了… 4 秒後回到晨帆港',1)}}
+ else if(e.t==='qdone'){if(e.id===undefined||true){toast('✔ 任務完成：'+e.n+(e.next?'　▶ 新任務：'+(G.D.quests[e.next]?.n||''):''));SFX.play('lvup')}}
+ else if(e.t==='qnew'){toast('📜 接受任務：'+e.n)}
  else if(e.t==='arrive'){if(e.id===me)UI.npc(e.npc)}
  else if(e.t==='job'){toast('轉職成功：'+D.jobs[e.job].n+'！');SFX.play('lvup')}}
 // ---------- 渲染 ----------
 const cv=document.getElementById('cv'),c=cv.getContext('2d');let last=performance.now(),frame=0,fpsAcc=0,fpsN=0,lastDraw=0;
-function resize(){const dpr=Math.min(2,devicePixelRatio||1);cv.width=innerWidth*dpr;cv.height=innerHeight*dpr;cv.style.width=innerWidth+'px';cv.style.height=innerHeight+'px';G.dpr=dpr;G.zoom=Math.max(2,Math.min(4,innerHeight/230))*dpr;c.imageSmoothingEnabled=false}
+function resize(){const dpr=Math.min(2,devicePixelRatio||1);cv.width=innerWidth*dpr;cv.height=innerHeight*dpr;cv.style.width=innerWidth+'px';cv.style.height=innerHeight+'px';G.dpr=dpr;G.zoom=Math.max(2,Math.min(4,Math.min(innerHeight/230,innerWidth/190)))*dpr;c.imageSmoothingEnabled=false}
 addEventListener('resize',resize);addEventListener('orientationchange',()=>setTimeout(resize,250));visualViewport&&visualViewport.addEventListener('resize',resize);resize();
 function wpos(x,y){return[(x*16+8)*G.zoom-G.cam.x,(y*16+12)*G.zoom-G.cam.y]}
 function lerpE(o,now){if(o.tx==null)return;const k=Math.min(1,(now-(o.t0||0))/200);const nx=o.px+(o.tx-o.px)*k,ny=o.py+(o.ty-o.py)*k;o.moving=Math.hypot(o.tx-o.px,o.ty-o.py)>.01;if(o.moving&&Math.abs(o.tx-o.px)>.01)o.flip=o.tx<o.px?1:0;o.x=nx;o.y=ny}
@@ -512,7 +557,7 @@ requestAnimationFrame(draw);
 function pick(cx,cy){const X=(cx*G.dpr+G.cam.x)/G.zoom/16-.5,Y=(cy*G.dpr+G.cam.y)/G.zoom/16-.75;let best=null,bd=1.3;for(const k in G.M){const m=G.M[k];const d=Math.hypot(m.x-X,m.y-.4-Y)/(G.D.mobs[m.k].boss?2:1);if(d<bd){bd=d;best=['m',m]}}for(const n of G.map.npcs){const d=Math.hypot(n.x-X,n.y-.4-Y);if(d<bd){bd=d;best=['n',n]}}return best||['g',[Math.round(X),Math.round(Y+.3)]]}
 cv.addEventListener('pointerdown',e=>{SFX.unlock();UI.wake&&UI.wake();if(!G.map)return;const [t,o]=pick(e.clientX,e.clientY);if(t==='m'){G.sel=o.id;send({op:'atk',mob:o.id})}else if(t==='n'){UI.npc(o.id)}else{G.dest=o;G.sel=null;send({op:'move',x:o[0],y:o[1]})}});
 const KEYS=Object.assign({bag:'i',equip:'e',skill:'k',quest:'q',stat:'a',market:'m',exchange:'x',settings:'o',auto:'f'},JSON.parse(localStorage.robKeys||'{}'));
-addEventListener('keydown',e=>{UI.wake&&UI.wake();if(e.target.tagName==='INPUT'||e.target.tagName==='TEXTAREA'||e.target.tagName==='SELECT'){if(e.key==='Enter'&&e.target.id==='chatin')UI.sendChat();if(e.key==='Escape')e.target.blur();return}if(UI.rebind&&UI.rebind(e))return;const n=+e.key;if(n>=1&&n<=9)return UI.useHot(n-1);const k=e.key.toLowerCase();for(const w in KEYS)if(KEYS[w]===k){if(w==='auto')UI.toggleAuto();else UI.win(w);return}if(k==='escape')UI.closeTop();if(e.key==='Enter'){e.preventDefault();document.getElementById('chatin').focus()}
+addEventListener('keydown',e=>{UI.wake&&UI.wake();if(e.target.tagName==='INPUT'||e.target.tagName==='TEXTAREA'||e.target.tagName==='SELECT'){if(e.key==='Enter'&&e.target.id==='chatin')UI.sendChat();if(e.key==='Escape')e.target.blur();return}if(UI.rebind&&UI.rebind(e))return;const n=+e.key;if(n>=1&&n<=9)return UI.useHot(UI.hpg*9+n-1);const k=e.key.toLowerCase();for(const w in KEYS)if(KEYS[w]===k){if(w==='auto')UI.toggleAuto();else UI.win(w);return}if(k==='escape')UI.closeTop();if(e.key==='Enter'){e.preventDefault();document.getElementById('chatin').focus()}
  const dir={arrowup:[0,-1],arrowdown:[0,1],arrowleft:[-1,0],arrowright:[1,0],w:[0,-1],s:[0,1],d:[1,0]}[k];if(dir&&!(k in{})){send({op:'dir',dx:dir[0],dy:dir[1]})}});
 function joystick(){const j=document.getElementById('joy'),kn=j.querySelector('i');let id=null,ox=0,oy=0,vec=null,timer=null;
  j.addEventListener('pointerdown',e=>{e.stopPropagation();id=e.pointerId;j.setPointerCapture(id);const r=j.getBoundingClientRect();ox=r.left+r.width/2;oy=r.top+r.height/2;mv(e);clearInterval(timer);timer=setInterval(()=>{if(vec)send({op:'dir',dx:vec[0],dy:vec[1]})},110)});
@@ -547,7 +592,16 @@ const UI={open:{},z:100,imgs:{},
  hotbar(){const m=G.me;$('#hot').innerHTML=m.hot.map((h,i)=>{let ic='',n='',cd='';if(h){const [k,id]=h.split(':');if(k==='i'){const d=G.D.items[id];ic=d?ART.icon(d.icon,30):'';const c=m.bag.filter(x=>x.id===id).reduce((a,b)=>a+b.n,0);n=`<em>${c}</em>`}else{const d=G.D.skills[id];ic=d?ART.icon(d.icon,30):'';n=m.sk[id]?'':'<em class="x">✕</em>'}}return`<div class="hs" data-i="${i}" draggable="${!!h}"><span>${i+1}</span>${ic}${n}</div>`}).join('');
   $$('#hot .hs').forEach(e=>{const i=+e.dataset.i;e.onclick=()=>this.useHot(i);e.ondragstart=ev=>ev.dataTransfer.setData('text/hot',JSON.stringify({from:i,v:m.hot[i]}));e.ondragover=ev=>ev.preventDefault();e.ondrop=ev=>{ev.preventDefault();const a=ev.dataTransfer.getData('text/hot');if(a){const o=JSON.parse(a);if(o.from!=null){act({op:'hot',i,v:o.v,j:o.from,v2:m.hot[i]})}else act({op:'hot',i,v:o.v})}};e.oncontextmenu=ev=>{ev.preventDefault();act({op:'hot',i,v:null})}});
   // 手機技能輪盤
-  const sk=m.hot.map((h,i)=>[h,i]).filter(([h])=>h);$('#rbtns').innerHTML=sk.slice(0,6).map(([h,i],j)=>{const [k,id]=h.split(':');const d=k==='i'?G.D.items[id]:G.D.skills[id];return`<button class="rbs p${j}" data-i="${i}">${d?ART.icon(d.icon,26):''}<span>${i+1}</span></button>`}).join('');$$('#rbtns .rbs').forEach(b=>b.onclick=e=>{e.stopPropagation();this.useHot(+b.dataset.i)})},
+  this.ring(m);},
+ hpg:+(localStorage.rohpg||0),
+ ring(m){m=m||G.me;if(!m)return;const pg=this.hpg,el=$('#rbtns');const big=innerWidth>900&&innerHeight>450;const sh=innerHeight<=450;const sc=big?1:sh?.78:.86;
+  const r1=big?94:sh?72:82,r2=big?152:sh?112:134;const pos=[];for(let k=0;k<4;k++){const a=Math.PI*(1-k/3*.5);pos.push([Math.cos(a)*r1,Math.sin(a)*r1])}for(let k=0;k<5;k++){const a=Math.PI*(1-k/4*.5);pos.push([Math.cos(a)*r2,Math.sin(a)*r2])}
+  let h='';for(let n=0;n<9;n++){const i=pg*9+n,v=m.hot[i];let ic='',cnt='';if(v){const [k,id]=v.split(':');const d=k==='i'?G.D.items[id]:G.D.skills[id];ic=d?ART.icon(d.icon,big?28:24):'';if(k==='i'){const c=(m.bag||[]).filter(b=>b&&b.id===id).reduce((a,b)=>a+(b.n||1),0);cnt=`<em>${c}</em>`}}
+   const cd=v&&v[0]==='s'&&G.cds&&G.cds[v.slice(2)]>Date.now()?' cd':'';h+=`<button class="rbs${v?'':' empty'}${cd}" data-i="${i}" style="right:${(46*sc-pos[n][0]-23*sc).toFixed(0)}px;bottom:${(46*sc+pos[n][1]-23*sc).toFixed(0)}px">${ic}<span>${n+1}</span>${cnt}</button>`}
+  h+=`<button id="hpgb" title="切換快捷頁">${pg+1}/2</button>`;el.innerHTML=h;
+  $$('#rbtns .rbs').forEach(b=>{const i=+b.dataset.i;b.onclick=e=>{e.stopPropagation();if(UI.assign){act({op:'hot',i,v:UI.assign});UI.assign=null;document.body.classList.remove('assigning');toast('已設定到快捷鍵 '+(i%9+1));return}if(m.hot[i])this.useHot(i);else UI.win('skill')};
+   b.ondragover=ev=>ev.preventDefault();b.ondrop=ev=>{ev.preventDefault();const a=ev.dataTransfer.getData('text/hot');if(a){const o=JSON.parse(a);if(o.from!=null)act({op:'hot',i,v:o.v,j:o.from,v2:G.me.hot[i]});else act({op:'hot',i,v:o.v})}};b.draggable=!!m.hot[i];b.ondragstart=ev=>ev.dataTransfer.setData('text/hot',JSON.stringify({from:i,v:m.hot[i]}));b.oncontextmenu=ev=>{ev.preventDefault();act({op:'hot',i,v:null})}});
+  $('#hpgb').onclick=e=>{e.stopPropagation();this.hpg=1-this.hpg;localStorage.rohpg=this.hpg;this.ring()}},
  useHot(i){const h=G.me.hot[i];if(!h)return;const [k,id]=h.split(':');if(k==='i')act({op:'use',i:id});else act({op:'skill',k:id,mob:G.sel})},
  toggleAuto(){act({op:'auto',on:!G.me.auto})},
  log(h){const l=$('#log');const d=document.createElement('div');d.innerHTML=`<b class="sys">[${t('系統')}]</b> `+h;l.appendChild(d);while(l.children.length>40)l.firstChild.remove();l.scrollTop=1e9},
@@ -569,7 +623,7 @@ const UI={open:{},z:100,imgs:{},
  npc(id){act({op:'npc',npc:id}).then(r=>{if(r.walk){toast(t('自動尋路中…'));return}if(!r.npc)return;this.win('npc',r)})}};
 // 長按（手機）拖曳到快捷列
 function longPress(el,cb){let tm;el.addEventListener('touchstart',e=>{tm=setTimeout(()=>{cb(e);navigator.vibrate&&navigator.vibrate(20)},400)},{passive:true});['touchend','touchmove','touchcancel'].forEach(k=>el.addEventListener(k,()=>clearTimeout(tm),{passive:true}))}
-function hotPick(v){const m=document.createElement('div');m.className='cardpop';m.innerHTML=`<div class="cpi"><b>放到快捷列第幾格？</b><div class="hotpick">${[...Array(9)].map((_,i)=>`<button class="btn" data-i="${i}">${i+1}</button>`).join('')}</div><button class="btn">取消</button></div>`;m.onclick=e=>{const b=e.target.closest('[data-i]');if(b)act({op:'hot',i:+b.dataset.i,v});if(e.target.tagName==='BUTTON')m.remove()};document.body.appendChild(m)}
+function hotPick(v){const m=document.createElement('div');m.className='cardpop';m.innerHTML=`<div class="cpi"><b>放到快捷列第幾格？</b><div class="hotpick"><div class="hpl">第1頁</div>${[...Array(9)].map((_,i)=>`<button class="btn" data-i="${i}">${i+1}</button>`).join('')}<div class="hpl">第2頁</div>${[...Array(9)].map((_,i)=>`<button class="btn" data-i="${i+9}">${i+1}</button>`).join('')}</div><button class="btn" data-as="1">點快捷環指定</button> <button class="btn">取消</button></div>`;m.onclick=e=>{const b=e.target.closest('[data-i]');if(b)act({op:'hot',i:+b.dataset.i,v});if(e.target.dataset.as){UI.assign=v;document.body.classList.add('assigning');toast('請點右下快捷環的格子')}if(e.target.tagName==='BUTTON')m.remove()};document.body.appendChild(m)}
 
 // ===== 各視窗（每個視窗一個物件：title/html/bind，互不相依）=====
 const SLOTN={head:'頭上',mid:'頭中',low:'頭下',body:'身體',wpn:'武器',off:'副手',cape:'披風',shoes:'鞋子',acc1:'飾品',acc2:'飾品'};
@@ -796,10 +850,40 @@ WINS.exch={title:'物品兌換',w:600,html(){const D=G.D,m=G.me;const day=new Da
 (()=>{const S=WINS.settings;const h0=S.html.bind(S),b0=S.bind?S.bind.bind(S):null;
  S.html=function(o){const g=G.me&&G.me.guest;return(g?`<div class="linkbox"><b>🔗 綁定正式帳號</b><small>遊客資料只存在這台裝置。綁定後可用名稱與密碼在任何裝置登入，角色、物品、公會、好友全部保留。</small><div class="frow"><input id="lkname" maxlength="12" placeholder="新角色名稱（2–12 字）"><input id="lkpw" type="password" placeholder="密碼（至少 4 字）"><button class="btn g" id="lkgo">綁定</button></div></div>`:`<div class="linkbox ok"><b>✔ 正式帳號</b><small>${esc(G.me?G.me.name:'')}</small></div>`)+h0(o)};
  S.bind=function(b,o){b0&&b0(b,o);const g=b.querySelector('#lkgo');if(g)g.onclick=async()=>{const n=b.querySelector('#lkname').value.trim(),pw=b.querySelector('#lkpw').value;const r=await act({op:'link',name:n,pw});if(r.linked){localStorage.removeItem('robGuest');localStorage.robAuto=JSON.stringify([n,pw]);CRED=[n,pw];G.me.name=n;UI.renderWin('settings')}}}})();
+// ===== 視窗：依實際（含旋轉）可視區縮放、點外面關閉、Esc 關閉 =====
+(()=>{const setV=()=>{const s=document.body.style;s.setProperty('--vw',innerWidth+'px');s.setProperty('--vh',innerHeight+'px')};setV();addEventListener('resize',()=>setTimeout(setV,50));addEventListener('orientationchange',()=>setTimeout(setV,400));
+ const bk=document.createElement('div');bk.id='wback';document.body.insertBefore(bk,$('#wins'));bk.addEventListener('pointerdown',e=>{e.preventDefault();e.stopPropagation();UI.closeTop()});
+ const sync=()=>{bk.style.display=isMob()&&Object.keys(UI.open).length?'block':'none'};const w0=UI.win.bind(UI),c0=UI.close.bind(UI);UI.win=function(...a){const r=w0(...a);sync();return r};UI.close=function(...a){const r=c0(...a);sync();return r};
+ addEventListener('keydown',e=>{if(e.key==='Escape'&&!(e.target&&e.target.id==='chatin')&&Object.keys(UI.open).length){UI.closeTop();e.preventDefault()}},true);setInterval(sync,500)})();
+// ===== 自動戰鬥設定（4 類 + 拾取 + 範圍 + 模式；伺服器端儲存，離線也套用）=====
+WINS.autobs={title:'自動戰鬥設定',w:640,html(o){const D=G.D,m=G.me;if(!o.ab){if(!o.ld){o.ld=1;act({op:'abget'}).then(r=>{o.ab=r.ab;UI.renderWin('autobs')})}return'<p class="note">讀取中…</p>'}
+ const ab=o.ab,S=D.skills,tab=o.tab||'buff';const nm=k=>esc(t(S[k]?.n||k));const ic=k=>ART.icon(S[k]?.icon,22);const ck=(p,v)=>`<input type="checkbox" data-p="${p}" ${v?'checked':''}>`;const num=(p,v,a,b)=>`<input type="number" class="abn" data-p="${p}" value="${v}" min="${a}" max="${b}">`;
+ const tabs=[['buff','增益技能'],['tog','常駐/被動'],['heal','治療補給'],['atk','攻擊技能'],['misc','拾取與範圍']];let body='';
+ const learned=Object.keys(m.sk||{}).filter(k=>S[k]);
+ if(tab==='buff'){const ks=Object.keys(ab.buff);body=ks.length?`<p class="note">到期前 3 秒自動重施；「戰前施放」會在尋找目標時先上增益。</p>`+ks.map(k=>`<div class="abr">${ic(k)}<b>${nm(k)}</b><label>${ck('buff.'+k+'.on',ab.buff[k].on)}啟用</label><label>${ck('buff.'+k+'.pre',ab.buff[k].pre)}戰前施放</label></div>`).join(''):'<p class="note">尚未學會增益技能。</p>'}
+ if(tab==='tog'){const ks=learned.filter(k=>S[k].kind==='passive'||(S[k].buff&&C_LONG(k)));body='<p class="note">被動技能永遠生效；可切換的常駐增益會被自動維持開啟。</p>'+(ks.length?ks.map(k=>`<div class="abr">${ic(k)}<b>${nm(k)}</b>${S[k].kind==='passive'?'<small class="ok">被動・常時生效</small>':`<label>${ck('tog.'+k,ab.tog[k])}保持開啟</label>`}</div>`).join(''):'<p class="note">目前沒有被動或常駐技能。</p>')}
+ if(tab==='heal'){const h=ab.heal;const hs=learned.filter(k=>S[k].heal);body=`<div class="abr"><b>治療技能</b><label>${ck('heal.on',h.on)}啟用</label>${hs.map(ic).join('')||'<small>（未學會）</small>'}</div>
+  <div class="abr"><b>自身 HP 低於</b>${num('heal.self',h.self,0,95)}%</div><div class="abr"><b>隊友 HP 低於</b>${num('heal.party',h.party,0,95)}%</div>
+  <div class="abr"><b>HP 藥水</b>低於${num('heal.potHp',h.potHp,0,95)}%<select data-p="heal.hpPot">${[['auto','自動（先橘後紅）'],['potR','紅色藥水'],['potO','橘色藥水']].map(([v,n])=>`<option value="${v}" ${h.hpPot===v?'selected':''}>${n}</option>`).join('')}</select></div>
+  <div class="abr"><b>SP 藥水</b>低於${num('heal.potSp',h.potSp,0,95)}%<select data-p="heal.spPot">${[['potB','藍色藥水'],['none','不使用']].map(([v,n])=>`<option value="${v}" ${h.spPot===v?'selected':''}>${n}</option>`).join('')}</select></div>`}
+ if(tab==='atk'){body=ab.atk.length?'<p class="note">依順序判斷，第一個符合條件的技能會被施放；否則普通攻擊。</p>'+ab.atk.map((a,i)=>`<div class="abr">${ic(a.k)}<b>${i+1}. ${nm(a.k)}</b><label>${ck('atk.'+i+'.on',a.on)}啟用</label><span>SP≥${num('atk.'+i+'.minSp',a.minSp,0,9999)}</span><span>怪數≥${num('atk.'+i+'.mobs',a.mobs,1,10)}</span><label>${ck('atk.'+i+'.boss',a.boss)}僅BOSS</label><button class="btn sm" data-up="${i}">▲</button><button class="btn sm" data-dn="${i}">▼</button></div>`).join(''):'<p class="note">尚未學會攻擊技能。</p>'}
+ if(tab==='misc'){const pk=ab.pick;body=`<div class="abr"><b>狩獵模式</b><select data-p="mode">${[['near','附近最近的怪'],['quest','只打任務怪（完成後自動交付）'],['spot','定點狩獵']].map(([v,n])=>`<option value="${v}" ${ab.mode===v?'selected':''}>${n}</option>`).join('')}</select></div>
+  <div class="abr"><b>索敵範圍</b>${num('range',ab.range,3,30)}格</div>
+  <div class="abr"><b>定點</b><small>${ab.spot?`${esc(MAPN(ab.spot.map))} (${ab.spot.x|0},${ab.spot.y|0}) 半徑`:'未設定'}</small>${ab.spot?num('spot.r',ab.spot.r,2,20):''}<button class="btn sm" data-spot="1">設為目前位置</button></div>
+  <div class="abr"><b>拾取</b><label>${ck('pick.use',pk.use)}消耗品</label><label>${ck('pick.etc',pk.etc)}素材</label><label>${ck('pick.eq',pk.eq)}裝備</label><label>${ck('pick.card',pk.card)}卡片</label></div><p class="note">未勾選的物品會自動換成金幣（半價）。離線掛機同樣套用。</p>`}
+ return`<div class="tabs">${tabs.map(([k,n])=>`<button class="tab ${tab===k?'on':''}" data-t="${k}">${n}</button>`).join('')}</div><div class="abw">${body}</div><div class="abf"><button class="btn" data-def="1">還原預設</button><button class="btn gold" data-save="1">儲存</button></div>`},
+ bind(b,o){if(!o.ab)return;const ab=o.ab;b.querySelectorAll('[data-t]').forEach(x=>x.onclick=()=>{o.tab=x.dataset.t;UI.renderWin('autobs')});
+  const setp=(p,v)=>{const ks=p.split('.');let t=ab;for(const k of ks.slice(0,-1))t=t[k];t[ks[ks.length-1]]=v};
+  b.querySelectorAll('[data-p]').forEach(x=>x.onchange=()=>setp(x.dataset.p,x.type==='checkbox'?(x.checked?1:0):x.type==='number'?+x.value:x.value));
+  b.querySelectorAll('[data-up],[data-dn]').forEach(x=>x.onclick=()=>{const i=+(x.dataset.up??x.dataset.dn),j=x.dataset.up!=null?i-1:i+1;if(j<0||j>=ab.atk.length)return;[ab.atk[i],ab.atk[j]]=[ab.atk[j],ab.atk[i]];UI.renderWin('autobs')});
+  const sp=b.querySelector('[data-spot]');if(sp)sp.onclick=()=>{const p=G.P[G.me.name]||G.me;ab.spot={map:(G.map&&G.map.id)||G.me.map,x:Math.round(p.x),y:Math.round(p.y),r:(ab.spot&&ab.spot.r)||8};ab.mode='spot';UI.renderWin('autobs')};
+  b.querySelector('[data-save]').onclick=()=>act({op:'abset',ab}).then(r=>{if(r&&r.ab)o.ab=r.ab;UI.renderWin('autobs')});
+  b.querySelector('[data-def]').onclick=()=>{o.ab=null;o.ld=0;act({op:'abset',ab:{v:1,reset:1}}).then(()=>UI.renderWin('autobs'))}}};
+function C_LONG(k){const b=G.D.skills[k]?.buff;return b&&G.D.buffs[b]&&G.D.buffs[b].dur>=120}
 
 // ===== 啟動 =====
-const MENU=[['stat','狀態','owl'],['skill','技能','staff'],['equip','裝備','armor'],['bag','背包','boots'],['quest','任務','card'],['market','市場','coin'],['exchange','交易所','dia'],['more','更多','ring']];
-const MORE=[['mail','信箱'],['settings','設定'],['mall','商城'],['premium','Premium'],['auction','拍賣'],['party','組隊'],['friends','好友'],['guild','公會'],['rank','排行'],['world','世界地圖'],['look','外觀'],['exch','兌換'],['mlog','交易紀錄'],['lore','職業']];
+const MENU=[['stat','狀態','owl'],['skill','技能','staff'],['equip','裝備','armor'],['bag','背包','boots'],['quest','任務','card'],['market','市集','coin'],['exchange','鑽石匯兌','dia'],['more','更多','ring']];
+const MORE=[['autobs','自動戰鬥'],['mail','信箱'],['settings','設定'],['mall','商城'],['premium','Premium'],['auction','拍賣'],['party','組隊'],['friends','好友'],['guild','公會'],['rank','排行'],['world','世界地圖'],['look','外觀'],['exch','兌換'],['mlog','交易紀錄'],['lore','職業']];
 function buildMenus(){const btn=([k,n,ic])=>`<button class="tm" id="tb-${k}" data-w="${k}"><span class="ti">${ART.micon(k,30)}</span>${t(n)}</button>`;$('#topmenu').innerHTML=MENU.map(btn).join('');$('#mbar').innerHTML=MENU.filter(m=>['stat','skill','equip','bag','more'].includes(m[0])).map(btn).join('');$('#more').innerHTML=MORE.map(btn).join('');
  document.querySelectorAll('[data-w]').forEach(b=>b.onclick=e=>{e.stopPropagation();const w=b.dataset.w;if(w==='more'){$('#more').classList.toggle('on');return}$('#more').classList.remove('on');if(w==='lore')return UI.win('lore',{job:G.me.job==='nov'?'kni':G.me.job});if(w==='mlog')return UI.win('mlog',{});UI.win(w)})}
 async function boot(){await loadLang(I18N.lang);$('#llang').innerHTML=Object.entries(I18N.langs).map(([k,v])=>`<option value="${k}" ${k===I18N.lang?'selected':''}>${v}</option>`).join('');$('#llang').onchange=async e=>{await loadLang(e.target.value);location.reload()};
@@ -811,7 +895,7 @@ async function boot(){await loadLang(I18N.lang);$('#llang').innerHTML=Object.ent
  const a=JSON.parse(localStorage.robAuto||'null');if(a){$('#lu').value=a[0];$('#lp').value=a[1];go(a[0],a[1])}
  if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{})}
 let started=0;function start(){if(started)return;started=1;buildMenus();joystick();UI.applySet();
- $('#autob').onclick=()=>UI.toggleAuto();$('#atkb').onclick=e=>{e.stopPropagation();let best=null,bd=9;const me=G.P[G.me.name];for(const k in G.M){const m=G.M[k];const d=Math.hypot(m.x-me.x,m.y-me.y);if(d<bd){bd=d;best=m}}if(best){G.sel=best.id;send({op:'atk',mob:best.id})}else{if(!G.me.auto)UI.toggleAuto();toast(t('附近沒有怪物，自動前往狩獵區…'))}};
+ $('#autob').onclick=()=>{if(UI._lp)return UI._lp=0;UI.toggleAuto()};{const ab=$('#autob');let tm;ab.oncontextmenu=e=>{e.preventDefault();UI.win('autobs')};ab.addEventListener('pointerdown',()=>{tm=setTimeout(()=>{UI._lp=1;UI.win('autobs')},550)});ab.addEventListener('pointerup',()=>clearTimeout(tm));ab.addEventListener('pointerleave',()=>clearTimeout(tm))}$('#atkb').onclick=e=>{e.stopPropagation();let best=null,bd=9;const me=G.P[G.me.name];for(const k in G.M){const m=G.M[k];const d=Math.hypot(m.x-me.x,m.y-me.y);if(d<bd){bd=d;best=m}}if(best){G.sel=best.id;send({op:'atk',mob:best.id})}else{if(!G.me.auto)UI.toggleAuto();toast(t('附近沒有怪物，自動前往狩獵區…'))}};
  $('#cmin').onclick=()=>{$('#ccard').classList.toggle('min');$('#cmin').textContent=$('#ccard').classList.contains('min')?'+':'–';$('#cname2').textContent=G.me.name};$('#chatbtn').onclick=()=>$('#chatin').focus();$('#fsbtn').onclick=()=>{if(document.fullscreenElement)document.exitFullscreen();else document.documentElement.requestFullscreen&&document.documentElement.requestFullscreen().catch(()=>{})};
  $('#mm').addEventListener('click',e=>{e.stopPropagation();const r=e.target.getBoundingClientRect();const x=Math.floor((e.clientX-r.left)/r.width*G.map.W),y=Math.floor((e.clientY-r.top)/r.height*G.map.H);G.dest=[x,y];send({op:'goto',map:G.map.id,x,y})});
  document.addEventListener('pointerdown',e=>{if(!e.target.closest('#more')&&!e.target.closest('[data-w="more"]'))$('#more').classList.remove('on')});
