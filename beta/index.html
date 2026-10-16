@@ -306,7 +306,8 @@ function fountain(c,px,X,Y){const E=(rx,ry,col,dy=0)=>{c.fillStyle=col;c.beginPa
  E(14,7,'#9a9484',-4);E(13,6,'#e0dac8',-5);px(X-4,Y-26,8,22,'#cfc8b4');px(X-4,Y-26,2,22,'#ece6d6');px(X+2,Y-26,2,22,'#9a9484');
  E(10,4,'#9a9484',-27);E(9,3,'#e8e2d2',-28);E(7,2,'#4a96d8',-28);px(X-1,Y-38,2,10,'#bfe4ff');
  for(let i=0;i<24;i++){const a=R()*3.14,r=4+R()*10;px(X+Math.cos(a)*r,Y-30-Math.sin(a)*r*.6+R()*4,1,2,R()<.5?'#e8f6ff':'#9ad0ff')}}
-function deco(c,d,ox,oy,s){const [k,x,y]=d;const X=ox+(x*16+8)*s,Y=oy+(y*16+16)*s;seed=x*31+y*17+1;const px=(a,b,w,h,col)=>{c.fillStyle=col;c.fillRect(Math.round(X+a*s),Math.round(Y+b*s),Math.ceil(w*s),Math.ceil(h*s))};
+const DCACHE=new Map();function deco(c,d,ox,oy,s){const key=d[0]+'|'+d[1]+'|'+d[2]+'|'+s;let cv=DCACHE.get(key);if(!cv){if(DCACHE.size>600)DCACHE.clear();cv=document.createElement('canvas');cv.width=Math.ceil(40*s);cv.height=Math.ceil(44*s);const x=cv.getContext('2d');x.imageSmoothingEnabled=false;decoRaw(x,d,20*s-(d[1]*16+8)*s,40*s-(d[2]*16+16)*s,s);DCACHE.set(key,cv)}c.drawImage(cv,Math.round(ox+(d[1]*16+8)*s-20*s),Math.round(oy+(d[2]*16+16)*s-40*s))}
+function decoRaw(c,d,ox,oy,s){const [k,x,y]=d;const X=ox+(x*16+8)*s,Y=oy+(y*16+16)*s;seed=x*31+y*17+1;const px=(a,b,w,h,col)=>{c.fillStyle=col;c.fillRect(Math.round(X+a*s),Math.round(Y+b*s),Math.ceil(w*s),Math.ceil(h*s))};
  if(k==='tree'){c.fillStyle='#0004';c.beginPath();c.ellipse(X+2*s,Y-s,10*s,3.5*s,0,0,7);c.fill();
   px(-2,-12,5,12,'#4a2e18');px(-2,-12,2,12,'#6a4428');px(2,-12,1,12,'#2e1c0e');px(-4,-2,3,2,'#4a2e18');px(2,-2,3,2,'#3a2412');
   const blob=(cx,cy,r,cols)=>{const [o,d2,m,l,hl]=cols;for(const [rr,col,sx,sy] of [[r+1,o,0,0],[r,d2,0,0],[r*.8,m,-r*.12,-r*.15],[r*.5,l,-r*.3,-r*.35],[r*.22,hl,-r*.4,-r*.5]]){c.fillStyle=col;const R2=Math.round(rr);for(let j=-R2;j<=R2;j++){const ww=Math.sqrt(Math.max(0,rr*rr-j*j));c.fillRect(Math.round(X+(cx+sx-ww)*s),Math.round(Y+(cy+sy+j)*s),Math.ceil(ww*2*s),Math.ceil(s))}}};
