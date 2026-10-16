@@ -641,6 +641,16 @@ body.ringc #rbtns .rbs[data-k="h"]{display:none!important}
 .v6 #mmw.mmx{position:fixed!important;left:50%!important;top:50%!important;right:auto!important;bottom:auto!important;transform:translate(-50%,-50%);width:min(86vw,720px)!important;z-index:80!important;padding:10px!important}
 .v6 #mmw.mmx #mm{width:100%!important;height:auto!important;max-height:70vh;object-fit:contain}
 #mmbk{position:fixed;inset:0;z-index:79;background:rgba(0,0,0,.35)}
+
+#ccard .av .avp{position:absolute;inset:2px;border-radius:inherit;background-repeat:no-repeat;background-size:190% auto;background-position:50% 4%;pointer-events:none;z-index:0}
+#ccard .av #clv{z-index:1}
+
+#qfb{position:fixed;left:50%;top:calc(env(safe-area-inset-top,0px) + 64px);transform:translateX(-50%);z-index:60;display:flex;align-items:center;gap:8px;padding:6px 8px 6px 12px;border-radius:999px;background:linear-gradient(180deg,rgba(40,30,12,.92),rgba(20,16,8,.92));border:1px solid #e9c46a;box-shadow:0 4px 14px #0008;color:#ffe9b0;font-size:13px;max-width:calc(100vw - 24px);white-space:nowrap}
+#qfb .qfi{width:8px;height:8px;border-radius:50%;background:#5CD68C;box-shadow:0 0 0 0 #5CD68C;animation:qfp 1.4s infinite}
+#qfb small{color:#e8d6a8;opacity:.85;overflow:hidden;text-overflow:ellipsis}
+#qfb button{min-width:28px;height:28px;border-radius:50%;border:1px solid #e9c46a88;background:#0004;color:#ffe9b0;cursor:pointer}
+@keyframes qfp{0%{box-shadow:0 0 0 0 #5CD68Caa}70%{box-shadow:0 0 0 8px #5CD68C00}100%{box-shadow:0 0 0 0 #5CD68C00}}
+.qcard .qauto{margin-top:6px}
 </style></head><body>
 <canvas id="cv"></canvas>
 <div id="hud" style="display:none">
@@ -941,7 +951,7 @@ function mvStep(dt,now){const me=G.me&&G.P[G.me.name];if(!me||!G.map)return;cons
  if(MV.on){// 平滑吃掉校正量
   const k=Math.min(1,dt*8);MV.x+=MV.cx*k;MV.y+=MV.cy*k;MV.cx-=MV.cx*k;MV.cy-=MV.cy*k;
   if(!v&&now-MV.lastIn>450){// 放開後交還伺服器（插值會從目前位置平滑接手）
-   me.px=MV.x;me.py=MV.y;me.t0=now;me.tx=me.tx??MV.x;MV.on=false}else{me.x=MV.x;me.y=MV.y;me.moving=!!v}}}
+   me.ex=MV.x-(me.ix??MV.x);me.ey=MV.y-(me.iy??MV.y);MV.on=false}else{me.x=MV.x;me.y=MV.y;me.moving=!!v}}}
 function mvAck(m){if(!MV.on||!m.ack||!G.me)return;const sv=m.p.find(p=>p.id===G.me.name);if(!sv)return;let h=null;while(MV.hist.length&&MV.hist[0][0]<=m.ack)h=MV.hist.shift();if(!h)return;
  const ex=sv.x-h[1],ey=sv.y-h[2],e=Math.hypot(ex,ey);if(e>3){MV.x=sv.x;MV.y=sv.y;MV.cx=MV.cy=0;MV.hist.length=0}else if(e>.05){MV.cx=ex;MV.cy=ey}}
 function KEYS_BLOCK(){const a=document.activeElement;return a&&(a.tagName==='INPUT'||a.tagName==='TEXTAREA')}
@@ -950,9 +960,9 @@ function onMsg(m){
  if(m.t==='data'){G.D=m.D;G.shopDia=m.ref;return}
  if(m.t==='codex'&&window.V6&&V6._cx&&V6._cx(m))return;
  if(m.t==='map'){G.map=m;G.mapArt=ART.renderMap(m);G.M={};G.P={};UI.mapChanged();return}
- if(m.t==='me'){G.me=m.ch;G.d=m.d;G.need=m.need;G.qs=m.qs;UI.refresh();return}
- if(m.t==='w'){mvAck(m);const now=performance.now();const seen={};for(const p of m.p){seen[p.id]=1;const o=G.P[p.id]||(G.P[p.id]={x:p.x,y:p.y,f:0,flip:0});o.px=o.x;o.py=o.y;o.tx=p.x;o.ty=p.y;o.t0=now;Object.assign(o,{n:p.n,job:p.job,wt:p.wt,hp:p.hp,mhp:p.mhp,dead:p.dead,buffs:p.buffs,lv:p.lv,id:p.id,pr:p.pr,g:p.g,look:p.look});if(G.me&&p.id===G.me.name)G.me.hp=p.hp}for(const k in G.P)if(!seen[k])delete G.P[k];
-  const ms={};for(const [id,k,x,y,hp,mhp,ag] of m.m){ms[id]=1;const o=G.M[id]||(G.M[id]={x,y,id,k});o.px=o.x;o.py=o.y;o.tx=x;o.ty=y;o.t0=now;o.k=k;o.mhp=mhp;o.ag=ag;if(o.hp==null||!o.hitT||now-o.hitT>400)o.hp=hp}for(const k in G.M)if(!ms[k]&&!G.M[k].dying&&!G.M[k]._lab)delete G.M[k];return}
+ if(m.t==='me'){G.me=m.ch;G.d=m.d;G.need=m.need;G.qs=m.qs;if('qf' in m){G.qf=m.qf;UI.qfShow&&UI.qfShow()}UI.refresh();return}
+ if(m.t==='w'){mvAck(m);const now=performance.now();const ts=m.tk!=null?NET.clock(m.tk,now):now;const seen={};for(const p of m.p){seen[p.id]=1;const o=G.P[p.id]||(G.P[p.id]={x:p.x,y:p.y,f:0,flip:0});pushS(o,ts,p.x,p.y);Object.assign(o,{n:p.n,job:p.job,wt:p.wt,hp:p.hp,mhp:p.mhp,dead:p.dead,buffs:p.buffs,lv:p.lv,id:p.id,pr:p.pr,g:p.g,look:p.look});if(G.me&&p.id===G.me.name)G.me.hp=p.hp}for(const k in G.P)if(!seen[k])delete G.P[k];
+  const ms={};for(const [id,k,x,y,hp,mhp,ag] of m.m){ms[id]=1;const o=G.M[id]||(G.M[id]={x,y,id,k});pushS(o,ts,x,y);o.k=k;o.mhp=mhp;o.ag=ag;if(o.hp==null||!o.hitT||now-o.hitT>400)o.hp=hp}for(const k in G.M)if(!ms[k]&&!G.M[k].dying&&!G.M[k]._lab)delete G.M[k];return}
  if(m.t==='ev'){for(const e of m.e)FXev(e);return}
  if(SOC_PKT(m))return;if(m.t==='chat'){UI.chat(m);return}
  if(m.t==='toast'){toast(m.m);return}
@@ -960,6 +970,7 @@ function onMsg(m){
  if(m.t==='dx'){UI.dxPush&&UI.dxPush(m);return}}
 // ---------- 伺服器事件 → 即時特效（收到即畫，不等快照）----------
 function FXev(e){const me=G.me&&G.me.name;const D=G.D;
+ if(e.t==='qf'){G.qf=e.k;UI.qfShow&&UI.qfShow();if(!e.k)toast(e.why==='manual'?t('手動移動，已取消任務自動'):e.why==='done'?t('任務自動完成'):t('已取消任務自動'));else toast(t('接下任務')+'：'+G.D.quests[e.k].n);return}
  if(e.t==='hit'){const m=G.M[e.tgt];if(m){m.hp=e.hp;m.hitT=performance.now();m.flash=1}const src=G.P[e.src];if(src&&m)src.flip=m.x<src.x?1:0;if(src)src.atkT=performance.now();
   const mine=e.src===me;const sk=e.sk&&D.skills[e.sk];const fxOn=SET.fx==='all'||(SET.fx==='mine'&&mine);
   if(m){if(e.cr&&fxOn){G.fx.push({k:'burst',x:m.x,y:m.y,t:0,life:.45});if(mine&&SET.shake)G.shake=.12}if(sk){G.labels.push({x:src?src.x:m.x,y:src?src.y:m.y,text:sk.n+'!!',t:0,life:.9});if(fxOn)G.fx.push({k:sk.fx||'slash',x:m.x,y:m.y,sx:src&&src.x,sy:src&&src.y,t:0,life:.5})}else if(fxOn){if(e.rng&&src)G.fx.push({k:'arrow',x:m.x,y:m.y,sx:src.x,sy:src.y,t:0,life:.18});else G.fx.push({k:'spark',x:m.x,y:m.y,t:0,life:.35,sd:Math.random()*99});G.fx.push({k:'slash',x:m.x,y:m.y,t:0,life:.25})}
@@ -988,14 +999,23 @@ const cv=document.getElementById('cv'),c=cv.getContext('2d');let last=performanc
 function resize(){const dpr=Math.min(2,devicePixelRatio||1);cv.width=innerWidth*dpr;cv.height=innerHeight*dpr;cv.style.width=innerWidth+'px';cv.style.height=innerHeight+'px';G.dpr=dpr;G.zoom=Math.max(2,Math.min(4,Math.min(innerHeight/230,innerWidth/190)))*dpr;c.imageSmoothingEnabled=false}
 addEventListener('resize',resize);addEventListener('orientationchange',()=>setTimeout(resize,250));visualViewport&&visualViewport.addEventListener('resize',resize);resize();
 function wpos(x,y){return[(x*16+8)*G.zoom-G.cam.x,(y*16+12)*G.zoom-G.cam.y]}
-function lerpE(o,now){if(o.tx==null)return;const k=Math.min(1,(now-(o.t0||0))/105);const nx=o.px+(o.tx-o.px)*k,ny=o.py+(o.ty-o.py)*k;o.moving=Math.hypot(o.tx-o.px,o.ty-o.py)>.01;if(o.moving&&Math.abs(o.tx-o.px)>.01)o.flip=o.tx<o.px?1:0;o.x=nx;o.y=ny}
+// 快照插值：以伺服器 tick（100ms）為時間軸、固定延遲渲染，避免封包抖動造成忽快忽慢
+const NET={off:null,d:200,jit:120,TK:100,r:null,clock(tk,now){const ts=tk*this.TK,o=now-ts;if(this.off==null||Math.abs(o-this.off)>1500){this.off=o;this.jit=120;this.r=null}else{this.off+=(o-this.off)*(o<this.off?.05:.002);const late=o-this.off;this.jit=late>this.jit?late:this.jit*.998}return ts},
+ // 渲染時鐘以實際時間等速前進，只用 ±4% 的速率微調追上目標，避免忽快忽慢
+ step(dt,now){if(this.off==null)return;const tg=Math.max(120,Math.min(380,this.TK*.5+this.jit*1.2+30));this.d+=Math.max(-dt*15,Math.min(dt*40,tg-this.d));const T=now-this.off-this.d;if(this.r==null||Math.abs(T-this.r)>600)this.r=T;else this.r+=dt*1000*(1+Math.max(-.04,Math.min(.04,(T-this.r)/1000)))},
+ rt(now){return this.r==null?(this.off==null?now:now-this.off-this.d):this.r}};
+function pushS(o,ts,x,y){const b=o.buf||(o.buf=[]);const l=b[b.length-1];if(l&&ts<=l[0])return;if(l&&Math.hypot(x-l[1],y-l[2])>3){b.length=0;o.ex=o.ey=0;o.x=x;o.y=y}b.push([ts,x,y]);if(b.length>24)b.shift()}
+function lerpE(o,now,dt){const b=o.buf;if(!b||!b.length)return;const rt=NET.rt(now);let x,y;
+ if(rt<=b[0][0]){x=b[0][1];y=b[0][2]}else{let i=b.length-1;while(i>0&&b[i-1][0]>=rt)i--;if(i>0&&b[i][0]>=rt){const a=b[i-1],c=b[i],k=(rt-a[0])/(c[0]-a[0]);x=a[1]+(c[1]-a[1])*k;y=a[2]+(c[2]-a[2])*k;while(b.length>2&&b[1][0]<rt-400)b.shift()}else{const l=b[b.length-1];x=l[1];y=l[2];NET.starve=(NET.starve||0)+1}}
+ const px=o.ix??x,py=o.iy??y;o.ix=x;o.iy=y;const d=Math.hypot(x-px,y-py);o.moving=d>1e-4||(o.mvT&&now-o.mvT<120);if(d>1e-4)o.mvT=now;if(Math.abs(x-px)>1e-3)o.flip=x<px?1:0;
+ if(o.ex||o.ey){const k=Math.exp(-(dt||.016)*10);o.ex*=k;o.ey*=k;if(Math.hypot(o.ex,o.ey)<.002)o.ex=o.ey=0}o.x=x+(o.ex||0);o.y=y+(o.ey||0)}
 function burst(x,y,r,n,a){c.save();c.translate(x,y);c.globalAlpha=Math.max(0,a);const L=[[r*1.25,'#7a0c0c'],[r,'#d81e1e'],[r*.7,'#ff8a1a'],[r*.42,'#ffe060'],[r*.18,'#fffbe0']];for(const [rr,col] of L){c.fillStyle=col;c.beginPath();for(let i=0;i<n*2;i++){const an=i/(n*2)*6.283+.2,d=i%2?rr*.45:rr*(.85+((i*37)%7)/20);c.lineTo(Math.cos(an)*d,Math.sin(an)*d*.8)}c.fill()}c.strokeStyle='#fff8';c.lineWidth=G.dpr;for(let i=0;i<3;i++){c.beginPath();c.moveTo(-r*1.7+i*5,-r*.9+i*6);c.lineTo(-r*1.0+i*5,-r*.45+i*6);c.stroke()}c.restore()}
 const PF={'0':'111101101101111','1':'010110010010111','2':'111001111100111','3':'111001111001111','4':'101101111001001','5':'111100111001111','6':'111100111101111','7':'111001010010010','8':'111101111101111','9':'111101111001111','+':'000010111010000','M':'101111111101101','I':'111010010010111','S':'111100111001111'};
 function pnum(str,x,y,s,fill,edge){str=String(str);if(SET.dmgFont==='sans'){c.font=`900 ${s*6}px sans-serif`;c.textAlign='center';c.lineWidth=s*1.4;c.strokeStyle=edge;c.strokeText(str,x,y+s*5);c.fillStyle=fill;c.fillText(str,x,y+s*5);return}const w=4*s;let X=x-str.length*w/2+s/2;c.fillStyle=edge;for(const ch of str){const g=PF[ch];if(g)for(let j=0;j<5;j++)for(let i=0;i<3;i++)if(g[j*3+i]==='1')c.fillRect(X+i*s-s*.4,y+j*s-s*.4,s*1.8,s*1.8);X+=w}X=x-str.length*w/2+s/2;for(const ch of str){const g=PF[ch];if(g)for(let j=0;j<5;j++)for(let i=0;i<3;i++)if(g[j*3+i]==='1'){c.fillStyle=fill;c.fillRect(X+i*s,y+j*s,s,s);if(j===0){c.fillStyle='#fff8d0';c.fillRect(X+i*s,y,s,s*.4)}}X+=w}}
 function label(t,x,y,col,below,frame){const LS=Math.max(1,G.zoom/G.dpr/2.6);c.font=`${Math.round(10*LS)*G.dpr}px sans-serif`;c.textAlign='center';const yy=y+(below?10*LS*G.dpr:0);if(frame&&SET.nameFrame!=='none'){const w=c.measureText(t).width+8*G.dpr;c.fillStyle='#0b1430aa';c.fillRect(x-w/2,yy-10*G.dpr,w,13*G.dpr);if(SET.nameFrame==='full'){c.strokeStyle='#c9a24a88';c.lineWidth=G.dpr*.8;c.strokeRect(x-w/2,yy-10*G.dpr,w,13*G.dpr)}}c.lineWidth=3*G.dpr;c.strokeStyle='#000c';c.strokeText(t,x,yy);c.fillStyle=col;c.fillText(t,x,yy)}
 function draw(now){requestAnimationFrame(draw);if(SET.fps<60&&now-lastDraw<1000/SET.fps-1)return;const dt=Math.min(.05,(now-last)/1000)*(window.CFX?CFX.ts(now):1);last=now;lastDraw=now;frame++;fpsAcc+=dt;fpsN++;if(fpsAcc>=1){G.fps=Math.round(fpsN/fpsAcc);fpsAcc=0;fpsN=0}if(!G.map||!G.me||!G.D)return;const z=G.zoom,W=cv.width,H=cv.height;
- for(const k in G.P)lerpE(G.P[k],now);for(const k in G.M)lerpE(G.M[k],now);mvStep(dt,now);const me=G.P[G.me.name];
- if(me){const tx=(me.x*16+8)*z-W/2,ty=(me.y*16+8)*z-H/2;const k=SET.smooth?Math.min(1,dt*8):1;G.cam.x+=(tx-G.cam.x)*k;G.cam.y+=(ty-G.cam.y)*k}
+ NET.step((now-(NET.ln||now))/1000,now);NET.ln=now;for(const k in G.P)lerpE(G.P[k],now,dt);for(const k in G.M)lerpE(G.M[k],now,dt);mvStep(dt,now);const me=G.P[G.me.name];
+ if(me){const tx=(me.x*16+8)*z-W/2,ty=(me.y*16+8)*z-H/2;const k=SET.smooth?1-Math.exp(-dt*10):1;G.cam.x+=(tx-G.cam.x)*k;G.cam.y+=(ty-G.cam.y)*k}
  
  let sx=0,sy=0;if(G.shake>0){G.shake-=dt;sx=(Math.random()-.5)*(G.shakeAmp||4)*G.dpr;sy=(Math.random()-.5)*(G.shakeAmp||4)*G.dpr}
  c.fillStyle=(typeof HD!=='undefined'&&HD.oob(G.map))||(G.map.id==='town'?'#2a3a26':'#1b3320');c.fillRect(0,0,W,H);c.save();c.translate(sx,sy);c.imageSmoothingEnabled=!!G.mapArt.smooth;c.drawImage(G.mapArt.cv,-G.cam.x,-G.cam.y,G.map.W*16*z,G.map.H*16*z);
@@ -1386,7 +1406,7 @@ const UI={open:{},z:100,imgs:{},
  drag(el,id){const h=el.querySelector('.wh');let sx,sy,ox,oy,on=false;h.addEventListener('pointerdown',e=>{if(isMob()||e.target.closest('button'))return;on=true;sx=e.clientX;sy=e.clientY;ox=el.offsetLeft;oy=el.offsetTop;h.setPointerCapture(e.pointerId);el.classList.add('dragging')});
   h.addEventListener('pointermove',e=>{if(!on)return;this.clamp(el,ox+e.clientX-sx,oy+e.clientY-sy)});h.addEventListener('pointerup',()=>{if(!on)return;on=false;el.classList.remove('dragging');localStorage['robWin_'+id]=JSON.stringify([el.offsetLeft,el.offsetTop])})},
  renderWin(id){const el=$('#w-'+id);if(!el||!this.open[id]||!G.me)return;const W=WINS[id];const b=el.querySelector('.wb');const st=b.scrollTop;const fx=document.activeElement&&b.contains(document.activeElement)&&document.activeElement.tagName==='INPUT'?document.activeElement:null;if(fx&&!W.live)return;b.innerHTML=W.html(this.open[id]);el.querySelector('.wsub').innerHTML=W.sub?W.sub():'';W.bind&&W.bind(b,this.open[id]);b.scrollTop=st},
- refresh(){if(!G.me)return;this.hud();for(const id in this.open)if(!WINS[id].manual)this.renderWin(id);this.tracker();this.hotbar()},
+ refresh(){if(!G.D||!G.me)return;if(!G.me)return;this.hud();for(const id in this.open)if(!WINS[id].manual)this.renderWin(id);this.tracker();this.hotbar()},
  mapChanged(){$('#mapn').textContent=G.map.n;this.log(`進入 <b>${esc(G.map.n)}</b>`);this.mmBase=null},
  hud(){const m=G.me,d=G.d;if(!m||!d)return;const J=G.D.jobs[m.job];$('#cname').textContent=m.name;$('#cjob').textContent=J.n;$('#clv').textContent='Lv.'+m.blv;
   const hp=Math.max(0,Math.round(m.hp)),sp=Math.round(m.spv);$('#hpb').style.width=Math.min(100,hp/d.mhp*100)+'%';$('#hpt').textContent=hp+' / '+d.mhp;$('#spb').style.width=Math.min(100,sp/d.msp*100)+'%';$('#spt').textContent=sp+' / '+d.msp;
@@ -1424,8 +1444,11 @@ const UI={open:{},z:100,imgs:{},
  connStatus(){const e=$('#connst');if(!e)return;const on=WS&&WS.readyState===1;e.innerHTML=`<div><i class="dot ${on?'on':''}"></i> Status <b>${on?t('已連線'):'離線'}</b></div><div>Ping ${G.ping}ms · snapshot</div><div>${G.lastDis?'上次斷線 '+Math.round((Date.now()-G.lastDis)/1000)+' 秒前':'連線 '+Math.round((Date.now()-G.connAt)/1000)+' 秒'} · 已斷線 ${G.discon} 次</div>`},
  applySet(){document.documentElement.style.setProperty('--hud',SET.hud/100);$('#joy').style.display=SET.joy?'':'none';$('#rpad').style.display=SET.btns?'':'none';$('#joy').style.opacity=$('#rpad').style.opacity=SET.joyOp/100;$('#ccard').style.display=SET.card?'':'none'},
  qgo(k){const q=G.D.quests[k],p=G.qs[k]||[0,1];const done=p[0]>=p[1];const g=q.goal||{};const findNpc=id=>{for(const mk in G.D.maps)for(const n of G.D.maps[mk].npcs||[])if(n.id===id)return[mk,n];return null};
-  if(!done&&(g.kill||g.collect)){act({op:'auto',on:1,quest:k});toast(t('自動前往任務目標…'));return}
-  const tg=findNpc(g.talk||q.giver);if(tg){if(G.map.id===tg[0])return this.npc(tg[1].id);send({op:'goto',map:tg[0],x:tg[1].x,y:tg[1].y,npc:tg[1].id});toast(t('自動尋路中…'))}else this.win('quest',{k})},
+  if(G.me.q.active[k]&&!q.reward.jobchange&&(g.kill||g.collect||g.talk)){act({op:'auto',on:1,quest:k}).then(r=>{if(r.e){toast(r.e);return}G.qf=k;G.me.auto=1;this.qfShow();toast(t('任務自動中')+'：'+q.n)});return}
+  const tg=findNpc(g.talk||q.to||q.giver);if(tg){if(G.map.id===tg[0])return this.npc(tg[1].id);send({op:'goto',map:tg[0],x:tg[1].x,y:tg[1].y,npc:tg[1].id});toast(t('自動尋路中…'))}else this.win('quest',{k})},
+ qfShow(){let b=document.getElementById('qfb');const k=G.qf,q=k&&G.D&&G.D.quests[k];if(!q){if(b)b.remove();return}
+  if(!b){b=document.createElement('div');b.id='qfb';b.innerHTML='<span class="qfi"></span><b></b><small></small><button type="button" aria-label="取消任務自動">✕</button>';document.body.appendChild(b);b.querySelector('button').onclick=e=>{e.stopPropagation();act({op:'qf'});G.qf=null;this.qfShow()}}
+  const p=G.qs&&G.qs[k];b.querySelector('b').textContent=t('任務自動中');b.querySelector('small').textContent=q.n+(p?` ${p[0]}/${p[1]}`:'')},
  npc(id){act({op:'npc',npc:id}).then(r=>{if(r.walk){toast(t('自動尋路中…'));return}if(!r.npc)return;this.win('npc',r)})}};
 // 長按（手機）拖曳到快捷列
 function longPress(el,cb){let tm;el.addEventListener('touchstart',e=>{tm=setTimeout(()=>{cb(e);navigator.vibrate&&navigator.vibrate(20)},400)},{passive:true});['touchend','touchmove','touchcancel'].forEach(k=>el.addEventListener(k,()=>clearTimeout(tm),{passive:true}))}
@@ -1479,7 +1502,7 @@ skill:{title:'技能書',w:720,html(o){const D=G.D,m=G.me,J=D.jobs[m.job];const 
 quest:{title:'任務日誌',w:560,sub:()=>'<small>探索 · 冒險 · 更好的明天</small>',html(o){const D=G.D,m=G.me;o.tab=o.tab||'prog';const tabs=[['prog','進行中'],['daily','每日'],['done','已完成'],['ex','物品兌換']];let ks;
  if(o.tab==='prog')ks=Object.keys(m.q.active).filter(k=>D.quests[k].type!=='daily');else if(o.tab==='daily')ks=Object.keys(D.quests).filter(k=>D.quests[k].type==='daily');else if(o.tab==='done')ks=Object.keys(m.q.done);else ks=[];
  const body=o.tab==='ex'?`<div class="empty">物品兌換：拿材料向 NPC 換取獎勵（下一版開放，例：10 泥殼蟹鉗 → 1 精煉礦石）。</div>`:ks.length?ks.map(k=>{const q=D.quests[k],act_=m.q.active[k],p=act_?(G.qs[k]||[0,1]):null,done=p&&p[0]>=p[1],fin=m.q.done[k];const r=q.reward;const g=q.goal;const goalT=g.kill?'擊敗 '+D.mobs[g.kill].n:g.collect?'收集 '+D.items[g.collect].n:g.talk?'與 '+(Object.values(D.maps).flatMap(x=>x.npcs).find(n=>n.id===g.talk)||{}).n+' 交談':g.joblv?'Job 等級 '+g.joblv:'';
-  return`<div class="qcard"><div class="qhd"><span class="qt ${q.type}">${{main:'主線',daily:'每日',npc:'委託',job:'轉職'}[q.type]}</span><b>${esc(q.n)}</b><small>${fin?'已完成':act_?'進行中':'未接受'}</small></div><p>${esc(q.desc)}</p>${act_?`<div class="qobj"><span>◎ 目標：${esc(goalT)}</span><b>${p[0]}/${p[1]}</b></div>`:''}
+  return`<div class="qcard"><div class="qhd"><span class="qt ${q.type}">${{main:'主線',daily:'每日',npc:'委託',job:'轉職'}[q.type]}</span><b>${esc(q.n)}</b><small>${fin?'已完成':act_?'進行中':'未接受'}</small></div><p>${esc(q.desc)}</p>${act_?`<div class="qobj"><span>◎ 目標：${esc(goalT)}</span><b>${p[0]}/${p[1]}</b></div>${!q.reward.jobchange&&(g.kill||g.collect||g.talk)?`<button class="btn b qauto" data-qauto="${k}" onclick="UI.close('quest');UI.qgo('${k}')">${G.qf===k?t('任務自動中'):t('任務自動')}</button>`:''}`:''}
   <div class="qrw"><span>獎勵：</span>${r.exp?`<span>Base EXP ${r.exp}</span>`:''}${r.jexp?`<span>Job EXP ${r.jexp}</span>`:''}${r.zeny?`<span>${ART.icon('coin',16)}${r.zeny}</span>`:''}${r.dia?`<span>${ART.icon('dia',16)}${r.dia}</span>`:''}${(r.items||[]).map(([i,n])=>`<span>${ART.icon(D.items[i].icon,18)}×${n}</span>`).join('')}${r.jobchange?'<span>轉職</span>':''}
   ${act_?(done?(q.reward.jobchange?Object.keys(D.jobs).filter(j=>D.jobs[j].from===m.job).map(j=>`<button class="btn g" data-turn="${k}" data-job="${j}">轉職為 ${D.jobs[j].n}</button>`).join(''):`<button class="btn g" data-turn="${k}">${t('領取獎勵')}</button>`):`<button class="btn" disabled>${t('尚未完成')}</button>`):fin?'':`<button class="btn b" data-acc="${k}">接受</button>`}</div></div>`}).join(''):`<div class="empty">沒有任務。去和頭上有「!」的 NPC 談談。</div>`;
  return`<div class="qtabs">${tabs.map(([k,n])=>`<span class="tab ${o.tab===k?'on':''}" data-tab="${k}">${t(n)}</span>`).join('')}</div>${body}`},
@@ -2009,7 +2032,8 @@ let started=0;function start(){if(started)return;started=1;buildMenus();V6.init(
  $('#cmin').onclick=()=>{$('#ccard').classList.toggle('min');$('#cmin').textContent=$('#ccard').classList.contains('min')?'+':'–';$('#cname2').textContent=G.me.name};$('#chatbtn').onclick=()=>$('#chatin').focus();$('#fsbtn').onclick=()=>{if(document.fullscreenElement)document.exitFullscreen();else document.documentElement.requestFullscreen&&document.documentElement.requestFullscreen().catch(()=>{})};
  $('#mm').addEventListener('click',e=>{e.stopPropagation();const r=e.target.getBoundingClientRect();const x=Math.floor((e.clientX-r.left)/r.width*G.map.W),y=Math.floor((e.clientY-r.top)/r.height*G.map.H);G.dest=[x,y];send({op:'goto',map:G.map.id,x,y})});
  document.addEventListener('pointerdown',e=>{if(!e.target.closest('#more')&&!e.target.closest('[data-w="more"]'))$('#more').classList.remove('on')});
- const av=$('#avc').getContext('2d');setInterval(()=>{if(!G.me)return;av.clearRect(0,0,14,14);ART.hero(av,7,14,1,G.me.job,null,0,0,G.me.look)},1000);
+ const avc=$('#avc'),av=avc.getContext('2d');const avp=document.createElement('div');avp.className='avp';avp.setAttribute('role','img');avc.parentNode.insertBefore(avp,avc);let avJ='';
+ const avUp=()=>{if(!G.me)return;const n=typeof HD!=='undefined'&&HD.CH&&HD.CH[G.me.job];if(n&&HD.on!==false){if(avJ!==n){avJ=n;avp.style.backgroundImage=`url(hd/${n}.webp)`;avp.setAttribute('aria-label',(G.D&&G.D.jobs[G.me.job]||{}).n||'')}avp.style.display='';avc.style.display='none'}else{avp.style.display='none';avc.style.display='';av.clearRect(0,0,14,14);ART.hero(av,7,14,1,G.me.job,null,0,0,G.me.look)}};setInterval(avUp,500);
  setTimeout(()=>{if(G.me&&G.me.blv<=1&&G.me.q.active.m1)UI.win('quest')},1500)}
 boot();
 {const im=document.getElementById('llogo');if(im){im.onload=()=>{im.hidden=false;im.parentNode.classList.add('haslogo')};im.onerror=()=>im.remove();im.src='logo.png'}}
