@@ -575,6 +575,44 @@ body.ringc #rbtns .rbs[data-k="h"]{display:none!important}
 .v6 body.lay-l #cxp{width:min(440px,52vw)}
 .v6 body.kb #cxp{bottom:var(--kb,0px);top:auto;height:min(calc(100dvh - var(--kb,0px) - 8px),520px)}
 .v6 body.chatx #logw{visibility:hidden}
+/* ===== 職業面板 ===== */
+.v6 .jc6{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.v6 .card6{border:1px solid var(--ln2);border-radius:12px;padding:10px;background:rgba(255,255,255,.04);display:flex;flex-direction:column;gap:7px;min-width:0}
+.v6 .card6.tgt{border-color:var(--lnG);background:linear-gradient(180deg,rgba(232,195,106,.10),rgba(255,255,255,.03))}
+.v6 .card6 .lab{font:600 11px var(--fui);letter-spacing:.14em;color:var(--t3)}
+.v6 .card6 .row{display:flex;gap:9px;align-items:center}.v6 .card6 .jn{font:700 17px var(--fcjk);color:var(--au2);display:block}.v6 .card6 small{color:var(--t3);font-size:11.5px}
+.v6 .jp6{width:46px;height:58px;object-fit:contain;image-rendering:auto;filter:drop-shadow(0 2px 3px rgba(0,0,0,.5));flex:none}.v6 .jp6.cv{image-rendering:pixelated}
+.v6 .kv6{display:flex;justify-content:space-between;font-size:13px;color:var(--t2)}.v6 .kv6 b{font-family:var(--fnum);color:var(--t1)}.v6 .kv6 b.au{color:var(--au)}
+.v6 .bar6{position:relative;height:16px;border-radius:8px;background:rgba(0,0,0,.45);overflow:hidden;border:1px solid var(--ln)}.v6 .bar6 i{position:absolute;inset:0 auto 0 0;background:var(--jxg)}.v6 .bar6 em{position:relative;display:block;text-align:center;font:600 10.5px/15px var(--fnum);font-style:normal;color:#fff;text-shadow:0 1px 2px #000}
+.v6 .card6 select{width:100%;height:36px;border-radius:9px;background:rgba(0,0,0,.4);border:1px solid var(--ln2);color:var(--t1);font-size:15px;padding:0 8px}
+.v6 .jb6{display:grid;grid-template-columns:repeat(4,1fr);gap:4px}.v6 .jb6 span{background:rgba(0,0,0,.28);border-radius:7px;padding:4px 0;text-align:center}.v6 .jb6 i{display:block;font-style:normal;font-size:10px;color:var(--t3)}.v6 .jb6 b{font:700 13px var(--fnum);color:var(--gn)}
+.v6 .jw6{display:flex;flex-wrap:wrap;gap:4px;align-items:center;font-size:11px}.v6 .jw6 i{font-style:normal;color:var(--t3);margin-right:2px}.v6 .jw6 em{font-style:normal;padding:1px 7px;border-radius:9px;border:1px solid var(--ln2);color:var(--t2)}
+.v6 .why6{font-size:12px;color:var(--rd)}.v6 .btn.wide{width:100%;height:38px;margin-top:auto}.v6 .mut6{color:var(--t3);font-size:13px}
+.v6 .jcf6{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:10px;padding-top:9px;border-top:1px solid var(--ln);font-size:12.5px;color:var(--au2)}
+@media (max-width:520px){.v6 .jc6{grid-template-columns:1fr}}
+/* ===== 職業傳說：羊皮紙 ===== */
+.v6 #w-legend{background:linear-gradient(180deg,rgba(58,44,28,.92),rgba(40,30,20,.94))!important;border-color:rgba(232,195,106,.6)!important}
+.v6 #w-legend .wb{background:radial-gradient(ellipse at 50% 0,rgba(255,236,190,.10),transparent 70%)}
+.v6 .lg6{color:#f3e6c8}
+.v6 .lgt6{display:flex;gap:6px;overflow-x:auto;padding:2px 2px 8px;scrollbar-width:thin}
+.v6 .lgt6 .lt{flex:none;display:flex;flex-direction:column;align-items:center;gap:2px;width:62px;padding:5px 0 4px;border-radius:10px;border:1px solid rgba(232,195,106,.25);background:rgba(0,0,0,.22);color:#e8d9b6;font:600 11px var(--fui);cursor:pointer;position:relative}
+.v6 .lgt6 .lt .jp6{width:34px;height:42px}.v6 .lgt6 .lt.on{border-color:var(--au);background:linear-gradient(180deg,rgba(232,195,106,.32),rgba(232,195,106,.08));color:#fff4d6}.v6 .lgt6 .lt.me::after{content:'';position:absolute;top:4px;right:5px;width:7px;height:7px;border-radius:50%;background:var(--gn)}
+.v6 .pro6{margin:2px 0 8px;border:1px solid rgba(232,195,106,.3);border-radius:10px;background:rgba(0,0,0,.18);padding:6px 10px}.v6 .pro6 summary{cursor:pointer;font:700 13px var(--fcjk);color:var(--au2)}.v6 .pro6 p{font-size:13px;line-height:1.7;color:#e9dcbf;margin:6px 0 2px}
+.v6 .lgm6{display:grid;grid-template-columns:250px 1fr;gap:12px;min-height:0}
+.v6 .lgl6{text-align:center;padding:8px;border-radius:12px;background:rgba(0,0,0,.2);border:1px solid rgba(232,195,106,.25);align-self:start}
+.v6 .lgl6 .pt6{height:170px;display:flex;align-items:flex-end;justify-content:center;background:radial-gradient(ellipse at 50% 70%,rgba(255,220,140,.25),transparent 65%)}.v6 .lgl6 .pt6 .jp6{width:auto;height:160px}.v6 .lgl6 .pt6 .jp6.cv{height:150px;width:auto}
+.v6 .lgl6 h3{font:700 22px var(--fcjk);color:var(--au2);margin:6px 0 2px;letter-spacing:.1em}.v6 .fac6{font-size:12px;color:#d8c59a}.v6 .fac6 em{display:block;font-style:normal;color:#bfae88;font-size:11px}
+.v6 .lgl6 blockquote{margin:8px 0;font:italic 13px var(--fcjk);color:#ffe6a8}.v6 .lgl6 p{font-size:12.5px;line-height:1.7;text-align:left;color:#eadcbc}
+.v6 .lgr6{max-height:min(62vh,560px);overflow-y:auto;padding-right:4px}
+.v6 .rt6 svg{width:100%;height:auto;max-height:340px}.v6 .rt6 path{fill:none;stroke:rgba(232,195,106,.28);stroke-width:2}.v6 .rt6 path.on{stroke:var(--au);stroke-width:3}
+.v6 .rt6 .nd{cursor:pointer}.v6 .rt6 .nd rect{fill:rgba(20,14,8,.75);stroke:rgba(232,195,106,.4)}.v6 .rt6 .nd text{fill:#eadcbc;font:600 11.5px var(--fui);text-anchor:middle}.v6 .rt6 .nd.on rect{stroke:var(--au)}.v6 .rt6 .nd.cur rect{fill:rgba(232,195,106,.85)}.v6 .rt6 .nd.cur text{fill:#2a1c08}.v6 .rt6 .nd.me rect{stroke:var(--gn);stroke-width:2}
+.v6 .lg6 .secb{color:var(--au2)!important;border-color:rgba(232,195,106,.3)!important;background:none!important}
+.v6 .sc6{border:1px solid rgba(232,195,106,.25);border-radius:10px;background:rgba(0,0,0,.2);margin-bottom:6px}.v6 .sc6.op{border-color:var(--au)}
+.v6 .sh6{display:flex;align-items:center;gap:9px;padding:6px 9px;cursor:pointer}.v6 .sh6 .nm{flex:1;min-width:0}.v6 .sh6 b{color:#fff1d0;font-size:14px}.v6 .sh6 small{display:block;color:#c9b68e;font-size:11px}
+.v6 .ps6,.v6 .ac6{font:700 10px var(--fnum);padding:2px 7px;border-radius:9px;letter-spacing:.06em}.v6 .ps6{background:rgba(169,139,255,.25);color:#d9ccff}.v6 .ac6{background:rgba(255,159,67,.22);color:#ffd2a0}.v6 .ch6{color:var(--au)}
+.v6 .sd6{padding:0 10px 9px}.v6 .sd6 p{font-size:13px;color:#f0e2c2;margin:2px 0 6px}.v6 .meta6{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:6px}.v6 .meta6 span{font-size:12px;background:rgba(0,0,0,.25);border-radius:7px;padding:3px 8px;color:#fff1d0}.v6 .meta6 i{font-style:normal;color:#c9b68e;margin-right:5px}
+.v6 .tw6{overflow-x:auto}.v6 .tw6 table{border-collapse:collapse;font:12px var(--fnum);white-space:nowrap}.v6 .tw6 th,.v6 .tw6 td{padding:3px 7px;border:1px solid rgba(232,195,106,.18);text-align:center;color:#f3e6c8}.v6 .tw6 th{color:#d9c393;text-align:left;background:rgba(0,0,0,.2)}
+@media (max-width:760px){.v6 .lgm6{grid-template-columns:1fr}.v6 .lgl6 .pt6{height:120px}.v6 .lgl6 .pt6 .jp6{height:115px}.v6 .lgr6{max-height:none;overflow:visible}}
 </style></head><body>
 <canvas id="cv"></canvas>
 <div id="hud" style="display:none">
@@ -1375,7 +1413,7 @@ item:{title:'物品詳情',w:360,html(o){const it=findIt(o.u);if(!it)return'<div
  bind(b,o){const it=findIt(o.u);if(!it)return;b.querySelectorAll('[data-a]').forEach(x=>x.onclick=async()=>{const a=x.dataset.a;if(a==='eq')await act({op:'equip',u:o.u});if(a==='un'){const sl=Object.keys(G.me.eq).find(k=>G.me.eq[k]===it||G.me.eq[k].u===o.u);await act({op:'unequip',sl})}if(a==='use')act({op:'use',u:o.u});if(a==='hot')hotPick('i:'+it.id);
   if(a==='refine')UI.win('npc',{npc:{id:'smith',n:'精煉師・鐵砧',act:'refine'},pre:o.u,remote:1});if(a==='card'){const cards=G.me.bag.filter(x=>G.D.items[x.id].type==='card');if(!cards.length)return toast('背包沒有卡片',1);const c=cards.length===1?cards[0]:cards[+prompt(cards.map((c,i)=>i+': '+G.D.items[c.id].n).join('\n'),'0')||0];if(c&&confirm('把 '+G.D.items[c.id].n+' 插入？插入後無法取下'))act({op:'card',c:c.u,u:o.u})}
   if(a==='sell'){const n=it.n>1?+prompt('出售數量',it.n)||0:1;if(n)act({op:'sell',u:o.u,n})}if(a==='mk')UI.win('market',{tab:'sell',u:o.u});if(a==='share'){send({op:'chat',ch:'map',text:'['+iname(it)+']'});}})}},
-skill:{title:'技能書',w:720,html(o){const D=G.D,m=G.me,J=D.jobs[m.job];const list=[...new Set([...J.skills,...(J.tier?[]:[])])];o.tmp=o.tmp||{...m.sk};o.psv=o.psv||[...m.psv];const used=Object.keys(o.tmp).reduce((a,k)=>a+(o.tmp[k]-(m.sk[k]||0)),0);const left=m.skp-used;const slots=J.tier===0?2:3+Math.floor(m.jlv/25);
+skill:{title:'技能書',w:720,html(o){const D=G.D,m=G.me,J=D.jobs[m.job];const list=[...new Set([...J.skills,...(J.tier?[]:[])])];o.tmp=o.tmp||{...m.sk};o.psv=o.psv||[...m.psv];const used=Object.keys(o.tmp).reduce((a,k)=>a+(o.tmp[k]-(m.sk[k]||0)),0);const left=m.skp-used;const slots=J.tier===0?2:4;
  const card=k=>{const s=D.skills[k],lv=o.tmp[k]||0;const eqp=s.kind==='passive'&&o.psv.includes(k);return`<div class="skc ${o.sel===k?'sel':''} ${lv?'':'un'}" data-k="${k}">${o.sel===k?'<span class="tagsel">SELECTED</span>':''}${eqp?'<span class="tageq">已裝備</span>':''}<b>${esc(s.n)}</b><div class="ic sk" draggable="${s.kind==='active'&&lv>0}" data-drag="${k}">${ART.icon(s.icon,40)}</div><div class="lvrow"><button class="pb" data-m="${k}" ${lv<=(m.sk[k]||0)?'disabled':''}>−</button><span>${lv} / ${s.max}</span><button class="pb" data-p="${k}" ${left<=0||lv>=s.max?'disabled':''}>＋</button></div><small class="st">${lv?'已學習 · Lv'+lv:'尚未學習'}</small></div>`};
  const act_=list.filter(k=>D.skills[k].kind==='active'),pas=list.filter(k=>D.skills[k].kind==='passive');o.sel=o.sel||act_[0];const s=D.skills[o.sel],lv=o.tmp[o.sel]||0;const fill=(l)=>s.desc.replace(/\{(\w+)\}/g,(_,k)=>{try{return Math.round(new Function('lv','return '+s[k])(Math.max(1,l))*10)/10}catch(e){return'?'}});
  return`<div class="secb">◆ 主動 · 可使用技能</div><div class="skrow">${act_.map(card).join('')}</div><div class="secb">◆ 被動 · 常駐技能 <span class="chip" title="點已學會的被動卡片可裝上/卸下">被動裝備 ${o.psv.length}/${slots}</span></div><div class="skrow">${pas.map(card).join('')}</div>
@@ -1742,11 +1780,63 @@ const CH6={msgs:[],tab:SET.chatTab||'all',fs:SET.chatFs||13,lang:SET.chatLang||'
   const lg=UI.log.bind(UI);UI.log=h=>{lg(h);const s=String(h);this.add({ch:/經驗|EXP|Base|Job ?\+/i.test(s.replace(/<[^>]+>/g,''))?'exp':'sys',html:s})};
   const ch0=UI.chat;UI.chat=m=>{ch0(m);this.add({...m})};this.render()}};
 
+// ===== v6 職業面板（目前/目標/轉職）＋ 職業傳說（羊皮紙圖鑑：肖像分頁、序章、陣營/格言/傳說、路線圖、技能卡展開數值） =====
+const JOB6={
+ HDP:{kni:'ch_kni',arc:'ch_arc',rgr:'ch_rgr',acl:'ch_acl',thf:'ch_thf',mer:'ch_mer'},
+ WPN:{kni:'sword',rgr:'bow',arc:'staff',acl:'mace',mer:'axe',thf:'dagger',mnk:'knuckle',brd:'harp',lnc:'spear',msw:'sword2',hsn:'bow',smg:'axe',nov:'dagger'},
+ KL:{pct:'傷害 %',heal:'治療量',atk:'攻擊 +%',matk:'魔攻 +%',def:'防禦 +',hit:'命中 +',crit:'暴擊 +',aspd:'攻速 +%',hp:'HP +',cast:'詠唱 (秒)',hits:'段數',aoe:'範圍 (格)',atkb:'攻擊 +',proc:'觸發 %'},
+ ev(f,lv){if(typeof f==='number')return f;try{const v=new Function('lv','return '+f)(lv);return Math.round(v*100)/100}catch(e){return null}},
+ portrait(j,big){const n=this.HDP[j];if(n)return `<img class="jp6" src="hd/${n}.webp" alt="" draggable="false">`;return `<canvas class="jp6 cv" data-pj="${j}" width="${big?28:20}" height="${big?36:26}"></canvas>`},
+ drawP(root){root.querySelectorAll('canvas[data-pj]').forEach(cv=>{const x=cv.getContext('2d');x.imageSmoothingEnabled=false;const j=cv.dataset.pj;const s=cv.width/14;(ART._hero0||ART.hero)(x,cv.width/2,cv.height-1,s,j,this.WPN[j],0,0)})},
+ elig(){const D=G.D,m=G.me,C=D.jobs[m.job];const out=[];for(const k in D.jobs){const J=D.jobs[k];if(k===m.job)continue;let ok=false,why='';
+   if(m.job==='nov'&&J.tier===1){ok=m.jlv>=10;why=ok?'':'需要 Job Lv.10'}
+   else if(C.tier===1&&J.tier===2&&(J.parents||[]).includes(m.job)){const rq=J.req||{jlv:20,blv:40};ok=m.jlv>=rq.jlv&&m.blv>=rq.blv;why=ok?'':`需要 Job Lv.${rq.jlv} · Base Lv.${rq.blv}`}
+   else continue;out.push({k,J,ok,why})}return out},
+ bonus(J){const D=G.D;return `<div class="jb6"><span><i>HP 成長</i><b>${J.hpL}</b></span><span><i>SP 成長</i><b>${J.spL}</b></span><span><i>攻速</i><b>${J.aspd}</b></span><span><i>盾牌</i><b>${J.shield?'可':'不可'}</b></span></div><div class="jw6"><i>${t('可用武器')}</i>${(J.weap||[]).map(w=>`<em>${esc((D.weapons[w]||{}).n||w)}</em>`).join('')}</div>`}};
+WINS.jobc={title:'職業',w:460,html(o){const D=G.D,m=G.me,J=D.jobs[m.job];const L=this._el=JOB6.elig();if(!o.to||!L.find(x=>x.k===o.to))o.to=(L.find(x=>x.ok)||L[0]||{}).k;const T=o.to&&D.jobs[o.to];const sel=L.find(x=>x.k===o.to);
+  const need=G.need||{};const jp=need.j?Math.min(100,(m.jexp||0)/need.j*100):0;
+  return `<div class="jc6"><div class="card6 cur"><div class="lab">${t('目前職業')}</div><div class="row">${JOB6.portrait(m.job)}<div><b class="jn">${esc(J.n)}</b><small>${esc(J.role||'')}</small></div></div>
+   <div class="kv6"><span>Job Lv</span><b>${m.jlv}</b></div><div class="bar6"><i style="width:${jp.toFixed(1)}%"></i><em>Job EXP ${jp.toFixed(1)}%</em></div><div class="kv6"><span>${t('技能點')}</span><b class="au">${m.skp}</b></div></div>
+   <div class="card6 tgt"><div class="lab">${t('目標職業')}</div>${L.length?`<select id="jcsel">${L.map(x=>`<option value="${x.k}"${x.k===o.to?' selected':''}>${esc(x.J.n)}${x.ok?'':' 🔒'}</option>`).join('')}</select>
+   <div class="row">${JOB6.portrait(o.to)}<div><b class="jn">${esc(T.n)}</b><small>${esc(T.role||'')}</small></div></div>${JOB6.bonus(T)}${sel&&!sel.ok?`<div class="why6">${esc(sel.why)}</div>`:''}
+   <button class="btn g wide" id="jcgo" ${sel&&sel.ok?'':'disabled'}>${t('轉職')}</button>`:`<p class="mut6">${J.tier===2?t('已是最終職業'):t('目前沒有可轉的職業')}</p>`}</div></div>
+   <div class="jcf6"><span>${m.job==='nov'?'Job Lv.10 可轉職':J.tier===1?'Job Lv.20 · Base Lv.40 可轉混合職業':t('已達最終職業')}</span><button class="btn" id="jclg">📜 ${t('職業傳說')}</button></div>`},
+ bind(b,o){JOB6.drawP(b);const s=b.querySelector('#jcsel');if(s)s.onchange=()=>{o.to=s.value;UI.renderWin('jobc')};b.querySelector('#jclg').onclick=()=>UI.win('legend',{job:o.to||G.me.job});
+  const g=b.querySelector('#jcgo');if(g)g.onclick=async()=>{const T=G.D.jobs[o.to];if(!confirm(t('確定轉職為')+' '+T.n+'？'))return;const r=await act({op:'jobchange',job:o.to});if(r&&!r.e){UI.close('jobc')}}}};
+WINS.legend={title:'職業傳說',w:880,html(o){const D=G.D;const ks=Object.keys(D.jobs);o.job=D.jobs[o.job]?o.job:G.me.job;const J=D.jobs[o.job];o.open=o.open||{};
+  const tabs=`<div class="lgt6">${ks.map(k=>`<button class="lt ${k===o.job?'on':''} ${k===G.me.job?'me':''}" data-j="${k}">${JOB6.portrait(k)}<span>${esc(D.jobs[k].n)}</span></button>`).join('')}</div>`;
+  const pro=`<details class="pro6" ${o.pro?'open':''}><summary>${t('序章 · 曙光之境')}</summary><p>千年前，曙光自天空裂隙灑落，浮空之城升起，大地分為十四片疆域。冒險者自晨帆港啟航，在霧沼、雪隘、赤砂與星晶洞窟之間尋找失落的曙光碎片。每一種職業，都是一條通往傳說的道路——選擇你的道路，寫下屬於你的篇章。</p></details>`;
+  // 路線圖
+  const t1=ks.filter(k=>D.jobs[k].tier===1),t2=ks.filter(k=>D.jobs[k].tier===2);const H=Math.max(t1.length,1)*34+10,X0=48,X1=232,X2=430;const y1=i=>20+i*34,yc=H/2;const pos={nov:[X0,yc]};t1.forEach((k,i)=>pos[k]=[X1,y1(i)]);t2.forEach(k=>{const ps=(D.jobs[k].parents||[]).map(p=>pos[p]).filter(Boolean);pos[k]=[X2,ps.length?ps.reduce((a,p)=>a+p[1],0)/ps.length:yc]});
+  const path=[o.job];let c=o.job;while(c&&D.jobs[c]){const P=D.jobs[c];const f=P.from||(P.parents&&(P.parents.includes(G.me.job)?G.me.job:P.parents[0]));if(!f||path.includes(f))break;path.push(f);c=f}
+  const ln=(a,b2,on)=>`<path d="M${pos[a][0]+44} ${pos[a][1]} C${(pos[a][0]+pos[b2][0])/2+20} ${pos[a][1]},${(pos[a][0]+pos[b2][0])/2} ${pos[b2][1]},${pos[b2][0]-44} ${pos[b2][1]}" class="${on?'on':''}"/>`;
+  let lines='';for(const k of t1)lines+=ln('nov',k,path.includes(k)&&path.includes('nov'));for(const k of t2)for(const p of D.jobs[k].parents||[])if(pos[p])lines+=ln(p,k,path.includes(k)&&path.includes(p));
+  const node=k=>`<g class="nd ${k===o.job?'cur':''} ${path.includes(k)?'on':''} ${k===G.me.job?'me':''}" data-j="${k}" transform="translate(${pos[k][0]-44},${pos[k][1]-12})"><rect width="88" height="24" rx="12"/><text x="44" y="16">${esc(D.jobs[k].n)}</text></g>`;
+  const tree=`<div class="rt6"><div class="secb">◆ ${t('職業路線')}</div><svg viewBox="0 0 ${X2+48} ${H}" preserveAspectRatio="xMidYMid meet">${lines}${['nov',...t1,...t2].map(node).join('')}</svg></div>`;
+  // 技能卡
+  const TR=J.tree||{};const card=k=>{const s=D.skills[k];if(!s)return'';const r=TR[k]||{jl:1,pre:[]};const op=!!o.open[k];const mx=s.max||1;
+   const keys=Object.keys(JOB6.KL).filter(x=>s[x]!=null&&typeof s[x]!=='object');if(s.status&&s.status.ch!=null)keys.push('_st');
+   const rows=keys.map(x=>{const lab=x==='_st'?`${t('狀態機率')} %`:JOB6.KL[x];const f=x==='_st'?s.status.ch:s[x];const vals=[];for(let l=1;l<=mx;l++)vals.push(JOB6.ev(f,l));return `<tr><th>${lab}</th>${vals.map(v=>`<td>${v==null?'–':v}</td>`).join('')}</tr>`}).join('');
+   const spRow=s.kind==='active'?`<tr><th>SP</th>${Array.from({length:mx},(_,i)=>`<td>${(s.sp||0)+i+1}</td>`).join('')}</tr>`:'';
+   const fill=l=>String(s.desc||'').replace(/\{(\w+)\}/g,(_,kk)=>{const v=JOB6.ev(s[kk],l);return v==null?'?':v});
+   const pre=(r.pre||[]).map(([pk,pl])=>`${esc((D.skills[pk]||{}).n||pk)} Lv.${pl}`).join('、')||t('無');
+   const cast=s.cast!=null?(typeof s.cast==='number'?s.cast+'s':`${JOB6.ev(s.cast,1)}–${JOB6.ev(s.cast,mx)}s`):t('瞬發');
+   return `<div class="sc6 ${op?'op':''}" data-sk="${k}"><div class="sh6"><div class="ic">${ART.icon(s.icon,36)}</div><div class="nm"><b>${esc(s.n)}</b><small>Job Lv.${r.jl} · ${t('最高')} Lv.${mx}</small></div>${s.kind==='passive'?'<span class="ps6">Passive</span>':'<span class="ac6">Active</span>'}<span class="ch6">${op?'▴':'▾'}</span></div>
+    ${op?`<div class="sd6"><p>${esc(fill(1))}</p><div class="meta6"><span><i>${t('前置')}</i>${pre}</span>${s.kind==='active'?`<span><i>SP</i>${(s.sp||0)+1}–${(s.sp||0)+mx}</span><span><i>${t('詠唱')}</i>${cast}</span><span><i>${t('冷卻')}</i>${s.cd!=null?s.cd+'s':'–'}</span>`:''}${s.aoe?`<span><i>${t('範圍')}</i>${s.aoe} 格</span>`:''}${s.ele?`<span><i>${t('屬性')}</i>${esc((D.elements&&D.elements[s.ele]&&D.elements[s.ele].n)||s.ele)}</span>`:''}</div>
+    ${rows||spRow?`<div class="tw6"><table><tr><th>Lv</th>${Array.from({length:mx},(_,i)=>`<td>${i+1}</td>`).join('')}</tr>${spRow}${rows}</table></div>`:''}</div>`:''}</div>`};
+  const sk=(J.skills||[]);const A=sk.filter(k=>(D.skills[k]||{}).kind==='active'),P=sk.filter(k=>(D.skills[k]||{}).kind==='passive');
+  return `<div class="lg6">${tabs}${pro}<div class="lgm6"><div class="lgl6"><div class="pt6">${JOB6.portrait(o.job,1)}</div><h3>${esc(J.n)}</h3><div class="fac6">${esc(J.faction||'')}<em>${esc(J.role||'')}</em></div><blockquote>${esc(J.motto||'')}</blockquote><p>${esc(J.lore||'')}</p>${JOB6.bonus(J)}</div>
+   <div class="lgr6">${tree}<div class="secb">◆ ${t('主動技能')} <small>${A.length}</small></div>${A.map(card).join('')}<div class="secb">◆ ${t('被動技能')} <small>${P.length}</small></div>${P.map(card).join('')}</div></div></div>`},
+ bind(b,o){JOB6.drawP(b);b.querySelectorAll('[data-j]').forEach(x=>x.onclick=e=>{e.stopPropagation();o.job=x.dataset.j;o.open={};UI.renderWin('legend')});
+  b.querySelectorAll('.sh6').forEach(x=>x.onclick=()=>{const k=x.parentNode.dataset.sk;o.open[k]=!o.open[k];const sc=b.querySelector('.lgr6').scrollTop;UI.renderWin('legend');const r=document.querySelector('#w-legend .lgr6');if(r)r.scrollTop=sc});
+  const d=b.querySelector('.pro6');if(d)d.ontoggle=()=>{o.pro=d.open}}};
+(()=>{if(window.HD){const h=ART.hero;ART._hero0=function(){const on=HD.on;HD.on=false;const sv=HD.CH;HD.CH={};try{return h.apply(ART,arguments)}finally{HD.CH=sv;HD.on=on}}}})();
+
 // ===== 啟動 =====
 const MENU=[['stat','狀態','owl'],['skill','技能','staff'],['equip','裝備','armor'],['bag','背包','boots'],['quest','任務','card'],['market','市集','coin'],['exchange','鑽石匯兌','dia'],['more','更多','ring']];
 const MORE=[['autobs','自動戰鬥'],['mail','信箱'],['settings','設定'],['mall','商城'],['premium','Premium'],['auction','拍賣'],['party','組隊'],['friends','好友'],['guild','公會'],['rank','排行'],['world','世界地圖'],['look','外觀'],['exch','兌換'],['mlog','交易紀錄'],['lore','職業']];
 function buildMenus(){const btn=([k,n,ic])=>`<button class="tm" id="tb-${k}" data-w="${k}"><span class="ti">${ART.micon(k,30)}</span>${t(n)}</button>`;const btn2=([k,n])=>`<button class="tm" data-w="${k}"><span class="ti">${ART.micon(k,30)}</span>${t(n)}</button>`;$('#topmenu').innerHTML=TOOL6.map(btn).join('');$('#mbar').innerHTML='';$('#more').innerHTML=MORE6.map(btn2).join('');
- document.querySelectorAll('[data-w]').forEach(b=>b.onclick=e=>{e.stopPropagation();const w=b.dataset.w;if(w==='more'){$('#more').classList.toggle('on');return}$('#more').classList.remove('on');document.body.classList.remove('menuo');const tmt=$('#tmt');if(tmt)tmt.classList.remove('on');if(w==='lore'){if(V6.canJob())return V6.goJob();return UI.win('lore',{job:G.me.job==='nov'?'kni':G.me.job})}if(w==='mlog')return UI.win('mlog',{});UI.win(w)})}
+ document.querySelectorAll('[data-w]').forEach(b=>b.onclick=e=>{e.stopPropagation();const w=b.dataset.w;if(w==='more'){$('#more').classList.toggle('on');return}$('#more').classList.remove('on');document.body.classList.remove('menuo');const tmt=$('#tmt');if(tmt)tmt.classList.remove('on');if(w==='lore'){return UI.win('jobc')}if(w==='mlog')return UI.win('mlog',{});UI.win(w)})}
 async function boot(){await loadLang(I18N.lang);$('#llang').innerHTML=Object.entries(I18N.langs).map(([k,v])=>`<option value="${k}" ${k===I18N.lang?'selected':''}>${v}</option>`).join('');$('#llang').onchange=async e=>{await loadLang(e.target.value);location.reload()};
  document.querySelectorAll('#login [placeholder]').forEach(e=>e.placeholder=t(e.placeholder));
  if('ontouchstart' in window||matchMedia('(pointer:coarse)').matches)document.body.classList.add('touch');
