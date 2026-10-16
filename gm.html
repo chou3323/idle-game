@@ -6,7 +6,7 @@
 <script>
 const API=location.hostname==='localhost'?'':'https://api.ragnarokidle.app';let TK=sessionStorage.gmtk||'',T=null,cur='items',sel=null;const $=s=>document.querySelector(s);const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 async function api(p,b){const r=await fetch(API+p,{method:b?'POST':'GET',headers:{'content-type':'application/json',authorization:'Bearer '+TK},body:b?JSON.stringify(b):undefined});const j=await r.json().catch(()=>({}));if(r.status===401){sessionStorage.gmtk='';location.reload()}return j}
-$('#go').onclick=async()=>{const r=await fetch(API+'/api/admin/login',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({username:$('#u').value,password:$('#p').value})});const j=await r.json();if(!j.token){$('#le').textContent=j.error||'登入失敗';return}TK=sessionStorage.gmtk=j.token;boot()};
+$('#go').onclick=async()=>{const r=await fetch(API+'/api/admin/login',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({username:$('#u').value,password:$('#p').value})});const j=await r.json();if(!j.token){$('#le').textContent=j.error||'登入失敗';return}TK=sessionStorage.gmtk=j.token;localStorage.robGMok='1';boot()};
 $('#out').onclick=()=>{sessionStorage.gmtk='';location.reload()};
 async function boot(){const j=await api('/api/rob/gm/tables');if(!j.tables)return;T=j.tables;$('#hash').textContent='內容雜湊 '+j.hash;$('#login').style.display='none';$('#app').style.display='';nav()}
 const N={params:'全域參數',jobs:'職業',weapons:'武器類型',skills:'技能',buffs:'增益',items:'物品',mobs:'怪物',quests:'任務',refine:'精煉',sets:'套裝',cats:'分類',exchange:'物品兌換',auction:'拍賣池'};

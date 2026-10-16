@@ -495,6 +495,7 @@ function FXev(e){const me=G.me&&G.me.name;const D=G.D;
  else if(e.t==='pdie'){if(e.id===me){SFX.play('die');toast('你倒下了… 4 秒後回到晨帆港',1)}}
  else if(e.t==='qdone'){if(e.id===undefined||true){toast('✔ 任務完成：'+e.n+(e.next?'　▶ 新任務：'+(G.D.quests[e.next]?.n||''):''));SFX.play('lvup')}}
  else if(e.t==='qnew'){toast('📜 接受任務：'+e.n)}
+ else if(e.t==='hint'){const a=$('#autotag');if(a){a.textContent='⏳ '+e.text;a.classList.add('hint');clearTimeout(G.hintT);G.hintT=setTimeout(()=>{a.classList.remove('hint');a.textContent='⚡ 自動狩獵中 · 離線也會繼續'},2600)}}
  else if(e.t==='arrive'){if(e.id===me)UI.npc(e.npc)}
  else if(e.t==='job'){toast('轉職成功：'+D.jobs[e.job].n+'！');SFX.play('lvup')}}
 // ---------- 渲染 ----------
@@ -618,7 +619,7 @@ const UI={open:{},z:100,imgs:{},
  connStatus(){const e=$('#connst');if(!e)return;const on=WS&&WS.readyState===1;e.innerHTML=`<div><i class="dot ${on?'on':''}"></i> Status <b>${on?t('已連線'):'離線'}</b></div><div>Ping ${G.ping}ms · snapshot</div><div>${G.lastDis?'上次斷線 '+Math.round((Date.now()-G.lastDis)/1000)+' 秒前':'連線 '+Math.round((Date.now()-G.connAt)/1000)+' 秒'} · 已斷線 ${G.discon} 次</div>`},
  applySet(){document.documentElement.style.setProperty('--hud',SET.hud/100);$('#joy').style.display=SET.joy?'':'none';$('#rpad').style.display=SET.btns?'':'none';$('#joy').style.opacity=$('#rpad').style.opacity=SET.joyOp/100;$('#ccard').style.display=SET.card?'':'none'},
  qgo(k){const q=G.D.quests[k],p=G.qs[k]||[0,1];const done=p[0]>=p[1];const g=q.goal||{};const findNpc=id=>{for(const mk in G.D.maps)for(const n of G.D.maps[mk].npcs||[])if(n.id===id)return[mk,n];return null};
-  if(!done&&(g.kill||g.collect)){const mk=Object.keys(G.D.maps).find(x=>G.D.maps[x].spawns);if(G.map.id===mk){if(!G.me.auto)UI.toggleAuto();return}const sp=G.D.maps[mk].spawns[0].area;send({op:'goto',map:mk,x:(sp[0]+sp[2])/2|0,y:(sp[1]+sp[3])/2|0});toast(t('自動尋路中…'));return}
+  if(!done&&(g.kill||g.collect)){act({op:'auto',on:1,quest:k});toast(t('自動前往任務目標…'));return}
   const tg=findNpc(g.talk||q.giver);if(tg){if(G.map.id===tg[0])return this.npc(tg[1].id);send({op:'goto',map:tg[0],x:tg[1].x,y:tg[1].y,npc:tg[1].id});toast(t('自動尋路中…'))}else this.win('quest',{k})},
  npc(id){act({op:'npc',npc:id}).then(r=>{if(r.walk){toast(t('自動尋路中…'));return}if(!r.npc)return;this.win('npc',r)})}};
 // 長按（手機）拖曳到快捷列
