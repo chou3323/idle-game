@@ -651,6 +651,15 @@ body.ringc #rbtns .rbs[data-k="h"]{display:none!important}
 #qfb button{min-width:28px;height:28px;border-radius:50%;border:1px solid #e9c46a88;background:#0004;color:#ffe9b0;cursor:pointer}
 @keyframes qfp{0%{box-shadow:0 0 0 0 #5CD68Caa}70%{box-shadow:0 0 0 8px #5CD68C00}100%{box-shadow:0 0 0 0 #5CD68C00}}
 .qcard .qauto{margin-top:6px}
+
+#tracker #qfb.intr{position:static;transform:none;left:auto;top:auto;margin:0 0 6px;max-width:100%;width:100%;box-sizing:border-box;border-radius:12px;font-size:12px;pointer-events:auto}
+#tracker #qfb.intr small{flex:1;min-width:0}
+
+.v6 #tracker #autotag.intr{position:static!important;transform:none!important;left:auto!important;top:auto!important;bottom:auto!important;margin:0 0 6px!important;max-width:100%!important;width:max-content;box-sizing:border-box;white-space:normal!important}
+.v6 #autotag.qfon{display:none!important}
+.v6 body.lay-p.touch #joy{bottom:calc(46px + var(--sB))!important}
+@media (max-width:900px){.v6 body.lay-l #topmenu .tm{width:36px!important;font-size:10px!important;letter-spacing:-.02em}}
+@media (max-width:900px){.v6 body.lay-l #ccard{width:222px!important;min-width:0!important;max-width:222px!important;box-sizing:border-box}}
 </style></head><body>
 <canvas id="cv"></canvas>
 <div id="hud" style="display:none">
@@ -1414,7 +1423,7 @@ const UI={open:{},z:100,imgs:{},
   $('#zeny').textContent=fmt(m.zeny);$('#dia').textContent=fmt(m.dia);$('#autob').classList.toggle('on',!!m.auto);$('#autotag').style.display=m.auto?'':'none';
   const badge=(sel,n)=>{const e=$(sel);if(e){e.dataset.n=n||'';e.classList.toggle('bd',!!n)}};badge('#tb-stat',m.stp);badge('#tb-skill',m.skp);badge('#tb-more',Object.keys(G.qs||{}).filter(k=>{const p=G.qs[k];return p[0]>=p[1]}).length);
   const npcQ={};for(const k in G.D.quests){const q=G.D.quests[k];if(m.q.active[k]){const p=G.qs[k];if(p&&p[0]>=p[1])npcQ[q.giver]='?'}}G.npcQ=npcQ},
- tracker(){const m=G.me;const el=$('#tracker');const ks=Object.keys(m.q.active);el.innerHTML=ks.length?`<div class="trh" onclick="UI.win('quest')">📜 ${t('任務')} <small>${ks.length}</small></div>`+ks.slice(0,4).map(k=>{const q=G.D.quests[k],p=G.qs[k]||[0,1];const done=p[0]>=p[1];return`<div class="tri ${done?'done':''}" onclick="UI.qgo('${k}')"><span class="qt ${q.type}">${{main:'主線',daily:'每日',npc:'委託',job:'轉職'}[q.type]}</span> ${esc(q.n)}<br><small>${esc(q.desc)}</small> <b>${done?'✔ 可回報':p[0]+'/'+p[1]}</b></div>`}).join(''):''},
+ tracker(){const m=G.me;const el=$('#tracker');const ks=Object.keys(m.q.active);el.querySelectorAll('#qfb,#autotag').forEach(x=>document.getElementById('hud').appendChild(x));el.innerHTML=ks.length?`<div class="trh" onclick="UI.win('quest')">📜 ${t('任務')} <small>${ks.length}</small></div>`+ks.slice(0,4).map(k=>{const q=G.D.quests[k],p=G.qs[k]||[0,1];const done=p[0]>=p[1];return`<div class="tri ${done?'done':''}" onclick="UI.qgo('${k}')"><span class="qt ${q.type}">${{main:'主線',daily:'每日',npc:'委託',job:'轉職'}[q.type]}</span> ${esc(q.n)}<br><small>${esc(q.desc)}</small> <b>${done?'✔ 可回報':p[0]+'/'+p[1]}</b></div>`}).join(''):'';this.qfShow&&this.qfShow()},
  hotbar(){const m=G.me;$('#hot').innerHTML=m.hot.map((h,i)=>{let ic='',n='',cd='';if(h){const [k,id]=h.split(':');if(k==='i'){const d=G.D.items[id];ic=d?ART.icon(d.icon,30):'';const c=m.bag.filter(x=>x.id===id).reduce((a,b)=>a+b.n,0);n=`<em>${c}</em>`}else{const d=G.D.skills[id];ic=d?ART.icon(d.icon,30):'';n=m.sk[id]?'':'<em class="x">✕</em>'}}return`<div class="hs" data-i="${i}" draggable="${!!h}"><span>${i+1}</span>${ic}${n}</div>`}).join('');
   $$('#hot .hs').forEach(e=>{const i=+e.dataset.i;e.onclick=()=>this.useHot(i);e.ondragstart=ev=>ev.dataTransfer.setData('text/hot',JSON.stringify({from:i,v:m.hot[i]}));e.ondragover=ev=>ev.preventDefault();e.ondrop=ev=>{ev.preventDefault();const a=ev.dataTransfer.getData('text/hot');if(a){const o=JSON.parse(a);if(o.from!=null){act({op:'hot',i,v:o.v,j:o.from,v2:m.hot[i]})}else act({op:'hot',i,v:o.v})}};e.oncontextmenu=ev=>{ev.preventDefault();act({op:'hot',i,v:null})}});
   // 手機技能輪盤
@@ -1446,9 +1455,9 @@ const UI={open:{},z:100,imgs:{},
  qgo(k){const q=G.D.quests[k],p=G.qs[k]||[0,1];const done=p[0]>=p[1];const g=q.goal||{};const findNpc=id=>{for(const mk in G.D.maps)for(const n of G.D.maps[mk].npcs||[])if(n.id===id)return[mk,n];return null};
   if(G.me.q.active[k]&&!q.reward.jobchange&&(g.kill||g.collect||g.talk)){act({op:'auto',on:1,quest:k}).then(r=>{if(r.e){toast(r.e);return}G.qf=k;G.me.auto=1;this.qfShow()});return}
   const tg=findNpc(g.talk||q.to||q.giver);if(tg){if(G.map.id===tg[0])return this.npc(tg[1].id);send({op:'goto',map:tg[0],x:tg[1].x,y:tg[1].y,npc:tg[1].id});toast(t('自動尋路中…'))}else this.win('quest',{k})},
- qfShow(){let b=document.getElementById('qfb');const k=G.qf,q=k&&G.D&&G.D.quests[k];if(!q){if(b)b.remove();return}
+ qfShow(){{const at=document.getElementById('autotag'),tr=document.getElementById('tracker');if(at&&tr){if(tr.offsetParent){const ref=document.getElementById('qfb');if(at.parentNode!==tr||(ref&&ref.parentNode===tr?ref.nextSibling!==at:tr.firstChild!==at))(ref&&ref.parentNode===tr)?ref.after(at):tr.prepend(at);at.classList.add('intr')}at.classList.toggle('qfon',!!G.qf)}}let b=document.getElementById('qfb');const k=G.qf,q=k&&G.D&&G.D.quests[k];if(!q){if(b)b.remove();return}
   if(!b){b=document.createElement('div');b.id='qfb';b.innerHTML='<span class="qfi"></span><b></b><small></small><button type="button" aria-label="取消任務自動">✕</button>';document.body.appendChild(b);b.querySelector('button').onclick=e=>{e.stopPropagation();act({op:'qf'});G.qf=null;this.qfShow()}}
-  const cc=document.getElementById('ccard');if(innerWidth<760&&cc&&cc.offsetParent){const r=cc.getBoundingClientRect();b.style.top=(r.bottom+6)+'px';b.style.left=r.left+'px';b.style.transform='none'}else{b.style.top=b.style.left=b.style.transform=''}const p=G.qs&&G.qs[k];b.querySelector('b').textContent=t('任務自動中');b.querySelector('small').textContent=q.n+(p?` ${p[0]}/${p[1]}`:'')},
+  const tr=document.getElementById('tracker');if(tr&&tr.offsetParent){if(b.parentNode!==tr||tr.firstChild!==b)tr.prepend(b);b.classList.add('intr')}else if(b.parentNode!==document.body){document.body.appendChild(b);b.classList.remove('intr')}const p=G.qs&&G.qs[k];b.querySelector('b').textContent=t('任務自動中');b.querySelector('small').textContent=q.n+(p?` ${p[0]}/${p[1]}`:'');const at=document.getElementById('autotag');if(at&&at.parentNode===b.parentNode&&b.nextSibling!==at)b.after(at)},
  npc(id){act({op:'npc',npc:id}).then(r=>{if(r.walk){toast(t('自動尋路中…'));return}if(!r.npc)return;this.win('npc',r)})}};
 // 長按（手機）拖曳到快捷列
 function longPress(el,cb){let tm;el.addEventListener('touchstart',e=>{tm=setTimeout(()=>{cb(e);navigator.vibrate&&navigator.vibrate(20)},400)},{passive:true});['touchend','touchmove','touchcancel'].forEach(k=>el.addEventListener(k,()=>clearTimeout(tm),{passive:true}))}
