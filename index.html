@@ -698,6 +698,36 @@ body.kb #atgt{visibility:hidden}
 .atg6 .nm{display:flex;flex-direction:column;min-width:0}.atg6 .nm small,.atg6 .atga small{opacity:.75;font-size:11px}.atg6 .boss .nm b{color:#ffd98a}
 .atg6 .atga{flex-wrap:wrap}.atg6 .atga small{flex-basis:100%;padding-left:30px;margin-top:-4px}
 .atg6 .atgf{display:flex;justify-content:space-between;gap:8px;margin-top:8px}
+/* ===== 技能書 v6：分階分頁、毛玻璃 ===== */
+.v6 .sk6{display:flex;flex-direction:column;gap:10px;min-width:0}
+.v6 .sk6t{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.v6 .skt{display:flex;flex-direction:column;align-items:center;gap:1px;padding:7px 4px;border-radius:12px;border:1px solid rgba(255,255,255,.14);background:rgba(20,28,44,.55);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);color:#cfd8ea;cursor:pointer;min-width:0}
+.v6 .skt b{font-size:13px}.v6 .skt small{font-size:10.5px;opacity:.75;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+.v6 .skt.on{background:linear-gradient(180deg,rgba(255,214,120,.28),rgba(255,180,60,.12));border-color:rgba(255,210,120,.7);color:#fff3d6;box-shadow:0 0 12px rgba(255,190,80,.25)}
+.v6 .skt.off{opacity:.55}
+.v6 .sk6e{padding:28px 12px;text-align:center;color:#c7cfdf;border-radius:14px;background:rgba(255,255,255,.05);border:1px dashed rgba(255,255,255,.18)}
+.v6 .sk6g{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:8px}
+.v6 .sk6c{display:grid;grid-template-columns:44px 1fr auto;align-items:center;gap:8px;padding:7px 8px;border-radius:12px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);cursor:pointer;min-width:0;transition:border-color .15s,background .15s}
+.v6 .sk6c.sel{border-color:rgba(255,210,120,.85);background:rgba(255,200,100,.13);box-shadow:inset 0 0 0 1px rgba(255,210,120,.3)}
+.v6 .sk6c.un .ic{filter:grayscale(.6) brightness(.8)}.v6 .sk6c.lk{opacity:.72}
+.v6 .sk6c .ic{position:relative;width:40px;height:40px;display:grid;place-items:center;border-radius:10px;background:rgba(0,0,0,.25)}
+.v6 .sk6c .lki{position:absolute;right:-3px;bottom:-3px;font-size:12px;font-style:normal}
+.v6 .sk6m{display:flex;flex-direction:column;min-width:0}.v6 .sk6m b{font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.v6 .sk6m small{font-size:10.5px;opacity:.75;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.v6 .sk6m .lkr{color:#ffb4a0;opacity:1}
+.v6 .sk6c .lvrow{display:flex;align-items:center;gap:4px}.v6 .sk6c .lvrow span{min-width:34px;text-align:center;font-size:12px;font-variant-numeric:tabular-nums}
+.v6 .sk6c .pb{width:26px;height:26px;border-radius:8px;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.1);color:#fff;font-size:15px;line-height:1;padding:0}
+.v6 .sk6c .pb:disabled{opacity:.3}
+.v6 .sk6d{display:grid;grid-template-columns:64px 1fr;gap:12px;padding:12px;border-radius:14px;background:rgba(14,20,34,.6);border:1px solid rgba(255,255,255,.14);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
+.v6 .sk6di{min-width:0;display:flex;flex-direction:column;gap:6px}
+.v6 .sk6dh{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.v6 .sk6dh b{font-size:15px}.v6 .sk6dh em{margin-left:auto;font-style:normal;color:#ffd98a;font-variant-numeric:tabular-nums}
+.v6 .sk6fx{display:grid;grid-template-columns:1fr 1fr;gap:8px}.v6 .sk6fx>div{padding:6px 8px;border-radius:10px;background:rgba(255,255,255,.06)}
+.v6 .sk6fx .nx{background:rgba(120,200,255,.09)}.v6 .sk6fx small{font-size:10.5px;opacity:.7}.v6 .sk6fx p{margin:2px 0 0;font-size:12px;line-height:1.45}
+.v6 .sk6meta{display:flex;flex-wrap:wrap;gap:5px}.v6 .sk6meta>span{font-size:11px;padding:2px 7px;border-radius:999px;background:rgba(255,255,255,.08)}
+.v6 .sk6meta .ok{color:#9fe8a6}.v6 .sk6meta .no{color:#ffb4a0}
+.v6 .sk6lk{font-size:12px;color:#ffb4a0}
+.v6 .sk6act{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.v6 .sk6act small{opacity:.65;font-size:11px}
+.v6 .sk6f{display:flex;align-items:center;gap:6px;flex-wrap:wrap}.v6 .sk6f>b{margin-right:auto}
+@media (max-width:560px){.v6 .sk6g{grid-template-columns:1fr}.v6 .sk6fx{grid-template-columns:1fr}.v6 .sk6d{grid-template-columns:1fr}.v6 .sk6d>.ic.big{display:none}}
 </style></head><body>
 <canvas id="cv"></canvas>
 <div id="hud" style="display:none">
@@ -1559,16 +1589,50 @@ item:{title:'物品詳情',w:360,html(o){const it=findIt(o.u);if(!it)return'<div
  bind(b,o){const it=findIt(o.u);if(!it)return;b.querySelectorAll('[data-a]').forEach(x=>x.onclick=async()=>{const a=x.dataset.a;if(a==='eq')await act({op:'equip',u:o.u});if(a==='un'){const sl=Object.keys(G.me.eq).find(k=>G.me.eq[k]===it||G.me.eq[k].u===o.u);await act({op:'unequip',sl})}if(a==='use')act({op:'use',u:o.u});if(a==='hot')hotPick('i:'+it.id);
   if(a==='refine')UI.win('npc',{npc:{id:'smith',n:'精煉師・鐵砧',act:'refine'},pre:o.u,remote:1});if(a==='card'){const cards=G.me.bag.filter(x=>G.D.items[x.id].type==='card');if(!cards.length)return toast('背包沒有卡片',1);const c=cards.length===1?cards[0]:cards[+prompt(cards.map((c,i)=>i+': '+G.D.items[c.id].n).join('\n'),'0')||0];if(c&&confirm('把 '+G.D.items[c.id].n+' 插入？插入後無法取下'))act({op:'card',c:c.u,u:o.u})}
   if(a==='sell'){const n=it.n>1?+prompt('出售數量',it.n)||0:1;if(n)act({op:'sell',u:o.u,n})}if(a==='mk')UI.win('market',{tab:'sell',u:o.u});if(a==='share'){send({op:'chat',ch:'map',text:'['+iname(it)+']'});}})}},
-skill:{title:'技能書',w:720,html(o){const D=G.D,m=G.me,J=D.jobs[m.job];const list=[...new Set([...J.skills,...(J.tier?[]:[])])];o.tmp=o.tmp||{...m.sk};o.psv=o.psv||[...m.psv];const used=Object.keys(o.tmp).reduce((a,k)=>a+(o.tmp[k]-(m.sk[k]||0)),0);const left=m.skp-used;const slots=J.tier===0?2:4;
- const TR=J.tree||{};const lockOf=k=>{const r=TR[k];if(!r)return'';if(m.jlv<(r.jl||1))return'Job Lv.'+r.jl;for(const [pk,pl] of r.pre||[])if((o.tmp[pk]||0)<pl)return (D.skills[pk]?D.skills[pk].n:pk)+' Lv.'+pl;return''};const card=k=>{const s=D.skills[k],lv=o.tmp[k]||0;const eqp=s.kind==='passive'&&o.psv.includes(k);const lk=lockOf(k);return`<div class="skc ${o.sel===k?'sel':''} ${lv?'':'un'} ${lk&&!lv?'lk':''}" data-k="${k}">${o.sel===k?'<span class="tagsel">SELECTED</span>':''}${eqp?'<span class="tageq">已裝備</span>':''}<b>${esc(s.n)}</b><div class="ic sk" draggable="${s.kind==='active'&&lv>0}" data-drag="${k}">${ART.icon(s.icon,40)}</div><div class="lvrow"><button class="pb" data-m="${k}" ${lv<=(m.sk[k]||0)?'disabled':''}>−</button><span>${lv} / ${s.max}</span><button class="pb" data-p="${k}" ${left<=0||lv>=s.max||lk?'disabled':''}>＋</button></div><small class="st">${lk&&!lv?'🔒 '+esc(lk):lv?'已學習 · Lv'+lv:'尚未學習'}</small></div>`};
- const act_=list.filter(k=>D.skills[k].kind==='active'),pas=list.filter(k=>D.skills[k].kind==='passive');o.sel=o.sel||act_[0];const s=D.skills[o.sel],lv=o.tmp[o.sel]||0;const fill=(l)=>s.desc.replace(/\{(\w+)\}/g,(_,k)=>{try{return Math.round(new Function('lv','return '+s[k])(Math.max(1,l))*10)/10}catch(e){return'?'}});
- return`<div class="secb">◆ 主動 · 可使用技能</div><div class="skrow">${act_.map(card).join('')}</div><div class="secb">◆ 被動 · 常駐技能 <span class="chip" title="點已學會的被動卡片可裝上/卸下">被動裝備 ${o.psv.length}/${slots}</span></div><div class="skrow">${pas.map(card).join('')}</div>
- <div class="skd"><div class="ic big">${ART.icon(s.icon,64)}</div><div><b class="sn">${esc(s.n)} · Lv${lv}</b> <span class="chip2">${s.kind==='active'?'主動':'被動'}</span><p>${esc(fill(lv||1))}${lv<s.max?`<br><small>下一級：${esc(fill(lv+1))}</small>`:''}</p><small>${(()=>{const r=TR[o.sel]||{};const pre=(r.pre||[]).map(([pk,pl])=>(D.skills[pk]||{}).n+' Lv.'+pl).join('、');return `Job Lv.${r.jl||1} 解鎖${pre?' · 前置 '+esc(pre):''}<br>`})()}${s.kind==='active'?`SP ${s.sp+(lv||1)} · 詠唱 ${s.cast!=null?(Math.round((typeof s.cast==='number'?s.cast:new Function('lv','return '+s.cast)(lv||1))*100)/100)+'s':'瞬發'} · 冷卻 ${s.cd}s${s.aoe?' · 範圍 '+s.aoe+' 格':''}`:'被動需裝入欄位才生效（最多 4 個）'}　ⓘ 把圖示拖到 1–9 格（手機長按）</small></div></div>
- <div class="foot"><b>✦ ${t('技能點')}：${left}</b><button class="btn" id="skreset">${t('重置')}</button><button class="btn" id="sklg">📜 ${t('職業傳說')}</button><button class="btn g" id="skapply">${t('套用')}</button></div>`},
- bind(b,o){const m=G.me;b.querySelectorAll('[data-k]').forEach(x=>x.onclick=e=>{if(e.target.closest('button'))return;const k=x.dataset.k;if(o.sel===k&&G.D.skills[k].kind==='passive'&&(o.tmp[k]||0)>0){const i=o.psv.indexOf(k);if(i>=0)o.psv.splice(i,1);else o.psv.push(k)}o.sel=k;UI.renderWin('skill')});
-  b.querySelectorAll('[data-p]').forEach(x=>x.onclick=()=>{const k=x.dataset.p;o.tmp[k]=(o.tmp[k]||0)+1;if(G.D.skills[k].kind==='passive'&&!o.psv.includes(k))o.psv.push(k);o.sel=k;UI.renderWin('skill')});b.querySelectorAll('[data-m]').forEach(x=>x.onclick=()=>{const k=x.dataset.m;o.tmp[k]--;UI.renderWin('skill')});
-  b.querySelectorAll('[data-drag]').forEach(x=>{const k=x.dataset.drag;x.ondragstart=e=>e.dataTransfer.setData('text/hot',JSON.stringify({v:'s:'+k}));longPress(x,()=>{if(m.sk[k])hotPick('s:'+k)})});
-  $('#sklg').onclick=()=>UI.win('legend',{job:G.me.job});$('#skreset').onclick=()=>{o.tmp={...m.sk};o.psv=[...m.psv];UI.renderWin('skill')};$('#skapply').onclick=async()=>{const r=await act({op:'skills',sk:o.tmp,psv:o.psv});if(!r.e){o.tmp=null;o.psv=null;UI.renderWin('skill')}}}},
+skill:{title:'技能書',w:760,html(o){const D=G.D,m=G.me,J=D.jobs[m.job];
+ // 職業路線：初心者 → 一轉 → 二轉；走過的職業技能永久保留、可繼續升級
+ const jh=m.jh||{};const line={0:'nov'};for(const j of [...Object.keys(jh),m.job]){const t_=(D.jobs[j]||{}).tier;if(t_>=1)line[t_]=j}
+ const owner={};for(const j of [m.job,...Object.keys(jh),'nov'])for(const k of (D.jobs[j]||{}).skills||[])if(!owner[k])owner[k]=j;
+ o.tmp=o.tmp||{...m.sk};o.psv=o.psv||[...m.psv];const used=Object.keys(o.tmp).reduce((a,k)=>a+(o.tmp[k]-(m.sk[k]||0)),0);const left=m.skp-used;const slots=J.tier===0?2:4;
+ if(o.tier==null)o.tier=J.tier||0;const tj=line[o.tier];const TJ=tj&&D.jobs[tj];
+ const jlOf=j=>j===m.job?m.jlv:Math.max(jh[j]||0,j==='nov'?10:0);
+ const lockOf=k=>{const j=owner[k];if(!j)return t('尚未轉職');const r=(D.jobs[j].tree||{})[k];if(!r)return'';if(jlOf(j)<(r.jl||1))return'Job Lv.'+r.jl;for(const [pk,pl] of r.pre||[])if((o.tmp[pk]||0)<pl)return (D.skills[pk]?D.skills[pk].n:pk)+' Lv.'+pl;return''};
+ const fillL=(s,l)=>s.desc.replace(/\{(\w+)\}/g,(_,k)=>{try{return Math.round(new Function('lv','return '+s[k])(Math.max(1,l))*10)/10}catch(e){return'?'}});
+ const spOf=(s,l)=>s.kind==='active'?(s.sp||0)+Math.max(1,l):0;
+ const tabs=[0,1,2].map(i=>{const j=line[i];const nm=['初心者','一轉','二轉'][i];const cnt=j?(D.jobs[j].skills||[]).reduce((a,k)=>a+(o.tmp[k]||0),0):0;return`<button class="skt ${o.tier===i?'on':''} ${j?'':'off'}" data-tier="${i}" role="tab" aria-selected="${o.tier===i}"><b>${t(nm)}</b><small>${j?esc(D.jobs[j].n)+(cnt?' · '+cnt:''):t('未轉職')}</small></button>`}).join('');
+ let body;
+ if(!TJ)body=`<div class="sk6e">🔒 ${o.tier===1?t('轉職為一轉職業後開放（初心者 Job Lv.10）'):t('一轉 Job Lv.20、Base Lv.40 後可轉為混合職業')}</div>`;
+ else{const list=TJ.skills||[];if(!o.sel||!list.includes(o.sel))o.sel=list[0];
+  const card=k=>{const s=D.skills[k],lv=o.tmp[k]||0,lk=lockOf(k);const al=s.kind==='passive'&&s.always;const eqp=s.kind==='passive'&&!al&&o.psv.includes(k);
+   return`<div class="sk6c ${o.sel===k?'sel':''} ${lv?'':'un'} ${lk&&!lv?'lk':''}" data-k="${k}" tabindex="0"><div class="ic sk" draggable="${s.kind==='active'&&(m.sk[k]||0)>0}" data-drag="${k}">${ART.icon(s.icon,36)}${lk&&!lv?'<i class="lki">🔒</i>':''}</div>
+    <div class="sk6m"><b>${esc(s.n)}</b><small>${s.kind==='active'?'SP '+spOf(s,lv):al?t('被動 · 常駐'):eqp?t('被動 · 已裝備'):t('被動')}</small>${lk&&!lv?`<small class="lkr">🔒 ${esc(lk)}</small>`:''}</div>
+    <div class="lvrow"><button class="pb" data-m="${k}" aria-label="−" ${lv<=(m.sk[k]||0)?'disabled':''}>−</button><span>${lv}/${s.max}</span><button class="pb" data-p="${k}" aria-label="+" ${left<=0||lv>=s.max||lk?'disabled':''}>＋</button></div></div>`};
+  const s=D.skills[o.sel],lv=o.tmp[o.sel]||0,lk=lockOf(o.sel),j=owner[o.sel],r=((D.jobs[j]||{}).tree||{})[o.sel]||{};
+  const pre=(r.pre||[]).map(([pk,pl])=>`<span class="${(o.tmp[pk]||0)>=pl?'ok':'no'}">${esc((D.skills[pk]||{}).n)} Lv.${pl}</span>`).join('');
+  const cast=s.kind==='active'?(s.cast!=null?(Math.round((typeof s.cast==='number'?s.cast:new Function('lv','return '+s.cast)(lv||1))*100)/100)+'s':t('瞬發')):'';
+  body=`<div class="sk6g">${list.map(card).join('')}</div>
+  <div class="sk6d"><div class="ic big">${ART.icon(s.icon,56)}</div><div class="sk6di"><div class="sk6dh"><b>${esc(s.n)}</b><span class="chip2">${s.kind==='active'?t('主動'):s.always?t('被動・常駐'):t('被動')}</span><em>Lv ${lv}/${s.max}</em></div>
+   <div class="sk6fx"><div><small>${t('目前')}</small><p>${lv?esc(fillL(s,lv)):t('尚未學習')}</p></div>${lv<s.max?`<div class="nx"><small>${t('下一級')} Lv${lv+1}</small><p>${esc(fillL(s,lv+1))}</p></div>`:''}</div>
+   <div class="sk6meta"><span>Job Lv.${r.jl||1}</span>${pre?`<span>${t('前置')}：${pre}</span>`:''}${s.kind==='active'?`<span>SP ${spOf(s,lv)}</span><span>${t('詠唱')} ${cast}</span><span>${t('冷卻')} ${s.cd||0}s</span>${s.aoe?`<span>${t('範圍')} ${s.aoe}</span>`:''}`:s.always?`<span>${t('常駐生效，不佔被動欄')}</span>`:`<span>${t('被動欄')} ${o.psv.length}/${slots}</span>`}</div>
+   ${lk&&!lv?`<div class="sk6lk">🔒 ${t('需要')} ${esc(lk)}</div>`:''}
+   <div class="sk6act">${s.kind==='active'?`<button class="btn sm" id="skhot" ${(m.sk[o.sel]||0)>0?'':'disabled'}>⇩ ${t('放入快捷列')}</button>`:(!s.always&&lv>0?`<button class="btn sm" id="skpsv">${o.psv.includes(o.sel)?t('卸下被動'):t('裝備被動')}</button>`:'')}<small>${s.kind==='active'?t('也可把圖示拖到快捷列（手機長按）'):''}</small></div></div></div>`}
+ const conf=o.conf&&used>0;
+ return`<div class="sk6"><div class="sk6t" role="tablist">${tabs}</div>${body}
+ <div class="foot sk6f"><b>✦ ${t('技能點')}：${left}${used?` <small>(${t('待套用')} ${used})</small>`:''}</b><button class="btn" id="sklg">📜 ${t('職業傳說')}</button><button class="btn" id="skreset" ${used||o.psvDirty?'':'disabled'}>${t('重置')}</button>${conf?`<button class="btn g" id="skok">${t('確認套用')} ${used} ${t('點')}</button>`:`<button class="btn g" id="skapply" ${used||o.psvDirty?'':'disabled'}>${t('套用')}</button>`}</div></div>`},
+ bind(b,o){const m=G.me,R=()=>UI.renderWin('skill');
+  b.querySelectorAll('[data-tier]').forEach(x=>x.onclick=()=>{o.tier=+x.dataset.tier;o.sel=null;R()});
+  b.querySelectorAll('[data-k]').forEach(x=>x.onclick=e=>{if(e.target.closest('button'))return;const k=x.dataset.k;if(o.sel===k&&G.D.skills[k].kind==='active'&&(m.sk[k]||0)>0){hotPick('s:'+k);return}o.sel=k;R()});
+  b.querySelectorAll('[data-p]').forEach(x=>x.onclick=()=>{const k=x.dataset.p;o.tmp[k]=(o.tmp[k]||0)+1;const s=G.D.skills[k];if(s.kind==='passive'&&!s.always&&!o.psv.includes(k)&&o.psv.length<(G.D.jobs[m.job].tier===0?2:4)){o.psv.push(k);o.psvDirty=1}o.sel=k;o.conf=0;R()});
+  b.querySelectorAll('[data-m]').forEach(x=>x.onclick=()=>{const k=x.dataset.m;o.tmp[k]--;if(!o.tmp[k]&&!m.sk[k]){delete o.tmp[k];o.psv=o.psv.filter(z=>z!==k)}o.conf=0;R()});
+  b.querySelectorAll('[data-drag]').forEach(x=>{const k=x.dataset.drag;x.ondragstart=e=>e.dataTransfer.setData('text/hot',JSON.stringify({v:'s:'+k}));longPress(x,()=>{if(m.sk[k]&&G.D.skills[k].kind==='active')hotPick('s:'+k)})});
+  const q=s=>b.querySelector(s);
+  q('#skhot')&&(q('#skhot').onclick=()=>hotPick('s:'+o.sel));
+  q('#skpsv')&&(q('#skpsv').onclick=()=>{const i=o.psv.indexOf(o.sel);if(i>=0)o.psv.splice(i,1);else if(o.psv.length<(G.D.jobs[m.job].tier===0?2:4))o.psv.push(o.sel);else{toast(t('被動欄位已滿'));return}o.psvDirty=1;R()});
+  q('#sklg').onclick=()=>UI.win('legend',{job:m.job});
+  q('#skreset').onclick=()=>{o.tmp={...m.sk};o.psv=[...m.psv];o.conf=0;o.psvDirty=0;R()};
+  const apply=async()=>{const r=await act({op:'skills',sk:o.tmp,psv:o.psv});if(r.e){toast(r.e);o.conf=0;R();return}o.tmp=null;o.psv=null;o.conf=0;o.psvDirty=0;R()};
+  q('#skapply')&&(q('#skapply').onclick=()=>{const used=Object.keys(o.tmp).reduce((a,k)=>a+(o.tmp[k]-(m.sk[k]||0)),0);if(used>0){o.conf=1;R()}else apply()});
+  q('#skok')&&(q('#skok').onclick=apply)}},
 quest:{title:'任務日誌',w:560,sub:()=>'<small>探索 · 冒險 · 更好的明天</small>',html(o){const D=G.D,m=G.me;o.tab=o.tab||'prog';const tabs=[['prog','進行中'],['daily','每日'],['done','已完成'],['ex','物品兌換']];let ks;
  if(o.tab==='prog')ks=Object.keys(m.q.active).filter(k=>D.quests[k].type!=='daily');else if(o.tab==='daily')ks=Object.keys(D.quests).filter(k=>D.quests[k].type==='daily');else if(o.tab==='done')ks=Object.keys(m.q.done);else ks=[];
  const body=o.tab==='ex'?`<div class="empty">物品兌換：拿材料向 NPC 換取獎勵（下一版開放，例：10 泥殼蟹鉗 → 1 精煉礦石）。</div>`:ks.length?ks.map(k=>{const q=D.quests[k],act_=m.q.active[k],p=act_?(G.qs[k]||[0,1]):null,done=p&&p[0]>=p[1],fin=m.q.done[k];const r=q.reward;const g=q.goal;const goalT=g.kill?'擊敗 '+D.mobs[g.kill].n:g.collect?'收集 '+D.items[g.collect].n:g.talk?'與 '+(Object.values(D.maps).flatMap(x=>x.npcs).find(n=>n.id===g.talk)||{}).n+' 交談':g.joblv?'Job 等級 '+g.joblv:'';
