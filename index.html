@@ -1038,6 +1038,12 @@ body.idle #joy,body.idle #mmw,body.idle #mmb,body.idle #rbtns,body.idle #autob,b
 @media (prefers-reduced-motion:reduce){.p2ic.s3{animation:none}}
 .p2-list{gap:6px}
 @media (max-width:760px){.p2-bar{grid-template-columns:repeat(6,minmax(0,1fr))!important}.p2-slot{max-width:none}}
+/* HD 技能圖示：圓形裁切＋依階段加框 */
+.p2ic.hdsk{display:inline-block;position:relative;border-radius:50%;overflow:hidden;vertical-align:middle;box-shadow:0 0 0 2px #0b1020,inset 0 0 0 1px #ffffff40;flex:none}
+.p2ic.hdsk img{width:100%;height:100%;object-fit:cover;display:block}
+.p2ic.hdsk.s2{box-shadow:0 0 0 2px #c9d3e8,0 0 0 3.5px #39425c,0 0 6px rgba(190,210,255,.6)}
+.p2ic.hdsk.s3{box-shadow:0 0 0 2px #ffd36a,0 0 0 3.5px #7a4b10,0 0 9px rgba(255,205,90,.9)}
+img.hdic.hdi{object-fit:contain;image-rendering:auto}
 .rb-c{display:flex;flex-direction:column;gap:8px;min-width:0}
 .rb-h{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.rb-h h4{margin:0}
 .rb-badge{font:800 11px/18px sans-serif;padding:0 8px;border-radius:9px;border:1px solid var(--c);color:var(--c);background:rgba(0,0,0,.25)}
@@ -1088,6 +1094,7 @@ body.idle #joy,body.idle #mmw,body.idle #mmb,body.idle #rbtns,body.idle #autob,b
 <div id="login"><div class="lgbg"></div><div class="lbox gl6" id="lauth"><div class="brand"><img class="logo" id="llogo" alt="Aurevia Online" hidden><small>AUREVIA ONLINE</small><h1>曙光之境</h1></div><div class="ltabs"><button class="on" data-lt="in">登入</button><button data-lt="reg">註冊</button></div><label>帳號</label><input id="lu" autocomplete="username" autocapitalize="off" spellcheck="false" maxlength="16" placeholder="輸入帳號"><label>密碼</label><input id="lp" type="password" autocomplete="current-password" placeholder="輸入密碼"><div id="lp2w" style="display:none"><label>確認密碼</label><input id="lp2" type="password" autocomplete="new-password" placeholder="再次輸入密碼"></div><div class="err" id="lerr"></div><button class="btn g big" id="lgo">登入</button><button class="btn big" id="lguest">以遊客身分進入</button><div class="lfoot"><span>🌐 <select id="llang"></select></span><small id="lhint">舊玩家請以原本的角色名稱與密碼登入，角色會自動保留。</small></div></div>
 <div class="lbox gl6 wide" id="lchars" style="display:none"><div class="brand sm"><small>AUREVIA ONLINE</small><h1>曙光之境</h1></div><div class="chwrap"><div class="chl"><div class="chh">選擇角色 <small id="chacc"></small></div><div id="chlist"></div></div><div class="chp"><canvas id="chpv" width="48" height="48"></canvas><b id="chpn"></b><small id="chpj"></small></div><div class="chc" id="chcreate" style="display:none"><div class="chh">建立角色</div><label>角色名稱（2–12 字）</label><input id="cnn" maxlength="12" placeholder="輸入角色名稱"><label>髮色</label><div class="sw6" data-k="h"></div><label>膚色</label><div class="sw6" data-k="s"></div><label>服裝色</label><div class="sw6" data-k="o"></div><div class="err" id="cerr"></div><button class="btn g big" id="cgo">建立</button><button class="btn big" id="ccancel">取消</button></div></div><div class="chact"><button class="btn g big" id="chplay">進入遊戲</button><button class="btn" id="chout">登出</button></div></div></div></div>
 <script>
+window.HDICON={"items": {}, "skills": {}};
 // 遊戲內對話框（取代瀏覽器原生 confirm／alert／prompt）：深藍面板＋金框，金色主按鈕、灰色取消；手機與桌機通用
 const Dlg=(()=>{let css=0;const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
  function sty(){if(css)return;css=1;const st=document.createElement('style');st.textContent=`.dlg-bg{position:fixed;inset:0;z-index:100000;background:rgba(3,6,14,.62);display:flex;align-items:center;justify-content:center;padding:18px;backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);animation:dlgf .14s ease-out}
@@ -2884,6 +2891,18 @@ const RBC={
   if(this.tab==='stat'&&RBC.meKey()!==RBC.key)RBC.load()}})();
 // 事件：轉生特效（自己與別人）
 (()=>{const f0=FXev;FXev=function(e){if(e&&e.t==='rebirth'){const p=G.P[e.src];if(p){G.fx.push({k:'nova',x:p.x,y:p.y,t:0,life:1.1},{k:'holy',x:p.x,y:p.y,t:0,life:1.2});G.labels.push({x:p.x,y:p.y,text:'✦ 轉生 '+e.n+(e.title?'「'+e.title+'」':''),t:0,life:2.2})}if(e.src!==(G.me&&G.me.name))toast(e.src+' 完成第 '+e.n+' 次轉生！');return}return f0(e)}})();
+
+// ===== HD 圖示（tools/slice_icons.js 切出 → hd/icons/<id>.webp；build 時把 index 打包成 window.HDICON）=====
+// 有圖就用圖；沒有的物品／技能自動沿用程式繪製的圖示。技能圖示外框（階段 1/2/3）照舊由 CSS 加上。
+(()=>{const X=window.HDICON||{items:{},skills:{}};X.items=X.items||{};X.skills=X.skills||{};const U=(id,v)=>'hd/icons/'+id+'.webp?v='+v;
+ const ALIAS={dia:'cash_dia',gold:'cash_gold',premium:'prem_30'};
+ let dref=null;const fix=()=>{if(typeof G==='undefined'||!G.D||dref===G.D)return;dref=G.D;for(const id in X.items){const d=G.D.items&&G.D.items[id];if(d&&!(d.cat==='book'&&d.skill))d.icon='hdi:'+id}};
+ const img=(id,v,s,cl)=>`<img class="hdic ${cl}" src="${U(id,v)}" width="${s}" height="${s}" alt="" draggable="false" loading="lazy">`;
+ const i0=ART.icon;ART.icon=function(k,s){fix();if(typeof k==='string'){if(k.startsWith('hdi:')){const id=k.slice(4);if(X.items[id])return img(id,X.items[id],s||32,'hdi')}else if(ALIAS[k]&&X.items[ALIAS[k]])return img(ALIAS[k],X.items[ALIAS[k]],s||32,'hdi')}return i0.apply(this,arguments)};
+ if(ART.micon){const m0=ART.micon;ART.micon=function(k,s){const a=ALIAS[k];if(a&&X.items[a])return img(a,X.items[a],s||32,'hdi');return m0.apply(this,arguments)}}
+ if(window.P2C){const s0=P2C.svg;P2C.svg=function(id,size,stage,type){const v=X.skills[id];if(!v)return s0.apply(this,arguments);const st=Math.max(1,Math.min(3,stage|0||1));return`<span class="p2ic hdsk s${st}" style="width:${size}px;height:${size}px"><img src="${U(id,v)}" alt="" draggable="false"></span>`};
+  const g0=P2C.img;P2C.img=function(id,stage,type){const v=X.skills[id];if(!v)return g0.apply(this,arguments);const k='hd|'+id;this._img=this._img||{};if(this._img[k])return this._img[k];const im=new Image();im.src=U(id,v);this._img[k]=im;return im}}
+ window.HDI={has:id=>!!(X.items[id]||X.skills[id]),n:()=>Object.keys(X.items).length+Object.keys(X.skills).length}})();
 
 // ===== 啟動 =====
 const MENU=[['stat','狀態','owl'],['skill','技能','staff'],['equip','裝備','armor'],['bag','背包','boots'],['quest','任務','card'],['market','市集','coin'],['exchange','鑽石匯兌','dia'],['more','更多','ring']];
