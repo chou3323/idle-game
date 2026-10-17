@@ -1495,6 +1495,8 @@ function pushS(o,ts,x,y){const b=o.buf||(o.buf=[]);const l=b[b.length-1];if(l&&t
 // 固定陣型（橫向放置）：玩家固定左側面向右、隊友在左側欄位、怪物在右側欄位面向左，新怪從右側走入；只改「顯示位置」，伺服器邏輯不變
 const FORMC={me:.27,meDk:.3,N:[[.6,-1.35],[.6,1.3],[.84,-.55]],NB:[[.56,-1.55],[.56,1.45]],B:[.79,.35],PT:[[.15,-1.25],[.15,1.25],[.06,0]],walk:.9};
 function FORM(now,dt){G.formOn=0;if(!G.idleArena||!G.clipR||!G.camF||typeof IDLE==='undefined'||!IDLE.on)return;const me=G.P[G.me.name];if(!me)return;G.formOn=1;
+  // 稽核 #3：放置戰鬥中角色顯示座標鎖定在進場時的錨點（伺服器座標移動不再造成背景／鏡頭平移）
+  {const mk=G.map&&G.map.id;if(!G.formA||G.formA.m!==mk||Math.hypot(G.formA.x-(G.me.x||0),G.formA.y-(G.me.y||0))>14)G.formA={m:mk,x:+me.x,y:+me.y};me.x=G.formA.x;me.y=G.formA.y;me.ix=me.x;me.iy=me.y}
  const q=G.clipR,tp=16*G.zoom/G.dpr,px0=G.camF.x,X=rx=>me.x+(q[0]+rx*q[2]-px0)/tp,FAR=1e4;me.flip=0;me.moving=false;
  // 隊友
  const pm=(G.party&&G.party.m||[]).map(m=>m.n).filter(n=>n!==G.me.name);let pi=0;
