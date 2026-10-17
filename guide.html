@@ -1,4 +1,4 @@
-<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>曙光之境 Aurevia Online・冒險指南</title>
+<!doctype html><html lang="zh-Hant"><head><meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://ragnarokidle.app https://api.ragnarokidle.app; connect-src 'self' https://api.ragnarokidle.app wss://api.ragnarokidle.app; font-src 'self' data:; object-src 'none'; base-uri 'none'; form-action 'self'"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>曙光之境 Aurevia Online・冒險指南</title>
 <meta name="description" content="曙光之境 Aurevia Online 官方冒險指南：遊戲特色、12 職業介紹、新手教學與最新公告。">
 <style>
 :root{--g:#e8c77a}*{box-sizing:border-box}body{margin:0;background:radial-gradient(1000px 600px at 20% -10%,#24407e 0,transparent 60%),#0b0f18;color:#eef2fb;font:15px/1.7 "Noto Sans TC","PingFang TC",system-ui,sans-serif}
@@ -29,7 +29,7 @@ main{max-width:980px;margin:0 auto;padding:12px 14px 60px}section{margin:26px 0}
 <script>
 const CLS=[['kni','盧恩騎士','以龍血與盧恩石強化肉體的重劍騎士','近戰・物理主輸出'],['lnc','皇家禁衛隊','持槍與聖盾的王國禁衛，分攤隊友傷害','近戰・守護・混合'],['arc','咒術士','以禁書與星辰召喚毀滅的魔導士','遠程・範圍魔法'],['msw','妖術師','與四大元素締約的元素劍士','屬性控制・混合'],['rgr','遊俠','與獵鷹同行的荒野射手','遠程・單體物理'],['brd','宮廷樂師／浪姬舞者','以歌聲與舞步支配戰場節奏','遠程・全隊增益'],['acl','大主教','唯一的真正治療者，不死與惡魔的剋星','治療・增益'],['mnk','修羅','蓄滿氣彈、一拳震碎首領的武僧','近戰・爆發單體'],['mer','機械工匠','戰場上斧頭旋風，工坊打出最好的武器','近戰・範圍・鍛造'],['smg','基因學者','藥劑、毒與植物生命的研究者','藥劑後勤・混合'],['thf','十字斬首者','以拳刃與劇毒收割目標的刺客','近戰・爆擊・閃避'],['hsn','魅影追蹤者','弓與短劍雙修、偷走敵人招式的追蹤者','減益專家']];
 document.getElementById('clsg').innerHTML=CLS.map(([k,n,d,r])=>`<div class="card cls"><img src="hd/ch_${k}.webp" alt=""><div><b>${n}</b><small>${r}</small>${d}</div></div>`).join('');
-const esc=s=>String(s||'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const esc=s=>String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const API=/^(localhost|127\.0\.0\.1)$/.test(location.hostname)?'':'https://api.ragnarokidle.app';
 const card=g=>`<div class="card"><b>${esc(g.title)}</b>${g.img?`<img src="${esc(g.img)}" alt="" style="width:100%;border-radius:10px;margin-top:6px">`:''}<div class="body">${esc(g.body)}</div></div>`;
 fetch(API+'/api/rob/guide').then(r=>r.json()).then(j=>{const R=j.rows||[];document.getElementById('news').innerHTML=R.filter(g=>g.news).map(card).join('')||'<div class="card">目前沒有公告</div>';
