@@ -1,0 +1,37 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>曙光之境 Aurevia Online・冒險指南</title>
+<meta name="description" content="曙光之境 Aurevia Online 官方冒險指南：遊戲特色、12 職業介紹、新手教學與最新公告。">
+<style>
+:root{--g:#e8c77a}*{box-sizing:border-box}body{margin:0;background:radial-gradient(1000px 600px at 20% -10%,#24407e 0,transparent 60%),#0b0f18;color:#eef2fb;font:15px/1.7 "Noto Sans TC","PingFang TC",system-ui,sans-serif}
+header{padding:calc(24px + env(safe-area-inset-top)) 18px 18px;text-align:center}header img{width:min(300px,70vw)}header p{color:#b9c4dc;margin:6px 0 14px}
+.play{display:inline-block;padding:10px 26px;border-radius:14px;background:linear-gradient(180deg,#ffe08a,#e2a43a);color:#2b1900;font-weight:900;text-decoration:none;border:2px solid #fff3c4}
+nav{position:sticky;top:0;z-index:5;display:flex;gap:6px;overflow:auto;padding:8px 12px;background:rgba(9,14,28,.9);backdrop-filter:blur(10px);border-bottom:1px solid rgba(255,255,255,.1)}
+nav a{flex:none;color:#c8d1e6;text-decoration:none;padding:5px 12px;border-radius:10px;border:1px solid rgba(255,255,255,.14);font-size:13px}
+main{max-width:980px;margin:0 auto;padding:12px 14px 60px}section{margin:26px 0}h2{color:var(--g);font-size:20px;margin:0 0 10px}
+.card{background:linear-gradient(180deg,rgba(28,36,56,.82),rgba(14,19,32,.9));border:1px solid rgba(255,255,255,.12);border-radius:14px;padding:12px 14px;margin:8px 0}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:10px}.cls{display:flex;gap:10px;align-items:center}.cls img{height:84px;width:62px;object-fit:contain}.cls b{color:#ffe2a0}.cls small{display:block;color:#9fabc6;font-size:12px}
+.body{white-space:pre-wrap;color:#d6ddef}.news .card{border-color:rgba(255,210,120,.45)}footer{text-align:center;color:#6f7a96;font-size:12px;padding:20px}
+</style></head><body>
+<header><img src="logo.png" alt="曙光之境 Aurevia Online"><p>RO 風格的放置 MMORPG：掛機也能變強，組隊挑戰世界王</p><a class="play" href="./?idle=1">立即開始</a></header>
+<nav><a href="#news">公告</a><a href="#feat">遊戲特色</a><a href="#cls">職業介紹</a><a href="#start">新手教學</a><a href="#sys">系統說明</a></nav>
+<main>
+<section id="news" class="news"><h2>最新公告</h2><div id="news"><div class="card">讀取中…</div></div></section>
+<section id="feat"><h2>遊戲特色</h2><div class="grid">
+<div class="card"><b>⚔️ 真實戰鬥的放置</b><br>伺服器實際計算每一刀，離線也有收益。</div>
+<div class="card"><b>📚 技能書制度</b><br>技能都靠書學，條件只看等級、屬性與轉生；每個職業有專屬書。</div>
+<div class="card"><b>🔥 屬性相剋</b><br>普攻、技能、陷阱全部吃屬性，打對弱點最高 200%。</div>
+<div class="card"><b>💎 玩家交易所</b><br>以鑽石交易，價格帶與手續費保護市場。</div>
+<div class="card"><b>🌀 無上限轉生</b><br>前期快、後期慢；每次轉生一次獲得轉生點。</div>
+<div class="card"><b>👑 推圖與世界王</b><br>單人推圖，後期組隊挑戰首領與深淵塔。</div></div></section>
+<section id="cls"><h2>職業介紹 <small style="font-size:13px;color:#9fabc6">建角時選一個，之後不能更改</small></h2><div class="grid" id="clsg"></div></section>
+<section id="start"><h2>新手教學</h2><div id="startb"></div></section>
+<section id="sys"><h2>系統說明</h2><div id="sysb"></div></section>
+</main><footer>© Aurevia Online・本頁內容由 GM 維護，與遊戲內「冒險指南」同步</footer>
+<script>
+const CLS=[['kni','盧恩騎士','以龍血與盧恩石強化肉體的重劍騎士','近戰・物理主輸出'],['lnc','皇家禁衛隊','持槍與聖盾的王國禁衛，分攤隊友傷害','近戰・守護・混合'],['arc','咒術士','以禁書與星辰召喚毀滅的魔導士','遠程・範圍魔法'],['msw','妖術師','與四大元素締約的元素劍士','屬性控制・混合'],['rgr','遊俠','與獵鷹同行的荒野射手','遠程・單體物理'],['brd','宮廷樂師／浪姬舞者','以歌聲與舞步支配戰場節奏','遠程・全隊增益'],['acl','大主教','唯一的真正治療者，不死與惡魔的剋星','治療・增益'],['mnk','修羅','蓄滿氣彈、一拳震碎首領的武僧','近戰・爆發單體'],['mer','機械工匠','戰場上斧頭旋風，工坊打出最好的武器','近戰・範圍・鍛造'],['smg','基因學者','藥劑、毒與植物生命的研究者','藥劑後勤・混合'],['thf','十字斬首者','以拳刃與劇毒收割目標的刺客','近戰・爆擊・閃避'],['hsn','魅影追蹤者','弓與短劍雙修、偷走敵人招式的追蹤者','減益專家']];
+document.getElementById('clsg').innerHTML=CLS.map(([k,n,d,r])=>`<div class="card cls"><img src="hd/ch_${k}.webp" alt=""><div><b>${n}</b><small>${r}</small>${d}</div></div>`).join('');
+const esc=s=>String(s||'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const API=/^(localhost|127\.0\.0\.1)$/.test(location.hostname)?'':'https://api.ragnarokidle.app';
+const card=g=>`<div class="card"><b>${esc(g.title)}</b>${g.img?`<img src="${esc(g.img)}" alt="" style="width:100%;border-radius:10px;margin-top:6px">`:''}<div class="body">${esc(g.body)}</div></div>`;
+fetch(API+'/api/rob/guide').then(r=>r.json()).then(j=>{const R=j.rows||[];document.getElementById('news').innerHTML=R.filter(g=>g.news).map(card).join('')||'<div class="card">目前沒有公告</div>';
+ document.getElementById('startb').innerHTML=R.filter(g=>!g.news&&g.cat==='新手').map(card).join('');document.getElementById('sysb').innerHTML=R.filter(g=>!g.news&&g.cat!=='新手').map(card).join('')}).catch(()=>{document.getElementById('news').innerHTML='<div class="card">公告暫時無法讀取</div>'});
+</script></body></html>
