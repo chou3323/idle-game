@@ -1,4 +1,4 @@
-<!doctype html><html lang="zh-Hant"><head><meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-caQPV84ijRw7sYO4W04uCHB/C7/0+zrJxXs8GrRCFd8='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; connect-src 'self' https://api.ragnarokidle.app wss://api.ragnarokidle.app; media-src 'self' data: blob:; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover"><meta name="theme-color" content="#0a0f1d"><meta name="apple-mobile-web-app-capable" content="yes"><link rel="manifest" href="manifest.json"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png"><title>Aurevia Online · 曙光之境</title><link rel="apple-touch-icon" sizes="180x180" href="icon-180.png"><meta name="apple-mobile-web-app-title" content="曙光之境"><style>
+<!doctype html><html lang="zh-Hant"><head><meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-JJORRvAjK1TgDqjHZy0sYJ4xDPBcTcyLILLFcBrcflU='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; connect-src 'self' https://api.ragnarokidle.app wss://api.ragnarokidle.app; media-src 'self' data: blob:; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover"><meta name="theme-color" content="#0a0f1d"><meta name="apple-mobile-web-app-capable" content="yes"><link rel="manifest" href="manifest.json"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png"><title>Aurevia Online · 曙光之境</title><link rel="apple-touch-icon" sizes="180x180" href="icon-180.png"><meta name="apple-mobile-web-app-title" content="曙光之境"><style>
 :root{--hud:1;--navy:#14244a;--navy2:#1f3a78;--gold:#c9a24a;--gold2:#e8c060;--paper:#f7f1e1;--ink:#1d2a4a}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}html,body{margin:0;height:100%;overflow:hidden;background:#000;font-family:"Noto Sans TC","Microsoft JhengHei","PingFang TC",sans-serif;color:var(--ink);user-select:none;-webkit-user-select:none;touch-action:none}
 #cv{position:fixed;inset:0;image-rendering:pixelated}button{font-family:inherit;cursor:pointer}input,select{font-family:inherit;user-select:text;-webkit-user-select:text}
@@ -1164,6 +1164,50 @@ img.hdic.hdi{object-fit:contain;image-rendering:auto}
 @keyframes asc-twinkle{0%,100%{opacity:0;transform:scale(.9)}50%{opacity:1;transform:scale(1)}}
 .eq-slot:not([data-q="UR"]) .asc{display:none!important}.eq-slot:not([data-q="UR"]) .eq-icon{filter:none!important}
 @media (prefers-reduced-motion:reduce){.eq-slot *{animation:none!important}}
+/* ===== B6 底部彈窗 sheet ===== */
+.sh-bg{position:fixed;inset:0;z-index:8000;background:rgba(4,6,12,0);transition:background .24s;display:flex;align-items:flex-end;justify-content:center}
+.sh-bg.on{background:rgba(4,6,12,.55);backdrop-filter:blur(2px)}
+.sh{width:min(560px,100%);max-height:82vh;display:flex;flex-direction:column;background:rgba(20,22,28,.97);border:1px solid rgba(255,215,140,.18);border-bottom:0;border-radius:16px 16px 0 0;transform:translateY(100%);transition:transform .24s cubic-bezier(.2,.8,.2,1);padding-bottom:env(safe-area-inset-bottom);color:#F2F2F2}
+.sh-bg.on .sh{transform:none}.sh-grip{width:40px;height:4px;border-radius:2px;background:rgba(255,255,255,.25);margin:8px auto 2px}
+.sh-h{display:flex;align-items:center;justify-content:space-between;padding:4px 14px 8px;font-size:17px}.sh-x{background:none;border:0;color:#A9AFBD;font-size:18px;min-width:44px;min-height:44px}
+.sh-b{overflow:auto;padding:0 14px 16px;font-size:14px;-webkit-overflow-scrolling:touch}
+/* ===== B6 裝備頁 ===== */
+.e2{color:#F2F2F2}.e2cp{display:flex;justify-content:center;align-items:baseline;gap:8px;margin:2px 0 8px}.e2cp span{color:#A9AFBD;font-size:12px}.e2cp b{font-size:22px;color:#FFD66B;font-variant-numeric:tabular-nums}
+.e2doll{display:grid;grid-template-columns:1fr 92px 1fr;gap:6px;align-items:stretch}.e2col{display:flex;flex-direction:column;gap:6px}
+.e2fig{display:flex;align-items:center;justify-content:center}.e2fig img{width:100%;max-height:300px;object-fit:contain;filter:drop-shadow(0 6px 14px rgba(0,0,0,.5))}
+.e2s{display:flex;align-items:center;gap:6px;min-height:52px;padding:4px 6px;border-radius:10px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);color:inherit;text-align:left;transition:transform .1s,background .15s}
+.e2col.r .e2s{flex-direction:row-reverse;text-align:right}.e2s:active{transform:scale(.96)}.e2s.has{background:rgba(255,255,255,.08)}
+.e2i{flex:0 0 44px;width:44px;height:44px;display:inline-flex;align-items:center;justify-content:center;border-radius:8px;overflow:hidden}.e2i.sm{flex-basis:40px;width:40px;height:40px}
+.e2e{font-size:20px;color:#6b7387;border:1px dashed rgba(255,255,255,.18);width:100%;height:100%;border-radius:8px;display:flex;align-items:center;justify-content:center}
+.e2t{display:flex;flex-direction:column;min-width:0;line-height:1.2}.e2t small{color:#A9AFBD;font-size:11px}.e2t em{color:#6b7387;font-style:normal;font-size:12px}
+.qn{font-weight:700;font-size:13px;text-shadow:0 1px 2px rgba(0,0,0,.7);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:100%}
+.e2ammo{margin-top:6px}.e2hint{color:#A9AFBD;font-size:12px;margin:8px 0}.e2btns{display:flex;gap:8px}.e2btns .btn{flex:1;min-height:44px;font-size:14px}
+.e2set{margin-top:8px;padding:8px;border-radius:10px;background:rgba(255,255,255,.05);font-size:13px}.e2set b{display:block;margin-bottom:4px}.e2set span{display:block;color:#6b7387}.e2set span.on{color:#6EE07A}
+.e2r,.e2cur{display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.06)}.e2r.no{opacity:.55}.e2rt{flex:1;min-width:0;display:flex;flex-direction:column}.e2rt small{color:#A9AFBD;font-size:12px}.e2rt small em{color:#FF7A7A;font-style:normal}
+.e2d{display:flex;flex-wrap:wrap;gap:4px;margin-top:3px;align-items:center}.dc{font-size:12px;padding:1px 6px;border-radius:6px;font-variant-numeric:tabular-nums}.dc.up{color:#6EE07A;background:rgba(110,224,122,.12)}.dc.dn{color:#FF7A7A;background:rgba(255,122,122,.12)}.dz{font-size:12px;color:#A9AFBD}
+.e2go{min-width:64px;min-height:40px;font-size:14px}.e2go.busy{opacity:.6}.e2inf{background:none;border:0;color:#A9AFBD;font-size:16px;min-width:36px;min-height:40px}
+.e2acts{display:flex;gap:8px;margin:8px 0}.e2acts .btn{flex:1;min-height:44px}.e2lh{margin:10px 0 2px;font-weight:700}.e2lh small{color:#A9AFBD;font-weight:400}.e2no summary{color:#A9AFBD;padding:10px 0;cursor:pointer}.e2em{color:#A9AFBD;padding:16px 0;text-align:center}
+.e2sk i{display:block;height:56px;margin:8px 0;border-radius:10px;background:linear-gradient(90deg,rgba(255,255,255,.04),rgba(255,255,255,.10),rgba(255,255,255,.04));background-size:200% 100%;animation:m2sh 1.1s linear infinite}
+/* ===== B6 導覽 5 分頁＋轉場 ===== */
+#iNav.n2nav{display:grid;grid-template-columns:repeat(5,1fr);height:64px;padding:0 4px env(safe-area-inset-bottom);align-items:stretch}
+#iNav.n2nav .i-nv{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font-size:12px;color:#A9AFBD;background:none;border:0;min-height:44px;transition:color .15s,transform .1s}
+#iNav.n2nav .i-nv img{width:28px;height:28px;object-fit:contain;opacity:.8;transition:opacity .15s,transform .2s}
+#iNav.n2nav .i-nv.on{color:#FFE2A0}#iNav.n2nav .i-nv.on img{opacity:1;transform:translateY(-1px) scale(1.06)}
+#iNav.n2nav .i-nv::before{content:'';position:absolute;top:0;left:22%;right:22%;height:3px;border-radius:0 0 3px 3px;background:linear-gradient(90deg,#ffd27a,#ffefc2,#ffd27a);opacity:0;transform:scaleX(.3);transition:opacity .2s,transform .22s cubic-bezier(.2,.8,.2,1)}
+#iNav.n2nav .i-nv.on::before{opacity:1;transform:none}#iNav.n2nav .i-nv:active{transform:scale(.96)}
+#iNav.n2nav .rd{position:absolute;top:8px;right:calc(50% - 20px);width:8px;height:8px;border-radius:50%;background:#ff4d5e;box-shadow:0 0 0 2px rgba(20,22,28,.9)}
+.n2-strip{position:fixed;left:8px;right:8px;z-index:40;display:flex;gap:6px;justify-content:center;pointer-events:auto}
+.n2-strip button{flex:1;min-height:36px;border-radius:18px;border:1px solid rgba(255,215,140,.18);background:rgba(20,22,28,.82);color:#A9AFBD;font-size:13px;backdrop-filter:blur(4px)}
+.n2-strip button.on{color:#FFE2A0;border-color:rgba(255,215,140,.5)}.n2-strip[hidden]{display:none}
+body.idle.im-battle .bv-ctl{margin-bottom:44px}
+.n2-seg{overflow-x:auto;scrollbar-width:none;flex-wrap:nowrap}.n2-seg::-webkit-scrollbar{display:none}.n2-seg .i-tab{flex:1 0 auto;min-height:40px;min-width:64px;transition:color .15s,background .2s}
+.win.n2-hid{display:none!important}.win .wbk{background:none;border:0;color:#FFE2A0;font-size:24px;min-width:44px;min-height:40px;margin-right:2px;line-height:1}
+@keyframes n2l{from{opacity:0;transform:translateX(28px)}to{opacity:1;transform:none}}@keyframes n2r{from{opacity:0;transform:translateX(-28px)}to{opacity:1;transform:none}}@keyframes n2up{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+.n2-l{animation:n2l .22s cubic-bezier(.2,.8,.2,1)}.n2-r{animation:n2r .22s cubic-bezier(.2,.8,.2,1)}.n2-up{animation:n2up .2s ease-out}
+@media (prefers-reduced-motion:reduce){.n2-l,.n2-r,.n2-up{animation:none}}
+.n2av{display:flex;gap:12px;align-items:center;margin-bottom:12px}.n2av img{width:56px;height:56px;border-radius:50%;object-fit:cover;object-position:top;background:rgba(255,255,255,.06)}.n2av b{display:block;font-size:16px}.n2av small{color:#A9AFBD}
+.n2grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.n2grid button{display:flex;flex-direction:column;align-items:center;gap:4px;min-height:72px;justify-content:center;border-radius:12px;border:1px solid rgba(255,215,140,.14);background:rgba(255,255,255,.05);color:#F2F2F2;font-size:13px}.n2grid button span{font-size:22px}.n2grid button:active{transform:scale(.96)}
+#iTgt .tel{font-style:normal;font-size:11px;padding:1px 6px;border-radius:8px;background:rgba(255,255,255,.1);color:#E8E8E8;margin-left:4px;white-space:nowrap;min-height:20px}
 .rb-c{display:flex;flex-direction:column;gap:8px;min-width:0}
 .rb-h{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.rb-h h4{margin:0}
 .rb-badge{font:800 11px/18px sans-serif;padding:0 8px;border-radius:9px;border:1px solid var(--c);color:var(--c);background:rgba(0,0,0,.25)}
@@ -2318,7 +2362,7 @@ document.addEventListener('click',e=>{const el=e.target&&e.target.closest&&e.tar
 
 // ===== 各視窗（每個視窗一個物件：title/html/bind，互不相依）=====
 const SLOTN={head:'頭上',mid:'頭中',low:'頭下',body:'身體',wpn:'武器',off:'副手',cape:'披風',shoes:'鞋子',acc1:'飾品',acc2:'飾品',ammo:'箭矢'};
-const RARC=it=>{const d=G.D.items[it.id];return it.rf>=7?'#a040d0':it.cards&&it.cards.length?'#2a7ad0':d.type==='card'?'#c08a10':'#1d2a4a'};
+const RARC=it=>window.QCOL?QCOL(window.ASC?ASC.qOf(it):G.D.items[it.id]):'#E8E8E8';/* B6：依物品本身品質，深色底高對比 */
 const iname=it=>{const d=G.D.items[it.id];return (it.rf?'+'+it.rf+' ':'')+d.n+(d.type==='eq'&&d.slots?` [${d.slots}]`:'')};
 const findIt=u=>G.me.bag.find(x=>x.u===u)||Object.values(G.me.eq).find(x=>x&&x.u===u);
 function statLine(d,it){const o=[];const rfA=it&&it.rf?(d.slot==='wpn'?Math.round(it.rf*G.D.refine.atkPer*(1+d.atk/60)):it.rf*G.D.refine.defPer):0;if(d.atk)o.push(['ATK',d.atk+(d.slot==='wpn'&&rfA?' (+'+rfA+')':'')]);if(d.matk)o.push(['MATK',d.matk]);if(d.def!=null&&d.type==='eq')o.push(['DEF',d.def+(d.slot!=='wpn'&&rfA?' (+'+rfA+')':'')]);for(const k of ['flee','hit','crit','str'])if(d[k])o.push([k.toUpperCase(),'+'+d[k]]);return o}
@@ -2437,7 +2481,7 @@ WINS.market={title:'市場',w:980,manual:1,sub:()=>`<span class="wsubc">${ART.ic
  const side=`<div class="mside"><div class="secb sm">● 分類</div><div class="cats">${D.cats.map(([k,n])=>`<span class="${o.f.cat===k&&!o.f.fav?'on':''}" data-cat="${k}">${n}</span>`).join('')}</div><button class="btn g wide ${o.f.fav?'on':''}" id="favb">★ 收藏</button><details class="sopt"><summary>☰ 搜尋選項</summary><label>價格 <input type="number" id="minp" placeholder="最低" value="${o.f.minp||''}"> – <input type="number" id="maxp" placeholder="最高" value="${o.f.maxp||''}"></label><label>精煉 ≥ <input type="number" id="minrf" value="${o.f.rf||''}" min="0" max="20"></label><button class="btn" id="applyf">套用篩選</button></details><select id="msort"><option value="pa">價格由低到高</option><option value="pd" ${o.f.sort==='pd'?'selected':''}>價格由高到低</option><option value="new" ${o.f.sort==='new'?'selected':''}>最新上架</option></select><div class="hot">🔥 熱門 ${(r&&r.hot||[]).map(i=>`<span class="chipb" data-s="${esc(D.items[i].n)}">${esc(D.items[i].n)}</span>`).join('')}${(JSON.parse(localStorage.robMS||'[]')).map(s=>`<span class="chipb rec" data-s="${esc(s)}">🕘 ${esc(s)}</span>`).join('')}</div></div>`;
  const fee=r?r.fee:{list:1,pct:5,min:1};let main='';
  if(o.tab==='buy'||o.tab==='orders'||o.tab==='mine'){const rows=r?r.mk.rows:[];main=`<div class="mlist"><div class="mlh"><span>物品</span><span>屬性</span><span>${o.tab==='orders'?'收購價':'價格'}</span><span></span></div>${rows.length?rows.map(x=>{const d=D.items[x.item_id];const it=x.item?(typeof x.item==='string'?JSON.parse(x.item):x.item):null;const mine=x.owner===G.me.name;const fav=G.me.fav.includes(x.item_id);
-  return`<div class="mlr"><span class="mi">${ART.icon(d.icon,26)}<i class="p2i" data-idesc="${x.item_id}">ⓘ</i><b style="color:${it?RARC(it):'#1d4ab8'}">${esc(it?iname(it):d.n)}</b>${x.qty>1?`<em>×${x.qty}</em>`:''}<i class="fav ${fav?'on':''}" data-fav="${x.item_id}">★</i></span><span class="ma">${esc(d.desc||statLine(d,it).map(a=>a.join(' ')).join(' · '))}${it&&it.cards&&it.cards.length?' · 卡：'+it.cards.map(c=>D.items[c].n).join('、'):''} <small>· ${esc(x.owner==='#AI'?'市集商人':x.owner)}</small></span><span class="mp">${ART.icon('dia',14)} ${x.price.toLocaleString()}<small>參考 ${r.ref[x.item_id]||'-'}</small></span><span>${mine?`<button class="btn" data-cancel="${x.id}">下架</button>`:o.tab==='orders'?`<button class="btn b" data-fill="${x.id}" data-q="${x.qty}">賣給他</button>`:`<button class="btn b" data-buy="${x.id}" data-q="${x.qty}">🛒 購買</button>`}</span></div>`}).join(''):`<div class="empty">${o.tab==='mine'?'你沒有任何掛單':'沒有符合的商品'}</div>`}</div>
+  return`<div class="mlr"><span class="mi">${ART.icon(d.icon,26)}<i class="p2i" data-idesc="${x.item_id}">ⓘ</i><b style="color:${it?RARC(it):(window.QCOL?QCOL(d):'#E8E8E8')}">${esc(it?iname(it):d.n)}</b>${x.qty>1?`<em>×${x.qty}</em>`:''}<i class="fav ${fav?'on':''}" data-fav="${x.item_id}">★</i></span><span class="ma">${esc(d.desc||statLine(d,it).map(a=>a.join(' ')).join(' · '))}${it&&it.cards&&it.cards.length?' · 卡：'+it.cards.map(c=>D.items[c].n).join('、'):''} <small>· ${esc(x.owner==='#AI'?'市集商人':x.owner)}</small></span><span class="mp">${ART.icon('dia',14)} ${x.price.toLocaleString()}<small>參考 ${r.ref[x.item_id]||'-'}</small></span><span>${mine?`<button class="btn" data-cancel="${x.id}">下架</button>`:o.tab==='orders'?`<button class="btn b" data-fill="${x.id}" data-q="${x.qty}">賣給他</button>`:`<button class="btn b" data-buy="${x.id}" data-q="${x.qty}">🛒 購買</button>`}</span></div>`}).join(''):`<div class="empty">${o.tab==='mine'?'你沒有任何掛單':'沒有符合的商品'}</div>`}</div>
   <div class="pager"><small>顯示 ${r?Math.min(r.mk.total,(r.mk.page-1)*15+1):0}–${r?Math.min(r.mk.total,r.mk.page*15):0} / ${r?r.mk.total:0} 筆</small>${r?pages(r.mk.page,r.mk.pages):''}</div>`}
  else if(o.tab==='sell'){const sell=G.me.bag.filter(it=>D.items[it.id].type!=='use'||1);const it=o.u&&findIt(o.u);const st=o.st;const pr=o.price||st&&(st.ask||st.ref)||1;const n=Math.min(o.n||1,it?it.n:1);const val=pr*n,fe=Math.max(fee.min,Math.ceil(val*fee.pct/100));
   main=`<div class="sellw"><div><div class="secth">選擇要出售的物品</div><div class="grid sm">${sell.map(x=>`<div class="cell ${o.u===x.u?'sel':''}" data-su="${x.u}" title="${esc(D.items[x.id].n)}">${ART.icon(D.items[x.id].icon,26)}${x.n>1?`<em>${x.n}</em>`:''}${x.rf?`<i>+${x.rf}</i>`:''}</div>`).join('')}</div></div>
@@ -2476,7 +2520,7 @@ WINS.exchange={title:'鑽石交易所',w:440,manual:1,sub:()=>``,
   b.querySelectorAll('[data-r]').forEach(x=>x.onclick=()=>{o.range=x.dataset.r;W.load(o)});b.querySelectorAll('[data-m]').forEach(x=>x.onclick=()=>{const [s,m]=x.dataset.m.split(':');o[s].mode=m;UI.renderWin('exchange')});
   b.querySelectorAll('[data-qt]').forEach(x=>x.oninput=()=>o[x.dataset.qt].qty=+x.value);b.querySelectorAll('[data-pr]').forEach(x=>x.oninput=()=>o[x.dataset.pr].price=+x.value);
   b.querySelectorAll('[data-go]').forEach(x=>x.onclick=async()=>{const s=x.dataset.go,P=o[s];if(!P.qty)return toast('請輸入數量',1);await act({op:'dx',side:s,mode:P.mode,qty:P.qty,price:P.price});W.load(o)});b.querySelectorAll('[data-cx]').forEach(x=>x.onclick=async()=>{await act({op:'dxcancel',oid:+x.dataset.cx});W.load(o)})}};
-WINS.mall={title:'商城',w:560,html(o){const D=G.D;if(!o.list){if(!o.ld){o.ld=1;req({op:'dshoplist'}).then(r=>{o.ld=0;o.list=(r&&r.list)||[];if(UI.open.mall)UI.renderWin('mall')})}return'<p class="note">載入中…</p>'}const L=o.list.filter(x=>D.items[x.i]);const ends=t=>{if(!t)return'';const h=Math.max(0,Math.round((t-Date.now())/3600e3));return h<72?`<em class="dsend">剩 ${h} 小時</em>`:''};return`<div class="prem-h" style="cursor:pointer" data-uiw="premium">${ART.micon('premium',36)}<div><b>Premium 方案</b><br><small>7/30/90/180/360 天 · 最高 -25% · 可贈送 → 點此查看</small></div></div><div class="note">商城價由伺服器上架清單決定（GM 管理，含限時上架）。</div><div class="shopl">${L.length?L.map(x=>`<div class="shi">${ART.icon(D.items[x.i].icon,28)}<div><b>${esc(D.items[x.i].n)}</b>${ends(x.to)}<small>${esc(D.items[x.i].desc||'')}</small></div><span>${ART.icon('dia',14)}${x.dia}</span><button class="btn b" data-ds="${x.i}">購買</button></div>`).join(''):'<p class="note">目前沒有上架商品。</p>'}</div>`},bind(b,o){b.querySelectorAll('[data-ds]').forEach(x=>x.onclick=()=>act({op:'dshop',i:x.dataset.ds,n:1}).then(()=>{o.list=null;UI.renderWin('mall')}))}};
+WINS.mall={title:'商城',w:560,html(o){const D=G.D;if(!o.list){if(!o.ld){o.ld=1;req({op:'dshoplist'}).then(r=>{o.ld=0;o.list=(r&&r.list)||[];if(UI.open.mall)UI.renderWin('mall')})}return'<p class="note">載入中…</p>'}const L=o.list.filter(x=>D.items[x.i]);const ends=t=>{if(!t)return'';const h=Math.max(0,Math.round((t-Date.now())/3600e3));return h<72?`<em class="dsend">剩 ${h} 小時</em>`:''};return`<div class="prem-h" style="cursor:pointer" data-uiw="premium">${ART.micon('premium',36)}<div><b>月卡特權</b><br><small>7/30/90/180/360 天 · 最高 -25% · 可贈送 → 點此查看</small></div></div><div class="note">商城價由伺服器上架清單決定（GM 管理，含限時上架）。</div><div class="shopl">${L.length?L.map(x=>`<div class="shi">${ART.icon(D.items[x.i].icon,28)}<div><b>${esc(D.items[x.i].n)}</b>${ends(x.to)}<small>${esc(D.items[x.i].desc||'')}</small></div><span>${ART.icon('dia',14)}${x.dia}</span><button class="btn b" data-ds="${x.i}">購買</button></div>`).join(''):'<p class="note">目前沒有上架商品。</p>'}</div>`},bind(b,o){b.querySelectorAll('[data-ds]').forEach(x=>x.onclick=()=>act({op:'dshop',i:x.dataset.ds,n:1}).then(()=>{o.list=null;UI.renderWin('mall')}))}};
 
 // ===== 社交、世界地圖、排行、Premium、拍賣 =====
 const JN=j=>G.D.jobs[j]?G.D.jobs[j].n:j;const MAPN=k=>G.D.maps[k]?G.D.maps[k].n:k;
@@ -2543,8 +2587,8 @@ WINS.world={title:'世界地圖',w:720,html(o){const D=G.D;if(!o.zs){req({op:'zo
  <div class="wz"><b style="font-size:16px">${esc(sel.n)}</b> <small>${sel.lv}</small><p class="note">${sel.locked?`🔒 尚未解鎖（需 Base Lv ${sel.need}）`:esc(sel.d)}</p>${sel.mobs.length?`<div class="secth">出沒怪物</div>${sel.mobs.map(m=>`<div class="lrow"><canvas data-mob="${m.k}" width="34" height="26"></canvas><b>${esc(m.n)}</b><small>Lv ${m.lv}${m.boss?' · 首領':''}</small><span style="flex:1"></span><small>${((D.mobs[m.k]||{}).drops||[]).filter(([i])=>SETOPEN(i)).slice(0,3).map(([i])=>esc(DROPN(i))).join('、')}</small></div>`).join('')}`:''}${sel.k==='town'&&(T.npcs||[]).length?`<div class="secth">NPC</div><div class="offi">${T.npcs.map(n=>`<span>${esc(n.n)}</span>`).join('')}</div>`:''}<button class="btn g" id="wgo" ${sel.k===cur||sel.locked?'disabled':''}>${sel.k===cur?'目前所在':sel.locked?'尚未解鎖':'前往'}</button></div></div>`},
  bind(b,o){b.querySelectorAll('[data-r]').forEach(x=>x.onclick=()=>{o.sel=x.dataset.r;UI.renderWin('world')});b.querySelectorAll('canvas[data-mob]').forEach(c=>{const k=c.dataset.mob;HD.pic(c,'mob',k,x=>(HD._m0||ART.mob).call(ART,x,k,17,24,2,0,0))});
   const g=b.querySelector('#wgo');if(g)g.onclick=()=>{const k=o.sel||G.me.map;UI.close('world');if(typeof IDLE!=='undefined'&&IDLE.on)IDLE.zone(k);else act({op:'zone',map:k})}}};
-WINS.premium={title:'Premium',w:620,manual:1,html(o){const d=o.data;if(!d)return'<p class="note">載入中…</p>';const on=d.until>Date.now();
- return`<div class="prem-h ${on?'on':''}">${ART.micon('premium',48)}<div><b>${on?'Premium 生效中':'尚未啟用 Premium'}</b><br><small>${on?'到期：'+new Date(d.until).toLocaleString()+'（剩 '+Math.ceil((d.until-Date.now())/86400e3)+' 天）':'用鑽石購買，可續期疊加，也能贈送好友'}</small></div></div>
+WINS.premium={title:'月卡特權',w:620,manual:1,html(o){const d=o.data;if(!d)return'<p class="note">載入中…</p>';const on=d.until>Date.now();
+ return`<div class="prem-h ${on?'on':''}">${ART.micon('premium',48)}<div><b>${on?'月卡特權生效中':'尚未啟用月卡特權'}</b><br><small>${on?'到期：'+new Date(d.until).toLocaleString()+'（剩 '+Math.ceil((d.until-Date.now())/86400e3)+' 天）':'用鑽石購買，可續期疊加，也能贈送好友'}</small></div></div>
  <div class="secth">特權</div><div class="perks">${[['經驗值 +20%','exp'],['掉寶率 +20%','drop'],['離線掛機上限 +4 小時','off'],['專屬金色名牌','name']].map(([a])=>`<span>✦ ${a}</span>`).join('')}</div>
  <div class="secth">方案</div><div class="packs">${d.packs.map(p=>`<div class="pk ${o.d===p.d?'sel':''}" data-d="${p.d}"><b>${p.d} 天</b>${p.ds?`<em>-${Math.round(p.ds*100)}%</em><s>${p.p}</s>`:''}<span>${ART.icon('dia',14)} ${p.price}</span><small>${(p.price/p.d).toFixed(1)} 鑽/天</small></div>`).join('')}</div>
  <div class="frow"><label><input type="checkbox" id="pgift" ${o.gift?'checked':''}> 贈送給</label><input id="pto" placeholder="玩家名稱" ${o.gift?'':'disabled'} value="${esc(o.to||'')}"><button class="btn g" id="pbuy" ${o.d?'':'disabled'}>購買${o.d?' '+o.d+' 天':''}</button></div><p class="note">持有鑽石：${G.me.dia}</p>`},
@@ -2659,7 +2703,7 @@ const V6={touch:'ontouchstart' in window||matchMedia('(pointer:coarse)').matches
  jobDot(){const b=document.getElementById('tb-lore');if(!b||!G.me)return;const c=!!this.canJob();b.classList.toggle('dot',c);const tr=document.getElementById('tracker');if(!tr)return;let j=tr.querySelector('.jobq');if(c&&!j){j=document.createElement('div');j.className='tri jobq';j.innerHTML=`<span class="qt job">轉職</span> ${t('可以轉職了！')}<br><small>${t('Job 等級已達標，點擊自動前往轉職導師')}</small> <b>➜</b>`;j.onclick=()=>this.goJob();const h=tr.querySelector('.trh');h?h.after(j):tr.prepend(j)}else if(!c&&j)j.remove()},
  goJob(){for(const mk in G.D.maps)for(const n of G.D.maps[mk].npcs||[])if(n.id==='job'){if(G.map.id===mk&&G.P[G.me.name]&&Math.hypot(G.P[G.me.name].x-n.x,G.P[G.me.name].y-n.y)<3)return UI.npc('job');send({op:'goto',map:mk,x:n.x,y:n.y,npc:'job'});toast(t('自動前往轉職導師…'));return}UI.win('lore',{job:G.me.job==='nov'?'kni':G.me.job})}};
 // 工具列（依參考站順序）與更多
-const TOOL6=[['stat','狀態'],['skill','技能'],['equip','裝備'],['market','商店'],['lore','職業'],['world','地圖'],['bag','背包'],['autobs','自動'],['premium','Premium'],['more','更多']];
+const TOOL6=[['stat','狀態'],['skill','技能'],['equip','裝備'],['market','商店'],['lore','職業'],['world','地圖'],['bag','背包'],['autobs','自動'],['premium','月卡特權'],['more','更多']];
 const MORE6=[['codex','圖鑑'],['settings','設定'],['mail','信箱'],['exchange','鑽石匯兌'],['auction','拍賣'],['exch','兌換'],['look','外觀'],['mall','商城'],['rank','排行'],['mlog','交易紀錄'],['friends','好友'],['party','組隊'],['guild','公會']];
 // 技能環：直式收合時只顯示 1、2 格
 (()=>{const r0=UI.ring.bind(UI);UI.ring=function(m){r0(m);document.querySelectorAll('#rbtns .rbs').forEach(b=>{const n=(+b.dataset.i)%9;b.dataset.k=n<2?'s':'h'})}})();
@@ -2958,7 +3002,7 @@ const IDLE={on:false,tab:'hunt',sub:'field',mode:'battle',zones:null,stats:null,
   $('#iMall').onclick=()=>{this.go('mkt');this.openWin('mall')};$('#iCfg').onclick=()=>{this.go('bag');this.openWin('equip')};$('#iAvb').onclick=()=>this.go('stat');$('#iHelp').onclick=()=>this.guideShow();
   addEventListener('resize',()=>this.layout());},
  start(){if(this.inited)return;this.inited=true;this.build();this.on=true;document.body.classList.add('idle');const cl=()=>{for(const id in UI.open)if(!this.wins.includes(id))UI.close(id)};cl();setTimeout(cl,1500);setTimeout(cl,4000);this.battle();this.layout();
-  document.addEventListener('pointerdown',e=>{if(!this.on)return;const t=e.target;if(!t.closest||t.closest('.win,.i-modal,.cardpop,.dlg-bg,#toasts,.hotpick,#chat6,#lw'))return;const ids=Object.keys(UI.open);if(!ids.length)return;for(const id of ids)UI.close(id);this.wins=[]},true);
+  document.addEventListener('pointerdown',e=>{if(!this.on)return;const t=e.target;if(!t.closest||t.closest('.win,.i-modal,.cardpop,.dlg-bg,#toasts,.hotpick,#chat6,#lw,.sh-bg,.elpop,.n2-seg'))return;const ids=Object.keys(UI.open);if(!ids.length)return;for(const id of ids)UI.close(id);this.wins=[]},true);
   req({op:'idle'}).then(r=>{if(r&&!r.e){this.flags=r.flags||{};(r.tick||[]).reverse().forEach(x=>this.addTick(x,1));this.stats=r.stats;this.status()}});
   setInterval(()=>{if(this.on&&G.me)req({op:'hstat'}).then(r=>{if(r&&r.stats){this.stats=r.stats;this.status()}})},20000);
   setInterval(()=>this.live(),120);
@@ -2990,7 +3034,7 @@ const IDLE={on:false,tab:'hunt',sub:'field',mode:'battle',zones:null,stats:null,
  live(){if(!this.on||!G.me||!G.M)return;const me=G.P[G.me.name];if(!me)return;const D=G.D.mobs;let tg=G.sel&&G.M[G.sel]&&!G.M[G.sel].dying?G.M[G.sel]:null,bs=null,bd=1e9,nd=1e9;const ec={};
   for(const k in G.M){const o=G.M[k];if(o.dying||o.hp<=0)continue;const md=D[o.k];if(!md)continue;const d=Math.hypot(o.x-me.x,o.y-me.y);if(d<14){ec[md.ele||'neutral']=(ec[md.ele||'neutral']||0)+1}if(md.boss&&d<16&&d<bd){bd=d;bs=o}if(!tg&&d<6&&(o.hp<o.mhp||o.hitT)&&d<nd){nd=d;tg=o}}
   const el=Object.entries(ec).sort((a,b)=>b[1]-a[1])[0];const ze=$('#iZe');const en=el&&this.EL[el[0]]?el[0]:'neutral';if(ze&&ze.dataset.e!==en){ze.dataset.e=en;ze.src='hd/p1/ele_'+en+'.webp'}
-  const t=$('#iTgt');if(t){const key=tg?tg.id+'|'+Math.round(tg.hp):'';if(t.dataset.k!==key){t.dataset.k=key;if(tg){const md=D[tg.k];t.innerHTML=`<img ${HD.mobImgAttr(tg.k)} alt=""><b>${esc(md.n)}</b><small>Lv${md.lv}</small><div class="gb"><i class="fl" style="width:${Math.max(0,tg.hp/tg.mhp*100)}%"></i></div>`}else t.innerHTML=G.me.auto?'<small>尋找目標中…</small>':''}}
+  const t=$('#iTgt');if(t){const te0=tg?((G.bele&&G.bele[tg.id])||(D[tg.k]||{}).ele||'neutral'):'';const key=tg?tg.id+'|'+te0:(G.me.auto?'s':'');/* B6：只在換目標／屬性時重畫，血量只改寬度，避免點屬性標籤時元素被換掉 */if(t.dataset.k===key&&tg){const f=t.querySelector('.gb .fl');if(f)f.style.width=Math.max(0,tg.hp/tg.mhp*100)+'%'}if(t.dataset.k!==key){t.dataset.k=key;if(tg){const md=D[tg.k];const te=te0;t.innerHTML=`<img ${HD.mobImgAttr(tg.k)} alt=""><b>${esc(md.n)}</b><small>Lv${md.lv}</small><em class="tel el-${te}" data-ele="${te}" data-elv="${md.eleLv||1}">${esc((G.D.elements[te]||{}).n||te)} Lv${md.eleLv||1}</em><div class="gb"><i class="fl" style="width:${Math.max(0,tg.hp/tg.mhp*100)}%"></i></div>`}else t.innerHTML=G.me.auto?'<small>尋找目標中…</small>':''}}
   const B=$('#iBoss');if(!B)return;const show=!!bs;if(B.hidden===show){B.hidden=!show;this.layout()}if(bs){const md=D[bs.k];const r=Math.max(0,bs.hp/bs.mhp);$('#iBossN').textContent=md.n+' Lv'+md.lv;{const ee=(G.bele&&G.bele[bs.id])||md.ele||'neutral';const EN=(G.D.elements[ee]||{}).n||ee,RN=((G.D.races||{})[md.race]||{}).n||md.race,SZ={small:'小型',medium:'中型',large:'大型'}[md.size]||md.size;const MN={phase_ele:'轉屬性',berserk_low:'暴走',armor_up:'硬化'};const tg=EN+'屬性 Lv'+(md.eleLv||1)+' ・ '+RN+' ・ '+SZ+((md.mech||[]).length?' ・ '+md.mech.map(x=>MN[x]||x).join('/'):'');const t=$('#iBossTag');if(t){t.dataset.ele=ee||'neutral';t.dataset.elv=md.eleLv||1}if(t&&t.textContent!==tg){t.textContent=tg;t.classList.toggle('chg',!!(G.bele&&G.bele[bs.id]&&G.bele[bs.id]!==md.ele))}}$('#iBossP').textContent=(r*100).toFixed(r<.1?1:0)+'%';$('#iBossF').style.width=r*100+'%';$('#iBossG').style.width=r*100+'%';$('#iBossT').textContent=fmt(Math.round(bs.hp))+' / '+fmt(bs.mhp);const e0=(G.bele&&G.bele[bs.id])||md.ele;const e=this.EL[e0]?e0:'neutral';if(B.dataset.e!==e){B.dataset.e=e;$('#iBossE').src='hd/p1/ele_'+e+'.webp'}}},
  status(){const s=this.stats;$('#iInc').textContent=s&&s.k?`10分收益 ≈ ${fmt(s.e)} EXP · ${fmt(s.z)} G`:'10分收益 — 開始狩獵後計算'},
  addTick(x,quiet){this.tick.unshift(x);this.tick.length=Math.min(this.tick.length,8);const f=x=>x.k==='drop'?`🎉 恭喜 <b>${esc(x.n)}</b> 在${esc(x.map||'')}擊敗 <em>${esc(x.m||'')}</em> 獲得 <b>${esc(x.in||'')}</b>`:esc(x.t||'');
@@ -3260,8 +3304,8 @@ const RBC={
 
 // ===== R8：物品詳情卡片（簡潔版）＋技能書學習按鈕＋掉落來源只在圖鑑 =====
 const R8I={
- QC:{N:'#eef2fa',R:'#6cc4ff',SR:'#c592ff',SSR:'#ffc94a',UR:'#ff8a6b'},
- qual(it,d){if(d.type==='card')return'SSR';return d.rar||'N'},/* B6：品質只看裝備本身（d.rar），精煉/插卡不提升品質 */
+ QC:{N:'#E8E8E8',R:'#6EE07A',SR:'#5AB4FF',SSR:'#C08CFF',UR:'#FF9A4A'},/* B6：全站品質色票（UX P0-2） */
+ qual(it,d){if(d.type==='card')return'SSR';return window.ASC?ASC.qOf(it,d):(d.rar||'N')},/* B6：品質只看裝備本身（d.rar），精煉/插卡不提升品質 */
  qname:{N:'普通',R:'優良',SR:'稀有',SSR:'史詩',UR:'傳說'},
  mapOf(mob){const D=G.D;for(const[k,m]of Object.entries(D.maps||{}))for(const s of m.spawns||[])if(s.mob===mob)return k;return null},
  cdxTab(d){return d.type==='eq'?'equip':d.type==='card'?'cards':'items'},
@@ -3475,7 +3519,7 @@ setInterval(()=>{const tg=document.getElementById('iTgt');if(!tg)return;let s=do
   html(o){o.q=o.q||{};if(!o.list){if(!o.ld){o.ld=1;req({op:'dshoplist'}).then(r=>{o.ld=0;o.list=(r&&r.list)||[];if(UI.open.mall)rw0('mall')})}return`<div class="mall2"><div class="m2sk"></div><div class="m2sk"></div><div class="m2sk"></div></div>`}
    const L=o.list.filter(x=>G.D.items[x.i]),Z=L.filter(x=>x.cur==='z'),Dm=L.filter(x=>x.cur!=='z');
    return`<div class="mall2"><div class="m2bal"><span class="m2c z">${ART.icon('coin',18)}<b data-num="zeny">${fmt(G.me.zeny)}</b></span><span class="m2c dia">${ART.icon('dia',18)}<b data-num="dia">${fmt(G.me.dia)}</b></span></div>
-   <div class="prem-h m2prem" data-uiw="premium">${ART.micon('premium',32)}<div><b>Premium 方案</b><br><small>7–360 天 · 最高 −25% · 可贈送</small></div><span class="m2arr">›</span></div>
+   <div class="prem-h m2prem" data-uiw="premium">${ART.micon('premium',32)}<div><b>月卡特權</b><br><small>7–360 天 · 最高 −25% · 可贈送</small></div><span class="m2arr">›</span></div>
    ${Z.length?`<div class="m2sec"><h5>${ART.icon('coin',16)} 金幣商品 <small>藥水、基本礦石，與雜貨商同價</small></h5>${Z.map(x=>row(x,o)).join('')}</div>`:''}
    ${Dm.length?`<div class="m2sec"><h5>${ART.icon('dia',16)} 鑽石商品 <small>稀有與強力道具</small></h5>${Dm.map(x=>row(x,o)).join('')}</div>`:''}
    ${L.length?'':'<p class="note">目前沒有上架商品。</p>'}</div>`},
@@ -3526,10 +3570,111 @@ setInterval(()=>{const tg=document.getElementById('iTgt');if(!tg)return;let s=do
  document.addEventListener('click',e=>{const t=e.target.closest&&e.target.closest('[data-ele]');if(!t||t.closest('.elpop'))return;e.stopPropagation();ELPOP(t.dataset.ele,t.dataset.elv,t)},true);
 })();
 // ---- B6 昇華（MANIFEST Batch 8c）：data-q 用裝備「本身」品質（d.rar，精煉/插卡不算），只有 UR 才套 data-asc ----
-window.ASC={own(d){return d&&d.type==='card'?'SSR':(d&&d.rar)||'N'},
- q(it,d){const R=(G.D&&G.D.params&&G.D.params.asc)||{};const ok=Array.isArray(R.q)&&R.q.length?R.q:['UR'];const q=this.own(d);return{q,asc:d&&d.type==='eq'&&ok.includes(q)?Math.max(0,Math.min(3,(it&&it.asc)|0)):0}},
+window.ASC={QN:['N','R','SR','SSR','UR'],own(d){return d&&d.type==='card'?'SSR':(d&&d.rar)||'N'},
+ qOf(it,d){d=d||(it&&G.D.items[it.id]);if(!d)return'N';if(d.type==='card')return'SSR';if(d.type==='eq'&&it&&Number.isInteger(it.q)&&it.q>=0&&it.q<=4)return this.QN[it.q];return d.rar||'N'},/* B6：品質看裝備實例 it.q（掉落時決定），沒有 q 的舊資料用 rar */
+ q(it,d){const R=(G.D&&G.D.params&&G.D.params.asc)||{};const ok=Array.isArray(R.q)&&R.q.length?R.q:['UR'];const q=this.qOf(it,d);return{q,asc:d&&d.type==='eq'&&ok.includes(q)?Math.max(0,Math.min(3,(it&&it.asc)|0)):0}},
  wrap(it,d,icon){const {q,asc}=this.q(it,d);const src=(/src="([^"]+)"/.exec(icon)||[])[1]||'';const L=asc?`<i class="asc asc-aura"></i>`:'';const T=asc?`<i class="asc asc-shine"></i><i class="asc asc-frame"></i><i class="asc asc-spark a"></i><i class="asc asc-spark b"></i><i class="asc asc-badge"></i>`:'';
   return`<span class="eq-slot" data-q="${q}" data-asc="${asc}" style="--icon:url('${src}')">${L}<span class="eq-icon">${icon}</span>${T}</span>`}};
+
+// ===== B6：品質色票、底部彈窗（sheet）、裝備格候選與比較（UX P0-1/P0-2、BUILDER_QUEUE 12）=====
+window.QCOL=x=>{const Q={N:'#E8E8E8',R:'#6EE07A',SR:'#5AB4FF',SSR:'#C08CFF',UR:'#FF9A4A'};const q=typeof x==='string'?x:(window.ASC?ASC.own(x):(x&&x.rar)||'N');return Q[q]||Q.N};
+window.QNAME={N:'一般',R:'優良',SR:'稀有',SSR:'史詩',UR:'傳說'};
+// ---- 底部彈窗：上滑 240ms，點背景／下滑／✕ 關閉，最多一層 ----
+window.SHEET={el:null,open(html,bind,o={}){this.close(true);const bg=document.createElement('div');bg.className='sh-bg';bg.innerHTML=`<div class="sh glass" role="dialog" aria-modal="true"><div class="sh-grip"></div><div class="sh-h"><b>${o.title||''}</b><button class="sh-x" aria-label="關閉">✕</button></div><div class="sh-b"></div></div>`;
+  document.body.appendChild(bg);this.el=bg;const sh=bg.querySelector('.sh'),b=bg.querySelector('.sh-b');b.innerHTML=html;bind&&bind(b,this);requestAnimationFrame(()=>bg.classList.add('on'));
+  bg.addEventListener('click',e=>{if(e.target===bg)this.close()});bg.querySelector('.sh-x').onclick=()=>this.close();
+  let y0=null;const g=bg.querySelector('.sh-grip'),h=bg.querySelector('.sh-h');for(const t of [g,h]){t.addEventListener('touchstart',e=>{y0=e.touches[0].clientY},{passive:true});t.addEventListener('touchmove',e=>{if(y0==null)return;const dy=Math.max(0,e.touches[0].clientY-y0);sh.style.transform=`translateY(${dy}px)`},{passive:true});t.addEventListener('touchend',e=>{const dy=parseFloat((sh.style.transform.match(/[\d.]+/)||[0])[0]);sh.style.transform='';if(dy>80)this.close();y0=null})}
+  this._k=o.key||null;return b},
+ body(){return this.el&&this.el.querySelector('.sh-b')},
+ close(now){const bg=this.el;if(!bg)return;this.el=null;this._k=null;if(now){bg.remove();return}bg.classList.remove('on');setTimeout(()=>bg.remove(),200)}};
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&SHEET.el)SHEET.close()});
+// ---- 戰力（UX P1-15）：簡單、穩定的綜合分數 ----
+window.CPOW=d=>Math.round((d.atk||0)+(d.matk||0)+(d.def||0)*1.5+(d.mdef||0)*1.5+(d.hit||0)*.8+(d.flee||0)*.8+(d.crit||0)*4+(d.mhp||0)/12+(d.msp||0)/20+Math.max(0,(d.aspdV||150)-150)*6);
+(()=>{const SN={head:'頭上',mid:'頭中',low:'頭下',body:'身體',wpn:'武器',off:'副手',cape:'披風',shoes:'鞋子',acc1:'飾品 1',acc2:'飾品 2',ammo:'箭矢'};
+ const DN={atk:'ATK',matk:'MATK',def:'DEF',mdef:'MDEF',hit:'HIT',flee:'FLEE',crit:'CRIT',aspdV:'ASPD',mhp:'HP',msp:'SP'};const W={atk:1,matk:1,def:1.5,mdef:1.5,hit:.8,flee:.8,crit:4,aspdV:6,mhp:1/12,msp:1/20};
+ const BN={atk:'攻擊',matk:'魔攻',def:'防禦',mdef:'魔防',hit:'命中',flee:'迴避',crit:'暴擊',spd:'移動速度',atkPct:'攻擊',matkPct:'魔攻',aspd:'攻速',aspdPct:'攻速',mhp:'最大 HP',msp:'最大 SP',mhpPct:'最大 HP',str:'力量',agi:'敏捷',vit:'體質',int:'智力',dex:'靈巧',luk:'幸運'};
+ window.BNTXT=(k,v)=>{const pct=/Pct$/.test(k)||k==='spd';return (BN[k]||k.toUpperCase())+' '+(v>=0?'+':'')+v+(pct?'%':'')};
+ const sc=df=>df?Object.entries(df).reduce((a,[k,v])=>a+v*(W[k]||0),0):-1e9;
+ const chips=df=>{if(!df)return'';const E=Object.entries(df).filter(([k])=>DN[k]);if(!E.length)return'<span class="dz">能力不變</span>';return E.map(([k,v])=>`<span class="dc ${v>0?'up':'dn'}">${DN[k]} ${v>0?'+':''}${k==='mhp'||k==='msp'?Math.round(v):v}${v>0?'↑':'↓'}</span>`).join('')};
+ const ico=(it,d,px)=>{const h=ART.icon(d.icon,px).replace(' loading="lazy"','');return window.ASC?ASC.wrap(it,d,h):h};
+ const nm=it=>`<b class="qn" style="color:${QCOL(ASC.qOf(it))}">${esc(iname(it))}</b>`;
+ const slotHtml=(s,o)=>{const it=G.me.eq[s];const d=it&&G.D.items[it.id];return`<button class="e2s ${it?'has':''}" data-sl="${s}" aria-label="${SN[s]}${d?'：'+esc(d.n):'（空）'}"><span class="e2i">${d?ico(it,d,40):`<span class="e2e">＋</span>`}</span><span class="e2t"><small>${SN[s]}</small>${it?nm(it):'<em>空</em>'}</span></button>`};
+ WINS.equip.title='裝備';
+ WINS.equip.html=function(o){const m=G.me,J=G.D.jobs[m.job]||{};const L=['head','low','wpn','cape','acc1'],R=['mid','body','off','shoes','acc2'];const bow=(J.weap||[]).includes('bow');
+  const sets=(G.d.sets||[]).map(([k,n])=>{const S=G.D.sets[k];if(!S)return'';return`<div class="e2set"><b>${esc(S.n)} <small>${n}/${S.pieces.length}</small></b>${Object.entries(S.bonus).map(([c,bo])=>`<span class="${n>=c?'on':''}">${c} 件：${Object.entries(bo).map(([a,v])=>BNTXT(a,v)).join('、')}</span>`).join('')}</div>`}).join('');
+  return`<div class="e2"><div class="e2cp"><span>戰力</span><b id="e2cp">${CPOW(G.d).toLocaleString()}</b></div><div class="e2doll"><div class="e2col">${L.map(s=>slotHtml(s,o)).join('')}</div><div class="e2fig"><img src="${IDLE.chImg?IDLE.chImg(m.job):'hd/ch_'+m.job+'.webp'}" alt=""></div><div class="e2col r">${R.map(s=>slotHtml(s,o)).join('')}</div></div>${bow?`<div class="e2ammo">${slotHtml('ammo',o)}</div>`:''}
+  <p class="e2hint">點格子：空格會列出背包裡能穿的裝備；已裝備的可以比較、更換或卸下。</p><div class="e2btns"><button class="btn g" id="autoeq">自動裝備</button><button class="btn" id="uneqall">全部卸下</button></div>${sets}</div>`};
+ const openSlot=async(sl)=>{const cur=G.me.eq[sl];const cd=cur&&G.D.items[cur.id];const b=SHEET.open(`<div class="e2sk"><i></i><i></i><i></i></div>`,null,{title:SN[sl]+(cd?' · 目前裝備':' · 選擇裝備'),key:'eq:'+sl});
+  const r=await req({op:'eqcand',sl});if(!SHEET.el||SHEET._k!=='eq:'+sl)return;if(!r||r.e){b.innerHTML=`<p class="e2em">${esc((r&&r.e)||'讀取失敗')}</p>`;return}
+  const ok=r.list.filter(x=>!x.why).map(x=>({...x,it:G.me.bag.find(y=>y.u===x.u)})).filter(x=>x.it).sort((a,b)=>sc(b.df)-sc(a.df));const no=r.list.filter(x=>x.why).map(x=>({...x,it:G.me.bag.find(y=>y.u===x.u)})).filter(x=>x.it);
+  const row=(x,can)=>{const d=G.D.items[x.it.id];return`<div class="e2r ${can?'':'no'}"><span class="e2i sm">${ico(x.it,d,32)}</span><div class="e2rt">${nm(x.it)}<small>${QNAME[ASC.qOf(x.it,d)]||''}${d.lv?' · Lv '+d.lv:''}${can?'':' · <em>'+esc(x.why)+'</em>'}</small>${can?`<div class="e2d">${chips(x.df)}</div>`:''}</div>${can?`<button class="btn b e2go" data-eu="${x.u}">${cur?'更換':'裝備'}</button>`:''}<button class="e2inf" data-iu="${x.u}" aria-label="詳情">ⓘ</button></div>`};
+  b.innerHTML=`${cur?`<div class="e2cur"><span class="e2i">${ico(cur,cd,44)}</span><div class="e2rt">${nm(cur)}<small>${QNAME[ASC.qOf(cur,cd)]||''} · ${statLine(cd,cur).map(x=>x.join(' ')).join(' · ')||'—'}</small><div class="e2d"><small>卸下後：</small>${chips(r.un)}</div></div></div><div class="e2acts"><button class="btn" data-a="det">詳情</button><button class="btn" data-a="un">卸下</button></div>`:''}
+   <div class="e2lh">${ok.length?`可裝備 ${ok.length} 件 <small>（依能力提升排序，數值是換上後的變化）</small>`:'背包裡沒有這一格能穿的裝備'}</div>${ok.map(x=>row(x,1)).join('')}
+   ${no.length?`<details class="e2no"><summary>無法裝備 ${no.length} 件</summary>${no.map(x=>row(x,0)).join('')}</details>`:''}`;
+  b.querySelectorAll('[data-eu]').forEach(x=>x.onclick=async()=>{x.disabled=true;x.classList.add('busy');const cp0=CPOW(G.d);const it=G.me.bag.find(y=>y.u===+x.dataset.eu);const rr=await act({op:'equip',u:+x.dataset.eu,sl:(sl==='off'||sl==='acc1'||sl==='acc2')?sl:undefined});if(rr&&rr.e){x.disabled=false;x.classList.remove('busy');return}
+   setTimeout(()=>{const dcp=CPOW(G.d)-cp0;toast(`已裝備 ${it?(G.D.items[it.id]||{}).n:''}${dcp?` · 戰力 ${dcp>0?'+':''}${dcp}`:''}`,false,'eq');UI.renderWin('equip');SHEET.close()},250)});
+  b.querySelectorAll('[data-iu]').forEach(x=>x.onclick=()=>{SHEET.close(true);UI.win('item',{u:+x.dataset.iu})});
+  const a=b.querySelector('[data-a="un"]');if(a)a.onclick=async()=>{const rr=await act({op:'unequip',sl});if(!rr||!rr.e){toast(`已卸下 ${cd.n}`,false,'eq');SHEET.close();setTimeout(()=>UI.renderWin('equip'),200)}};
+  const dt=b.querySelector('[data-a="det"]');if(dt)dt.onclick=()=>{SHEET.close(true);UI.win('item',{u:cur.u})}};
+ window.EQSLOT=openSlot;
+ const b0=WINS.equip.bind;WINS.equip.bind=function(b,o){b.querySelectorAll('[data-sl]').forEach(x=>x.onclick=()=>openSlot(x.dataset.sl));
+  const ua=b.querySelector('#uneqall');if(ua)ua.onclick=async()=>{const n=Object.values(G.me.eq).filter(Boolean).length;if(!n)return toast('身上沒有裝備');if(!await Dlg.confirm(`要卸下全部 ${n} 件裝備嗎？`,{title:'全部卸下',ok:'卸下'}))return;for(const s in G.me.eq)if(G.me.eq[s])await act({op:'unequip',sl:s});toast('已卸下全部裝備',false,'eq')};
+  const ae=b.querySelector('#autoeq');if(ae)ae.onclick=async()=>{ae.disabled=true;const cp0=CPOW(G.d);let n=0;try{for(const sl of ['wpn','body','head','mid','low','off','cape','shoes','acc1','acc2']){const r=await req({op:'eqcand',sl});if(!r||r.e)continue;const best=r.list.filter(x=>!x.why&&x.df).sort((a,b)=>sc(b.df)-sc(a.df))[0];if(best&&sc(best.df)>0.5){const rr=await act({op:'equip',u:best.u,sl:(sl==='off'||sl==='acc1'||sl==='acc2')?sl:undefined});if(rr&&!rr.e)n++}}}finally{ae.disabled=false}
+   setTimeout(()=>{const d=CPOW(G.d)-cp0;toast(n?`自動裝備 ${n} 件 · 戰力 ${d>=0?'+':''}${d}`:'目前已是最佳裝備',false,'eq')},300)}};
+})();
+
+// ===== B6：下方導覽 5 分頁（UI_NAV_V2.md）＋頁面堆疊＋轉場 =====
+(()=>{if(typeof IDLE==='undefined')return;
+ const T={adv:[['hunt','狩獵',{battle:1}],['map','地圖',{panel:'field'}],['town','功能',{panel:'town'}],['boss','世界王',{panel:'boss'}],['set','掛機設定',{panel:'set'}]],
+  char:[['equip','裝備',{win:'equip'}],['stat','能力',{panel:'stat'}],['skill','技能',{win:'skill'}],['codex','圖鑑',{win:'codex'}]],
+  bag:[['bag','背包',{win:'bag'}]],
+  soc:[['party','組隊',{win:'party'}],['guild','公會',{win:'guild'}],['friends','好友',{win:'friends'}],['rank','排行',{win:'rank'}],['mail','信箱',{win:'mail'}]],
+  shop:[['mall','商城',{win:'mall'}],['premium','月卡特權',{win:'premium'}],['exchange','鑽石兌換',{win:'exchange'}],['market','交易所',{win:'market'}],['auction','拍賣',{win:'auction'}],['mlog','紀錄',{win:'mlog'}]]};
+ const NV=[['adv','p1/nav_hunt','冒險'],['char','p1/nav_stat','角色'],['bag','p1/nav_bag','背包'],['soc','p1/nav_soc','社交'],['shop','p1/nav_shop','商城']];const ORD=NV.map(x=>x[0]);
+ IDLE.n2='adv';IDLE.n2s={};window.NAV2={T};
+ const has=o=>!o.win||WINS[o.win];
+ const seg=(tab)=>{const L=T[tab].filter(x=>has(x[2]));if(L.length<2)return'';const cur=IDLE.n2s[tab]||L[0][0];return`<div class="i-tabs i-hb n2-seg" role="tablist">${L.map(([k,n])=>`<button class="i-tab ${k===cur?'on':''}" role="tab" aria-selected="${k===cur}" data-n2="${tab}:${k}">${n}</button>`).join('')}</div>`};
+ const anim=(el,cls)=>{if(!el)return;el.classList.remove('n2-l','n2-r','n2-up');void el.offsetWidth;el.classList.add(cls);setTimeout(()=>el.classList.remove(cls),260)};
+ // 舊分頁內容沿用，只把頂部分段換成新的
+ const ph=IDLE.p_hunt,ps=IDLE.p_stat,pst=IDLE.p_set,st0=IDLE.subTabs;
+ IDLE.p_hunt=function(){this.subTabs=()=>'';try{return seg('adv')+ph.call(this)}finally{this.subTabs=st0}};
+ IDLE.p_stat=function(){return seg('char')+ps.call(this)};IDLE.p_set=function(){return seg('adv')+pst.call(this)};
+ IDLE.p_n2w=function(){return seg(this.n2)};
+ const b0=IDLE.bind;IDLE.bind=function(p){b0.call(this,p);p.querySelectorAll('[data-n2]').forEach(b=>b.onclick=()=>{const [t,s]=b.dataset.n2.split(':');go2(t,s)})};
+ function hi(t){const n=$('#iNav');if(n)n.querySelectorAll('.i-nv').forEach(b=>{const on=b.dataset.t===t;b.classList.toggle('on',on);b.setAttribute('aria-current',on?'page':'false')})}
+ function strip(){let s=$('#n2Strip');const show=IDLE.on&&IDLE.mode==='battle'&&IDLE.mob()&&IDLE.n2==='adv';if(!s){if(!show)return;s=document.createElement('div');s.id='n2Strip';s.className='n2-strip';document.body.appendChild(s)}
+  s.hidden=!show;if(show){s.innerHTML=T.adv.map(([k,n])=>`<button class="${k==='hunt'?'on':''}" data-n2="adv:${k}">${n}</button>`).join('');s.querySelectorAll('[data-n2]').forEach(b=>b.onclick=()=>{const [t,k]=b.dataset.n2.split(':');go2(t,k)});const st=$('#idl .i-st'),nav=$('#iNav');const ref=st&&st.offsetHeight?st:nav;if(ref)s.style.bottom=(innerHeight-ref.getBoundingClientRect().top+4)+'px'}}
+ function go2(tab,sub){if(!T[tab])tab='adv';const prev=IDLE.n2,pi=ORD.indexOf(prev),ni=ORD.indexOf(tab);const L=T[tab].filter(x=>has(x[2]));let s=sub||IDLE.n2s[tab]||L[0][0];if(!L.find(x=>x[0]===s))s=L[0][0];const oi=L.findIndex(x=>x[0]===(IDLE.n2s[tab]||L[0][0]));IDLE.n2s[tab]=s;IDLE.n2=tab;const o=L.find(x=>x[0]===s)[2];
+  STK.clear();if(window.SHEET)SHEET.close(true);
+  if(o.battle){IDLE.n2s.adv='hunt';IDLE.battle();hi(tab);strip();return}
+  IDLE._fromB=0;IDLE.mode='page';IDLE.applyMode();for(const id of Object.keys(UI.open))UI.close(id,1);IDLE.wins=[];
+  if(o.panel){if(o.panel==='stat')IDLE.tab='stat';else if(o.panel==='set')IDLE.tab='set';else{IDLE.tab='hunt';IDLE.sub=o.panel}}else IDLE.tab='n2w';
+  hi(tab);strip();IDLE.panel();if(o.win)IDLE.openWin(o.win);
+  const dir=prev!==tab?(ni>pi?'n2-l':'n2-r'):(L.findIndex(x=>x[0]===s)>=oi?'n2-l':'n2-r');const p=$('#iPan');if(prev!==tab)anim(p,'n2-up');if(o.win)anim($('#w-'+o.win),prev!==tab?'n2-up':dir);else if(prev===tab)anim(p.querySelector('.i-card,.i-region,.i-set,.i-hub')?.parentElement===p?p:p,dir);
+  requestAnimationFrame(()=>IDLE.layout());IDLE.tutor&&IDLE.tutor({map:'hunt',set:'settings',market:'market',stat:'stats'}[s])}
+ window.NAV2.go=go2;
+ // 舊入口對應到新分頁
+ const g0=IDLE.go;IDLE.go=function(t){const M={battle:['adv','hunt'],hunt:['adv','map'],set:['adv','set'],stat:['char','stat'],bag:['bag','bag'],soc:['soc'],mkt:['shop','market'],equip:['char','equip']};const m=M[t];if(m)return go2(m[0],t==='hunt'&&this.sub==='zones'?'map':m[1]);return g0.call(this,t)};
+ // 重建導覽列
+ const bd0=IDLE.build;IDLE.build=function(){bd0.call(this);const n=$('#iNav');if(!n)return;n.classList.add('n2nav');n.innerHTML=NV.map(([k,ic,nm])=>`<button class="i-nv" data-t="${k}" aria-label="${nm}"><img src="${this.img(ic)}" alt=""><span class="lb">${nm}</span><i class="rd" hidden></i></button>`).join('');
+  n.querySelectorAll('.i-nv').forEach(b=>b.onclick=()=>{const t=b.dataset.t;if(t==='adv'&&IDLE.n2==='adv'&&IDLE.mode==='page')return go2('adv','hunt');go2(t,t===IDLE.n2?IDLE.n2s[t]:undefined)});
+  const av=$('#iAvb');if(av)av.onclick=()=>avMenu();const ml=$('#iMall');if(ml)ml.onclick=()=>go2('shop','mall');const cf=$('#iCfg');if(cf)cf.onclick=()=>go2('char','equip');
+  addEventListener('resize',strip)};
+ const bt0=IDLE.battle;IDLE.battle=function(){bt0.call(this);this.n2='adv';hi('adv');strip()};
+ function avMenu(){const m=G.me;const it=[['char:stat','👤','角色資訊'],['soc:mail','✉️','信箱'],['adv:set','⚙️','掛機設定'],['w:settings','🔧','遊戲設定'],['guide','📖','冒險指南'],['adv:set#code','🎟️','序號兌換']];
+  SHEET.open(`<div class="n2av"><img src="${IDLE.chImg(m.job)}" alt=""><div><b>${esc(m.name)}</b><small>${esc(IDLE.clsName(m.job))} · Lv ${m.blv}</small></div></div><div class="n2grid">${it.map(([k,ic,n])=>`<button data-k="${k}"><span>${ic}</span>${n}</button>`).join('')}</div>`,b=>{b.querySelectorAll('[data-k]').forEach(x=>x.onclick=()=>{const k=x.dataset.k;SHEET.close(true);if(k==='guide')return IDLE.guideShow();if(k.startsWith('w:')){const w=k.slice(2);if(WINS[w]){UI.win(w)}return}const [t,s]=k.split('#')[0].split(':');go2(t,s);if(k.endsWith('#code'))setTimeout(()=>{const c=$('#iCode');if(c){c.scrollIntoView({block:'center'});c.focus()}},300)})},{title:'選單'})}
+ // 紅點：屬性點、信件
+ setInterval(()=>{if(!IDLE.on||!G.me)return;const n=$('#iNav');if(!n)return;const R={char:G.me.stp>0,soc:!!(G.me.mailN||G.me.mail),shop:false};n.querySelectorAll('.i-nv').forEach(b=>{const r=b.querySelector('.rd');if(r)r.hidden=!R[b.dataset.t]})},1500);
+ // ---- 頁面堆疊（UX P0-5）：視窗上再開視窗時，下層先藏起來，上層有「‹ 返回」；關掉上層就回到下層 ----
+ const STK={L:[],clear(){for(const e of this.L)for(const k of e.under){const el=$('#w-'+k);if(el)el.classList.remove('n2-hid')}this.L=[];document.querySelectorAll('.win .wbk').forEach(b=>b.remove())},
+  top(){return this.L[this.L.length-1]}};window.NAV2.STK=STK;
+ const w0=UI.win.bind(UI);UI.win=function(id,arg){if(!IDLE.on)return w0(id,arg);const vis=Object.keys(UI.open).filter(k=>k!==id&&(()=>{const el=$('#w-'+k);return el&&el.style.display!=='none'&&!el.classList.contains('n2-hid')})());const wasOpen=!!UI.open[id];const r=w0(id,arg);const el=$('#w-'+id);
+  if(UI.open[id]&&el){if(!wasOpen)anim(el,'n2-up');if(vis.length&&!wasOpen){for(const k of vis){const e2=$('#w-'+k);if(e2)e2.classList.add('n2-hid')}STK.L.push({top:id,under:vis});const h=el.querySelector('.wh');if(h&&!h.querySelector('.wbk')){const b=document.createElement('button');b.className='wbk';b.setAttribute('aria-label','返回');b.textContent='‹';b.onclick=e=>{e.stopPropagation();UI.close(id)};h.insertBefore(b,h.firstChild)}}}
+  return r};
+ const c0=UI.close.bind(UI);UI.close=function(id,quiet){const r=c0(id);const i=STK.L.findIndex(e=>e.top===id);if(i>=0){const e=STK.L.splice(i,1)[0];const el=$('#w-'+id);el&&el.querySelector('.wbk')&&el.querySelector('.wbk').remove();if(!quiet)for(const k of e.under){if(UI.open[k]){const e2=$('#w-'+k);if(e2){e2.classList.remove('n2-hid');anim(e2,'n2-r');UI.renderWin(k)}}}}
+  for(const e of STK.L){e.under=e.under.filter(k=>k!==id)}return r};
+ addEventListener('keydown',e=>{if(e.key!=='Escape'||!IDLE.on||(window.SHEET&&SHEET.el))return;const t=STK.top();if(t)UI.close(t.top)});
+})();
 
 // ===== 啟動 =====
 // R10：密碼不落地。localStorage 只存伺服器發的 session token；舊資料（robAcc.pw／robAuto／robGuest 陣列）自動換成 token 並刪除密碼
