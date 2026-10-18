@@ -1,4 +1,4 @@
-<!doctype html><html lang="zh-Hant"><head><meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-ucwPnweuvJo5g+N1QRCMGp+bXc1bCuFvLaDHG1Qp3AE='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; connect-src 'self' https://api.ragnarokidle.app wss://api.ragnarokidle.app; media-src 'self' data: blob:; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover"><meta name="theme-color" content="#0a0f1d"><meta name="apple-mobile-web-app-capable" content="yes"><link rel="manifest" href="manifest.json"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png"><title>Aurevia Online · 曙光之境</title><link rel="apple-touch-icon" sizes="180x180" href="icon-180.png"><meta name="apple-mobile-web-app-title" content="曙光之境"><style>
+<!doctype html><html lang="zh-Hant"><head><meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-vDOB3QqIEMJbAyMaKB542eJ1c6U3gK+wYD2FqkR8J9k='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; connect-src 'self' https://api.ragnarokidle.app wss://api.ragnarokidle.app; media-src 'self' data: blob:; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover"><meta name="theme-color" content="#0a0f1d"><meta name="apple-mobile-web-app-capable" content="yes"><link rel="manifest" href="manifest.json"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png"><title>Aurevia Online · 曙光之境</title><link rel="apple-touch-icon" sizes="180x180" href="icon-180.png"><meta name="apple-mobile-web-app-title" content="曙光之境"><style>
 :root{--hud:1;--navy:#14244a;--navy2:#1f3a78;--gold:#c9a24a;--gold2:#e8c060;--paper:#f7f1e1;--ink:#1d2a4a}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}html,body{margin:0;height:100%;overflow:hidden;background:#000;font-family:"Noto Sans TC","Microsoft JhengHei","PingFang TC",sans-serif;color:var(--ink);user-select:none;-webkit-user-select:none;touch-action:none}
 #cv{position:fixed;inset:0;image-rendering:pixelated}button{font-family:inherit;cursor:pointer}input,select{font-family:inherit;user-select:text;-webkit-user-select:text}
@@ -1136,6 +1136,58 @@ img.hdic.hdi{object-fit:contain;image-rendering:auto}
 .r8drop span{flex:1;min-width:0}.r8drop small{color:var(--t3)}.r8drop b{color:var(--au2);font:700 13px Inter,sans-serif}
 .r8drop .goz{padding:5px 10px;border-radius:8px;background:rgba(90,169,255,.14);border:1px solid rgba(90,169,255,.45);color:#cfe6ff;font:600 12px 'Noto Sans TC',sans-serif;cursor:pointer}
 .pm.idle{filter:grayscale(1);opacity:.6}
+/* ===== 世界王（R11） ===== */
+.wb{display:flex;flex-direction:column;gap:8px;padding-bottom:12px}
+.wb-hero{display:flex;gap:10px;align-items:center;border-radius:14px;padding:10px;border-color:rgba(255,200,110,.45)}
+.wb-hero.live{border-color:rgba(255,120,80,.85);box-shadow:0 0 16px rgba(255,80,50,.25)}
+.wb-art{width:96px;height:96px;object-fit:contain;flex:none;border-radius:12px;background:radial-gradient(circle at 50% 60%,rgba(255,140,80,.25),rgba(0,0,0,.25) 70%)}
+.wb-art.q{display:grid;place-items:center;font:900 40px/1 serif;color:#e8c77a}
+.wb-hi{flex:1;min-width:0;display:flex;flex-direction:column;gap:6px}
+.wb-n{display:flex;flex-wrap:wrap;align-items:center;gap:4px}
+.wb-n b{font-size:16px;color:#ffe2a8;margin-right:4px}
+.wb-n .chip{font-size:10px;padding:2px 6px;border-radius:8px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);color:#cfd8ee}
+.wb-st{font-size:11.5px;color:#c9d3ea;line-height:1.4}
+.wb-st b{color:#fff}.wb .lv{color:#ff8a6a;font-weight:800}
+.wb .ok{color:#7dffa0;font-weight:800}.wb .ng,#wbHud .ng{color:#ff7a7a;font-weight:800}.wb .fx{color:#ffcf6a}
+.wb-bar{position:relative;height:14px;border-radius:8px;background:rgba(4,8,18,.85);border:1px solid rgba(255,200,110,.7);overflow:hidden}
+.wb-bar i{position:absolute;left:0;top:0;bottom:0;width:100%;background:linear-gradient(180deg,#ffb36a,#d02a2a);transition:width .3s}
+.wb-bar span{position:absolute;inset:0;display:grid;place-items:center;font:800 10px/1 sans-serif;color:#fff;text-shadow:0 0 2px #000,0 1px 2px #000}
+.wb-act{display:flex;gap:6px}.wb-act .i-btn{flex:1;padding:8px 0}
+.wb-act .i-btn[disabled]{filter:grayscale(.7) brightness(.75)}
+.wb-sec{border-radius:12px;padding:8px 10px}
+.wb-sec h4{margin:0 0 6px;font-size:13px;color:#e8c77a;display:flex;align-items:baseline;gap:6px;flex-wrap:wrap}
+.wb-sec h4 small{font-size:10.5px;color:#9aa6c4;font-weight:400}
+.wb table{width:100%;border-collapse:collapse;font-size:11.5px;color:#dfe6f5}
+.wb th{font-weight:600;color:#9aa6c4;text-align:left;padding:3px 4px;border-bottom:1px solid rgba(255,255,255,.1)}
+.wb td{padding:4px;border-bottom:1px solid rgba(255,255,255,.05);vertical-align:middle}
+.wb-rk td:first-child,.wb-rk th:first-child{width:22px;text-align:center;color:#ffd27a;font-weight:800}
+.wb-rk td:nth-child(3),.wb-rk td:nth-child(4),.wb-rk th:nth-child(3),.wb-rk th:nth-child(4){text-align:right;white-space:nowrap}
+.wb-rk td b{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:150px}
+.wb-rk td small{color:#8f9bb8;font-size:10px}
+.wb-rk tr.me td{background:rgba(255,210,120,.12)}
+.wb-rk .emp{text-align:center;color:#8f9bb8;padding:10px}
+.wb-me{font-size:11.5px;color:#cfd8ee;margin-top:6px}.wb-me b{color:#ffd27a}
+.wb-mech{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:5px}
+.wb-mech li{display:flex;gap:8px;font-size:11.5px;color:#cfd8ee;padding:5px 7px;border-radius:8px;background:rgba(255,255,255,.04);border:1px solid transparent}
+.wb-mech li b{flex:none;color:#ffcf6a;min-width:56px}
+.wb-mech li.on{border-color:rgba(255,120,80,.8);background:rgba(255,90,60,.14)}
+.wb-rw td:first-child{white-space:nowrap;color:#ffd27a;width:96px}
+.wb-note{font-size:11px;color:#8f9bb8;line-height:1.5;margin:0 4px}
+#wbHud{position:absolute;left:8px;right:8px;top:96px;z-index:3;pointer-events:auto;border-radius:10px;padding:3px 8px 4px;background:rgba(8,12,24,.8);border:1px solid rgba(255,190,110,.5);font:600 10.5px/1.3 sans-serif;color:#dfe6f5}
+#wbHud[hidden]{display:none}
+#wbHud .wh{display:flex;align-items:center;gap:7px;white-space:nowrap;overflow:hidden}
+#wbHud .wh .tm{color:#ffd27a;font-weight:800}
+#wbHud .wh .mr{color:#ffe2a8}
+#wbHud .wh .fx{color:#ffcf6a;overflow:hidden;text-overflow:ellipsis;min-width:0}
+#wbHud .wh button{margin-left:auto;flex:none;height:19px;padding:0 9px;border-radius:10px;border:1px solid rgba(255,255,255,.25);background:rgba(30,40,64,.9);color:#e8edfb!important;font:700 10.5px/1 sans-serif}
+#wbHud ol{list-style:none;margin:2px 0 0;padding:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0 8px}
+#wbHud ol:empty{display:none}
+#wbHud li{display:flex;gap:4px;align-items:center;min-width:0}
+#wbHud li i{font-style:normal;color:#ffd27a;font-weight:800}
+#wbHud li b{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:600}
+#wbHud li em{font-style:normal;color:#9fe8ff}
+#wbHud li.me b{color:#ffe2a8}
+@media(min-width:900px){#wbHud{left:16%;right:16%}}
 </style></head><body>
 <canvas id="cv"></canvas>
 <div id="hud" style="display:none">
@@ -2822,7 +2874,7 @@ const IDLE={on:false,tab:'hunt',sub:'field',mode:'battle',zones:null,stats:null,
   const T={push:['推圖','每個地區 10 關，第 10 關首領解鎖下一區；第 9 章起有職業首領關。'],chal:['挑戰','副本 DPS 競速與深淵塔。'],boss:['世界王','全服排程首領；群體增益影響最近 8 名玩家（轉生 ≥ 3：12 名）。']}[s];const LK=this.LOCK[s];
   return h+`<div class="i-card glass"><h4>${T[0]}<span class="i-soon">🔒 需 Base Lv ${LK[0]} · 製作中</span></h4><p>${T[1]}</p></div>`},
  // R8：主城與 NPC 移除；「功能」選單（已完成的直接開，未完成的顯示等級鎖＋製作中）
- LOCK:{store:[15,'倉庫'],appr:[25,'鑑定'],craft:[35,'製作'],push:[20,'推圖'],chal:[40,'挑戰'],boss:[50,'世界王']},
+ LOCK:{store:[15,'倉庫'],appr:[25,'鑑定'],craft:[35,'製作'],push:[20,'推圖'],chal:[40,'挑戰'],boss:[1,'世界王']},
  lockTxt(k){const L=this.LOCK[k];return L?'需 Base Lv '+L[0]+(G.me.blv>=L[0]?' · 製作中':'')+'':''},
  townHub(){const C=[['shop','商店','藥水、箭矢與補給','npc_shop','p_stall',{npc:'shop'}],['smith','鍛冶・精煉','精煉裝備、插入卡片','npc_smith','p_forge',{npc:'smith'}],['mkt','交易所','玩家買賣、鑽石兌換','npc_board','p_crates',{win:'market'}],
    ['appr','鑑定','鑑定未知裝備','p1/it_magnifier','p_lantern',{soon:1}],['store','倉庫','帳號共用倉庫','npc_store','p_crates',{soon:1}],['craft','製作','礦石與材料合成','p1/or_pliers','p_forge',{soon:1}]];
@@ -3123,6 +3175,64 @@ WINS.item.bind=function(b,o){const it=findIt(o.u);if(!it)return;const d=G.D.item
 WINS.idesc={title:'物品說明',w:380,html(o){const d=G.D.items[o.id];if(!d)return'<div class="empty">—</div>';return R8I.card(null,d,o)},bind(b,o){b.querySelectorAll('[data-a="cdx"]').forEach(x=>x.onclick=()=>R8I.cdxOpen(o.id))}};
 // 圖鑑：掉落來源可點「前往」（沿用 GOZ 解鎖檢查）；其他地方不再列掉落
 (()=>{const f0=P2C.idesc.bind(P2C);P2C.idesc=function(id,o){let h=f0(id,o);const dr=this.dropsOf(id);if(!dr.length)return h;const rows=dr.map(([m,p])=>{const k=Object.keys(G.D.mobs).find(x=>G.D.mobs[x]===m);const mp=k&&R8I.mapOf(k);const pc=p>=1?Math.round(p*100)/100+'%':(p*100<1?(p*100).toFixed(2):(p*100).toFixed(1))+'%';return`<div class="r8drop"><span>${esc(m.n)}<small> Lv${m.lv}${m.boss?' · 首領':''}</small></span><b>${pc}</b>${mp?`<button class="goz" data-goz="${mp}">前往 ›</button>`:''}</div>`}).join('');return h.replace(/<div class="p2d-r"><b>掉落<\/b>[\s\S]*?<\/div>(?=(<div class="p2d-r">|<\/div>$))/,`<div class="p2d-r r8dl"><b>掉落來源</b><div>${rows}</div></div>`)}})();
+
+// ===== 世界王（R11）：狩獵場 → 世界王 分頁、戰場 HUD（即時 DPS 排行）、整點公告 =====
+// 伺服器權威：用戶端只送 wbjoin／wbleave／wb（查詢），傷害、排名、獎勵全由伺服器計算
+const WBU={s:null,t:0,poll:0,
+ cv(k,d){const c=(G.D&&G.D.scaling&&G.D.scaling.curve)||{};return c[k]!=null?c[k]:d},
+ inArena(){return !!(G.map&&G.map.id==='wbarena')},
+ clock(ms){ms=Math.max(0,ms);const m=Math.floor(ms/60e3),s=Math.floor(ms%60e3/1000);return String(m).padStart(2,'0')+':'+String(s).padStart(2,'0')},
+ hhmm(t){const d=new Date(t);return String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0')},
+ off(){return this.s&&this.s.now?this.s.now-this._rcv:0},
+ now(){return Date.now()+(this.s?this.off():0)},
+ set(s){if(!s)return;this._rcv=Date.now();const o=this.s;if(o)for(const k of ['rewards','hist','failMul','minDmgPct'])if(s[k]==null&&o[k]!=null)s[k]=o[k];this.s=s;const key=[s.ph,s.id,(s.hist||[]).length,s.inArena,(s.rewards||[]).length].join('|');if(key!==this._key){const first=this._key==null;this._key=key;if(!first&&this.visible()){IDLE.panel();return}}this.upd()},
+ visible(){return typeof IDLE!=='undefined'&&IDLE.on&&IDLE.tab==='hunt'&&IDLE.sub==='boss'&&!!$('#wbBox')&&(IDLE.mode==='page'||!IDLE.mob())},
+ tickPoll(){if(this.visible()){if(Date.now()-this.poll>2000){this.poll=Date.now();req({op:'wb'}).then(r=>{if(r&&r.s)this.set(r.s)})}this.upd()}this.hud()},
+ eleN(e){return((G.D.elements||{})[e]||{}).n||e||''},raceN(r){return((G.D.races||{})[r]||{}).n||r||''},jobN(j){return(G.D.jobs[j]||{}).n||j||''},
+ itemsTxt(r){const a=[];if(r.zeny)a.push(fmt(r.zeny)+' G');if(r.dia)a.push(r.dia+' 💎');for(const [id,n] of r.items||[])a.push(esc((G.D.items[id]||{}).n||id)+'×'+n);return a.join('、')||'—'},
+ html(){const s=this.s;if(!s){if(Date.now()-this.poll>500){this.poll=Date.now();req({op:'wb'}).then(r=>{if(r&&r.s){this.set(r.s);if(this.visible()||IDLE.sub==='boss')IDLE.panel()}})}return'<div class="i-region">讀取世界王…</div>'}
+  const live=s.ph==='live',md=s.id&&G.D.mobs[s.id];const lv=this.cv('wbMinLv',1),low=G.me.blv<lv;
+  const art=s.id?`<img class="wb-art" ${HD.mobImgAttr(s.id)} alt="">`:`<div class="wb-art q">?</div>`;
+  const mech=(s.mech||[]).map(k=>{const m=(G.D.wbMech||{})[k]||{n:k,d:''};return`<li data-mk="${k}"><b>${esc(m.n)}</b><span>${esc(m.d)}</span></li>`}).join('');
+  const rw=(s.rewards||[]).map(r=>`<tr><td>${r.from===r.to?'第 '+r.from+' 名':r.to>=99999?'第 '+r.from+' 名以後':'第 '+r.from+'–'+r.to+' 名'}</td><td>${this.itemsTxt(r)}</td></tr>`).join('');
+  const hist=(s.hist||[]).slice().reverse().map(h=>`<tr><td>${this.hhmm(h.hour)}</td><td>${esc(h.n)}</td><td>${h.killed?'<span class="ok">討伐</span>':'<span class="ng">逃走</span>'}</td><td>${h.top&&h.top[0]?esc(h.top[0][1]):'—'}</td></tr>`).join('');
+  return`<div class="wb" id="wbBox">
+  <div class="wb-hero glass ${live?'live':''}">${art}<div class="wb-hi"><div class="wb-n"><b>${esc(live||s.ph==='done'?s.n:'下一隻世界王')}</b>${md?`<span class="chip">${esc(this.eleN(s.ele||md.ele))}屬性</span><span class="chip">${esc(this.raceN(md.race))}</span><span class="chip">Lv${md.lv}</span>`:''}</div>
+   <div class="wb-st" id="wbSt"></div><div class="wb-bar"><i id="wbHpF"></i><span id="wbHpT"></span></div>
+   <div class="wb-act">${this.inArena()?'<button class="i-btn" id="wbLeave">離開戰場</button><button class="i-btn g" data-t="battle" id="wbGo">回到戰鬥</button>':`<button class="i-btn g" id="wbJoin" ${live&&!low?'':'disabled'}>${low?'需要 Base Lv '+lv:live?'⚔ 立即參戰':'整點開放參戰'}</button>`}</div></div></div>
+  <div class="wb-sec glass"><h4>即時 DPS 排行<small id="wbJn"></small></h4><table class="wb-rk"><thead><tr><th>#</th><th>玩家</th><th>傷害</th><th>DPS</th></tr></thead><tbody id="wbRk"></tbody></table><div class="wb-me" id="wbMe"></div></div>
+  ${mech?`<div class="wb-sec glass"><h4>首領機制</h4><ul class="wb-mech">${mech}</ul></div>`:''}
+  <div class="wb-sec glass"><h4>傷害名次獎勵<small>擊殺 ×1、逃走 ×${s.failMul!=null?s.failMul:.3}・傷害需 ≥ 首領 HP ${((s.minDmgPct||0)*100).toFixed(2)}%</small></h4><table class="wb-rw">${rw}</table></div>
+  ${hist?`<div class="wb-sec glass"><h4>最近戰績</h4><table class="wb-hs"><thead><tr><th>時間</th><th>首領</th><th>結果</th><th>MVP</th></tr></thead><tbody>${hist}</tbody></table></div>`:''}
+  <p class="wb-note">每小時整點出現、戰鬥 ${Math.round(this.cv('wbFightMin',20))} 分鐘，全天 24 場。所有玩家同時參戰，人越多首領血越厚；傷害與排名由伺服器計算，結束後依名次寄送獎勵。</p></div>`},
+ bind(p){const j=p.querySelector('#wbJoin'),l=p.querySelector('#wbLeave'),g=p.querySelector('#wbGo');
+  if(j)j.onclick=()=>act({op:'wbjoin'}).then(r=>{if(r&&r.s)this.set(r.s);if(r&&!r.e)IDLE.battle()});
+  if(l)l.onclick=()=>act({op:'wbleave'}).then(r=>{if(r&&r.s)this.set(r.s);IDLE.panel()});
+  if(g)g.onclick=()=>IDLE.battle();this.upd()},
+ upd(){const s=this.s;if(!s||!$('#wbBox'))return;const t=this.now(),live=s.ph==='live';
+  const st=$('#wbSt');if(st){const fx=(s.fx||[]).map(k=>((G.D.wbMech||{})[k]||{n:k}).n);st.innerHTML=live?`<span class="lv">● 戰鬥中</span> 剩 <b>${this.clock(s.end-t)}</b>${s.enrage>t?' ・ 狂暴 '+this.clock(s.enrage-t):' ・ <span class="ng">狂暴中</span>'}${fx.length?' ・ <span class="fx">'+fx.map(esc).join('、')+'</span>':''}`:s.ph==='done'&&s.res?`${s.res.killed?'<span class="ok">已討伐</span>':'<span class="ng">已逃走</span>'} ・ 下一隻 ${this.hhmm(s.next)}（${this.clock(s.next-t)}）`:`下一隻 ${this.hhmm(s.next)} 整點出現 ・ 倒數 <b>${this.clock(s.next-t)}</b>`}
+  const f=$('#wbHpF'),ht=$('#wbHpT');if(f){const r=s.mhp?Math.max(0,Math.min(1,s.hp/s.mhp)):1;f.style.width=(r*100).toFixed(1)+'%';ht.textContent=s.mhp?fmt(s.hp)+' / '+fmt(s.mhp)+'（'+(r*100).toFixed(1)+'%）':'—'}
+  const rk=$('#wbRk');if(rk){const me=G.me.name;const top=(s.ph==='done'&&s.res?s.res.top:s.top)||[];rk.innerHTML=top.length?top.map(r=>`<tr class="${r[1]===me?'me':''}"><td>${r[0]}</td><td><b>${esc(r[1])}</b><small>${esc(this.jobN(r[4]))}</small></td><td>${fmt(r[2])}</td><td>${fmt(r[3])}</td></tr>`).join(''):'<tr><td colspan="4" class="emp">尚無傷害紀錄</td></tr>'}
+  const jn=$('#wbJn');if(jn)jn.textContent=s.joined?' 參戰 '+s.joined+' 人':'';
+  const mm=$('#wbMe');if(mm)mm.innerHTML=s.me?`我的名次 <b>#${s.me.rank}</b> ・ 傷害 ${fmt(s.me.dmg)} ・ DPS ${fmt(s.me.dps)}`:(live?'尚未造成傷害':'');
+  document.querySelectorAll('#wbBox .wb-mech li').forEach(li=>li.classList.toggle('on',(s.fx||[]).includes(li.dataset.mk)))},
+ // 戰場 HUD：放在戰鬥畫面下緣（不擋人物與首領；layout 會把安全區上移）
+ hud(){let h=$('#wbHud');const on=this.inArena()&&this.s&&typeof IDLE!=='undefined'&&IDLE.on;const bv=$('#iBv');if(!bv)return;
+  if(!h){h=document.createElement('div');h.id='wbHud';h.hidden=true;bv.appendChild(h);h.addEventListener('click',e=>{if(e.target.id==='wbHl')act({op:'wbleave'}).then(r=>{if(r&&r.s)this.set(r.s)})})}
+  if(!on){if(!h.hidden){h.hidden=true;IDLE.layout()}return}
+  const s=this.s,t=this.now(),me=G.me.name,live=s.ph==='live';const top=((s.ph==='done'&&s.res?s.res.top:s.top)||[]).slice(0,3);
+  const fx=(s.fx||[]).map(k=>((G.D.wbMech||{})[k]||{n:k}).n);
+  h.innerHTML=`<div class="wh"><span class="tm">${live?'⏱ '+this.clock(s.end-t):s.res&&s.res.killed?'🏆 已討伐':'⌛ 已結束'}</span>${live?(s.enrage>t?`<span>狂暴 ${this.clock(s.enrage-t)}</span>`:'<span class="ng">狂暴中</span>'):''}<span>${s.joined||0} 人</span>${s.me?`<span class="mr">我 #${s.me.rank}・${fmt(s.me.dps)}</span>`:''}${fx.length?`<span class="fx">${fx.map(esc).join('・')}</span>`:''}<button id="wbHl">離開</button></div><ol>${top.map(r=>`<li class="${r[1]===me?'me':''}"><i>${r[0]}</i><b>${esc(r[1])}</b><em>${fmt(r[3])}</em></li>`).join('')}</ol>`;
+  // 位置：首領血條卡（或上方狀態列）正下方；layout 會把我方陣型的安全區往下移，不會擋到人物
+  const bo=$('#iBoss'),an=bo&&!bo.hidden?bo:$('#iBv .bv-top');const y=Math.round(an.getBoundingClientRect().bottom-bv.getBoundingClientRect().top+4)+'px';
+  let chg=false;if(h.style.top!==y){h.style.top=y;chg=true}if(h.hidden){h.hidden=false;chg=true}if(chg||h.offsetHeight!==this._hh){this._hh=h.offsetHeight;IDLE.layout()}},
+ pkt(m){if(m.t==='wb'){this.set(m.s);this.hud();return 1}
+  if(m.t==='wbs'){const T={live:`⚔ 世界王「${m.n}」出現了！到 狩獵場 → 世界王 參戰`,soon:'⏰ 世界王將在 '+this.hhmm(m.at)+' 整點出現',done:m.killed?`🏆 世界王「${m.n}」已被討伐！獎勵已寄到信箱`:`世界王「${m.n}」已離開`,revive:`🔥 ${m.n} 涅槃復活！`}[m.ph];if(T){toast(T);if(typeof IDLE!=='undefined'&&IDLE.addTick)IDLE.addTick({t:T})}this.poll=0;return 1}return 0}};
+// 掛到放置介面：世界王分頁、等級鎖跟 GM 參數 wbMinLv
+(()=>{if(typeof IDLE==='undefined')return;const ph=IDLE.p_hunt,bd=IDLE.bind;
+ IDLE.p_hunt=function(){if(this.sub==='boss')return this.subTabs()+WBU.html();return ph.call(this)};
+ IDLE.bind=function(p){bd.call(this,p);if(this.sub==='boss'&&this.tab==='hunt')WBU.bind(p)};
+ setInterval(()=>{try{WBU.tickPoll()}catch(e){}},1000)})();
 
 // ===== HD 圖示（tools/slice_icons.js 切出 → hd/icons/<id>.webp；build 時把 index 打包成 window.HDICON）=====
 // 有圖就用圖；沒有的物品／技能自動沿用程式繪製的圖示。技能圖示外框（階段 1/2/3）照舊由 CSS 加上。
