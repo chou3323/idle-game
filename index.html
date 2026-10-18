@@ -1,4 +1,4 @@
-<!doctype html><html lang="zh-Hant"><head><meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-vDOB3QqIEMJbAyMaKB542eJ1c6U3gK+wYD2FqkR8J9k='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; connect-src 'self' https://api.ragnarokidle.app wss://api.ragnarokidle.app; media-src 'self' data: blob:; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover"><meta name="theme-color" content="#0a0f1d"><meta name="apple-mobile-web-app-capable" content="yes"><link rel="manifest" href="manifest.json"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png"><title>Aurevia Online · 曙光之境</title><link rel="apple-touch-icon" sizes="180x180" href="icon-180.png"><meta name="apple-mobile-web-app-title" content="曙光之境"><style>
+<!doctype html><html lang="zh-Hant"><head><meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-TB6s0YqYlJcQFVDFLjoay0iD/EjkFwD7DaDA6wjyZGA='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; connect-src 'self' https://api.ragnarokidle.app wss://api.ragnarokidle.app; media-src 'self' data: blob:; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover"><meta name="theme-color" content="#0a0f1d"><meta name="apple-mobile-web-app-capable" content="yes"><link rel="manifest" href="manifest.json"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png"><title>Aurevia Online · 曙光之境</title><link rel="apple-touch-icon" sizes="180x180" href="icon-180.png"><meta name="apple-mobile-web-app-title" content="曙光之境"><style>
 :root{--hud:1;--navy:#14244a;--navy2:#1f3a78;--gold:#c9a24a;--gold2:#e8c060;--paper:#f7f1e1;--ink:#1d2a4a}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}html,body{margin:0;height:100%;overflow:hidden;background:#000;font-family:"Noto Sans TC","Microsoft JhengHei","PingFang TC",sans-serif;color:var(--ink);user-select:none;-webkit-user-select:none;touch-action:none}
 #cv{position:fixed;inset:0;image-rendering:pixelated}button{font-family:inherit;cursor:pointer}input,select{font-family:inherit;user-select:text;-webkit-user-select:text}
@@ -1188,6 +1188,8 @@ img.hdic.hdi{object-fit:contain;image-rendering:auto}
 #wbHud li em{font-style:normal;color:#9fe8ff}
 #wbHud li.me b{color:#ffe2a8}
 @media(min-width:900px){#wbHud{left:16%;right:16%}}
+#iDps{flex:none;height:24px;display:flex;align-items:center;padding:0 9px;border-radius:12px;background:rgba(0,0,0,.45);border:1px solid rgba(255,255,255,.14);color:#9aa3b5;font:800 11.5px/1 sans-serif;font-variant-numeric:tabular-nums;white-space:nowrap}
+#iDps.on{color:#ffd36b;border-color:rgba(255,211,107,.45)}
 </style></head><body>
 <canvas id="cv"></canvas>
 <div id="hud" style="display:none">
@@ -1521,11 +1523,13 @@ const SET=Object.assign({},SETDEF,JSON.parse(localStorage.robSet||'{}'));const s
 const G={D:null,me:null,d:null,map:null,mapArt:null,P:{},M:{},fx:[],nums:[],labels:[],cam:{x:0,y:0},zoom:2,sel:null,rid:0,cb:{},shake:0,ping:0,fps:60,online:0,discon:0,lastDis:null,connAt:0};
 const API=(location.hostname==='localhost'||location.hostname==='127.0.0.1')?`ws://${location.host}/ws?rob=1`:'wss://api.ragnarokidle.app/ws?rob=1';
 let WS,CRED=null;
-function wsOpen(){return new Promise((res,rej)=>{if(WS&&WS.readyState===1)return res();try{WS&&WS.close()}catch(e){}WS=new WebSocket(API);WS.onmessage=e=>onMsg(JSON.parse(e.data));WS.onopen=()=>res();WS.onerror=()=>{};WS.onclose=()=>{if(!G.me)rej('無法連線')}})}
+function wsOpen(){return new Promise((res,rej)=>{if(WS&&WS.readyState===1)return res();try{WS&&WS.close()}catch(e){}WS=new WebSocket(API);WS.onmessage=e=>onMsg(JSON.parse(e.data));WS.onopen=()=>res();WS.onerror=()=>{};WS.onclose=()=>rej('無法連線')})}
+// 斷線重連：失敗就退避重試（2.5s→最多 15s），不再只試一次（R11b：世界王結算後分頁停在「戰鬥中」的原因）
+let RC=0;function reconn(){if(RC)return;RC=1;let n=0;const go=()=>{if(!CRED||!G.me){RC=0;return}if(WS&&WS.readyState===1&&G.connAt>(G.lastDis||0)){RC=0;return}connect(...CRED).then(()=>{RC=0;toast('已重新連線');try{if(window.WBU){WBU.poll=0;if(WBU.visible&&WBU.visible())IDLE.panel()}}catch(_){}}).catch(()=>{n++;setTimeout(go,Math.min(15000,2500*Math.pow(1.5,n)))})};setTimeout(go,2500)}
 function connect(name,pw){if(typeof name==='object')return connectAcc(name);CRED=[name,pw];return new Promise((res,rej)=>{WS=new WebSocket(API);WS.onopen=()=>req({op:'login',name,pw,guest:/^旅人/.test(name)?1:0}).then(r=>{if(r.e)rej(r.e);else{G.connAt=Date.now();res()}});WS.onmessage=e=>onMsg(JSON.parse(e.data));
- WS.onclose=e=>{if(G.me&&CRED&&e.code!==4000){G.discon++;G.lastDis=Date.now();toast('連線中斷，重新連線中…',1);setTimeout(()=>connect(...CRED).catch(()=>{}),2500)}else if(e.code===4000)toast('已在其他裝置登入',1);else rej('無法連線')};WS.onerror=()=>{}})}
+ WS.onclose=e=>{rej('無法連線');if(G.me&&CRED&&e.code!==4000){G.discon++;G.lastDis=Date.now();if(!RC)toast('連線中斷，重新連線中…',1);reconn()}else if(e.code===4000)toast('已在其他裝置登入',1)};WS.onerror=()=>{}})}
 async function connectAcc(c){CRED=[c];await wsOpen();const a=await req(c.tok?{op:'acct',tok:c.tok}:{op:'acct',acc:c.acc,pw:c.pw,guest:c.guest?1:0});if(a.e){if(a.expired){try{const o=JSON.parse(localStorage.robAcc||'null');if(o){delete o.tok;delete o.pw;localStorage.robAcc=JSON.stringify(o)}}catch(_){}CRED=null;toast('登入已過期，請重新登入',1);setTimeout(()=>location.reload(),1500)}throw a.e}if(a.tok){c.tok=a.tok;delete c.pw}const p=await req({op:'play',name:c.char});if(p.e)throw p.e;G.connAt=Date.now();
- WS.onclose=e=>{if(G.me&&CRED&&e.code!==4000){G.discon++;G.lastDis=Date.now();toast('連線中斷，重新連線中…',1);setTimeout(()=>connect(...CRED).catch(()=>{}),2500)}else if(e.code===4000)toast('已在其他裝置登入',1)}}
+ WS.onclose=e=>{if(G.me&&CRED&&e.code!==4000){G.discon++;G.lastDis=Date.now();if(!RC)toast('連線中斷，重新連線中…',1);reconn()}else if(e.code===4000)toast('已在其他裝置登入',1)}}
 function req(o){return new Promise(r=>{o.id=++G.rid;G.cb[o.id]=r;if(!WS||WS.readyState!==1)return r({e:'未連線'});WS.send(JSON.stringify(o));setTimeout(()=>{if(G.cb[o.id]){delete G.cb[o.id];r({e:'逾時'})}},8000)})}
 function send(o){if(WS&&WS.readyState===1)WS.send(JSON.stringify(o))}
 const PEND={};async function act(o){const key=o.op+(o.u||'')+(o.i||'')+(o.k||'');if(PEND[key])return{e:'busy'};PEND[key]=1;try{const r=await req(o);if(r.e&&r.e!=='busy')toast(r.e,1);if(r.toast)toast(r.toast);return r}finally{delete PEND[key]}}
@@ -1987,7 +1991,8 @@ const HD={on:SET.hd!==0,img:{},ok:{},T:32,
   for(let i=0;i<a.length;i+=4){if(!a[i+3])continue;let r=a[i],g=a[i+1],b=a[i+2];let R=M[0]*r+M[1]*g+M[2]*b,G2=M[3]*r+M[4]*g+M[5]*b,B2=M[6]*r+M[7]*g+M[8]*b;const L=.2126*R+.7152*G2+.0722*B2;R=(L+(R-L)*S)*B;G2=(L+(G2-L)*S)*B;B2=(L+(B2-L)*S)*B;a[i]=R;a[i+1]=G2;a[i+2]=B2}
   x.putImageData(d,0,0);return this.tintC[k]=c},
  CH:{nov:'ch_nov',kni:'ch_kni',arc:'ch_arc',rgr:'ch_rgr',acl:'ch_acl',thf:'ch_thf',mer:'ch_mer',msw:'ch_msw',hsn:'ch_hsn',smg:'ch_smg',mnk:'ch_mnk',brd:'ch_brd',lnc:'ch_lnc'},
- MOB:{crab:['mob_crab',15],frog:['mob_frog',24],wisp:['mob_wisp',26],kingcrab:['mob_kingcrab',54],leaf:['mob_leaf',26],mossmush:['mob_mossmush',26],bee:['mob_bee',24],bunny:['mob_bunny',26],yeti:['mob_yeti',28],icewolf:['mob_icewolf',26],scorpion:['mob_scorpion',24],cactus:['mob_cactus',30],treant:['mob_treant',34],spore:['mob_spore',28],firelizard:['mob_firelizard',24],fox:['mob_fox',26],icegolem:['mob_icegolem',34],magma:['mob_magma',24],skeleton:['mob_skeleton',32],beetle:['mob_beetle',24],stag:['mob_stag',40],frostgiant:['mob_frostgiant',42],pharaoh:['mob_pharaoh',38],dragon:['mob_dragon',40],griffin:['mob_griffin',40],vampire:['mob_vampire',40]},
+ MOB:{crab:['mob_crab',15],frog:['mob_frog',24],wisp:['mob_wisp',26],kingcrab:['mob_kingcrab',54],leaf:['mob_leaf',26],mossmush:['mob_mossmush',26],bee:['mob_bee',24],bunny:['mob_bunny',26],yeti:['mob_yeti',28],icewolf:['mob_icewolf',26],scorpion:['mob_scorpion',24],cactus:['mob_cactus',30],treant:['mob_treant',34],spore:['mob_spore',28],firelizard:['mob_firelizard',24],fox:['mob_fox',26],icegolem:['mob_icegolem',34],magma:['mob_magma',24],skeleton:['mob_skeleton',32],beetle:['mob_beetle',24],stag:['mob_stag',40],frostgiant:['mob_frostgiant',42],pharaoh:['mob_pharaoh',38],dragon:['mob_dragon',40],griffin:['mob_griffin',40],vampire:['mob_vampire',40],
+  /* 世界王專屬美術（26 張，透明底、朝左；不套色相） */wb_inferno:['mob_wb_inferno',42],wb_ashwyrm:['mob_wb_ashwyrm',42],wb_thunder:['mob_wb_thunder',42],wb_nightking:['mob_wb_nightking',42],wb_starcolossus:['mob_wb_starcolossus',42],wb_frostgiant:['mob_wb_frostgiant',42],wb_pharaoh:['mob_wb_pharaoh',42],wb_rootstag:['mob_wb_rootstag',42],wb_abysscrab:['mob_wb_abysscrab',42],wb_elderoak:['mob_wb_elderoak',42],wb_lichbone:['mob_wb_lichbone',42],wb_snowtyrant:['mob_wb_snowtyrant',42],wb_dunescorp:['mob_wb_dunescorp',42],wb_holyseraph:['mob_wb_holyseraph',42],wb_voidmind:['mob_wb_voidmind',42],wb_plaguequeen:['mob_wb_plaguequeen',42],wb_magmaheart:['mob_wb_magmaheart',42],wb_stormserpent:['mob_wb_stormserpent',42],wb_mirrorqueen:['mob_wb_mirrorqueen',42],wb_bloodcount:['mob_wb_bloodcount',42],wb_ironwarden:['mob_wb_ironwarden',42],wb_wraithfox:['mob_wb_wraithfox',42],wb_sunphoenix:['mob_wb_sunphoenix',42],wb_chaosdragon:['mob_wb_chaosdragon',42],wb_timewyrm:['mob_wb_timewyrm',42],wb_earthtitan:['mob_wb_earthtitan',42]},
  IC:['stat','skill','equip','market','lore','world','bag','autobs','premium','more','quest','codex','party','guild','mail','settings'],
  load(n,tr){if(this.img[n]&&!tr)return this.img[n];const im=new Image();const retry=()=>{const k=(tr||0)+1;if(k>6)return;setTimeout(()=>{this.load(n,k)},Math.min(8000,600*2**k))};
   im.onload=()=>{const fin=()=>{if(/^(mob|ch|npc)_/.test(n)){// 角色/怪物：預先點陣化成 canvas（避免 iOS Safari 丟棄解碼圖導致畫不出來），並驗證不是空白
@@ -2044,7 +2049,7 @@ const HD={on:SET.hd!==0,img:{},ok:{},T:32,
   c.imageSmoothingEnabled=true;c.imageSmoothingQuality='high';c.drawImage(im,-w/2,-h-bob,w,h);
   if(cast){c.globalCompositeOperation='lighter';c.globalAlpha=.25+.15*Math.sin(now/80);c.drawImage(im,-w/2,-h-bob,w,h)}
   c.restore();return true},
- mob(c,k,x,y,s,boss,o){const md=(G.D&&G.D.mobs[k])||{};const bk=this.MOB[k]?k:md.spr;const m=this.MOB[bk];if(!m)return false;if(!this.ready(m[0])){this.load(m[0]);return false}const im=md.hue?this.tint(m[0],[md.hue,1.1,1]):this.img[m[0]];const h=this.uh(k,m[1])*s;k=bk;const now=performance.now();const w=h*im.width/im.height;const ph=now/(k==='wisp'||k==='bee'||k==='griffin'?400:150)+(o&&o.id?(typeof o.id==="number"?o.id:String(o.id).split("").reduce((a,ch)=>a+ch.charCodeAt(0),0)):0)%7;
+ mob(c,k,x,y,s,boss,o){const md=(G.D&&G.D.mobs[k])||{};const bk=this.MOB[k]?k:md.spr;const m=this.MOB[bk];if(!m)return false;if(!this.ready(m[0])){this.load(m[0]);return false}const im=md.hue&&!this.MOB[k]?this.tint(m[0],[md.hue,1.1,1]):this.img[m[0]];const h=this.uh(k,m[1])*s;k=bk;const now=performance.now();const w=h*im.width/im.height;const ph=now/(k==='wisp'||k==='bee'||k==='griffin'?400:150)+(o&&o.id?(typeof o.id==="number"?o.id:String(o.id).split("").reduce((a,ch)=>a+ch.charCodeAt(0),0)):0)%7;
   const mv=o&&o.moving;const fl=k==='wisp'||k==='bee'||k==='griffin';const bob=fl?(4+Math.sin(ph)*2.5)*s:mv?Math.abs(Math.sin(ph))*1.6*s:0;const sq=fl?1:1+Math.sin(now/(mv?90:420)+(o?o.x:0))*(mv?.05:.025);
   c.fillStyle='rgba(0,0,0,.3)';c.beginPath();c.ellipse(x,y-s*.5,w*(fl?.22:.36),s*(boss?4:2.2),0,0,7);c.fill();
   c.save();c.translate(x,y);{const nf=(this.MBF[k]||'L')==='R';const wantL=(typeof G!=='undefined'&&G.idleArena)?true:!(o&&o.flip);if(nf===wantL)c.scale(-1,1)}if(mv&&!fl)c.rotate(Math.sin(ph)*.05);c.scale(1/sq,sq);c.imageSmoothingEnabled=true;c.imageSmoothingQuality='high';if(fl)c.globalAlpha*=.92;c.drawImage(im,-w/2,-h-bob,w,h);c.restore();return true},
@@ -2071,12 +2076,12 @@ Object.assign(HD,{_w:{},
  mobName(k){const m=this.MOB[this.mobKey(k)];return m?m[0]:null},
  faceFlip(k){return (this.MBF[this.mobKey(k)]||'L')==='R'},// 怪物 UI 圖一律朝左；原生朝右的（如 dragon）需水平翻轉
  _tu:{},
- mobURL(k){const n=this.mobName(k)||('mob_'+k);const md=(typeof G!=='undefined'&&G.D&&G.D.mobs[k])||{};if(md.hue&&this.on){if(this.ready(n)){const key=n+'|'+md.hue;if(!this._tu[key]){try{const c=this.tint(n,[md.hue,1.1,1]);this._tu[key]=c.toDataURL('image/webp')}catch(e){return 'hd/'+n+'.webp'}}return this._tu[key]}this.load(n)}return 'hd/'+n+'.webp'},
+ mobURL(k){const n=this.mobName(k)||('mob_'+k);const md=(typeof G!=='undefined'&&G.D&&G.D.mobs[k])||{};if(md.hue&&!this.MOB[k]&&this.on){if(this.ready(n)){const key=n+'|'+md.hue;if(!this._tu[key]){try{const c=this.tint(n,[md.hue,1.1,1]);this._tu[key]=c.toDataURL('image/webp')}catch(e){return 'hd/'+n+'.webp'}}return this._tu[key]}this.load(n)}return 'hd/'+n+'.webp'},
  // <img> 用：src＋data-hm（載好後自動換成染色版）＋朝向
  mobImgAttr(k){return `src="${this.mobURL(k)}" data-hm="${k}"${this.faceFlip(k)?' class="hdflip"':''}`},
  pic(c,kind,key,fb){if(!c)return false;if(c._cw==null){c._cw=c.width;c._ch=c.height}const W=c._cw,H=c._ch;
   let n=null,md={};if(kind==='mob'){md=(typeof G!=='undefined'&&G.D&&G.D.mobs[key])||{};n=this.mobName(key)}else n=this.CH[key]||null;
-  if(this.on&&n&&this.ready(n)){const im0=this.img[n];const im=kind==='mob'&&md.hue?this.tint(n,[md.hue,1.1,1]):im0;const iw=im.naturalWidth||im.width,ih=im.naturalHeight||im.height;if(!iw||!ih)return false;
+  if(this.on&&n&&this.ready(n)){const im0=this.img[n];const im=kind==='mob'&&md.hue&&!this.MOB[key]?this.tint(n,[md.hue,1.1,1]):im0;const iw=im.naturalWidth||im.width,ih=im.naturalHeight||im.height;if(!iw||!ih)return false;
    if(!c.style.width&&(c.clientWidth===W||!c.clientWidth)){c.style.width=W+'px';c.style.height=H+'px'}
    const R=Math.max(3,Math.ceil((window.devicePixelRatio||1)*2));c.width=Math.round(W*R);c.height=Math.round(H*R);c.style.imageRendering='auto';const x=c.getContext('2d');x.setTransform(R,0,0,R,0,0);x.clearRect(0,0,W,H);
    const sc=Math.min(H*.92/ih,W*.96/iw),dw=iw*sc,dh=ih*sc,cx=W/2,by=H*.97;
@@ -3233,6 +3238,13 @@ const WBU={s:null,t:0,poll:0,
  IDLE.p_hunt=function(){if(this.sub==='boss')return this.subTabs()+WBU.html();return ph.call(this)};
  IDLE.bind=function(p){bd.call(this,p);if(this.sub==='boss'&&this.tab==='hunt')WBU.bind(p)};
  setInterval(()=>{try{WBU.tickPoll()}catch(e){}},1000)})();
+
+// R11b：戰鬥畫面顯示自己的即時 DPS（最近 10 秒自己造成的傷害；戰鬥畫面底列）
+const DPSM={L:[],add(v){if(v>0)this.L.push([performance.now(),v])},val(){const t=performance.now();while(this.L.length&&t-this.L[0][0]>10000)this.L.shift();if(!this.L.length)return 0;const span=Math.max(3000,t-this.L[0][0]);return this.L.reduce((a,x)=>a+x[1],0)/(span/1000)},
+ fmt(v){return v>=1e6?(v/1e6).toFixed(2)+'M':v>=1e4?(v/1e3).toFixed(1)+'K':String(Math.round(v))}};
+(function(){const f=FXev;FXev=window.FXev=function(e){try{if(e&&e.t==='hit'&&G.me&&e.src===G.me.name&&e.hits)DPSM.add(e.hits.reduce((a,b)=>a+(+b||0),0))}catch(_){}return f.apply(this,arguments)}})();
+/* 放在戰鬥畫面底列（目標資訊左側）；狀態列中間會被底部大按鈕蓋住 */
+setInterval(()=>{const tg=document.getElementById('iTgt');if(!tg)return;let s=document.getElementById('iDps');if(!s||s.parentNode!==tg.parentNode){if(s)s.remove();s=document.createElement('span');s.id='iDps';s.title='最近 10 秒的每秒傷害';tg.parentNode.insertBefore(s,tg)}const v=DPSM.val();s.textContent='DPS '+DPSM.fmt(v);s.classList.toggle('on',v>0)},500);
 
 // ===== HD 圖示（tools/slice_icons.js 切出 → hd/icons/<id>.webp；build 時把 index 打包成 window.HDICON）=====
 // 有圖就用圖；沒有的物品／技能自動沿用程式繪製的圖示。技能圖示外框（階段 1/2/3）照舊由 CSS 加上。
