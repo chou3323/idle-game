@@ -1,4 +1,4 @@
-<!doctype html><html lang="zh-Hant"><head><meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-yebsS7592sK87antUeunS8OFwUdNu+aStsbTp9oF1uQ='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; connect-src 'self' https://api.ragnarokidle.app wss://api.ragnarokidle.app; media-src 'self' data: blob:; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover"><meta name="theme-color" content="#0a0f1d"><meta name="apple-mobile-web-app-capable" content="yes"><link rel="manifest" href="manifest.json"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png"><title>Aurevia Online · 曙光之境</title><link rel="apple-touch-icon" sizes="180x180" href="icon-180.png"><meta name="apple-mobile-web-app-title" content="曙光之境"><style>
+<!doctype html><html lang="zh-Hant"><head><meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-pKl3OiCzgPdGxqT/YSkd05M09bP1rYzIiPA61YlSbAw='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; connect-src 'self' https://api.ragnarokidle.app wss://api.ragnarokidle.app; media-src 'self' data: blob:; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover"><meta name="theme-color" content="#0a0f1d"><meta name="apple-mobile-web-app-capable" content="yes"><link rel="manifest" href="manifest.json"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png"><title>Aurevia Online · 曙光之境</title><link rel="apple-touch-icon" sizes="180x180" href="icon-180.png"><meta name="apple-mobile-web-app-title" content="曙光之境"><style>
 :root{--hud:1;--navy:#14244a;--navy2:#1f3a78;--gold:#c9a24a;--gold2:#e8c060;--paper:#f7f1e1;--ink:#1d2a4a}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}html,body{margin:0;height:100%;overflow:hidden;background:#000;font-family:"Noto Sans TC","Microsoft JhengHei","PingFang TC",sans-serif;color:var(--ink);user-select:none;-webkit-user-select:none;touch-action:none}
 #cv{position:fixed;inset:0;image-rendering:pixelated}button{font-family:inherit;cursor:pointer}input,select{font-family:inherit;user-select:text;-webkit-user-select:text}
@@ -1016,6 +1016,13 @@ body.idle .win .tab,body.idle .win .i-tab{min-height:30px;padding:5px 12px!impor
 body.idle .win .tab.on,body.idle .win .i-tab.on{background:rgba(232,195,106,.16)!important;border-color:#e8c36a!important;color:#ffe3a0!important}
 
 .cgen{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin:6px 0}.cgen span{font-size:12px;color:#b9c4dc}.cgen button{padding:4px 14px;border-radius:8px;border:1px solid rgba(255,255,255,.25);background:rgba(255,255,255,.06);color:inherit}.cgen button.on{border-color:#e8c36a;background:rgba(232,195,106,.18)}.cgen small{flex-basis:100%;font-size:11px;color:#8f9bb5}
+/* B6 #20c 跑馬燈：預設靜止置左；超出才來回捲動 */
+.i-tick .mq{padding-left:0;animation:none}
+.i-tick .mq.mqs{animation:imq2 var(--mqd,10s) ease-in-out infinite alternate}
+@keyframes imq2{0%,15%{transform:translateX(0)}85%,100%{transform:translateX(var(--mqx,0))}}
+/* B6 #20d 掉落提示：移到戰場左上（血條下），不壓住右下的按鈕與設定 */
+html body.idle.idle #loots,.v6 body.idle.idle #loots{right:auto!important;left:10px!important;bottom:auto!important;top:calc(env(safe-area-inset-top,0px) + 250px)!important;align-items:flex-start;pointer-events:none}
+body.idle #loots .lootb{font-size:12px;padding:3px 10px;opacity:.92}
 .p2{display:flex;flex-direction:column;gap:10px;min-width:0}
 .p2 small{opacity:.78}
 .p2-barw{background:rgba(10,16,32,.55);border:1px solid rgba(232,195,106,.35);border-radius:12px;padding:8px}
@@ -1216,6 +1223,30 @@ body.idle.im-battle .bv-ctl{margin-bottom:44px}
 .sth{cursor:pointer}.sthi{font-style:normal;font-size:11px;opacity:.6;margin-left:2px}
 .stpop{position:fixed;z-index:9000;width:260px;padding:10px 12px;border-radius:12px;background:rgba(18,26,44,.97);border:1px solid rgba(140,180,255,.35);font-size:13px;line-height:1.5;color:#e6ecf8;box-shadow:0 8px 24px rgba(0,0,0,.5)}
 .stpop b{display:block;color:#ffe2a0;margin-bottom:2px}
+/* B6 #23a 世界王提醒 */
+.wb-auto{display:flex;gap:8px;align-items:center;margin-top:8px;font-size:13px;color:#cfd8ea}.wb-auto input{width:20px;height:20px}
+.wb-how{margin-top:6px;font-size:12px;color:#9fb3d6;line-height:1.5}
+.wb-banner{position:fixed;left:10px;right:10px;top:calc(env(safe-area-inset-top,0px) + 118px);z-index:8500;display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:14px;background:linear-gradient(90deg,#4a1010,#7a2a10);border:1px solid #ffb35a;box-shadow:0 6px 20px rgba(0,0,0,.5);color:#fff;font-size:14px;animation:wbbIn .25s ease-out}
+.wb-banner.soon{background:linear-gradient(90deg,#1c2a4a,#2b3f6a);border-color:#7fb0ff}.wb-banner b{flex:1}.wb-banner .i-btn{min-height:40px;padding:0 14px}.wbb-x{background:none;border:0;color:#fff;font-size:18px;min-width:40px;min-height:40px}
+@keyframes wbbIn{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:none}}
+/* B6 #20b 戰鬥浮動選單 */
+.n2-fab{position:fixed;right:10px;z-index:40}.n2-fab[hidden]{display:none}
+.n2-fab button{width:48px;height:48px;border-radius:50%;border:1px solid rgba(255,215,140,.45);background:rgba(20,22,28,.85);color:#FFE2A0;display:flex;flex-direction:column;align-items:center;justify-content:center;backdrop-filter:blur(4px);box-shadow:0 4px 12px rgba(0,0,0,.4)}
+.n2-fab i{font-style:normal;font-size:18px;line-height:1}.n2-fab small{font-size:10px;line-height:1.1}
+.n2-fabl{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:4px 0 8px}.n2-fabl button{min-height:52px;border-radius:12px;border:1px solid rgba(255,215,140,.25);background:rgba(255,255,255,.05);color:#E8ECF5;font-size:15px}
+/* B6 #28 技能唱名 */
+.callout{position:fixed;left:0;top:0;z-index:35;pointer-events:none;white-space:nowrap;font-weight:900;font-size:17px;color:#fff3c4;-webkit-text-stroke:3px #3a1a00;paint-order:stroke fill;text-shadow:0 2px 6px rgba(0,0,0,.6);will-change:transform,opacity}
+.callout.proc{font-size:13px;color:#8ff3ff;-webkit-text-stroke:2.5px #062a3a}
+.callout.ot{font-size:12px;opacity:.85}.callout.ot.proc{font-size:11px}
+/* B6 #27 頭像選單 */
+.avc{display:flex;gap:12px;align-items:center;padding:10px;border-radius:14px;background:linear-gradient(135deg,rgba(255,215,130,.14),rgba(255,255,255,.04));margin-bottom:10px}
+.avc img{width:64px;height:64px;object-fit:contain;border-radius:12px;background:rgba(0,0,0,.25)}
+.avci{display:flex;flex-direction:column;gap:2px;min-width:0}.avci b{font-size:17px}.avci small{opacity:.8}.avci em{font-style:normal;color:#ffd77a;font-weight:800}
+.avid{align-self:flex-start;margin-top:4px;font-size:12px;padding:3px 8px;border-radius:8px;border:1px solid rgba(255,255,255,.2);background:rgba(0,0,0,.25);color:inherit}.avid span{color:#8fd3ff;margin-left:4px}
+.avs{margin:8px 0}.avs h4{margin:0 0 4px 4px;font-size:12px;opacity:.6;font-weight:600}
+.avr{display:flex;align-items:center;gap:10px;width:100%;min-height:46px;padding:8px 12px;border:0;border-radius:10px;background:rgba(255,255,255,.05);color:inherit;margin-bottom:4px;text-align:left}
+.avr span{font-size:18px}.avr b{font-weight:600}.avr small{margin-left:auto;opacity:.55;font-size:11px}.avr i{font-style:normal;opacity:.4;margin-left:6px}.avr small+i{margin-left:6px}.avr b+i{margin-left:auto}
+.avr.red b{color:#ff8b8b}.avsup p{margin:6px 0;line-height:1.5}
 .rb-c{display:flex;flex-direction:column;gap:8px;min-width:0}
 .rb-h{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.rb-h h4{margin:0}
 .rb-badge{font:800 11px/18px sans-serif;padding:0 8px;border-radius:9px;border:1px solid var(--c);color:var(--c);background:rgba(0,0,0,.25)}
@@ -1647,17 +1678,26 @@ const SFX=(()=>{let ac=null,on=localStorage.robSnd!=='0',last={},bus=null,mst=nu
   click:()=>tone(700,600,.03,'square',.04),die:()=>{tone(300,60,.35,'sawtooth',.08);noise(.3,.12,'lowpass',800,150,.7)},
   mobdie:()=>{noise(.2,.18,'bandpass',J(900),300,1);tone(J(400),120,.18,'triangle',.06)},
   refineOk:()=>[660,880,1320].forEach((f,i)=>tone(f,f,.15,'triangle',.12,i*.07)),refineFail:()=>{noise(.25,.3,'lowpass',1200,200,.7);tone(200,50,.4,'sawtooth',.1)}};
+ // B6 #26c：高攻速用「只有打擊、沒有揮空氣流」的版本，以打擊音為主
+ REG.hit_slash_i=()=>{noise(.05,.32,'bandpass',J(2600),900,1.2);body(170,.55,.09);tone(J(3200),1800,.03,'square',.03)};REG.hit_heavy_i=()=>{noise(.09,.4,'lowpass',J(1800),300,.8);body(110,.75,.16);tone(70,40,.18,'triangle',.3)};REG.hit_pierce_i=()=>{noise(.035,.35,'highpass',J(2400),2400,.7);body(210,.4,.07)};
  REG.hit=REG.hit_slash;REG.arrow=REG.bow;REG.magic=REG.missile_hit;
- return{REG,play(id){if(!on||!REG[id])return;const n=performance.now();if(n-(last[id]||0)<30)return;last[id]=n;try{A();if(ac&&ac.state==='suspended')ac.resume();REG[id]()}catch(e){}},
+ // B6 #26：RO 式預先算好的音效池——每種音效第一次用到（或解鎖後背景預載）就用 OfflineAudioContext 算成 AudioBuffer，之後命中當下直接播放 buffer（零合成延遲、節點少）；
+ //  同一音效 45ms 內再命中合併成一次（音量略增）；同時最多 8 個聲部，超過丟掉最舊的
+ const BUF={},RND={},VO=[];const HOT=['hit_slash_i','hit_heavy_i','hit_pierce_i','hit_slash','hit_heavy','hit_blunt','hit_pierce','hit_punch','arrow_hit','crit','miss','hurt','missile_hit','fire_hit','ice_hit','bow','loot','mobdie'];
+ function render(id){if(BUF[id]||RND[id]||!REG[id])return;const OC=window.OfflineAudioContext||window.webkitOfflineAudioContext;if(!OC||!A())return;RND[id]=1;try{const sr=ac.sampleRate,oc=new OC(1,Math.ceil(sr*.7),sr);const sa=ac,sb=bus;const g=oc.createGain();g.gain.value=1;g.connect(oc.destination);ac=oc;bus=g;try{REG[id]()}finally{ac=sa;bus=sb}const pr=oc.startRendering();const done=b=>{BUF[id]=b;RND[id]=0};if(pr&&pr.then)pr.then(done).catch(()=>{RND[id]=0});else oc.oncomplete=e=>done(e.renderedBuffer)}catch(e){RND[id]=0}}
+ function playBuf(id,k){const b=BUF[id];const src=ac.createBufferSource();src.buffer=b;src.playbackRate.value=1+(Math.random()*2-1)*.05;const g=ac.createGain();g.gain.value=Math.min(1.6,k);src.connect(g).connect(bus);src.start();src._id=id;VO.push(src);src.onended=()=>{const i=VO.indexOf(src);if(i>=0)VO.splice(i,1)};const same=VO.filter(v=>v._id===id);if(same.length>4){const o=same[0];VO.splice(VO.indexOf(o),1);try{o.stop()}catch(e){}}while(VO.length>10){const o=VO.shift();try{o.stop()}catch(e){}}}
+ let pre=0;const preload=()=>{if(pre||!ac)return;pre=1;let i=0;const step=()=>{if(i<HOT.length){render(HOT[i++]);setTimeout(step,30)}};step()};
+ return{REG,BUF,play(id){if(!on||!REG[id])return;const n=performance.now();const L=last[id]||0;if(id!=='crit'&&n-(last.crit||0)<50)return;/* 50ms 內已有爆擊聲就不再出一般打擊聲（爆擊優先） */if(n-L<50){last['k'+id]=(last['k'+id]||1)+.25;return}const k=n-L<200?(last['k'+id]||1):1;last['k'+id]=1;last[id]=n;try{A();if(ac&&ac.state==='suspended')ac.resume();preload();if(BUF[id])playBuf(id,k);else{REG[id]();render(id)}}catch(e){}},
   get on(){return on},set(v){on=v;localStorage.robSnd=v?'1':'0';if(v)A()&&ac.resume()},
   get vol(){return vol},setVol(v){vol=Math.max(0,Math.min(1,+v));localStorage.robVolSfx=vol;if(bus)bus.gain.value=vol},
   get mvol(){return mvol},setMaster(v){mvol=Math.max(0,Math.min(1,+v));localStorage.robVolMaster=mvol;if(mst)mst.gain.value=mvol},
+  _vo(id){return id?VO.filter(v=>v._id===id).length:VO.length},
   unlock(){A()&&ac.resume&&ac.resume()}}})();
 
 // v4：沒有轉職（params.noJobChange=1）→ 隱藏 Job 等級／Job EXP／轉職 NPC 與視窗
 function NOJOB(){return !!(G.D&&G.D.params&&G.D.params.noJobChange)}
 // ===== 網路 / 世界渲染 / 輸入 / 特效（設定由 SET 驅動）=====
-const SETDEF={fps:60,blackout:0,daynight:1,fx:'all',shake:1,smooth:1,others:'all',nameFrame:'full',alwaysNames:1,hud:100,joy:1,btns:1,joyOp:55,dragAim:1,card:1,focus:1,dmg:'all',dmgFont:'pixel',mobBuffs:1,lootBanner:1,floatExp:1,cardPopup:1};
+const SETDEF={fps:60,blackout:0,daynight:1,fx:'all',shake:1,smooth:1,others:'all',nameFrame:'full',alwaysNames:1,hud:100,joy:1,btns:1,joyOp:55,dragAim:1,card:1,focus:1,dmg:'all',dmgFont:'pixel',mobBuffs:1,lootBanner:1,floatExp:1,cardPopup:1,sysNotify:1,callout:'all'};
 const SET=Object.assign({},SETDEF,JSON.parse(localStorage.robSet||'{}'));const saveSet=()=>{localStorage.robSet=JSON.stringify(SET);UI&&UI.applySet&&UI.applySet()};
 const G={D:null,me:null,d:null,map:null,mapArt:null,P:{},M:{},fx:[],nums:[],labels:[],cam:{x:0,y:0},zoom:2,sel:null,rid:0,cb:{},shake:0,ping:0,fps:60,online:0,discon:0,lastDis:null,connAt:0};
 const API=(location.hostname==='localhost'||location.hostname==='127.0.0.1')?`ws://${location.host}/ws?rob=1`:'wss://api.ragnarokidle.app/ws?rob=1';
@@ -1709,7 +1749,7 @@ function FXev(e){const me=G.me&&G.me.name;const D=G.D;
  if(e.t==='qf'){G.qf=e.k;UI.qfShow&&UI.qfShow();if(!e.k)toast(e.why==='auto'?t('已切換為一般自動狩獵（打最近的怪）'):e.why==='manual'?t('手動移動，已取消任務自動'):e.why==='done'?t('任務自動完成'):t('已取消任務自動'));else toast(t('接下任務')+'：'+G.D.quests[e.k].n);return}
  if(e.t==='hit'){const m=G.M[e.tgt];if(m){m.hp=e.hp;m.hitT=performance.now();m.flash=1}const src=G.P[e.src];if(src&&m)src.flip=m.x<src.x?1:0;if(src)src.atkT=performance.now();
   const mine=e.src===me;const sk=e.sk&&D.skills[e.sk];const fxOn=SET.fx==='all'||(SET.fx==='mine'&&mine);
-  if(m){if(e.cr&&fxOn){G.fx.push({k:'burst',x:m.x,y:m.y,t:0,life:.45});if(mine&&SET.shake)G.shake=.12}if(sk){G.labels.push({x:src?src.x:m.x,y:src?src.y:m.y,text:sk.n+'!!',t:0,life:.9,ic:sk.icon});if(fxOn)G.fx.push({k:sk.fx||'slash',x:m.x,y:m.y,sx:src&&src.x,sy:src&&src.y,t:0,life:.5})}else if(fxOn){if(e.rng&&src)G.fx.push({k:'arrow',x:m.x,y:m.y,sx:src.x,sy:src.y,t:0,life:.18});else G.fx.push({k:'spark',x:m.x,y:m.y,t:0,life:.35,sd:Math.random()*99});G.fx.push({k:'slash',x:m.x,y:m.y,t:0,life:.25})}
+  if(m){if(e.cr&&fxOn&&performance.now()-(m._bst||0)>320){m._bst=performance.now();/* B6 #19a：爆擊特效只在目標身上、約怪物 1.2 倍、高攻速節流 */G.fx.push({k:'burst',x:m.x,y:m.y,t:0,life:.3})}if(sk){G.labels.push({x:src?src.x:m.x,y:src?src.y:m.y,text:sk.n+'!!',t:0,life:.9,ic:sk.icon});if(fxOn)G.fx.push({k:sk.fx||'slash',x:m.x,y:m.y,sx:src&&src.x,sy:src&&src.y,t:0,life:.5})}else if(fxOn){if(e.rng&&src)G.fx.push({k:'arrow',x:m.x,y:m.y,sx:src.x,sy:src.y,t:0,life:.18});else G.fx.push({k:'spark',x:m.x,y:m.y,t:0,life:.35,sd:Math.random()*99});G.fx.push({k:'slash',x:m.x,y:m.y,t:0,life:.25})}
    if(SET.dmg==='all'||(SET.dmg==='mine'&&mine)){e.hits.forEach((v,i)=>G.nums.push({x:m.vx??m.x,y:m.vy??m.y,v:e.miss||v===0?'MISS':v,cr:e.cr,mine,t:-i*.07,life:1,i,st:e.hits.length>1}));if(e.hits.length>1&&e.cr)G.nums.push({x:m.vx??m.x,y:m.vy??m.y,v:e.hits.reduce((a,b)=>a+b,0),cr:1,mine,t:-e.hits.length*.07,life:1.1,i:e.hits.length,tot:1})}}
   if(mine)SFX.play(e.miss?'miss':e.cr?'crit':sk&&sk.magic?'magic':e.rng?'arrow':'hit');if(mine&&m){G.focus=m.id}}
  else if(e.t==='hurt'){{const ms=G.M[e.src];if(ms)ms.atkT=performance.now()}const p=G.P[e.tgt];if(p){p.hp=e.hp;p.flash=1;if(SET.dmg!=='off')G.nums.push({x:p.x,y:p.y,v:e.miss?'MISS':e.v,hurt:1,t:0,life:.9,i:0})}if(e.tgt===me){if(!e.miss)SFX.play('hurt');G.me.hp=e.hp;UI.hud()}}
@@ -1845,7 +1885,7 @@ function draw(now){requestAnimationFrame(draw);if(SET.fps<60&&now-lastDraw<1000/
  G.fx=G.fx.filter(f=>(f.t+=dt)<f.life);for(const f of G.fx){const [x,y]=wpos(f.x,f.y);const p=f.t/f.life;
   if(f.k==='spark'){for(let i=0;i<8;i++){const a=f.sd+i*.785,d=(6+p*18)*z,s2=(1-p)*2.2*z;c.fillStyle=i%2?'#fff6c0':'#ffffff';c.globalAlpha=1-p;c.fillRect(x+Math.cos(a)*d-s2/2,y-8*z+Math.sin(a)*d*.8-s2/2,s2,s2)}c.globalAlpha=1;c.strokeStyle=`rgba(255,240,180,${1-p})`;c.lineWidth=2*G.dpr;c.beginPath();c.arc(x,y-8*z,(4+p*14)*z,0,7);c.stroke()}
   else if(f.k==='puff'){for(let i=0;i<10;i++){const a=f.sd+i*.63,d=(3+p*12)*z;c.globalAlpha=(1-p)*.8;c.fillStyle=i%3?'#e8e0d0':'#b8b0a0';c.beginPath();c.arc(x+Math.cos(a)*d,y-4*z+Math.sin(a)*d*.5-p*8*z,(3-p*2)*z,0,7);c.fill()}c.globalAlpha=1-p;c.fillStyle='#fff8c0';for(let i=0;i<4;i++)c.fillRect(x+Math.sin(f.sd+i*1.6)*6*z,y-(8+p*26+i*4)*z,1.5*z,1.5*z);c.globalAlpha=1}
-  if(f.k==='burst'){const sc=p<.18?p/.18*1.3:1.3-(p-.18)*1.1;burst(x,y-8*z,16*z*Math.max(.2,sc),14,1-Math.max(0,p-.6)/.4)}
+  if(f.k==='burst'){const sc=p<.2?p/.2:1-(p-.2)*.6;burst(x,y-12*z,11*z*Math.max(.2,sc),12,1-Math.max(0,p-.5)/.5)}
   else if(f.k==='slash'||f.k==='cleave'){c.strokeStyle=`rgba(255,255,255,${1-p})`;c.lineWidth=3*G.dpr;c.beginPath();c.arc(x,y-8*z,(f.k==='cleave'?22:10)*z,-1.2+p*2,.2+p*2);c.stroke()}
   else if((f.k==='arrow'||f.k==='arrow2'||f.k==='bolt')&&f.sx!=null){const [sx2,sy2]=wpos(f.sx,f.sy);const q=Math.min(1,p*2.2);const ax=sx2+(x-sx2)*q,ay=sy2-8*z+(y-sy2)*q;c.strokeStyle=f.k==='bolt'?'#ff9030':'#f0e0b0';c.lineWidth=(f.k==='bolt'?4:2)*G.dpr;c.beginPath();c.moveTo(ax,ay);c.lineTo(ax-(x-sx2)*.1,ay-(y-sy2)*.1);c.stroke();if(f.k==='bolt'){c.fillStyle='#ffd060';c.beginPath();c.arc(ax,ay,4*G.dpr,0,7);c.fill()}if(f.k==='arrow2'){c.beginPath();c.moveTo(ax+5*G.dpr,ay+5*G.dpr);c.lineTo(ax+5*G.dpr-(x-sx2)*.1,ay+5*G.dpr-(y-sy2)*.1);c.stroke()}}
   else if(f.k==='rain'){c.strokeStyle=`rgba(240,224,176,${1-p})`;c.lineWidth=2*G.dpr;for(let i=0;i<12;i++){const ox=((i*37)%50-25)*z,oy=((i*53)%30-15)*z;const yy=y+oy-40*z*(1-p);c.beginPath();c.moveTo(x+ox,yy-12*z);c.lineTo(x+ox,yy);c.stroke()}}
@@ -1921,7 +1961,7 @@ const CFX=(()=>{
  // ---------- 動作週期：自己的 ASPD 直接取；其他人用攻擊間隔估算 ----------
  function period(p){if(LAB.on&&G.me&&p.id===G.me.name)return LAB.cfg.aspd;if(G.me&&p.id===G.me.name&&G.d&&G.d.aspd)return G.d.aspd;return p._per||.9}
  function startAnim(p,kind,tx,ty){const t=now();if(p._lastA)p._per=Math.max(.15,Math.min(2,(t-p._lastA)/1000))*.6+(p._per||.9)*.4;p._lastA=t;
-  const per=period(p);const dur=per<.25?Math.max(.07,per*.92):Math.max(.11,Math.min(.5,per*.72));AN[p.id]={t0:t,dur:dur*1000,kind,tx,ty};p.atkT=0;return dur}
+  const per=period(p);const dur=per<.25?Math.max(.07,per*.9):Math.max(.11,Math.min(.5,per*.72));AN[p.id]={t0:t,dur:dur*1000,kind,tx,ty};p.atkT=0;return dur}
  // ---------- 粒子 ----------
  const MOBL=matchMedia('(pointer:coarse)').matches;function parts(x,y,n,o){if(MOBL)n=Math.ceil(n*.55);if(PT.length>(MOBL?220:420))n=Math.min(n,4);for(let i=0;i<n;i++){const a=(o.a0??0)+(o.spread??6.283)*Math.random(),s=(o.sp||3)*(.4+Math.random()*.8);
   PT.push({x,y,h:o.h??10,vx:Math.cos(a)*s,vy:Math.sin(a)*s*.55,vh:(o.up??0)+Math.random()*(o.upr??0),g:o.g??0,t:0,life:(o.life||.4)*(.6+Math.random()*.6),col:o.cols[i%o.cols.length],sz:o.sz||2,str:o.str})}}
@@ -1933,12 +1973,12 @@ const CFX=(()=>{
    if(!lim()){parts(m.x,m.y,cr?26:12,{cols:C,sp:cr?7:4.5,life:cr?.5:.32,h:12,up:6,upr:30,g:60,sz:cr?2.6:1.8,str:el==='phys'||el==='bolt'});
     ring(m.x,m.y,C[1],2,cr?26:13,cr?.35:.22,cr?4:2.5,.9);if(el!=='phys'){ring(m.x,m.y,C[2],4,cr?32:20,.4,3,.5);parts(m.x,m.y,10,{cols:C,sp:1.5,life:.7,h:6,up:18,upr:16,g:-6,sz:2})}
     if(v.slash){RING.push({slash:1,x:m.x,y:m.y,col:C[0],t:0,life:.18,dir:v.dir||1})}}
-   const isB=G.D.mobs[m.k]&&G.D.mobs[m.k].boss;if(cr){if(mine&&SET.shake){G.shake=.22;G.shakeAmp=CFG.critShake*(isB?1.2:1)}}else if(mine&&SET.shake&&(big||isB)){G.shake=Math.max(G.shake,isB?.12:.1);G.shakeAmp=isB?CFG.shake*.8:CFG.shake}}
+   const isB=G.D.mobs[m.k]&&G.D.mobs[m.k].boss;if(cr){if(mine&&SET.shake&&now()-(G._critShk||0)>900){G._critShk=now();G.shake=.14;G.shakeAmp=CFG.critShake*.5*(isB?1.2:1)}}else if(mine&&SET.shake&&(big||isB)){G.shake=Math.max(G.shake,isB?.12:.1);G.shakeAmp=isB?CFG.shake*.8:CFG.shake}}
   // 傷害數字
   if(SET.dmg==='all'||(SET.dmg==='mine'&&mine)){const H=e.hits||[0];const dir=Math.random()<.5?-1:1;
-   H.forEach((h,i)=>at(i*90,()=>{NUM.push({x:m.x,y:m.y,el,v:e.miss||h===0?'MISS':h,cr,bst:cr&&i===0&&SET.fx!=='off',mine,t:0,life:cr?CFG.critLife:CFG.numLife,dir:H.length>1?dir:(Math.random()<.5?-1:1),i,st:H.length>1});if(i&&mine)SFX.play(v.snd||'hit_slash')}));
+   H.forEach((h,i)=>at(i*90,()=>{/* B6 #19a：高攻速時同一目標 0.22 秒內自己的命中合併成一個數字（累加、爆擊優先），不再一直疊 */if(mine&&!e.miss&&h>0&&H.length===1){const o=NUM.find(n=>n.tg===m.id&&n.mine&&!n.hurt&&typeof n.v==='number'&&n.t<.22&&!n.st);if(o){o.v+=h;o.cr=o.cr||cr;o.mg=(o.mg||1)+1;if(cr)o.life=CFG.critLife;return}}NUM.push({tg:m.id,x:m.x,y:m.y,el,v:e.miss||h===0?'MISS':h,cr,bst:0/* B6 #19a：不再在數字上畫大爆炸，改目標身上小特效（game.js burst） */,mine,t:0,life:cr?CFG.critLife:CFG.numLife,dir:H.length>1?dir:(Math.random()<.5?-1:1),i,st:H.length>1});if(i&&mine)SFX.play(v.snd||'hit_slash')}));
    if(H.length>1&&!e.miss){const tot=H.reduce((a,b)=>a+b,0);at(H.length*90+40,()=>NUM.push({x:m.x,y:m.y,v:tot,cr:1,tot:1,mine,t:0,life:1.4,dir:0,i:0}))}}
-  if(mine&&(cr||now()-lastSnd>Math.max(110,period(src||{})*1000*(period(src||{})<.25?2.5:0)))){lastSnd=now();SFX.play(e.miss?'miss':cr?'crit':v.snd||'hit_slash')}if(cr&&mine&&v.snd&&v.snd!=='hit_slash')at(20,()=>SFX.play(v.snd))}
+  if(mine&&(cr||now()-lastSnd>60)){/* B6 #26：每次命中當下出聲（音效池 + 45ms 合併），不再每 2.5 下才響一次 */lastSnd=now();{const per=period(src||{});let sd=e.miss?'miss':cr?'crit':v.snd||'hit_slash';if(!e.miss&&!cr&&per<.3&&SFX.REG[sd+'_i'])sd+='_i';if(e.miss&&per<.3&&Math.random()<.6)sd=null;if(sd)SFX.play(sd)}}if(cr&&mine&&v.snd&&v.snd!=='hit_slash')at(20,()=>SFX.play(v.snd))}
  // ---------- 事件分派 ----------
  function onHit(e,keep){const m=G.M[e.tgt];if(!m)return;m.flash=0;const src=G.P[e.src],me=G.me&&G.me.name,mine=e.src===me;const D=G.D,sk=e.sk&&D.skills[e.sk];
   const wt=(LAB.on&&src&&G.me&&src.id===G.me.name)?LAB.cfg.wt:src&&typeof src.wt==='string'?src.wt:(e.rng?'bow':'sword');let kind=WK[wt]||'swing';
@@ -1994,7 +2034,9 @@ const CFX=(()=>{
   try{T==='hit'?onHit(e,keep):T==='hurt'?onHurt(e,keep):T==='cast'?onCast(e,keep):onBuff(e,keep)}catch(err){console.warn('CFX',err);G.nums.push(...keep.nums);G.fx.push(...keep.fx);G.labels.push(...keep.labels)}}}
  // ---------- B6：手上真的拿著裝備中的武器，依武器種類揮動（圖示跟著手轉，加軌跡）----------
  const WPN={
-  img(o){const wi=o.wi||(G.me&&o.id===G.me.name&&G.me.eq&&G.me.eq.wpn&&G.me.eq.wpn.id);const d=wi&&G.D.items[wi];if(!d)return null;const im=icoImg(d.icon||'sword');return im&&im.complete&&im.naturalWidth?im:null},
+  HANDS:new Set(["w_axe", "w_axe2", "w_book", "w_bow", "w_bow2", "w_crossbow", "w_crossbow2", "w_dagger", "w_dagger2", "w_dg_flame", "w_dg_inferno", "w_dg_thunder", "w_gatling", "w_gatling2", "w_grenade", "w_harp", "w_holymace", "w_huuma", "w_huuma2", "w_katar", "w_katar2", "w_knuckle", "w_mace", "w_ninken", "w_pistol", "w_pistol2", "w_rifle", "w_rifle2", "w_rod", "w_shotgun", "w_shotgun2", "w_spear", "w_spear1", "w_staff", "w_staff2", "w_sw_twin", "w_sword", "w_sword2", "w_whip"]),WTH:{axe1:'w_axe',axe2:'w_axe2',gun_gatling:'w_gatling',gun_grenade:'w_grenade',gun_pistol:'w_pistol',gun_rifle:'w_rifle',gun_shotgun:'w_shotgun',spear2:'w_spear',spear1:'w_spear1'},_hi:{},
+  /* B6 #19b：手持武器用去背圖 hd/hand/（裝備圖示有底框不能拿來當手持）：先找同 id，再依武器類型 */
+  img(o){const wi=o.wi||(G.me&&o.id===G.me.name&&G.me.eq&&G.me.eq.wpn&&G.me.eq.wpn.id);const d=wi&&G.D.items[wi];if(!d)return null;const hk=this.HANDS.has(wi)?wi:(d.wt&&(this.WTH[d.wt]||'w_'+d.wt));let im=null;if(hk&&this.HANDS.has(hk)){im=this._hi[hk];if(!im){im=new Image();im.src='hd/hand/'+hk+'.webp?v=b6';this._hi[hk]=im}}else im=icoImg(d.icon||'sword');return im&&im.complete&&im.naturalWidth?im:null},
   // 角度：0＝朝前（右），負值朝上；圖示原生是刀尖朝右上（-45°）
   pose(k,p){const E=x=>1-Math.pow(1-Math.min(1,Math.max(0,x)),3);
    switch(k){
@@ -2085,11 +2127,11 @@ const CFX=(()=>{
   // RO 式：彈出放大 → 向上拋物線往側邊飄 → 淡出；連擊依序疊高
   const u=n.t,dir=n.dir,vy=n.tot?0:1;let x=x0+dir*u*34*D*(n.cr?.8:1),y=y0-22*z-(u*95-u*u*80)*D*vy-(n.st?n.i*9*D:0)-(n.tot?(16*D+u*14*D):0);
   if(n.hurt){x=x0+dir*u*20*D;y=y0-20*z-(u*70-u*u*90)*D}
-  const pop=p<.1?1.9-p/.1*.9:p<.16?1-(.16-p)/.06*-.0+(p-.1)*0:1;const sc0=n.cr?(p<.12?2.2-p/.12*1.2:1):(p<.08?1.6-p/.08*.6:1);
+  const pop=p<.1?1.9-p/.1*.9:p<.16?1-(.16-p)/.06*-.0+(p-.1)*0:1;const sc0=n.cr?(p<.1?1.45-p/.1*.45:1):(p<.08?1.4-p/.08*.4:1);
   c.globalAlpha=p>.72?1-(p-.72)/.28:1;
   if(n.v==='MISS'){c.save();c.font=`italic 900 ${13*D*sc0}px sans-serif`;c.textAlign='center';c.lineWidth=3.2*D;c.strokeStyle='#0a1a3a';c.strokeText('MISS',x,y);c.fillStyle='#8fd0ff';c.fillText('MISS',x,y);c.restore()}
-  else{if(n.bst&&n.t<.5){const q=n.t/.5,sc=q<.25?q/.25*1.2:1.2-(q-.25)*.4;burst(x,y+7*D*sc0,(24+12*sc0)*D*Math.max(.3,sc)*Math.max(1,z/2.5),14,1-Math.max(0,q-.6)/.4)}if(n.cr){c.save();c.globalCompositeOperation='lighter';c.globalAlpha*=.55*(1-p);const g=c.createRadialGradient(x,y+6*D,0,x,y+6*D,28*D*sc0);g.addColorStop(0,'#ffcc40');g.addColorStop(1,'rgba(255,80,0,0)');c.fillStyle=g;c.beginPath();c.arc(x,y+6*D,28*D*sc0,0,7);c.fill();c.restore()}
-   const s=(n.cr?(n.tot?1.45:1.25):n.hurt?.9:.82)*Math.max(2.2*D,z)*sc0;const ec=n.el&&n.el!=='phys'&&ELC[n.el];const col=n.hurt?'#ff5252':n.cr?'#ffd23a':ec?ec[1]:n.mine?'#ffffff':'#d8dcff';pnum(n.v,x,y,s,col,n.cr?'#6a2400':n.hurt?'#3a0000':ec?ec[3]:'#181820')}
+  else{if(n.bst&&n.t<.5){const q=n.t/.5,sc=q<.25?q/.25*1.2:1.2-(q-.25)*.4;burst(x,y+7*D*sc0,(24+12*sc0)*D*Math.max(.3,sc)*Math.max(1,z/2.5),14,1-Math.max(0,q-.6)/.4)}if(n.cr){c.save();c.globalCompositeOperation='lighter';c.globalAlpha*=.55*(1-p);const g=c.createRadialGradient(x,y+6*D,0,x,y+6*D,13*D*sc0);g.addColorStop(0,'#ffcc40');g.addColorStop(1,'rgba(255,80,0,0)');c.fillStyle=g;c.beginPath();c.arc(x,y+6*D,13*D*sc0,0,7);c.fill();c.restore()}
+   const s=(n.cr?(n.tot?1.2:1.0):n.hurt?.9:.82)*Math.max(2.2*D,z)*sc0;const ec=n.el&&n.el!=='phys'&&ELC[n.el];const col=n.hurt?'#ff5252':n.cr?'#ffd23a':ec?ec[1]:n.mine?'#ffffff':'#d8dcff';pnum(n.v,x,y,s,col,n.cr?'#6a2400':n.hurt?'#3a0000':ec?ec[3]:'#181820')}
   c.globalAlpha=1}
  function drawIco(c,o){const p=G.P[o.p];if(!p||o.t<0)return;const z=Z(),D=dpr(),[x,y]=W(p.x,p.y),q=o.t/o.life;const sc=q<.12?q/.12*1.25:q<.2?1.25-(q-.12)/.08*.25:1;const yy=y-44*z-q*14*D,R=11*D*sc;
   c.save();c.globalAlpha=q>.75?1-(q-.75)/.25:1;c.fillStyle=o.proc?'#3a1a00e0':'#0e1c38e0';c.beginPath();c.arc(x,yy,R,0,7);c.fill();c.strokeStyle=o.proc?'#ffb040':'#e8c060';c.lineWidth=1.6*D;c.stroke();
@@ -2201,7 +2243,7 @@ const HD={on:SET.hd!==0,img:{},ok:{},T:32,
   if(M.tiles.includes(2)){const wet=mask([2],1,14);const wc=wet.getContext('2d');wc.globalCompositeOperation='source-in';wc.fillStyle=M.id==='town'?'rgba(70,58,40,.9)':'rgba(40,34,20,.85)';wc.fillRect(0,0,W,H);c.drawImage(wet,0,0);const Wt=layer([2],set[2],1,0);c.drawImage(Wt,0,0);
    const hl=mask([2],1,0);const hc=hl.getContext('2d');hc.globalCompositeOperation='source-out';hc.fillStyle='rgba(220,240,255,.18)';hc.fillRect(0,0,W,H)}
   // 鋪面、木棧：硬邊＋投影
-  const Pv=layer([4,7,8],set[4],0);if(Pv){sh(Pv,0,4,.35);c.drawImage(Pv,0,0);c.save();c.globalAlpha=.10;c.globalCompositeOperation='overlay';for(let y=0;y<M.H;y++)for(let x=0;x<M.W;x++)if(at(x,y)===7){c.fillStyle='#fff';c.fillRect(x*T,y*T,T,T)}c.restore()}
+  /* B6 #19c：野外地圖中央的石板廣場原本是硬邊方塊，跟草地接不上；野外改柔邊＋外圍苔痕過渡（城鎮、競技場維持硬邊） */const wild=M.gen==='wild'||(!M.gen&&M.id!=='town');if(wild&&M.tiles.some(v=>v===4||v===8)){const rim=mask([4,7,8],1,10);const rc=rim.getContext('2d');rc.globalCompositeOperation='source-in';rc.fillStyle='rgba(40,46,30,.45)';rc.fillRect(0,0,W,H);c.drawImage(rim,0,0)}const Pv=layer([4,7,8],set[4],wild?1:0,wild?2:0);if(Pv){sh(Pv,0,4,wild?.18:.35);c.drawImage(Pv,0,0);c.save();c.globalAlpha=.10;c.globalCompositeOperation='overlay';for(let y=0;y<M.H;y++)for(let x=0;x<M.W;x++)if(at(x,y)===7){c.fillStyle='#fff';c.fillRect(x*T,y*T,T,T)}c.restore()}
   const Pl=layer([3],set[3],0);if(Pl){sh(Pl,3,6,.5);c.drawImage(Pl,0,0)}
   // 大尺度明暗（柔光）＋輕微暗角
   const n=document.createElement('canvas');n.width=Math.ceil(M.W/3);n.height=Math.ceil(M.H/3);const nc=n.getContext('2d');let sd=M.W*7+M.H;const R=()=>(sd=(sd*16807)%2147483647)/2147483647;for(let y=0;y<n.height;y++)for(let x=0;x<n.width;x++){const v=R();nc.fillStyle=v<.5?`rgba(0,0,0,${(.5-v)*.5})`:`rgba(255,240,200,${(v-.5)*.35})`;nc.fillRect(x,y,1,1)}
@@ -2338,7 +2380,7 @@ const UI={open:{},z:100,imgs:{},
  log(h){const l=$('#log');const d=document.createElement('div');d.innerHTML=`<b class="sys">[${t('系統')}]</b> `+h;l.appendChild(d);while(l.children.length>40)l.firstChild.remove();l.scrollTop=1e9},
  chat(m){const l=$('#log');const d=document.createElement('div');d.innerHTML=`<b class="${m.ch}">[${m.ch==='world'?t('世界'):t('地圖')}]</b> <span class="cn">${esc(m.from)}</span>：${esc(m.text)}`;l.appendChild(d);l.scrollTop=1e9;const p=G.P[m.from];if(p){p.say=m.text;p.sayT=performance.now()}},
  sendChat(){const i=$('#chatin');const v=i.value.trim();if(!v)return i.blur();const ch=v.startsWith('/w ')?'world':'map';send({op:'chat',ch,text:ch==='world'?v.slice(3):v});i.value='';i.blur()},
- lootBanner(id){const d=G.D.items[id];const b=document.createElement('div');b.className='lootb';b.innerHTML=ART.icon(d.icon,22)+' '+esc(d.n)+' ×1';$('#loots').appendChild(b);setTimeout(()=>b.remove(),2200);while($('#loots').children.length>5)$('#loots').firstChild.remove()},
+ lootBanner(id){/* B6 #20d：只在戰鬥畫面顯示（開著選單/設定頁不擋操作）；同物品合併計數；最多 3 則 */const d=G.D.items[id];if(!d)return;if(typeof IDLE!=='undefined'&&IDLE.on&&IDLE.mode!=='battle')return;const L=$('#loots');if(!L)return;let b=[...L.children].find(x=>x.dataset.id===id);if(b){b._n=(b._n||1)+1;b.querySelector('.lbn').textContent='×'+b._n;clearTimeout(b._t)}else{b=document.createElement('div');b.className='lootb';b.dataset.id=id;b._n=1;b.innerHTML=ART.icon(d.icon,20)+' '+esc(d.n)+' <span class="lbn">×1</span>';L.appendChild(b)}b._t=setTimeout(()=>b.remove(),2200);while(L.children.length>3)L.firstChild.remove()},
  cardPopup(id){const d=G.D.items[id];const p=document.createElement('div');p.className='cardpop';p.innerHTML=`<div class="cpi">${ART.icon('card',96)}<b>${esc(d.n)}</b><small>${esc(d.desc||'')}</small><span>獲得稀有卡片！</span></div>`;p.onclick=()=>p.remove();document.body.appendChild(p);setTimeout(()=>p.remove(),3500);SFX.play('refineOk')},
  offline(r){const D=G.D;const p=document.createElement('div');p.className='cardpop';p.innerHTML=`<div class="cpi offl"><b>離線掛機報告</b><div>離線 ${r.h} 小時，在${esc((G.D.maps[r.map]||G.D.maps.field).n)}擊敗 <b>${r.kills}</b> 隻${D.mobs[r.mob].n}</div><div>Base Lv ${r.blv[0]} → ${r.blv[1]}${NOJOB()?'':`　Job Lv ${r.jlv[0]} → ${r.jlv[1]}`}</div><div>金幣 +${r.zeny.toLocaleString()}　消耗紅色藥水 ${r.pots}</div><div class="offi">${Object.entries(r.loot).map(([i,n])=>`<span>${ART.icon(D.items[i].icon,22)}${esc(D.items[i].n)} ×${n}</span>`).join('')}</div><button class="btn g">領取</button></div>`;p.onclick=e=>{if(e.target.tagName==='BUTTON')p.remove()};document.body.appendChild(p)},
  minimap(){const mm=$('#mm');if(!mm||!G.map)return;const x=mm.getContext('2d');if(!this.mmBase){this.mmBase=1;mm.width=G.map.W*3;mm.height=G.map.H*3}x.imageSmoothingEnabled=false;x.drawImage(G.mapArt.cv,0,0,mm.width,mm.height);x.fillStyle='#ff5050';for(const k in G.M){const m=G.M[k];x.fillRect(m.x*3,m.y*3,3,3)}x.fillStyle='#7ad0ff';for(const k in G.P){const p=G.P[k];x.fillRect(p.x*3-1,p.y*3-1,4,4)}x.fillStyle='#ffd040';for(const n of G.map.npcs)x.fillRect(n.x*3,n.y*3,3,3);const me=G.P[G.me.name];if(me){x.fillStyle='#fff';x.fillRect(me.x*3-2,me.y*3-2,5,5);$('#coord').textContent=Math.round(me.x)+', '+Math.round(me.y)}$('#mmon').textContent=Object.keys(G.P).length},
@@ -2386,7 +2428,7 @@ equip:{title:'已裝備物品',w:560,html(o){const m=G.me;const L=['head','low',
  bind(b,o){b.querySelectorAll('[data-sl]').forEach(x=>x.onclick=()=>{o.sel=x.dataset.sl;UI.renderWin('equip')});b.querySelectorAll('[data-un]').forEach(x=>x.onclick=()=>act({op:'unequip',sl:x.dataset.un}));b.querySelectorAll('[data-det]').forEach(x=>x.onclick=()=>UI.win('item',{u:+x.dataset.det}));
   $('#uneqall').onclick=async()=>{for(const s in G.me.eq)await act({op:'unequip',sl:s})};$('#autoeq').onclick=async()=>{const best={};for(const it of G.me.bag){const d=G.D.items[it.id];if(d.type!=='eq'||d.lv>G.me.blv)continue;{const J=G.D.jobs[G.me.job]||{},w=J.weap||[];if(d.jobs&&!d.jobs.includes(G.me.job))continue;if(d.slot==='wpn'&&d.wt&&!w.includes(d.wt))continue;if(d.slot==='ammo'&&!w.includes('bow'))continue}const sc=(d.atk||0)+(d.matk||0)+(d.def||0)*2+(it.rf||0)*3;const s=d.slot;if(!best[s]||sc>best[s][0])best[s]=[sc,it]}for(const s in best){const cur=G.me.eq[s==='acc'?'acc1':s];const cd=cur&&G.D.items[cur.id];const cs=cd?(cd.atk||0)+(cd.matk||0)+(cd.def||0)*2+(cur.rf||0)*3:-1;if(best[s][0]>cs)await act({op:'equip',u:best[s][1].u})}};
   }},
-bag:{title:'背包',w:620,sub:()=>{const w=G.me.bag.reduce((a,it)=>a+(G.D.items[it.id].wt||it.n*2),0);return`<span class="wsubc">${ART.icon('coin',14)} ${fmt(G.me.zeny)}　${ART.icon('dia',14)} ${fmt(G.me.dia)}　⚖ ${w} / ${2000+G.me.st.str*30}</span>`},
+bag:{title:'背包',w:620,sub:()=>{/* B6 #20a：d.wt 現在是武器類型字串，不能當重量；重量只取數字欄位 */const w=G.me.bag.reduce((a,it)=>{const d=G.D.items[it.id]||{};const u=typeof d.weight==='number'?d.weight:typeof d.wt==='number'?d.wt:(d.type==='eq'?20:2);return a+u*(d.type==='eq'?1:(it.n||1))},0);return`<span class="wsubc">${ART.icon('coin',14)} ${fmt(G.me.zeny)}　${ART.icon('dia',14)} ${fmt(G.me.dia)}　<span class="wwt">負重 ${fmt(w)} / ${fmt(2000+G.me.st.str*30)}</span></span>`},
  html(o){const D=G.D,m=G.me;o.tab=o.tab||'all';const tabs=[['all','全部','ALL'],['use','消耗','Consumable'],['eq','裝備','Equipment'],['etc','其他','Etc.'],['card','卡片','Card'],['cash','商城','Cash']];
  let items=m.bag.filter(it=>{const d=D.items[it.id];if(!d)return false;if(o.s&&!d.n.includes(o.s))return false;return o.tab==='all'||o.tab===d.type});if(o.sort==='name')items.sort((a,b)=>D.items[a.id].n.localeCompare(D.items[b.id].n));else items.sort((a,b)=>['use','eq','card','etc'].indexOf((D.items[a.id]||{}).type)-['use','eq','card','etc'].indexOf((D.items[b.id]||{}).type));
  const body=o.tab==='preset'?`<div class="empty">裝備組合預設（下一版）：一鍵切換整套裝備與快捷列。</div>`:o.tab==='cash'?`<div class="empty">商城物品會放在這裡。<br><button class="btn g" data-uiw="mall">前往商城</button></div>`:`<div class="grid">${items.map(it=>{const d=D.items[it.id];return`<div class="cell r-${d.type} ${o.u===it.u?'sel':''}" data-u="${it.u}" draggable="true" title="${esc(d.n)}">${ART.icon(d.icon,30)}${it.n>1?`<em>${it.n}</em>`:''}${it.rf?`<i>+${it.rf}</i>`:''}${it.cards&&it.cards.length?'<b class="cd">◆</b>':''}</div>`}).join('')}${[...Array(Math.max(0,40-items.length))].map(()=>'<div class="cell e"></div>').join('')}</div>`;
@@ -2475,7 +2517,7 @@ settings:{title:'設定',w:440,manual:1,html(){const sel=(k,opts)=>`<select data
  <div class="secb">👥 ${t('玩家與名稱')}</div>${row('👥','其他玩家',sel('others',[['all','顯示全部'],['none','隱藏']]))}${row('🏷','其他人的名稱外框',sel('nameFrame',[['full','完整顯示'],['simple','簡單'],['none','無']]))}${ck('alwaysNames','始終顯示角色名稱','🔖')}
  <div class="secb">🎮 ${t('介面與按鍵')}</div>${row('🔍','HUD / UI 大小','<button class="pb" data-hud="-10">−</button><b>'+SET.hud+'%</b><button class="pb" data-hud="10">＋</button><button class="btn" data-hud="0">標準</button>')}${ck('joy','顯示螢幕搖桿','🕹')}${ck('btns','顯示螢幕攻擊/技能按鈕','⚔')}${row('◐','搖桿 / 按鈕不透明度','<button class="pb" data-op="-5">−</button><b>'+SET.joyOp+'%</b><button class="pb" data-op="5">＋</button>')}${ck('dragAim','拖曳技能按鈕瞄準','➤')}${ck('card','顯示角色資訊卡','🪪')}${ck('focus','顯示正在戰鬥的首領/目標血量（Focus）','🎯')}
  <details class="keys"><summary>▸ 按鍵設定（鍵盤／手把）</summary>${Object.entries(KEYS).map(([k,v])=>`<div class="srow"><span>${{bag:'背包',equip:'裝備',skill:'技能',quest:'任務',stat:'屬性',market:'市場',exchange:'交易所',settings:'設定',auto:'自動狩獵'}[k]}</span><button class="btn" data-key="${k}">${v.toUpperCase()}</button></div>`).join('')}<small>1–9：快捷列　Enter：聊天　Esc：關閉視窗　方向鍵：移動　手把：左搖桿移動（下一版）</small></details>
- <div class="secb">⚔ ${t('戰鬥與掉落')}</div>${row('💥','傷害數字',sel('dmg',[['all','顯示全部'],['mine','只顯示自己'],['off','關閉']]))}${row('Aa','傷害數字字型',sel('dmgFont',[['pixel','像素點陣'],['sans','粗體黑體']]))}${ck('mobBuffs','在怪物頭上顯示增益/減益圖示','▦')}${ck('lootBanner','顯示拾取物品橫幅','💰')}${ck('floatExp','在畫面上顯示浮動的獲得 EXP','⬆')}${ck('cardPopup','撿到卡片時全螢幕彈出卡片','🃏')}
+ <div class="secb">⚔ ${t('戰鬥與掉落')}</div>${row('💥','傷害數字',sel('dmg',[['all','顯示全部'],['mine','只顯示自己'],['off','關閉']]))}${row('Aa','傷害數字字型',sel('dmgFont',[['pixel','像素點陣'],['sans','粗體黑體']]))}${ck('sysNotify','世界王開打時發送系統通知（App 在背景時）','🔔')}${row('📢','技能唱名',sel('callout',[['all','全部顯示'],['mine','只顯示自己'],['off','關閉']]))}${ck('mobBuffs','在怪物頭上顯示增益/減益圖示','▦')}${ck('lootBanner','顯示拾取物品橫幅','💰')}${ck('floatExp','在畫面上顯示浮動的獲得 EXP','⬆')}${ck('cardPopup','撿到卡片時全螢幕彈出卡片','🃏')}
  <div class="secb">📶 ${t('連線狀態')}</div><div class="connrow"><button class="btn b" id="relog">⏏ ${t('返回登入頁面')}</button><div id="connst"></div></div>`},
  bind(b){b.querySelectorAll('[data-set]').forEach(x=>x.onchange=()=>{const k=x.dataset.set;SET[k]=x.type==='checkbox'?(x.checked?1:0):(isNaN(+x.value)?x.value:+x.value);saveSet()});$('#snd').onchange=e=>SFX.set(e.target.checked);$('#lang').onchange=async e=>{await loadLang(e.target.value);location.reload()};
   b.querySelectorAll('[data-hud]').forEach(x=>x.onclick=()=>{const v=+x.dataset.hud;SET.hud=v?Math.max(70,Math.min(140,SET.hud+v)):100;saveSet();UI.renderWin('settings')});b.querySelectorAll('[data-op]').forEach(x=>x.onclick=()=>{SET.joyOp=Math.max(20,Math.min(100,SET.joyOp+ +x.dataset.op));saveSet();UI.renderWin('settings')});
@@ -3046,7 +3088,7 @@ const IDLE={on:false,tab:'hunt',sub:'field',mode:'battle',zones:null,stats:null,
   const B=$('#iBoss');if(!B)return;const show=!!bs;if(B.hidden===show){B.hidden=!show;this.layout()}if(bs){const md=D[bs.k];const r=Math.max(0,bs.hp/bs.mhp);$('#iBossN').textContent=md.n+' Lv'+md.lv;{const ee=(G.bele&&G.bele[bs.id])||md.ele||'neutral';const EN=(G.D.elements[ee]||{}).n||ee,RN=((G.D.races||{})[md.race]||{}).n||md.race,SZ={small:'小型',medium:'中型',large:'大型'}[md.size]||md.size;const MN={phase_ele:'轉屬性',berserk_low:'暴走',armor_up:'硬化'};const tg=EN+'屬性 Lv'+(md.eleLv||1)+' ・ '+RN+' ・ '+SZ+((md.mech||[]).length?' ・ '+md.mech.map(x=>MN[x]||x).join('/'):'');const t=$('#iBossTag');if(t){t.dataset.ele=ee||'neutral';t.dataset.elv=md.eleLv||1}if(t&&t.textContent!==tg){t.textContent=tg;t.classList.toggle('chg',!!(G.bele&&G.bele[bs.id]&&G.bele[bs.id]!==md.ele))}}$('#iBossP').textContent=(r*100).toFixed(r<.1?1:0)+'%';$('#iBossF').style.width=r*100+'%';$('#iBossG').style.width=r*100+'%';$('#iBossT').textContent=fmt(Math.round(bs.hp))+' / '+fmt(bs.mhp);const e0=(G.bele&&G.bele[bs.id])||md.ele;const e=this.EL[e0]?e0:'neutral';if(B.dataset.e!==e){B.dataset.e=e;$('#iBossE').src='hd/p1/ele_'+e+'.webp'}}},
  status(){const s=this.stats;$('#iInc').textContent=s&&s.k?`10分收益 ≈ ${fmt(s.e)} EXP · ${fmt(s.z)} G`:'10分收益 — 開始狩獵後計算'},
  addTick(x,quiet){this.tick.unshift(x);this.tick.length=Math.min(this.tick.length,8);const f=x=>x.k==='drop'?`🎉 恭喜 <b>${esc(x.n)}</b> 在${esc(x.map||'')}擊敗 <em>${esc(x.m||'')}</em> 獲得 <b>${esc(x.in||'')}</b>`:esc(x.t||'');
-  const el=$('#iTickIn');if(!el)return;el.innerHTML=this.tick.map(f).join('　·　');el.style.animation='none';void el.offsetWidth;el.style.animation=''},
+  const el=$('#iTickIn');if(!el)return;el.innerHTML=this.tick.map(f).join('　·　');/* B6 #20c：放得下就靜止置左，放不下才從可見位置開始捲動（不再從右側外面跑進來、看起來被切掉） */const box=el.parentElement;el.classList.remove('mqs');el.style.removeProperty('--mqd');el.style.removeProperty('--mqx');requestAnimationFrame(()=>{const over=el.scrollWidth-(box.clientWidth-20);if(over>4){el.style.setProperty('--mqx',-over+'px');el.style.setProperty('--mqd',Math.max(6,over/30+4)+'s');el.classList.add('mqs')}})},
  // ---- 面板 ----
  panel(){const p=$('#iPan');if(!p||!G.D)return;const f=this['p_'+this.tab];p.innerHTML=f?f.call(this):'';this.bind(p);this.layout()},
  bind(p){p.querySelectorAll('[data-sub]').forEach(b=>b.onclick=()=>{this.sub=b.dataset.sub;this.panel();if(this.sub==='party')this.openWin('party')});
@@ -3082,10 +3124,10 @@ const IDLE={on:false,tab:'hunt',sub:'field',mode:'battle',zones:null,stats:null,
   <div class="i-row"><button class="i-btn g" data-win="stat">詳細屬性</button><button class="i-btn g" data-win="equip">裝備</button><button class="i-btn g" data-win="skill">技能書</button></div>`},
  p_set(){const ab=this.ab;if(!ab){req({op:'abget'}).then(r=>{if(r&&r.ab){this.ab=r.ab;if(this.tab==='set')this.panel()}});return'<div class="i-card glass"><p>讀取設定…</p></div>'}
   const h=ab.heal,as=ab.asell||{on:0,etc:0,eq:0,use:0,slotKeep:1,keep:[]};const sl=(k,n,v,max)=>`<label>${n}<input type="range" min="0" max="${max||95}" step="5" value="${v}" data-h="${k}"><output>${v}%</output></label>`;const sw=(k,v,n)=>`<div class="tg"><span>${n}</span><button class="i-sw ${v?'on':''}" data-sw="${k}"></button></div>`;
-  return`<div class="i-set"><div class="i-card glass i-code"><h4>序號</h4><div class="cr"><input id="iCode" maxlength="29" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="輸入序號"><button class="i-btn" id="iRedeem">兌換</button></div><p class="res" id="iCodeR"></p></div><div class="i-card glass"><h4>喝水</h4>${sl('potHp','HP 低於',h.potHp)}${sl('potSp','SP 低於',h.potSp)}
+  return`<div class="i-set"><div class="i-card glass"><h4>喝水</h4>${sl('potHp','HP 低於',h.potHp)}${sl('potSp','SP 低於',h.potSp)}
    <div class="tg"><span>HP 藥水</span><select data-hs="hpPot">${[['auto','自動（先橙後紅）'],['potR','紅色藥水'],['potO','橙色藥水']].map(([v,n])=>`<option value="${v}" ${h.hpPot===v?'selected':''}>${n}</option>`).join('')}</select></div></div>
   <div class="i-card glass"><h4>治療與技能</h4>${sw('heal.on',h.on,'自動治療')}${sl('self','自己 HP 低於',h.self)}${sl('party','隊友 HP 低於',h.party)}
-   ${(ab.atk||[]).map((a,i)=>{const S=G.D.skills[a.k]||{};return`<div class="tg"><span>${esc(S.n||a.k)} <small style="color:#9fabc6">SP ≥</small> <input type="number" min="0" max="9999" value="${a.minSp}" data-ms="${i}" style="width:64px;display:inline-block"></span><button class="i-sw ${a.on?'on':''}" data-sk="${i}"></button></div>`}).join('')||'<p>尚未學會攻擊技能</p>'}</div>
+   ${(ab.atk||[]).map((a,i)=>{const S=G.D.skills[a.k]||{};return`<div class="tg"><span>${esc(S.n||a.k)} <small style="color:#9fabc6">SP ≥</small> <input type="number" min="0" max="9999" value="${a.minSp}" data-ms="${i}" style="width:64px;display:inline-block"></span><button class="i-sw ${a.on?'on':''}" data-sk="${i}"></button></div>`}).join('')||'<div class="i-empty"><p>還沒有可自動施放的攻擊技能。先到技能頁學一個攻擊技能，就能在這裡設定自動施放。</p><button class="i-btn g" type="button" onclick="window.N2GO?N2GO(\'char\',\'skill\'):UI.win(\'skill2\')">去學技能</button></div>'}</div>
   <div class="i-card glass"><h4>自動賣出</h4>${sw('as.on',as.on,'啟用（卡片與收藏物品永不賣）')}
    <div class="tg"><span>雜物售價 ≤</span><input type="number" min="0" max="1000000" value="${as.etc}" data-as="etc" style="width:110px"></div>
    <div class="tg"><span>裝備售價 ≤（0＝不賣）</span><input type="number" min="0" max="10000000" value="${as.eq}" data-as="eq" style="width:110px"></div>${sw('as.slotKeep',as.slotKeep,'保留有插槽的裝備')}</div>
@@ -3379,11 +3421,11 @@ const WBU={s:null,t:0,poll:0,
  off(){return this.s&&this.s.now?this.s.now-this._rcv:0},
  now(){return Date.now()+(this.s?this.off():0)},
  set(s){if(!s)return;this._rcv=Date.now();const o=this.s;if(o)for(const k of ['rewards','hist','failMul','minDmgPct'])if(s[k]==null&&o[k]!=null)s[k]=o[k];this.s=s;const key=[s.ph,s.id,(s.hist||[]).length,s.inArena,(s.rewards||[]).length].join('|');if(key!==this._key){const first=this._key==null;this._key=key;if(!first&&this.visible()){IDLE.panel();return}}this.upd()},
- visible(){return typeof IDLE!=='undefined'&&IDLE.on&&IDLE.tab==='hunt'&&IDLE.sub==='boss'&&!!$('#wbBox')&&(IDLE.mode==='page'||!IDLE.mob())},
+ visible(){const b=$('#wbBox');return !!(b&&b.offsetParent)},/* B6 #23a：只看世界王頁是否真的在畫面上（舊條件在戰鬥模式下會停止更新，按鈕一直停在「整點開放參戰」） */
  tickPoll(){if(this.visible()){if(Date.now()-this.poll>2000){this.poll=Date.now();req({op:'wb'}).then(r=>{if(r&&r.s)this.set(r.s)})}this.upd()}this.hud()},
  eleN(e){return((G.D.elements||{})[e]||{}).n||e||''},raceN(r){return((G.D.races||{})[r]||{}).n||r||''},jobN(j){return(G.D.jobs[j]||{}).n||j||''},
  itemsTxt(r){const a=[];if(r.zeny)a.push(fmt(r.zeny)+' G');if(r.dia)a.push(r.dia+' 💎');for(const [id,n] of r.items||[])a.push(esc((G.D.items[id]||{}).n||id)+'×'+n);return a.join('、')||'—'},
- html(){const s=this.s;if(!s){if(Date.now()-this.poll>500){this.poll=Date.now();req({op:'wb'}).then(r=>{if(r&&r.s){this.set(r.s);if(this.visible()||IDLE.sub==='boss')IDLE.panel()}})}return'<div class="i-region">讀取世界王…</div>'}
+ html(){const s=this.s;if(s&&Date.now()-(this._rcv||0)>3000&&Date.now()-this.poll>800){this.poll=Date.now();req({op:'wb'}).then(r=>{if(r&&r.s)this.set(r.s)})}if(!s){if(Date.now()-this.poll>500){this.poll=Date.now();req({op:'wb'}).then(r=>{if(r&&r.s){this.set(r.s);if(this.visible()||IDLE.sub==='boss')IDLE.panel()}})}return'<div class="i-region">讀取世界王…</div>'}
   const live=s.ph==='live',md=s.id&&G.D.mobs[s.id];const lv=this.cv('wbMinLv',1),low=G.me.blv<lv;
   const art=s.id?`<img class="wb-art" ${HD.mobImgAttr(s.id)} alt="">`:`<div class="wb-art q">?</div>`;
   const mech=(s.mech||[]).map(k=>{const m=(G.D.wbMech||{})[k]||{n:k,d:''};return`<li data-mk="${k}"><b>${esc(m.n)}</b><span>${esc(m.d)}</span></li>`}).join('');
@@ -3392,7 +3434,7 @@ const WBU={s:null,t:0,poll:0,
   return`<div class="wb" id="wbBox">
   <div class="wb-hero glass ${live?'live':''}">${art}<div class="wb-hi"><div class="wb-n"><b>${esc(live||s.ph==='done'?s.n:'下一隻世界王')}</b>${md?`<span class="chip">${esc(this.eleN(s.ele||md.ele))}屬性</span><span class="chip">${esc(this.raceN(md.race))}</span><span class="chip">Lv${md.lv}</span>`:''}</div>
    <div class="wb-st" id="wbSt"></div><div class="wb-bar"><i id="wbHpF"></i><span id="wbHpT"></span></div>
-   <div class="wb-act">${this.inArena()?'<button class="i-btn" id="wbLeave">離開戰場</button><button class="i-btn g" data-t="battle" id="wbGo">回到戰鬥</button>':`<button class="i-btn g" id="wbJoin" ${live&&!low?'':'disabled'}>${low?'需要 Base Lv '+lv:live?'⚔ 立即參戰':'整點開放參戰'}</button>`}</div></div></div>
+   <div class="wb-act">${this.inArena()?'<button class="i-btn" id="wbLeave">離開戰場</button><button class="i-btn g" data-t="battle" id="wbGo">回到戰鬥</button>':`<button class="i-btn g" id="wbJoin" ${live&&!low?'':'disabled'}>${low?'需要 Base Lv '+lv:live?'⚔ 立即參戰':'整點開放參戰'}</button>`}</div>${this.inArena()?'':`<label class="wb-auto"><input type="checkbox" id="wbAuto" ${G.me.wbAuto?'checked':''}> 整點自動參戰（掛機中也會加入，結束後回原狩獵場）</label>`}<div class="wb-how">${live?'現在開放中！按「立即參戰」會傳送到世界王祭壇並自動攻擊。':'每小時整點開放 '+Math.round(this.cv('wbFightMin',20))+' 分鐘（XX:00–XX:'+String(Math.round(this.cv('wbFightMin',20))).padStart(2,'0')+'）。開放前 5 分鐘與開打時會提醒，按「立即參戰」或開啟自動參戰即可。'}</div></div></div>
   <div class="wb-sec glass"><h4>即時 DPS 排行<small id="wbJn"></small></h4><table class="wb-rk"><thead><tr><th>#</th><th>玩家</th><th>傷害</th><th>DPS</th></tr></thead><tbody id="wbRk"></tbody></table><div class="wb-me" id="wbMe"></div></div>
   ${mech?`<div class="wb-sec glass"><h4>首領機制</h4><ul class="wb-mech">${mech}</ul></div>`:''}
   <div class="wb-sec glass"><h4>傷害名次獎勵<small>擊殺 ×1、逃走 ×${s.failMul!=null?s.failMul:.3}・傷害需 ≥ 首領 HP ${((s.minDmgPct||0)*100).toFixed(2)}%</small></h4><table class="wb-rw">${rw}</table></div>
@@ -3401,7 +3443,7 @@ const WBU={s:null,t:0,poll:0,
  bind(p){const j=p.querySelector('#wbJoin'),l=p.querySelector('#wbLeave'),g=p.querySelector('#wbGo');
   if(j)j.onclick=()=>act({op:'wbjoin'}).then(r=>{if(r&&r.s)this.set(r.s);if(r&&!r.e)IDLE.battle()});
   if(l)l.onclick=()=>act({op:'wbleave'}).then(r=>{if(r&&r.s)this.set(r.s);IDLE.panel()});
-  if(g)g.onclick=()=>IDLE.battle();this.upd()},
+  if(g)g.onclick=()=>IDLE.battle();const au=p.querySelector('#wbAuto');if(au)au.onchange=()=>(au.checked&&'Notification' in window&&Notification.permission==='default'&&Notification.requestPermission().catch(()=>{}),0)||act({op:'wbauto',on:au.checked?1:0}).then(r=>{if(r&&!r.e)G.me.wbAuto=r.wbAuto});this.upd()},
  upd(){const s=this.s;if(!s||!$('#wbBox'))return;const t=this.now(),live=s.ph==='live';
   const st=$('#wbSt');if(st){const fx=(s.fx||[]).map(k=>((G.D.wbMech||{})[k]||{n:k}).n);st.innerHTML=live?`<span class="lv">● 戰鬥中</span> 剩 <b>${this.clock(s.end-t)}</b>${s.enrage>t?' ・ 狂暴 '+this.clock(s.enrage-t):' ・ <span class="ng">狂暴中</span>'}${fx.length?' ・ <span class="fx">'+fx.map(esc).join('、')+'</span>':''}`:s.ph==='done'&&s.res?`${s.res.killed?'<span class="ok">已討伐</span>':'<span class="ng">已逃走</span>'} ・ 下一隻 ${this.hhmm(s.next)}（${this.clock(s.next-t)}）`:`下一隻 ${this.hhmm(s.next)} 整點出現 ・ 倒數 <b>${this.clock(s.next-t)}</b>`}
   const f=$('#wbHpF'),ht=$('#wbHpT');if(f){const r=s.mhp?Math.max(0,Math.min(1,s.hp/s.mhp)):1;f.style.width=(r*100).toFixed(1)+'%';ht.textContent=s.mhp?fmt(s.hp)+' / '+fmt(s.mhp)+'（'+(r*100).toFixed(1)+'%）':'—'}
@@ -3419,8 +3461,9 @@ const WBU={s:null,t:0,poll:0,
   // 位置：首領血條卡（或上方狀態列）正下方；layout 會把我方陣型的安全區往下移，不會擋到人物
   const bo=$('#iBoss'),an=bo&&!bo.hidden?bo:$('#iBv .bv-top');const y=Math.round(an.getBoundingClientRect().bottom-bv.getBoundingClientRect().top+4)+'px';
   let chg=false;if(h.style.top!==y){h.style.top=y;chg=true}if(h.hidden){h.hidden=false;chg=true}if(chg||h.offsetHeight!==this._hh){this._hh=h.offsetHeight;IDLE.layout()}},
+ banner(m){if(this.inArena())return;let b=document.getElementById('wbBanner');if(!b){b=document.createElement('div');b.id='wbBanner';document.body.appendChild(b)}const live=m.ph==='live';b.className='wb-banner '+(live?'live':'soon');b.innerHTML=live?`<b>⚔ 世界王「${esc(m.n||'')}」開打！</b><button class="i-btn g" id="wbbJoin">立即參戰</button><button class="wbb-x" aria-label="關閉">✕</button>`:`<b>⏰ 世界王 ${this.hhmm(m.at)} 整點出現</b><button class="wbb-x" aria-label="關閉">✕</button>`;b.querySelector('.wbb-x').onclick=()=>b.remove();const j=b.querySelector('#wbbJoin');if(j)j.onclick=()=>act({op:'wbjoin'}).then(r=>{if(r&&r.s)this.set(r.s);if(r&&!r.e){b.remove();IDLE.battle()}});clearTimeout(this._bt);this._bt=setTimeout(()=>b.remove(),live?120e3:300e3);try{if(document.hidden&&'Notification' in window&&Notification.permission==='granted'&&(typeof SET==='undefined'||SET.sysNotify))new Notification(live?'世界王開打了！':'世界王即將出現',{body:live?(m.n||'')+' 正在祭壇等你，點開遊戲參戰':'整點 '+this.hhmm(m.at)+' 出現',icon:'icon-192.png'})}catch(e){}},
  pkt(m){if(m.t==='wb'){this.set(m.s);this.hud();return 1}
-  if(m.t==='wbs'){const T={live:`⚔ 世界王「${m.n}」出現了！到 狩獵場 → 世界王 參戰`,soon:'⏰ 世界王將在 '+this.hhmm(m.at)+' 整點出現',done:m.killed?`🏆 世界王「${m.n}」已被討伐！獎勵已寄到信箱`:`世界王「${m.n}」已離開`,revive:`🔥 ${m.n} 涅槃復活！`}[m.ph];if(T){toast(T);if(typeof IDLE!=='undefined'&&IDLE.addTick)IDLE.addTick({t:T})}this.poll=0;return 1}return 0}};
+  if(m.t==='wbs'){const T={live:`⚔ 世界王「${m.n}」出現了！到 狩獵場 → 世界王 參戰`,soon:'⏰ 世界王將在 '+this.hhmm(m.at)+' 整點出現',done:m.killed?`🏆 世界王「${m.n}」已被討伐！獎勵已寄到信箱`:`世界王「${m.n}」已離開`,revive:`🔥 ${m.n} 涅槃復活！`}[m.ph];if(m.ph==='live')T.live=`⚔ 世界王「${m.n}」出現了！冒險 → 世界王 →「立即參戰」`;const T2={...T};if(T2[m.ph]){toast(T2[m.ph]);if(typeof IDLE!=='undefined'&&IDLE.addTick)IDLE.addTick({t:T2[m.ph]})}this.poll=0;if(m.ph==='live'||m.ph==='soon')this.banner(m);if(m.ph==='live'&&this.s){this.s={...this.s,ph:'live',id:m.id,n:m.n,end:m.end};this._key=null;if(this.visible())IDLE.panel()}if(m.ph==='done'){const b=document.getElementById('wbBanner');if(b)b.remove()}req({op:'wb'}).then(r=>{if(r&&r.s)this.set(r.s)});return 1}return 0}};
 // 掛到放置介面：世界王分頁、等級鎖跟 GM 參數 wbMinLv
 (()=>{if(typeof IDLE==='undefined')return;const ph=IDLE.p_hunt,bd=IDLE.bind;
  IDLE.p_hunt=function(){if(this.sub==='boss')return this.subTabs()+WBU.html();return ph.call(this)};
@@ -3651,7 +3694,10 @@ window.CPOW=d=>Math.round((d.atk||0)+(d.matk||0)+(d.def||0)*1.5+(d.mdef||0)*1.5+
  const b0=IDLE.bind;IDLE.bind=function(p){b0.call(this,p);p.querySelectorAll('[data-n2]').forEach(b=>b.onclick=()=>{const [t,s]=b.dataset.n2.split(':');go2(t,s)})};
  function hi(t){const n=$('#iNav');if(n)n.querySelectorAll('.i-nv').forEach(b=>{const on=b.dataset.t===t;b.classList.toggle('on',on);b.setAttribute('aria-current',on?'page':'false')})}
  function strip(){let s=$('#n2Strip');const show=IDLE.on&&IDLE.mode==='battle'&&IDLE.mob()&&IDLE.n2==='adv';if(!s){if(!show)return;s=document.createElement('div');s.id='n2Strip';s.className='n2-strip';document.body.appendChild(s)}
-  s.hidden=!show;if(show){s.innerHTML=T.adv.map(([k,n])=>`<button class="${k==='hunt'?'on':''}" data-n2="adv:${k}">${n}</button>`).join('');s.querySelectorAll('[data-n2]').forEach(b=>b.onclick=()=>{const [t,k]=b.dataset.n2.split(':');go2(t,k)});const st=$('#idl .i-st'),nav=$('#iNav');const ref=st&&st.offsetHeight?st:nav;if(ref)s.style.bottom=(innerHeight-ref.getBoundingClientRect().top+4)+'px'}}
+  /* B6 #20b：戰鬥畫面不再多一整排二級導覽（跟底部 5 分頁疊在一起），改成一顆浮動「選單」鈕，點開底部抽屜 */
+  s.hidden=!show;if(show){if(!s.dataset.fab){s.dataset.fab=1;s.className='n2-fab';s.innerHTML='<button type="button" aria-label="冒險選單"><i>☰</i><small>選單</small></button>';s.querySelector('button').onclick=()=>{const L=T.adv.filter(x=>has(x[2])&&x[0]!=='hunt');if(!window.SHEET){go2('adv',L[0][0]);return}SHEET.open(`<div class="n2-fabl">${L.map(([k,n])=>`<button type="button" data-k="${k}">${n}</button>`).join('')}</div>`,el=>{el.querySelectorAll('[data-k]').forEach(b=>b.onclick=()=>{SHEET.close(true);go2('adv',b.dataset.k)})},{title:'冒險'})}}
+   const ab=$('#autob')||$('#idl .i-auto');const st=$('#idl .i-st'),nav=$('#iNav');const ref=st&&st.offsetHeight?st:nav;if(ref)s.style.bottom=(innerHeight-ref.getBoundingClientRect().top+104)+'px'}}
+ window.N2GO=(t,k)=>go2(t,k);
  function go2(tab,sub){if(!T[tab])tab='adv';const prev=IDLE.n2,pi=ORD.indexOf(prev),ni=ORD.indexOf(tab);const L=T[tab].filter(x=>has(x[2]));let s=sub||IDLE.n2s[tab]||L[0][0];if(!L.find(x=>x[0]===s))s=L[0][0];const oi=L.findIndex(x=>x[0]===(IDLE.n2s[tab]||L[0][0]));IDLE.n2s[tab]=s;IDLE.n2=tab;const o=L.find(x=>x[0]===s)[2];
   STK.clear();if(window.SHEET)SHEET.close(true);
   if(o.battle){IDLE.n2s.adv='hunt';IDLE.battle();hi(tab);strip();return}
@@ -3669,8 +3715,22 @@ window.CPOW=d=>Math.round((d.atk||0)+(d.matk||0)+(d.def||0)*1.5+(d.mdef||0)*1.5+
   const av=$('#iAvb');if(av)av.onclick=()=>avMenu();const ml=$('#iMall');if(ml)ml.onclick=()=>go2('shop','mall');const cf=$('#iCfg');if(cf)cf.onclick=()=>go2('char','equip');
   addEventListener('resize',strip)};
  const bt0=IDLE.battle;IDLE.battle=function(){bt0.call(this);this.n2='adv';hi('adv');strip()};
- function avMenu(){const m=G.me;const it=[['char:stat','👤','角色資訊'],['soc:mail','✉️','信箱'],['adv:set','⚙️','掛機設定'],['w:settings','🔧','遊戲設定'],['guide','📖','冒險指南'],['adv:set#code','🎟️','序號兌換']];
-  SHEET.open(`<div class="n2av"><img src="${IDLE.chImg(m.job)}" alt=""><div><b>${esc(m.name)}</b><small>${esc(IDLE.clsName(m.job))} · Lv ${m.blv}</small></div></div><div class="n2grid">${it.map(([k,ic,n])=>`<button data-k="${k}"><span>${ic}</span>${n}</button>`).join('')}</div>`,b=>{b.querySelectorAll('[data-k]').forEach(x=>x.onclick=()=>{const k=x.dataset.k;SHEET.close(true);if(k==='guide')return IDLE.guideShow();if(k.startsWith('w:')){const w=k.slice(2);if(WINS[w]){UI.win(w)}return}const [t,s]=k.split('#')[0].split(':');go2(t,s);if(k.endsWith('#code'))setTimeout(()=>{const c=$('#iCode');if(c){c.scrollIntoView({block:'center'});c.focus()}},300)})},{title:'選單'})}
+ function avMenu(){const m=G.me;const pw=window.CPOW?CPOW(G.d):0;const sup=(G.D.params&&G.D.params.support)||'';
+  // B6 #27：角色卡＋設定／帳號／客服公告兌換；已在下方分頁有的入口（角色資訊、信箱、掛機設定）不再重複
+  const sec=(t,a)=>`<div class="avs"><h4>${t}</h4>${a.map(([k,ic,n,sub])=>`<button class="avr${k==='out'?' red':''}" data-k="${k}"><span>${ic}</span><b>${n}</b>${sub?`<small>${sub}</small>`:''}<i>›</i></button>`).join('')}</div>`;
+  SHEET.open(`<div class="avc"><img src="${IDLE.chImg(m.job)}" alt=""><div class="avci"><b>${esc(m.name)}</b><small>${esc(IDLE.clsName(m.job))} · Lv ${m.blv}／${m.jlv||1}</small><small>戰力 <em>${(pw||0).toLocaleString()}</em></small><button class="avid" data-k="copy">ID：${esc(m.name)} <span>複製</span></button></div></div>`
+   +sec('設定',[['set','🔧','遊戲設定','畫質、音效、通知']])
+   +sec('帳號',[['chars','🔁','切換角色'],['out','🚪','登出']])
+   +sec('其他',[['news','📢','公告與冒險指南'],['code','🎟️','序號兌換'],['sup','💬','客服','回報問題請附上角色 ID']]),
+   b=>{b.querySelectorAll('[data-k]').forEach(x=>x.onclick=async()=>{const k=x.dataset.k;
+    if(k==='copy'){try{await navigator.clipboard.writeText(m.name);toast('已複製角色 ID')}catch(e){toast('角色 ID：'+m.name)}return}
+    if(k==='out'||k==='chars'){if(!confirm(k==='out'?'確定要登出嗎？會先存檔再中斷連線。':'確定要切換角色嗎？會先存檔再回到角色列表。'))return;SHEET.close(true);return bye(k==='out')}
+    SHEET.close(true);
+    if(k==='set')return UI.win('settings');if(k==='news')return IDLE.guideShow();if(k==='code')return window.CODESHEET&&CODESHEET();
+    if(k==='sup'){SHEET.open(`<div class="avsup"><p>遇到問題時，請把下面的角色 ID 和發生時間一起告訴我們。</p><p><b>角色 ID：</b>${esc(m.name)}</p>${sup?`<p><a href="${esc(sup)}" target="_blank" rel="noopener">聯絡客服</a></p>`:'<p>也可以到「社交 › 信箱」寫信給 GM。</p>'}</div>`,null,{title:'客服'})}})},{title:'選單'})}
+ async function bye(out){const c=(typeof CRED!=='undefined'&&CRED&&CRED[0])||{};try{await Promise.race([req(out?{op:'logout',tok:c.tok}:{op:'bye'}),new Promise(r=>setTimeout(r,2500))])}catch(e){}
+  try{if(out){localStorage.removeItem('robAcc');localStorage.removeItem('robAuto')}else{const a=JSON.parse(localStorage.robAcc||'null');if(a){a.char='';localStorage.robAcc=JSON.stringify(a)}}}catch(e){}
+  try{CRED=null;WS.close(4000)}catch(e){}location.reload()}
  // 紅點：屬性點、信件
  setInterval(()=>{if(!IDLE.on||!G.me)return;const n=$('#iNav');if(!n)return;const R={char:G.me.stp>0,soc:!!(G.me.mailN||G.me.mail),shop:false};n.querySelectorAll('.i-nv').forEach(b=>{const r=b.querySelector('.rd');if(r)r.hidden=!R[b.dataset.t]})},1500);
  // ---- 頁面堆疊（UX P0-5）：視窗上再開視窗時，下層先藏起來，上層有「‹ 返回」；關掉上層就回到下層 ----
@@ -3717,6 +3777,24 @@ window.STATPOP=(k,el,d)=>{let t=STATHELP[k];if(!t)return;if(k==='ASPD'&&d&&d.aps
  setTimeout(()=>{const off=e=>{if(!p.contains(e.target)){p.remove();document.removeEventListener('pointerdown',off,true)}};document.addEventListener('pointerdown',off,true)},0)};
 document.addEventListener('click',e=>{const t=e.target.closest&&e.target.closest('[data-sth]');if(!t)return;e.stopPropagation();STATPOP(t.dataset.sth,t,G&&G.d)},true);
 })();
+// B6 #20e：序號兌換從掛機設定移出，改由頭像選單開啟
+window.CODESHEET=()=>{if(!window.SHEET)return;SHEET.open(`<div class="i-code"><div class="cr"><input id="cdIn" maxlength="29" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="輸入序號"><button class="i-btn g" id="cdGo">兌換</button></div><p class="res" id="cdR"></p></div>`,b=>{const go=b.querySelector('#cdGo'),inp=b.querySelector('#cdIn'),out=b.querySelector('#cdR');setTimeout(()=>inp.focus(),80);
+ go.onclick=async()=>{const c=inp.value.trim();if(!c)return;go.disabled=true;out.className='res';out.textContent='兌換中…';try{const r=await req({op:'redeem',code:c});if(r&&r.e){out.className='res bad';out.textContent=r.e}else if(r&&r.got){const g=r.got,L=[];for(const [id,n] of g.items||[])L.push(((G.D.items[id]||{}).n||id)+' ×'+n);if(g.zeny)L.push('金幣 '+g.zeny);if(g.dia)L.push('鑽石 '+g.dia);out.className='res ok';out.textContent='兌換成功：'+(L.join('、')||'已領取');inp.value=''}else{out.className='res ok';out.textContent='兌換成功'}}catch(e){out.className='res bad';out.textContent='兌換失敗，請稍後再試'}go.disabled=false}},{title:'序號兌換'})};
+// B6 #28 技能唱名：頭上顯示技能名，新的直接蓋掉舊的、約 1 秒淡出；觸發技（普攻/卡片/詞綴）用青色小字；同技能 0.4 秒內不重複；隊友與他人字較小；設定：全部／只顯示自己／關閉
+window.CALL={m:new Map(),
+ nm(e){const D=G.D;if(e.n)return e.n;if(e.sk&&D.skills[e.sk])return D.skills[e.sk].n;if(e.b2&&D.books&&D.books[e.b2])return D.books[e.b2].n;return null},
+ ev(e){try{if(!G.me||!G.D)return;const T=e.t;let kind=null;if(T==='hit'&&(e.sk||e.b2)&&!e.spl)kind=(e.tri||e.trig)?'proc':'act';else if(T==='cast'&&(e.sk||e.b2))kind='act';else if(T==='trig')kind='proc';if(!kind)return;const n=this.nm(e);if(n)this.set(e.src,n,kind)}catch(x){}},
+ set(pid,text,kind){const mode=(typeof SET!=='undefined'&&SET.callout)||'all';if(mode==='off')return;const mine=pid===G.me.name;if(mode==='mine'&&!mine)return;const now=performance.now();const o=this.m.get(pid);if(o&&o.text===text&&now-o.t0<400)return;if(o&&o.kind==='act'&&kind==='proc'&&now-o.t0<350)return;/* 主動技剛喊不要被觸發技立刻蓋掉 */this.m.set(pid,{text,kind,t0:now,mine,el:o&&o.el})},
+ frame(){const cv=document.getElementById('cv');const now=performance.now();if(!cv||!G.P||typeof wpos!=='function'){requestAnimationFrame(()=>this.frame());return}
+  // 舊的頭頂標籤（「技能名!!」「✦ 卡片 → 技能」）改由唱名顯示，避免重複
+  if(G.labels)for(let i=G.labels.length-1;i>=0;i--){const t=G.labels[i]&&G.labels[i].text;if(typeof t==='string'&&(t.endsWith('!!')||t.startsWith('✦ ')))G.labels.splice(i,1)}
+  const r=cv.getBoundingClientRect(),kx=r.width/cv.width,ky=r.height/cv.height;
+  for(const [pid,o] of this.m){const p=G.P[pid];const age=(now-o.t0)/1000;if(!p||age>1.15||(typeof IDLE!=='undefined'&&IDLE.on&&IDLE.mode!=='battle')){if(o.el)o.el.remove();this.m.delete(pid);continue}
+   if(!o.el){o.el=document.createElement('div');document.body.appendChild(o.el)}o.el.className='callout '+o.kind+(o.mine?' me':' ot');if(o.el.textContent!==o.text+(o.kind==='act'?'!!':''))o.el.textContent=o.text+(o.kind==='act'?'!!':'');
+   const [x,y]=wpos(p.x,p.y);const hh=34*G.zoom;o.el.style.transform=`translate(${(r.left+x*kx).toFixed(1)}px,${(r.top+(y-hh)*ky).toFixed(1)}px) translate(-50%,-100%) scale(${age<.08?1.25-age*3:1})`;o.el.style.opacity=age<.8?1:Math.max(0,1-(age-.8)/.35)}
+  requestAnimationFrame(()=>this.frame())}};
+requestAnimationFrame(()=>CALL.frame());
+(function hookFX(){if(typeof FXev!=='function'){setTimeout(hookFX,300);return}if(FXev._call)return;const f0=FXev;FXev=function(e){f0(e);CALL.ev(e)};FXev._call=1;setInterval(()=>{if(!FXev._call){const f1=FXev;FXev=function(e){f1(e);CALL.ev(e)};FXev._call=1}},2000)})();
 
 // ===== 啟動 =====
 // R10：密碼不落地。localStorage 只存伺服器發的 session token；舊資料（robAcc.pw／robAuto／robGuest 陣列）自動換成 token 並刪除密碼
