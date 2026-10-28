@@ -1,0 +1,17 @@
+{
+ "version": 1,
+ "ui": {
+  "base": "assets/custom/",
+  "vars": {
+   "--ro-tb1": "#8fa3d1",
+   "--ro-tb2": "#5f78b0"
+  },
+  "images": {
+   "win": "ui/win.png",
+   "tb": "ui/title.png",
+   "btn": "ui/btn.png",
+   "slot": "ui/slot.png",
+   "close": "ui/close.png"
+  }
+ }
+}

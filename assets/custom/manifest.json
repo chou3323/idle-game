@@ -1,6 +1,11 @@
 {
   "version": 1,
   "_doc": "chou 的素材覆蓋檔：格式與 ../manifest.json 相同，只寫你要換的項目就好（會深度合併）。範例見 README「換成官方風格素材」。目前是空的 = 全部用內建原創素材。",
+  "ui": {
+    "_doc": "視窗皮膚覆蓋（全部可省略）。images 的檔名相對於 assets/custom/；vars 可重新上色。見 README「舊版 RO 風格框」。",
+    "vars": {},
+    "images": {}
+  },
   "mobs": {},
   "bosses": {},
   "maps": {},

@@ -1,5 +1,5 @@
-# 曙光 Aurevia — 割草大畫面 v2（原型・假資料）
-純前端、無後端、不碰 API/DB/玩家資料。存檔只在瀏覽器 localStorage（key `aur_horde_v2`）。
+# 曙光 Aurevia — 割草大畫面 v3（原型・假資料）
+純前端、無後端、不碰 API/DB/玩家資料。存檔只在瀏覽器 localStorage（key `aur_horde_v2`（v3 沿用同一存檔，新欄位自動補齊））。
 
 ## 內容
 - **裝備**（E）：8 個欄位（頭飾/武器/鎧甲/鞋子/披風/副手/飾品×2），背包 24 格，品階色框、對比、賣普通/賣優良；裝備直接影響 ATK/MATK/DEF/HP/暴擊/攻速與角色光環（外觀會微調亮度）。
@@ -7,6 +7,27 @@
 - **地圖**（M）：6 張主題場景（霧沼濕地/荒漠/洞窟/雪原/熔岩/遺跡），各 12 種怪（3 階 × 12 款）、不同體型/顏色/行為（衝撞、飛行、遠程、固定、重甲、追擊）與各自 BOSS。
 - **掉落**（L）：素材統計 + 掉落紀錄；HUD 有等級、Base/Job 經驗、HP/SP、Zeny。
 - XP 風格視窗：桌機可拖曳、點擊置頂；手機（≤600px）為底部彈出面板。
+
+## v3 變更摘要
+- **舊版 RO 風格視窗（預設）**：奶油/灰色面板、深色細圓角框、藍灰漸層標題列＋小關閉鈕、斜角按鈕/分頁/捲軸、裝備/背包格框、經典 HP/SP 條。全部用 CSS/SVG 自繪（`rotheme.css`），**未使用任何官方 UI 圖**。上方「外觀」按鈕可切回 Windows XP 風（記在 localStorage `aur_theme`）。
+- **割草＋難度**：原創 11 職與技能（連鎖/範圍/全螢幕）、連殺 COMBO、菁英/BOSS、掉寶光柱；討伐模式 4 難度 × 6 地圖、每圖 6 波（第 6 波 BOSS）、每波選 1/3 強化（12 種可疊 3 層）、技能升級（Lv1-8）、藥水、可死亡／失敗重試／下一關。
+- **資料**：`data/monsters_ro.json`（2555 筆，**只有數值事實**）→ `data/aur_map.json`/`aur_mobs.json`：36 隻 Aurevia 怪各對應一隻規模相近的 RO 怪的 HP/ATK/DEF/屬性/移速/掉率「形狀」；戰鬥有屬性倍率表、掉落用壓縮後的掉率。名稱與美術仍是 Aurevia 原創。來源說明見 `data/README.md`。
+- **美術**：36 隻小怪 + 3 隻 BOSS 皆為原創大眼可愛像素風（`tools/gen_mobs.py`、`tools/gen_bosses.py` 程序化繪製）。
+
+## 視窗皮膚主題化
+所有顏色都是 `--ro-*` CSS 變數（`rotheme.css` 開頭）；也可用 `assets/custom/manifest.json` 的 `ui` 區塊覆蓋，不用改程式：
+
+    "ui": {
+      "base": "assets/custom/",                      // 圖檔相對路徑的前綴（可省略）
+      "vars":   { "--ro-tb1": "#8fa3d1", "--ro-body": "#f1ecd9" },
+      "images": { "win": "ui/win.png",    // 視窗外框（border-image，切片寬用 --ro-win-slice / --ro-win-bw 調）
+                  "tb": "ui/title.png",   // 標題列背景
+                  "btn": "ui/btn.png", "tab": "ui/tab.png", "close": "ui/close.png",
+                  "slot": "ui/slot.png",  // 裝備/背包格框
+                  "hp": "ui/hp.png", "sp": "ui/sp.png", "body": "ui/body.png" }
+    }
+
+沒填的項目一律用內建 CSS 繪製的外觀。
 
 ## 執行
     cd horde && python3 -m http.server 18440 --bind 127.0.0.1

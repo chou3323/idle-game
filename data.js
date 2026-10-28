@@ -39,25 +39,34 @@ const MAPS=[
  {id:'l3',n:'熔岩深淵 01',tier:3,theme:'lava',  lv:'66–92',w:W([2,3,2,3,2,1,2,3,3,3,1,2]),boss:{n:'熔岩龍',img:'magma_boss'}},
  {id:'r3',n:'星墜廢墟 07',tier:3,theme:'ruins', lv:'68–92',w:W([1,1,2,2,2,3,3,2,1,2,3,3]),boss:{n:'星墜龍',img:'magma_boss',hue:250}}];
 // jobs
-const JOBS={kni:{n:'騎士',wk:'sword'},lnc:{n:'槍兵',wk:'spear'},mer:{n:'商人',wk:'axe'},mnk:{n:'武僧',wk:'fist'},acl:{n:'服事',wk:'staff'},arc:{n:'法師',wk:'staff'},
- rgr:{n:'遊俠',wk:'bow'},brd:{n:'吟遊',wk:'harp'},dnc:{n:'舞者',wk:'whip'},gun:{n:'槍手',wk:'gun'},hsn:{n:'刺客',wk:'dagger'}};
+const JOBS={kni:{n:'曙光衛士',wk:'sword',role:'坦克／近戰',d:'站在最前線的重甲劍士，旋刃與審判之光掃清近身怪群。'},
+ lnc:{n:'穿雲槍騎',wk:'spear',role:'貫穿／爆發',d:'長槍一線貫穿整排敵人，龍炎吐息補足中距離。'},
+ mer:{n:'熔金匠師',wk:'axe',role:'範圍／經濟',d:'把金幣當彈藥的匠師，傷害高、掉寶加成。'},
+ mnk:{n:'破軍拳師',wk:'fist',role:'連擊／近戰',d:'拳拳連發的氣功師，連擊越高越強。'},
+ acl:{n:'晨曦祭司',wk:'staff',role:'治療／聖光',d:'用聖輝與癒光撐住全隊，聖屬性剋制不死與暗系怪。'},
+ arc:{n:'星砌術士',wk:'staff',role:'範圍／連鎖',d:'連鎖雷霆與墜星雨製造螢幕級的連殺，血量脆弱。'},
+ rgr:{n:'風行獵手',wk:'bow',role:'遠程／風屬',d:'遠距箭雨壓制，陷阱把怪群聚在一起。'},
+ brd:{n:'迴響詩人',wk:'harp',role:'輔助／連鎖',d:'音波與弦刃造成範圍傷害，戰歌強化自己。'},
+ dnc:{n:'花影舞者',wk:'whip',role:'機動／範圍',d:'花瓣風暴與魅影步，念屬性對暗系與無形怪有效。'},
+ gun:{n:'火鳴槍士',wk:'gun',role:'遠程／高傷',d:'榴彈與狙擊的火力派，攻速快。'},
+ hsn:{n:'夜隱刺客',wk:'dagger',role:'爆擊／單體',d:'影襲與暗殺的暴擊型，毒霧處理雜兵。'}};
 const EL={fire:{c1:'#ff8a2a',c2:'#ffe27a',num:'o',n:'火'},ice:{c1:'#6fcfff',c2:'#ffffff',num:'b',n:'水'},bolt:{c1:'#ffe14a',c2:'#ffffff',num:'c',n:'雷'},
  holy:{c1:'#fff0a0',c2:'#ffffff',num:'c',n:'聖'},wind:{c1:'#8af0b0',c2:'#eafff2',num:'g',n:'風'},earth:{c1:'#d2a35c',c2:'#f4e0b0',num:'o',n:'地'},
  poison:{c1:'#9ae04a',c2:'#e6ffb0',num:'g',n:'毒'},dark:{c1:'#a45ae8',c2:'#e4c8ff',num:'p',n:'闇'},phys:{c1:'#ffffff',c2:'#cfe2ff',num:'w',n:'無'},
  pink:{c1:'#ff9ad0',c2:'#ffe0f0',num:'k',n:'念'},gold:{c1:'#ffd84a',c2:'#fff5c0',num:'c',n:'無'},heal:{c1:'#7dffa8',c2:'#eafff2',num:'g',n:'治'}};
 // skill: [name, kind, el, cd(s), sp, mult, radius, count]
-const K={bolt:'射擊/彈道',nova:'範圍爆發',pillar:'落雷柱',meteor:'隕落',arrows:'箭雨',wave:'斬擊波',heal:'治療',buff:'增益'};
+const K={chain:'連鎖',bolt:'射擊/彈道',nova:'範圍爆發',pillar:'落雷柱',meteor:'隕落',arrows:'箭雨',wave:'斬擊波',heal:'治療',buff:'增益'};
 const SK={
- arc:[['火焰箭','bolt','fire',2.2,8,1.5,36,3],['冰霜新星','nova','ice',5,18,1.7,86,0],['雷神之怒','pillar','bolt',7,26,2.8,62,0],['隕石風暴','meteor','fire',12,40,2.4,52,4]],
- kni:[['旋風斬','nova','phys',4,10,1.6,70,0],['破甲斬','wave','phys',3,8,2.1,0,0],['戰吼','buff','gold',20,20,0,0,0],['聖光衝擊','pillar','holy',9,24,2.6,62,0]],
- lnc:[['貫穿突刺','wave','phys',3,8,2.2,0,0],['龍息','bolt','fire',5,16,2.0,40,2],['旋槍','nova','phys',5,12,1.5,76,0],['天槍降臨','pillar','holy',10,30,3.0,60,0]],
- mer:[['金幣風暴','arrows','gold',6,14,1.5,64,0],['重擊','wave','phys',3,8,2.0,0,0],['加速','buff','gold',20,16,0,0,0],['爆裂錢袋','meteor','gold',11,30,2.0,46,3]],
- mnk:[['氣彈','bolt','holy',2.4,8,1.4,30,3],['連環拳','wave','phys',2.5,8,2.0,0,0],['阿修羅','nova','holy',9,30,2.8,92,0],['金剛','buff','holy',20,18,0,0,0]],
- acl:[['治癒術','heal','heal',6,16,0,150,0],['聖光','pillar','holy',6,16,2.0,56,0],['神佑','buff','holy',25,26,0,0,0],['驅魔','nova','holy',8,22,1.8,92,0]],
- rgr:[['箭雨','arrows','wind',5,14,1.5,68,0],['連射','bolt','wind',2.2,8,1.3,28,3],['地雷陷阱','nova','earth',7,18,2.2,70,0],['鷹眼','buff','wind',20,16,0,0,0]],
- brd:[['戰歌','buff','pink',20,18,0,0,0],['音波','nova','dark',6,16,1.7,92,0],['治癒樂章','heal','heal',8,22,0,150,0],['彈奏','bolt','pink',2.4,8,1.4,30,3]],
- dnc:[['舞步','buff','pink',20,16,0,0,0],['花瓣風暴','nova','pink',6,18,1.8,90,0],['魅惑','bolt','pink',3,10,1.5,34,2],['劍舞','wave','pink',3,10,2.0,0,0]],
- gun:[['連射','bolt','phys',2.2,8,1.2,24,3],['榴彈','meteor','fire',9,24,2.0,44,2],['暴風射擊','nova','wind',6,18,1.7,80,0],['狙擊','bolt','phys',5,16,3.4,26,1]],
+ arc:[['星火箭','bolt','fire',2.2,8,1.5,36,3],['凜冬環','nova','ice',5,18,1.7,86,0],['連鎖雷霆','chain','bolt',6,22,1.9,90,7],['墜星雨','meteor','fire',12,40,2.4,52,4]],
+ kni:[['旋刃陣','nova','phys',4,10,1.6,70,0],['破陣斬','wave','phys',3,8,2.1,0,0],['戰旗','buff','gold',20,20,0,0,0],['曙光審判','pillar','holy',9,24,2.6,62,0]],
+ lnc:[['穿雲突','wave','phys',3,8,2.2,0,0],['龍炎吐息','bolt','fire',5,16,2.0,40,2],['迴旋槍舞','nova','phys',5,12,1.5,76,0],['天槍降臨','pillar','holy',10,30,3.0,60,0]],
+ mer:[['金幣風暴','arrows','gold',6,14,1.5,64,0],['熔鐵重錘','wave','phys',3,8,2.0,0,0],['鍍金加速','buff','gold',20,16,0,0,0],['爆裂錢袋','meteor','gold',11,30,2.0,46,3]],
+ mnk:[['氣功彈','bolt','holy',2.4,8,1.4,30,3],['百裂拳','wave','phys',2.5,8,2.0,0,0],['震天掌','nova','holy',9,30,2.8,92,0],['不動心法','buff','holy',20,18,0,0,0]],
+ acl:[['癒光','heal','heal',6,16,0,150,0],['聖輝','pillar','holy',6,16,2.0,56,0],['祝福','buff','holy',25,26,0,0,0],['淨罪之環','nova','holy',8,22,1.8,92,0]],
+ rgr:[['風暴箭雨','arrows','wind',5,14,1.5,68,0],['疾風連射','bolt','wind',2.2,8,1.3,28,3],['震地陷阱','nova','earth',7,18,2.2,70,0],['獵鷹之眼','buff','wind',20,16,0,0,0]],
+ brd:[['戰歌','buff','pink',20,18,0,0,0],['迴響音波','nova','dark',6,16,1.7,92,0],['療癒樂章','heal','heal',8,22,0,150,0],['弦刃連鎖','chain','pink',3.2,10,1.5,80,5]],
+ dnc:[['舞動','buff','pink',20,16,0,0,0],['花瓣風暴','nova','pink',6,18,1.8,90,0],['魅影步','chain','pink',3,10,1.5,84,4],['劍舞','wave','pink',3,10,2.0,0,0]],
+ gun:[['速射','bolt','phys',2.2,8,1.2,24,3],['榴彈','meteor','fire',9,24,2.0,44,2],['颶風彈幕','nova','wind',6,18,1.7,80,0],['狙擊','bolt','phys',5,16,3.4,26,1]],
  hsn:[['影襲','wave','dark',3,8,2.1,0,0],['毒霧','nova','poison',6,16,1.6,84,0],['暗殺','wave','phys',5,14,3.2,0,0],['隱身','buff','dark',20,14,0,0,0]]};
 const SKILLS={};for(const j in SK)SKILLS[j]=SK[j].map((a,i)=>({id:j+'_'+i,i,n:a[0],kind:a[1],el:a[2],cd:a[3],sp:a[4],mul:a[5],r:a[6],cnt:a[7]||1}));
 // ---- equipment ----
@@ -80,8 +89,30 @@ for(let t=0;t<5;t++){
 }
 const STAT_N={atk:'ATK',matk:'MATK',def:'DEF',hp:'HP',crit:'CRI',aspd:'ASPD'};
 const BAGMAT_VALUE=4;
+// ---- stage / difficulty / perks (our own roguelite layer) ----
+const EL2RO={fire:'fire',ice:'water',bolt:'wind',holy:'holy',wind:'wind',earth:'earth',poison:'poison',dark:'dark',phys:'neutral',pink:'ghost',gold:'neutral',heal:null};
+const RO_EL_N={neutral:'無',water:'水',earth:'地',fire:'火',wind:'風',poison:'毒',holy:'聖',dark:'闇',ghost:'念',undead:'不死'};
+const DIFFS=[{id:0,n:'普通',c:'#7bd66a',hp:1,atk:1,exp:1,drop:1,zeny:1,elite:.04,rec:1},
+ {id:1,n:'困難',c:'#ffd24a',hp:2.4,atk:2.1,exp:1.6,drop:1.35,zeny:2.2,elite:.07,rec:2},
+ {id:2,n:'惡夢',c:'#ff8a3a',hp:5.5,atk:4,exp:2.4,drop:1.8,zeny:4.5,elite:.1,rec:3},
+ {id:3,n:'地獄',c:'#ff4a5a',hp:12,atk:7,exp:3.6,drop:2.4,zeny:9,elite:.14,rec:4}];
+const WAVES=6;   // wave 6 = boss wave
+const PERKS=[
+ {id:'boom',n:'連環爆裂',ic:'💥',d:'擊殺有 {a}% 機率引爆，連鎖波及周圍怪物。',v:[14,22,30]},
+ {id:'vamp',n:'嗜血',ic:'🩸',d:'造成傷害的 {a}% 轉為生命。',v:[1.2,2.2,3.2]},
+ {id:'gold',n:'貪婪',ic:'💰',d:'Zeny 與掉落率 +{a}%。',v:[30,55,80]},
+ {id:'haste',n:'疾風',ic:'⚡',d:'技能冷卻縮短 {a}%。',v:[18,30,40]},
+ {id:'power',n:'巨力',ic:'🔥',d:'技能傷害 +{a}%。',v:[22,42,60]},
+ {id:'wall',n:'鐵壁',ic:'🛡',d:'受到傷害 -{a}%。',v:[16,28,38]},
+ {id:'mind',n:'靈泉',ic:'💧',d:'SP 回復速度 +{a}%。',v:[60,120,180]},
+ {id:'splash',n:'貫穿',ic:'🌀',d:'普攻附帶 {a}% 範圍傷害，波及周圍。',v:[35,60,85]},
+ {id:'combo',n:'連擊大師',ic:'🔗',d:'連擊保持時間 +{a} 秒，連擊加成加倍。',v:[1.5,2.5,3.5]},
+ {id:'rage',n:'狂熱',ic:'😈',d:'擊殺後 3 秒內傷害 +{a}%（可疊）。',v:[10,16,22]},
+ {id:'regen',n:'復甦',ic:'💚',d:'每清一波回復 {a}% 最大生命並提升上限。',v:[30,50,70]},
+ {id:'crit',n:'致命',ic:'🎯',d:'暴擊率 +{a}%，暴擊傷害 ×{b}。',v:[12,22,32],v2:[2.2,2.4,2.6]}];
 function sellValue(it){return 20+it.tier*it.tier*60+(it.ref||0)*15}
-return {TIERS,TPL,MOBS,MAPS,JOBS,EL,SKILLS,K,GRADES,SLOTS,ITEMS,STAT_N,WK,ORDER,BAGMAT_VALUE,sellValue,
+const CAL=Array.from({length:24},(_,i)=>{const k=.8+.035*i;return [+k.toFixed(3),+Math.pow(k,.8).toFixed(3)]});   // per-stage hp/atk calibration (headless ladder sim)
+return {CAL,EL2RO,RO_EL_N,DIFFS,WAVES,PERKS,TIERS,TPL,MOBS,MAPS,JOBS,EL,SKILLS,K,GRADES,SLOTS,ITEMS,STAT_N,WK,ORDER,BAGMAT_VALUE,sellValue,
   mapById:id=>MAPS.find(m=>m.id===id),
   behName:{charger:'衝撞',tank:'重甲',flyer:'飛行',ranged:'遠程',static:'固定',chase:'追擊'}};
 })();

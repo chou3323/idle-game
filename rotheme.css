@@ -1,0 +1,122 @@
+/* ==========================================================================
+   Aurevia "classic RO client" window skin — 100% original CSS / SVG (no official art).
+   Active when <html data-theme="ro"> (default). <html data-theme="xp"> keeps the XP look.
+   Everything is driven by CSS variables so a pack can re-colour it, and image
+   overrides can be dropped in via assets/custom/manifest.json  →  "ui": {...}  (see README).
+   ========================================================================== */
+html[data-theme=ro]{
+  /* palette */
+  --ro-bg:#46587a; --ro-body:#f1eee3; --ro-body2:#e6e2d3; --ro-panel:#ebe7d9; --ro-ink:#2a2f3c; --ro-mut:#6e7488;
+  --ro-bd:#2a3350; --ro-bd2:#fcfaf2; --ro-bd3:#9aa0b4;
+  --ro-tb1:#a9bbdc; --ro-tb2:#6a86b8; --ro-tb3:#4a6496; --ro-tb-text:#fff;
+  --ro-btn1:#fbfaf5; --ro-btn2:#d9d6c8; --ro-btn-bd:#7a8296; --ro-btn-hi:#fff; --ro-btn-sh:#a7a595;
+  --ro-sel1:#bcd0f0; --ro-sel2:#8aa8dc; --ro-slot1:#566a92; --ro-slot2:#2f3d60; --ro-slot-bd:#1b2440; --ro-slot-hi:#8fa3cc;
+  --ro-hp1:#7be07a; --ro-hp2:#2aa238; --ro-hplow1:#ffb25a; --ro-hplow2:#d4521a; --ro-sp1:#8ec4ff; --ro-sp2:#2f6fd0; --ro-ex1:#ffe58a; --ro-ex2:#d9a21b;
+  --ro-scroll-tr:#d8d4c4; --ro-scroll-th1:#c9d6ee; --ro-scroll-th2:#8da6d4;
+  /* image slots (a manifest "ui.images" entry replaces the matching variable with url(...)) */
+  --ro-img-win:none; --ro-img-tb:none; --ro-img-btn:none; --ro-img-slot:none; --ro-img-tab:none; --ro-img-close:none; --ro-img-hp:none; --ro-img-sp:none; --ro-img-body:none;
+  /* remap the legacy (XP) variables so every existing rule follows the new palette */
+  --bg:var(--ro-bg); --frame1:var(--ro-tb2); --frame2:var(--ro-tb3); --frame-line:var(--ro-bd);
+  --title-text:#fff; --body:var(--ro-body); --panel-hdr1:var(--ro-tb1); --panel-hdr2:var(--ro-tb2);
+  --btn1:var(--ro-btn1); --btn2:var(--ro-btn2); --btn-line:var(--ro-btn-bd);
+  --tab-sel1:var(--ro-sel1); --tab-sel2:var(--ro-sel2); --ink:var(--ro-ink); --mut:var(--ro-mut);
+  --hp:#3fbf45; --sp:#3a74d8; --exp:#d9a21b; --warn:#e8760e;
+  --font:"Tahoma","Verdana","Microsoft JhengHei","Noto Sans TC","Noto Sans CJK TC","PingFang TC",system-ui,sans-serif;
+}
+html[data-theme=ro] body{background:var(--ro-bg);background-image:linear-gradient(135deg,rgba(255,255,255,.05) 25%,transparent 25%,transparent 50%,rgba(255,255,255,.05) 50%,rgba(255,255,255,.05) 75%,transparent 75%);background-size:6px 6px}
+/* ---------- window chrome: thin dark rounded border, cream body, blue-grey title bar ---------- */
+html[data-theme=ro] .win{background:var(--ro-body);border:1px solid var(--ro-bd);border-radius:5px;padding:0;
+  box-shadow:inset 0 0 0 1px var(--ro-bd2),0 2px 5px rgba(0,0,0,.35);overflow:hidden;
+  border-image:var(--ro-img-win) var(--ro-win-slice,8) / var(--ro-win-bw,8px) stretch}
+html[data-theme=ro] .win>.tb{height:22px;padding:0 4px 0 7px;gap:5px;color:var(--ro-tb-text);font:700 12px/22px var(--font);letter-spacing:.3px;text-shadow:0 1px 1px rgba(10,20,50,.7);
+  background:var(--ro-img-tb,none),linear-gradient(180deg,var(--ro-tb1) 0%,var(--ro-tb2) 52%,var(--ro-tb3) 100%);background-size:100% 100%;
+  border-bottom:1px solid var(--ro-bd);box-shadow:inset 0 1px 0 rgba(255,255,255,.55)}
+html[data-theme=ro] .win>.tb .ic{color:#fff;font-size:10px;opacity:.9}
+html[data-theme=ro] .win>.tb button{all:unset;box-sizing:border-box;cursor:pointer;width:15px;height:15px;line-height:12px;text-align:center;font:700 11px/12px var(--font);color:#2a3a6a;text-shadow:none;
+  border:1px solid #33406a;border-radius:3px;background:var(--ro-img-close,none),linear-gradient(#fff,#c9d2e8);box-shadow:inset 0 -1px 0 #a6b2d4}
+html[data-theme=ro] .win>.tb button:hover{background:linear-gradient(#fff,#e7edfb)}
+html[data-theme=ro] .win>.tb button:active{box-shadow:inset 0 1px 2px #6a76a0}
+html[data-theme=ro] .win>.tb button[aria-label="關閉"],html[data-theme=ro] .fw>.tb button.x{color:#8a1d1d}
+html[data-theme=ro] .win>.bd{background:var(--ro-img-body,none),var(--ro-body);background-size:100% 100%;border:none;border-radius:0;border-top:1px solid #fff;box-shadow:inset 0 0 0 1px rgba(154,160,180,.55)}
+html[data-theme=ro] #mainwin>.bd{background:linear-gradient(#e2deCf,#d4d0c0)}
+html[data-theme=ro] .fw>.bd.fwb{background:var(--ro-body)!important;color:var(--ro-ink)}
+html[data-theme=ro] .win.float,html[data-theme=ro] .fw{box-shadow:inset 0 0 0 1px var(--ro-bd2),3px 5px 14px rgba(0,0,0,.55)}
+html[data-theme=ro] .win .rz:after{border-color:#6a7aa6}
+/* ---------- buttons ---------- */
+html[data-theme=ro] .btn,html[data-theme=ro] .mini,html[data-theme=ro] .tab,html[data-theme=ro] .badge,html[data-theme=ro] #menubar .mb{
+  background:var(--ro-img-btn,none),linear-gradient(180deg,var(--ro-btn-hi) 0%,var(--ro-btn1) 30%,var(--ro-btn2) 100%);background-size:100% 100%;
+  border:1px solid var(--ro-btn-bd);border-radius:3px;color:var(--ro-ink);
+  box-shadow:inset 0 1px 0 #fff,inset -1px -1px 0 var(--ro-btn-sh),0 1px 0 rgba(0,0,0,.18);font-family:var(--font)}
+html[data-theme=ro] .btn:hover,html[data-theme=ro] .mini:hover,html[data-theme=ro] .tab:hover,html[data-theme=ro] #menubar .mb:hover{background:linear-gradient(#fff,#ece9dc)}
+html[data-theme=ro] .btn:active,html[data-theme=ro] .mini:active,html[data-theme=ro] #menubar .mb:active,html[data-theme=ro] .go:active{box-shadow:inset 1px 1px 2px var(--ro-btn-sh);transform:translateY(1px)}
+html[data-theme=ro] .btn:disabled{opacity:.55}
+html[data-theme=ro] .mini.on,html[data-theme=ro] #menubar .mb.on,html[data-theme=ro] .tab[aria-selected=true]{background:linear-gradient(var(--ro-sel1),var(--ro-sel2));border-color:#4a64a0;box-shadow:inset 1px 1px 2px rgba(20,40,90,.35);font-weight:700}
+html[data-theme=ro] .fw .btn.go2,html[data-theme=ro] .go{background:linear-gradient(#d8e6ff,#7d9fdc);border-color:#3a5290;color:#14224a;border-radius:3px;font-weight:700;box-shadow:inset 0 1px 0 #fff,inset -1px -1px 0 #5472b4}
+html[data-theme=ro] .fw .btn.go2:hover{background:linear-gradient(#eaf2ff,#94b2e8)}
+html[data-theme=ro] .btn:focus-visible,html[data-theme=ro] .mini:focus-visible,html[data-theme=ro] #menubar .mb:focus-visible{outline:2px solid #2b4aa8;outline-offset:1px}
+/* tabs: classic squared tabs with a rounded top */
+html[data-theme=ro] .tab{border-radius:4px 4px 0 0}
+html[data-theme=ro] #menubar{background:linear-gradient(#d6dcea,#b9c3dc);border-bottom:1px solid var(--ro-bd)}
+html[data-theme=ro] #menubar .mb{border-radius:3px 3px 0 0}
+html[data-theme=ro] #menubar .mb kbd{background:#fff;border-color:#b3b8c8;color:#5a6280}
+html[data-theme=ro] .scene-tools,html[data-theme=ro] .ph{background:linear-gradient(#e7e3d4,#d3cfbf);border-bottom:1px solid var(--ro-bd3);color:var(--ro-ink)}
+html[data-theme=ro] .ph{background:linear-gradient(var(--ro-tb1),var(--ro-tb2));color:#fff;text-shadow:0 1px 1px rgba(10,20,50,.6);font-family:var(--font);border-bottom:1px solid var(--ro-bd)}
+html[data-theme=ro] select,html[data-theme=ro] input[type=text],html[data-theme=ro] input[type=search]{background:#fff;border:1px solid var(--ro-btn-bd);border-radius:2px;box-shadow:inset 1px 1px 0 #cfcdc0}
+/* ---------- slots (bag / equip) ---------- */
+html[data-theme=ro] .slot,html[data-theme=ro] .bi{background:var(--ro-img-slot,none),linear-gradient(180deg,var(--ro-slot1),var(--ro-slot2));background-size:100% 100%;border:1px solid var(--ro-slot-bd);border-radius:3px;
+  box-shadow:inset 0 0 0 1px var(--ro-slot-hi),inset 0 2px 4px rgba(0,0,0,.35);color:#fff}
+html[data-theme=ro] .slot.has,html[data-theme=ro] .bi{border-color:var(--gc,#1b2440);box-shadow:inset 0 0 0 1px var(--gc,var(--ro-slot-hi)),inset 0 2px 4px rgba(0,0,0,.35)}
+html[data-theme=ro] .slot .sn{color:#b9c7e8}html[data-theme=ro] .slot .empty{color:#6f82ab}html[data-theme=ro] .slot .in{text-shadow:0 1px 1px #000}
+html[data-theme=ro] .bi .rf{color:#ffd27a;text-shadow:0 0 2px #000,0 0 2px #000}
+html[data-theme=ro] .bag{background:#bdb9a8;border:1px solid #8f8b7a;box-shadow:inset 1px 1px 3px rgba(0,0,0,.25)}
+html[data-theme=ro] .slot.sel,html[data-theme=ro] .bi.sel{outline:2px solid #ffd24a}
+html[data-theme=ro] .eq-stats,html[data-theme=ro] .eq-detail,html[data-theme=ro] .dr-list,html[data-theme=ro] .sk,html[data-theme=ro] .cx,html[data-theme=ro] .stg,html[data-theme=ro] .mp{
+  background:linear-gradient(#fbfaf4,#ebe7d8);border:1px solid #b3ae9a;border-radius:3px;box-shadow:inset 0 1px 0 #fff}
+html[data-theme=ro] .mp.cur{background:linear-gradient(#e6efff,#c3d6f5);border-color:#3a5a9c;box-shadow:inset 0 0 0 1px #3a5a9c}
+html[data-theme=ro] .stg.cl{border-color:#3f9a4e}
+html[data-theme=ro] .cx-i{background:radial-gradient(#d7e6c3,#a9c18f);border:1px solid #8b9a76}
+html[data-theme=ro] .eq-stats .eq-h,html[data-theme=ro] .dt-s b,html[data-theme=ro] .st-g b,html[data-theme=ro] .dr-sum b{color:#243a78}
+html[data-theme=ro] .sk-i .k{background:#33406a;border-radius:2px}
+html[data-theme=ro] .mt{background:#fbfaf4;border-color:#b3ae9a;border-radius:3px}
+html[data-theme=ro] .bf{background:#fff0b8;border-color:#c9a02a;border-radius:3px}
+/* ---------- bars: classic RO HP (green→orange when low) / SP / EXP ---------- */
+html[data-theme=ro] .bar{background:#1d2237;border:1px solid #0e1224;border-radius:2px;box-shadow:inset 0 0 0 1px #5a6488;height:14px}
+html[data-theme=ro] .bar i{background:linear-gradient(var(--ro-hp1),var(--ro-hp2))}
+html[data-theme=ro] .bar.hp i{background:var(--ro-img-hp,none),linear-gradient(var(--ro-hp1),var(--ro-hp2));background-size:100% 100%}
+html[data-theme=ro] .bar.hp.low i{background:linear-gradient(var(--ro-hplow1),var(--ro-hplow2))}
+html[data-theme=ro] .bar.sp i{background:var(--ro-img-sp,none),linear-gradient(var(--ro-sp1),var(--ro-sp2));background-size:100% 100%}
+html[data-theme=ro] .bar.ex i{background:linear-gradient(var(--ro-ex1),var(--ro-ex2))}
+html[data-theme=ro] .bar:after{content:"";position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(90deg,transparent 0 9px,rgba(0,0,0,.28) 9px 10px)}
+html[data-theme=ro] .hb-bars{background:rgba(20,26,50,.78);border:1px solid #0e1224;border-radius:4px;box-shadow:inset 0 0 0 1px #5a6488}
+html[data-theme=ro] .hb-bars .bar{height:8px;box-shadow:none}
+/* ---------- hotbar slots ---------- */
+html[data-theme=ro] .hs{background:var(--ro-img-slot,none),linear-gradient(180deg,var(--ro-slot1),var(--ro-slot2));background-size:100% 100%;border:1px solid var(--ro-slot-bd);border-radius:4px;box-shadow:inset 0 0 0 1px var(--ro-slot-hi),0 2px 4px rgba(0,0,0,.5)}
+html[data-theme=ro] .hs:hover{box-shadow:inset 0 0 0 1px #ffe27a,0 2px 4px rgba(0,0,0,.5)}
+/* ---------- status bar / log ---------- */
+html[data-theme=ro] #status{background:linear-gradient(#e9e5d6,#cfcbb9);border-top:1px solid var(--ro-bd)}
+html[data-theme=ro] #st-pos{border-radius:2px;box-shadow:inset 1px 1px 0 #cfcdc0}
+html[data-theme=ro] .logbox{background:rgba(14,18,34,.9);border:1px solid var(--ro-bd);border-radius:2px;box-shadow:inset 0 0 0 1px #4a5780}
+html[data-theme=ro] .logwin>.tb .seg button{background:linear-gradient(#fff,#cfd4e4);color:#2a3a6a;border-radius:2px}
+/* ---------- scroll bars ---------- */
+html[data-theme=ro] *{scrollbar-width:thin;scrollbar-color:#8da6d4 #d8d4c4}
+html[data-theme=ro] ::-webkit-scrollbar{width:13px;height:13px}
+html[data-theme=ro] ::-webkit-scrollbar-track{background:var(--ro-scroll-tr);border-left:1px solid #b3ae9a;box-shadow:inset 1px 0 2px rgba(0,0,0,.15)}
+html[data-theme=ro] ::-webkit-scrollbar-thumb{background:linear-gradient(90deg,var(--ro-scroll-th1),var(--ro-scroll-th2));border:1px solid #3a5290;border-radius:2px;box-shadow:inset 1px 1px 0 #fff}
+html[data-theme=ro] ::-webkit-scrollbar-thumb:hover{background:linear-gradient(90deg,#dbe6fa,#a3bae4)}
+html[data-theme=ro] ::-webkit-scrollbar-button{display:block;height:13px;width:13px;background:linear-gradient(#fbfaf5,#d9d6c8);border:1px solid var(--ro-btn-bd)}
+html[data-theme=ro] ::-webkit-scrollbar-corner{background:var(--ro-scroll-tr)}
+/* ---------- in-scene overlays ---------- */
+html[data-theme=ro] .pv,html[data-theme=ro] .rs{background:linear-gradient(#fbfaf4,#e4e0d0);border:1px solid var(--ro-bd);border-radius:5px;box-shadow:inset 0 0 0 1px #fff,0 6px 18px rgba(0,0,0,.6)}
+html[data-theme=ro] .pv:hover{border-color:#ffd24a}
+html[data-theme=ro] .rs-h,html[data-theme=ro] .pv-h{font-family:var(--font)}
+html[data-theme=ro] .sh-bar{border-color:#0e1224;border-radius:2px;box-shadow:inset 0 0 0 1px #5a6488}
+html[data-theme=ro] #bossbar .bb{border-radius:2px}
+html[data-theme=ro] #toast{border-radius:3px;border:1px solid #0e1224;background:rgba(30,40,76,.9)}
+/* ---------- mobile bottom sheets ---------- */
+@media (max-width:600px){
+  html[data-theme=ro] .fw{border-radius:9px 9px 0 0;border-bottom:none}
+  html[data-theme=ro] .fw>.tb{height:30px;line-height:30px;font-size:13px}
+  html[data-theme=ro] .fw>.tb button{width:24px;height:24px;line-height:20px;font-size:14px}
+  html[data-theme=ro] .fw:before{content:"";position:absolute;left:50%;top:3px;width:34px;height:3px;margin-left:-17px;border-radius:2px;background:rgba(255,255,255,.55);z-index:2;pointer-events:none}
+  html[data-theme=ro] #menubar{background:linear-gradient(#d6dcea,#b9c3dc)}
+}

@@ -77,5 +77,13 @@ function skillIcon(sk,EL){
    case 'heal':x.beginPath();x.moveTo(0,-8);x.lineTo(0,8);x.moveTo(-8,0);x.lineTo(8,0);x.lineWidth=4;x.stroke();break;
    case 'buff':x.beginPath();x.moveTo(0,-9);x.lineTo(7,0);x.lineTo(2.4,0);x.lineTo(2.4,8);x.lineTo(-2.4,8);x.lineTo(-2.4,0);x.lineTo(-7,0);x.closePath();x.fill();break}
   x.restore();SC.set(key,c);return c}
-return {loadManifest,loadImg,recolor,itemIcon,skillIcon,merge};
+// ---------- window-skin overrides (manifest "ui") ----------
+// "ui":{"vars":{"--ro-tb1":"#9bb"...},"images":{"win":"ui/win.png","tb":"ui/titlebar.png","btn":..,"slot":..,"tab":..,"close":..,"hp":..,"sp":..,"body":..},"base":"assets/custom/"}
+// Every image key sets --ro-img-<key>; vars may re-colour the whole skin. Relative paths resolve against ui.base (default assets/custom/).
+function applyUI(ui){if(!ui)return 0;const r=document.documentElement;let n=0;
+  const vars=ui.vars||{};for(const k in vars){r.style.setProperty(k.indexOf('--')===0?k:'--ro-'+k,vars[k]);n++}
+  const imgs=ui.images||{},base=ui.base||'assets/custom/';
+  for(const k in imgs){const v=imgs[k];if(!v)continue;r.style.setProperty('--ro-img-'+k,/^(url|linear-|radial-|none)/.test(v)?v:'url("'+(/^(https?:|assets\/|\/|data:)/.test(v)?v:base+v)+'")');n++}
+  return n}
+return {loadManifest,loadImg,recolor,itemIcon,skillIcon,merge,applyUI};
 })();

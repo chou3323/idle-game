@@ -1,12 +1,13 @@
 <!doctype html>
-<html lang="zh-Hant"><head><meta charset="utf-8">
+<html lang="zh-Hant" data-theme="ro"><head><meta charset="utf-8">
+<script>(function(){var d=document.documentElement;try{var q=new URLSearchParams(location.search).get("theme"),t=q||localStorage.getItem("aur_theme")||"ro";d.setAttribute("data-theme",t==="xp"?"xp":"ro")}catch(e){d.setAttribute("data-theme","ro")}})()</script>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<link rel="icon" href="data:,"><title>曙光 Aurevia · 仙境冒險 · 割草大畫面 v2</title>
-<link rel="stylesheet" href="xp.css"><link rel="stylesheet" href="horde.css"><link rel="stylesheet" href="ui.css">
+<link rel="icon" href="data:,"><title>曙光 Aurevia · 仙境冒險 · 割草大畫面 v3</title>
+<link rel="stylesheet" href="xp.css"><link rel="stylesheet" href="horde.css"><link rel="stylesheet" href="ui.css"><link rel="stylesheet" href="stage.css"><link rel="stylesheet" href="rotheme.css">
 </head><body>
 <div id="app">
  <div class="win" id="mainwin">
-  <div class="tb"><span class="ic">◆</span><span class="ttl">曙光 Aurevia 仙境冒險 - 割草大畫面 v2（原型・全部是假資料）</span></div>
+  <div class="tb"><span class="ic">◆</span><span class="ttl">曙光 Aurevia 仙境冒險 - 割草大畫面 v3（原型・全部是假資料）</span></div>
   <div class="bd">
    <div id="stage">
     <div class="win" id="w-scene">
@@ -18,7 +19,7 @@
        <button class="mini on" id="t-names">名牌</button><button class="mini on" id="t-dmg">傷害數字</button><button class="mini on" id="t-mini">小地圖</button>
        <span class="zoomg"><button class="mini" id="z-out" aria-label="縮小">−</button><span id="z-val">100%</span><button class="mini" id="z-in" aria-label="放大">＋</button></span>
        <span class="sp"></span>
-       <button class="mini" id="t-gear" aria-label="控制面板">⚙ 控制</button><button class="mini" id="t-big">⛶ 放大</button><button class="mini" id="t-full">全螢幕</button>
+       <button class="mini" id="t-theme" title="切換視窗外觀：舊版 RO ⇄ Windows XP">外觀：舊版 RO</button><button class="mini" id="t-gear" aria-label="控制面板">⚙ 控制</button><button class="mini" id="t-big">⛶ 放大</button><button class="mini" id="t-full">全螢幕</button>
       </div>
       <div class="scene-wrap" id="wrap">
        <canvas id="scene"></canvas>

@@ -117,3 +117,6 @@ body.big #b-gear{display:inline-block}
   body.big #mini{bottom:112px}
   body.big .logwin.big~#mini{display:none}
 }
+
+/* v3: never let an inner nowrap row widen the flex-body (mobile horizontal overflow) */
+#app{min-width:0;max-width:100%}

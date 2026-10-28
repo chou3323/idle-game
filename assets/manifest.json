@@ -302,15 +302,15 @@
  },
  "bosses": {
   "hills_boss": {
-   "src": "assets/mobs/hills_boss.webp",
+   "src": "assets/mobs/hills_boss.png",
    "recolor": null
   },
   "cave_boss": {
-   "src": "assets/mobs/cave_boss.webp",
+   "src": "assets/mobs/cave_boss.png",
    "recolor": null
   },
   "magma_boss": {
-   "src": "assets/mobs/magma_boss.webp",
+   "src": "assets/mobs/magma_boss.png",
    "recolor": null
   }
  },
