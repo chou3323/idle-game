@@ -2,12 +2,12 @@
 <html lang="zh-Hant" data-theme="ro"><head><meta charset="utf-8">
 <script>(function(){var d=document.documentElement;try{var q=new URLSearchParams(location.search).get("theme"),t=q||localStorage.getItem("aur_theme")||"ro";d.setAttribute("data-theme",t==="xp"?"xp":"ro")}catch(e){d.setAttribute("data-theme","ro")}})()</script>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<link rel="icon" href="data:,"><title>曙光 Aurevia · 仙境冒險 · 割草大畫面 v3</title>
-<link rel="stylesheet" href="xp.css"><link rel="stylesheet" href="horde.css"><link rel="stylesheet" href="ui.css"><link rel="stylesheet" href="stage.css"><link rel="stylesheet" href="rotheme.css">
+<link rel="icon" href="data:,"><title>曙光 Aurevia · 仙境冒險 · 割草大畫面 v4</title>
+<link rel="stylesheet" href="xp.css?v=4"><link rel="stylesheet" href="horde.css?v=4"><link rel="stylesheet" href="ui.css?v=4"><link rel="stylesheet" href="stage.css?v=4"><link rel="stylesheet" href="rotheme.css?v=4">
 </head><body>
 <div id="app">
  <div class="win" id="mainwin">
-  <div class="tb"><span class="ic">◆</span><span class="ttl">曙光 Aurevia 仙境冒險 - 割草大畫面 v3（原型・全部是假資料）</span></div>
+  <div class="tb"><span class="ic">◆</span><span class="ttl">曙光 Aurevia 仙境冒險 - 割草大畫面 v4（原型・全部是假資料）</span></div>
   <div class="bd">
    <div id="stage">
     <div class="win" id="w-scene">
@@ -31,7 +31,9 @@
        <div class="win logwin" id="logwin">
         <div class="tb"><span class="ic">■</span><span class="ttl">戰鬥訊息 <small id="log-n"></small></span><span class="seg" role="group" aria-label="訊息模式"><button data-m="full">完整</button><button data-m="sum">摘要</button><button data-m="hl">重點</button></span><span class="wb"><button id="log-exp" title="展開 / 縮小" aria-label="展開訊息">⇱</button><button id="log-min" title="收合" aria-label="收合訊息">⊟</button></span></div>
         <div class="bd">
+         <div class="lf" id="lg-f" role="group" aria-label="訊息分類"><button class="on" data-f="all">全部</button><button data-f="fight">戰鬥</button><button data-f="skill">技能</button><button data-f="exp">經驗值</button><button data-f="loot">掉寶</button><button data-f="sys">系統</button><button data-f="warn">警告</button></div>
          <div class="logbox" id="logbox" tabindex="0"></div>
+         <div class="lc"><button id="lg-clear" type="button">清除</button><label><input type="checkbox" id="lg-auto" checked> 自動捲動</label><span class="sp"></span><label>字體 <select id="lg-fs" aria-label="字體大小"><option value="11">11px</option><option value="12.5" selected>13px</option><option value="14">14px</option></select></label></div>
         </div>
        </div>
       </div>
@@ -58,9 +60,9 @@
   </div>
  </div>
 </div>
-<script src="data.js"></script>
-<script src="art.js"></script>
+<script src="data.js?v=4"></script>
+<script src="art.js?v=4"></script>
 <script src="bgart.js"></script>
-<script src="ui.js"></script>
-<script src="horde.js"></script>
+<script src="ui.js?v=4"></script>
+<script src="horde.js?v=4"></script>
 </body></html>

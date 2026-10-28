@@ -15,7 +15,7 @@ function paint(root){
   root.querySelectorAll('canvas.ic').forEach(cv=>{const x=cv.getContext('2d');x.clearRect(0,0,cv.width,cv.height);x.imageSmoothingEnabled=true;
     if(cv.dataset.i){x.drawImage(Art.itemIcon(D.ITEMS[cv.dataset.i],S.mf),0,0,cv.width,cv.height)}
     else if(cv.dataset.s){const [job,i]=cv.dataset.s.split('_');x.drawImage(Art.skillIcon(D.SKILLS[job][+i],D.EL),0,0,cv.width,cv.height)}
-    else if(cv.dataset.m){const ty=S.types[cv.dataset.m];if(!ty)return;x.imageSmoothingEnabled=false;const sc=Math.min(cv.width/ty.fw,cv.height/ty.fh)*.95,dw=ty.fw*sc,dh=ty.fh*sc;x.drawImage(ty.cv,0,0,ty.fw,ty.fh,(cv.width-dw)/2,cv.height-dh-2,dw,dh)}})}
+    else if(cv.dataset.m){const ty=S.types[cv.dataset.m];if(!ty)return;x.imageSmoothingEnabled=true;x.imageSmoothingQuality='high';const bx=ty.box||[0,0,ty.fw,ty.fh],sc=Math.min(cv.width/bx[2],cv.height/bx[3])*.94,dw=bx[2]*sc,dh=bx[3]*sc;x.drawImage(ty.cv,bx[0],bx[1],bx[2],bx[3],(cv.width-dw)/2,cv.height-dh-2,dw,dh)}})}
 // ---------- window manager ----------
 function mk(id,title,ic,w,pos){
   const e=el('div','win fw hidden');e.id='fw-'+id;e.style.width=w+'px';

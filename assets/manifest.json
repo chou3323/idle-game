@@ -13,305 +13,1202 @@
  "mobs": {
   "t1_bat": {
    "src": "assets/mobs/t1_bat.png",
-   "frames": 2,
-   "fw": 80,
-   "fh": 80,
-   "base": 72,
-   "fps": 3
+   "frames": 6,
+   "fw": 96,
+   "fh": 96,
+   "base": 88,
+   "fps": 4,
+   "h": 68.6,
+   "box": [
+    0,
+    16,
+    96,
+    70
+   ],
+   "anim": {
+    "idle": {
+     "row": 0,
+     "n": 4,
+     "fps": 4
+    },
+    "walk": {
+     "row": 1,
+     "n": 6,
+     "fps": 10
+    },
+    "atk": {
+     "row": 2,
+     "n": 4,
+     "t": 0.4
+    }
+   }
   },
   "t1_bee": {
    "src": "assets/mobs/t1_bee.png",
-   "frames": 2,
-   "fw": 80,
-   "fh": 80,
-   "base": 72,
-   "fps": 3
+   "frames": 6,
+   "fw": 96,
+   "fh": 96,
+   "base": 88,
+   "fps": 4,
+   "h": 78.2,
+   "box": [
+    18,
+    27,
+    78,
+    54
+   ],
+   "anim": {
+    "idle": {
+     "row": 0,
+     "n": 4,
+     "fps": 4
+    },
+    "walk": {
+     "row": 1,
+     "n": 6,
+     "fps": 10
+    },
+    "atk": {
+     "row": 2,
+     "n": 4,
+     "t": 0.4
+    }
+   }
   },
   "t1_beetle": {
    "src": "assets/mobs/t1_beetle.png",
-   "frames": 2,
-   "fw": 80,
-   "fh": 80,
-   "base": 72,
-   "fps": 3
+   "frames": 6,
+   "fw": 96,
+   "fh": 96,
+   "base": 88,
+   "fps": 4,
+   "h": 90.4,
+   "box": [
+    6,
+    38,
+    82,
+    51
+   ],
+   "anim": {
+    "idle": {
+     "row": 0,
+     "n": 4,
+     "fps": 4
+    },
+    "walk": {
+     "row": 1,
+     "n": 6,
+     "fps": 10
+    },
+    "atk": {
+     "row": 2,
+     "n": 4,
+     "t": 0.4
+    }
+   }
   },
   "t1_bunny": {
    "src": "assets/mobs/t1_bunny.png",
-   "frames": 2,
-   "fw": 80,
-   "fh": 80,
-   "base": 72,
-   "fps": 3
+   "frames": 6,
+   "fw": 96,
+   "fh": 96,
+   "base": 88,
+   "fps": 4,
+   "h": 64.7,
+   "box": [
+    16,
+    0,
+    68,
+    92
+   ],
+   "anim": {
+    "idle": {
+     "row": 0,
+     "n": 4,
+     "fps": 4
+    },
+    "walk": {
+     "row": 1,
+     "n": 6,
+     "fps": 10
+    },
+    "atk": {
+     "row": 2,
+     "n": 4,
+     "t": 0.4
+    }
+   }
   },
   "t1_crab": {
    "src": "assets/mobs/t1_crab.png",
-   "frames": 2,
-   "fw": 80,
-   "fh": 80,
-   "base": 72,
-   "fps": 3
+   "frames": 6,
+   "fw": 96,
+   "fh": 96,
+   "base": 88,
+   "fps": 4,
+   "h": 73.8,
+   "box": [
+    0,
+    24,
+    89,
+    65
+   ],
+   "anim": {
+    "idle": {
+     "row": 0,
+     "n": 4,
+     "fps": 4
+    },
+    "walk": {
+     "row": 1,
+     "n": 6,
+     "fps": 10
+    },
+    "atk": {
+     "row": 2,
+     "n": 4,
+     "t": 0.4
+    }
+   }
   },
   "t1_fox": {
    "src": "assets/mobs/t1_fox.png",
-   "frames": 2,
-   "fw": 80,
-   "fh": 80,
-   "base": 72,
-   "fps": 3
+   "frames": 6,
+   "fw": 96,
+   "fh": 96,
+   "base": 88,
+   "fps": 4,
+   "h": 83.6,
+   "box": [
+    8,
+    28,
+    88,
+    62
+   ],
+   "anim": {
+    "idle": {
+     "row": 0,
+     "n": 4,
+     "fps": 4
+    },
+    "walk": {
+     "row": 1,
+     "n": 6,
+     "fps": 10
+    },
+    "atk": {
+     "row": 2,
+     "n": 4,
+     "t": 0.4
+    }
+   }
   },
   "t1_ghost": {
    "src": "assets/mobs/t1_ghost.png",
-   "frames": 2,
-   "fw": 80,
-   "fh": 80,
-   "base": 72,
-   "fps": 3
+   "frames": 6,
+   "fw": 96,
+   "fh": 96,
+   "base": 88,
+   "fps": 4,
+   "h": 80.0,
+   "box": [
+    14,
+    24,
+    77,
+    72
+   ],
+   "anim": {
+    "idle": {
+     "row": 0,
+     "n": 4,
+     "fps": 4
+    },
+    "walk": {
+     "row": 1,
+     "n": 6,
+     "fps": 10
+    },
+    "atk": {
+     "row": 2,
+     "n": 4,
+     "t": 0.4
+    }
+   }
   },
   "t1_golem": {
    "src": "assets/mobs/t1_golem.png",
-   "frames": 2,
-   "fw": 80,
-   "fh": 80,
-   "base": 72,
-   "fps": 3
+   "frames": 6,
+   "fw": 96,
+   "fh": 96,
+   "base": 88,
+   "fps": 4,
+   "h": 104.1,
+   "box": [
+    6,
+    8,
+    83,
+    83
+   ],
+   "anim": {
+    "idle": {
+     "row": 0,
+     "n": 4,
+     "fps": 4
+    },
+    "walk": {
+     "row": 1,
+     "n": 6,
+     "fps": 10
+    },
+    "atk": {
+     "row": 2,
+     "n": 4,
+     "t": 0.4
+    }
+   }
   },
   "t1_mush": {
    "src": "assets/mobs/t1_mush.png",
-   "frames": 2,
-   "fw": 80,
-   "fh": 80,
-   "base": 72,
-   "fps": 3
+   "frames": 6,
+   "fw": 96,
+   "fh": 96,
+   "base": 88,
+   "fps": 4,
+   "h": 80.4,
+   "box": [
+    14,
+    17,
+    72,
+    74
+   ],
+   "anim": {
+    "idle": {
+     "row": 0,
+     "n": 4,
+     "fps": 4
+    },
+    "walk": {
+     "row": 1,
+     "n": 6,
+     "fps": 10
+    },
+    "atk": {
+     "row": 2,
+     "n": 4,
+     "t": 0.4
+    }
+   }
   },
   "t1_plant": {
    "src": "assets/mobs/t1_plant.png",
-   "frames": 2,
-   "fw": 80,
-   "fh": 80,
-   "base": 72,
-   "fps": 3
+   "frames": 6,
+   "fw": 96,
+   "fh": 96,
+   "base": 88,
+   "fps": 4,
+   "h": 85.1,
+   "box": [
+    15,
+    10,
+    65,
+    79
+   ],
+   "anim": {
+    "idle": {
+     "row": 0,
+     "n": 4,
+     "fps": 4
+    },
+    "walk": {
+     "row": 1,
+     "n": 6,
+     "fps": 10
+    },
+    "atk": {
+     "row": 2,
+     "n": 4,
+     "t": 0.4
+    }
+   }
   },
   "t1_slime": {
    "src": "assets/mobs/t1_slime.png",
-   "frames": 2,
-   "fw": 80,
-   "fh": 80,
-   "base": 72,
-   "fps": 3
+   "frames": 6,
+   "fw": 96,
+   "fh": 96,
+   "base": 88,
+   "fps": 4,
+   "h": 71.6,
+   "box": [
+    15,
+    23,
+    69,
+    67
+   ],
+   "anim": {
+    "idle": {
+     "row": 0,
+     "n": 4,
+     "fps": 4
+    },
+    "walk": {
+     "row": 1,
+     "n": 6,
+     "fps": 10
+    },
+    "atk": {
+     "row": 2,
+     "n": 4,
+     "t": 0.4
+    }
+   }
   },
   "t1_snake": {
    "src": "assets/mobs/t1_snake.png",
-   "frames": 2,
-   "fw": 80,
-   "fh": 80,
-   "base": 72,
-   "fps": 3
+   "frames": 6,
+   "fw": 96,
+   "fh": 96,
+   "base": 88,
+   "fps": 4,
+   "h": 65.8,
+   "box": [
+    0,
+    16,
+    96,
+    73
+   ],
+   "anim": {
+    "idle": {
+     "row": 0,
+     "n": 4,
+     "fps": 4
+    },
+    "walk": {
+     "row": 1,
+     "n": 6,
+     "fps": 10
+    },
+    "atk": {
+     "row": 2,
+     "n": 4,
+     "t": 0.4
+    }
+   }
   },
   "t2_bat": {
    "src": "assets/mobs/t2_bat.png",
-   "frames": 2,
-   "fw": 80,
-   "fh": 80,
-   "base": 72,
-   "fps": 3
+   "frames": 6,
+   "fw": 96,
+   "fh": 96,
+   "base": 88,
+   "fps": 4,
+   "h": 68.6,
+   "box": [
+    0,
+    16,
+    96,
+    70
+   ],
+   "anim": {
+    "idle": {
+     "row": 0,
+     "n": 4,
+     "fps": 4
+    },
+    "walk": {
+     "row": 1,
+     "n": 6,
+     "fps": 10
+    },
+    "atk": {
+     "row": 2,
+     "n": 4,
+     "t": 0.4
+    }
+   }
   },
   "t2_bee": {
    "src": "assets/mobs/t2_bee.png",
-   "frames": 2,
-   "fw": 80,
-   "fh": 80,
-   "base": 72,
-   "fps": 3
+   "frames": 6,
+   "fw": 96,
+   "fh": 96,
+   "base": 88,
+   "fps": 4,
+   "h": 78.2,
+   "box": [
+    18,
+    27,
+    78,
+    54
+   ],
+   "anim": {
+    "idle": {
+     "row": 0,
+     "n": 4,
+     "fps": 4
+    },
+    "walk": {
+     "row": 1,
+     "n": 6,
+     "fps": 10
+    },
+    "atk": {
+     "row": 2,
+     "n": 4,
+     "t": 0.4
+    }
+   }
   },
   "t2_beetle": {
    "src": "assets/mobs/t2_beetle.png",
-   "frames": 2,
-   "fw": 80,
-   "fh": 80,
-   "base": 72,
-   "fps": 3
+   "frames": 6,
+   "fw": 96,
+   "fh": 96,
+   "base": 88,
+   "fps": 4,
+   "h": 83.8,
+   "box": [
+    6,
+    34,
+    82,
+    55
+   ],
+   "anim": {
+    "idle": {
+     "row": 0,
+     "n": 4,
+     "fps": 4
+    },
+    "walk": {
+     "row": 1,
+     "n": 6,
+     "fps": 10
+    },
+    "atk": {
+     "row": 2,
+     "n": 4,
+     "t": 0.4
+    }
+   }
   },
   "t2_bunny": {
    "src": "assets/mobs/t2_bunny.png",
-   "frames": 2,
-   "fw": 80,
-   "fh": 80,
-   "base": 72,
-   "fps": 3
+   "frames": 6,
+   "fw": 96,
+   "fh": 96,
+   "base": 88,
+   "fps": 4,
+   "h": 64.7,
+   "box": [
+    16,
+    0,
+    68,
+    92
+   ],
+   "anim": {
+    "idle": {
+     "row": 0,
+     "n": 4,
+     "fps": 4
+    },
+    "walk": {
+     "row": 1,
+     "n": 6,
+     "fps": 10
+    },
+    "atk": {
+     "row": 2,
+     "n": 4,
+     "t": 0.4
+    }
+   }
   },
   "t2_crab": {
    "src": "assets/mobs/t2_crab.png",
-   "frames": 2,
-   "fw": 80,
-   "fh": 80,
-   "base": 72,
-   "fps": 3
+   "frames": 6,
+   "fw": 96,
+   "fh": 96,
+   "base": 88,
+   "fps": 4,
+   "h": 73.8,
+   "box": [
+    0,
+    24,
+    89,
+    65
+   ],
+   "anim": {
+    "idle": {
+     "row": 0,
+     "n": 4,
+     "fps": 4
+    },
+    "walk": {
+     "row": 1,
+     "n": 6,
+     "fps": 10
+    },
+    "atk": {
+     "row": 2,
+     "n": 4,
+     "t": 0.4
+    }
+   }
   },
   "t2_fox": {
    "src": "assets/mobs/t2_fox.png",
-   "frames": 2,
-   "fw": 80,
-   "fh": 80,
-   "base": 72,
-   "fps": 3
+   "frames": 6,
+   "fw": 96,
+   "fh": 96,
+   "base": 88,
+   "fps": 4,
+   "h": 83.6,
+   "box": [
+    8,
+    28,
+    88,
+    62
+   ],
+   "anim": {
+    "idle": {
+     "row": 0,
+     "n": 4,
+     "fps": 4
+    },
+    "walk": {
+     "row": 1,
+     "n": 6,
+     "fps": 10
+    },
+    "atk": {
+     "row": 2,
+     "n": 4,
+     "t": 0.4
+    }
+   }
   },
   "t2_ghost": {
    "src": "assets/mobs/t2_ghost.png",
-   "frames": 2,
-   "fw": 80,
-   "fh": 80,
-   "base": 72,
-   "fps": 3
+   "frames": 6,
+   "fw": 96,
+   "fh": 96,
+   "base": 88,
+   "fps": 4,
+   "h": 75.8,
+   "box": [
+    11,
+    20,
+    80,
+    76
+   ],
+   "anim": {
+    "idle": {
+     "row": 0,
+     "n": 4,
+     "fps": 4
+    },
+    "walk": {
+     "row": 1,
+     "n": 6,
+     "fps": 10
+    },
+    "atk": {
+     "row": 2,
+     "n": 4,
+     "t": 0.4
+    }
+   }
   },
   "t2_golem": {
    "src": "assets/mobs/t2_golem.png",
-   "frames": 2,
-   "fw": 80,
-   "fh": 80,
-   "base": 72,
-   "fps": 3
+   "frames": 6,
+   "fw": 96,
+   "fh": 96,
+   "base": 88,
+   "fps": 4,
+   "h": 99.3,
+   "box": [
+    6,
+    4,
+    83,
+    87
+   ],
+   "anim": {
+    "idle": {
+     "row": 0,
+     "n": 4,
+     "fps": 4
+    },
+    "walk": {
+     "row": 1,
+     "n": 6,
+     "fps": 10
+    },
+    "atk": {
+     "row": 2,
+     "n": 4,
+     "t": 0.4
+    }
+   }
   },
   "t2_mush": {
    "src": "assets/mobs/t2_mush.png",
-   "frames": 2,
-   "fw": 80,
-   "fh": 80,
-   "base": 72,
-   "fps": 3
+   "frames": 6,
+   "fw": 96,
+   "fh": 96,
+   "base": 88,
+   "fps": 4,
+   "h": 74.4,
+   "box": [
+    14,
+    11,
+    72,
+    80
+   ],
+   "anim": {
+    "idle": {
+     "row": 0,
+     "n": 4,
+     "fps": 4
+    },
+    "walk": {
+     "row": 1,
+     "n": 6,
+     "fps": 10
+    },
+    "atk": {
+     "row": 2,
+     "n": 4,
+     "t": 0.4
+    }
+   }
   },
   "t2_plant": {
    "src": "assets/mobs/t2_plant.png",
-   "frames": 2,
-   "fw": 80,
-   "fh": 80,
-   "base": 72,
-   "fps": 3
+   "frames": 6,
+   "fw": 96,
+   "fh": 96,
+   "base": 88,
+   "fps": 4,
+   "h": 85.1,
+   "box": [
+    15,
+    10,
+    64,
+    79
+   ],
+   "anim": {
+    "idle": {
+     "row": 0,
+     "n": 4,
+     "fps": 4
+    },
+    "walk": {
+     "row": 1,
+     "n": 6,
+     "fps": 10
+    },
+    "atk": {
+     "row": 2,
+     "n": 4,
+     "t": 0.4
+    }
+   }
   },
   "t2_slime": {
    "src": "assets/mobs/t2_slime.png",
-   "frames": 2,
-   "fw": 80,
-   "fh": 80,
-   "base": 72,
-   "fps": 3
+   "frames": 6,
+   "fw": 96,
+   "fh": 96,
+   "base": 88,
+   "fps": 4,
+   "h": 62.3,
+   "box": [
+    16,
+    13,
+    68,
+    77
+   ],
+   "anim": {
+    "idle": {
+     "row": 0,
+     "n": 4,
+     "fps": 4
+    },
+    "walk": {
+     "row": 1,
+     "n": 6,
+     "fps": 10
+    },
+    "atk": {
+     "row": 2,
+     "n": 4,
+     "t": 0.4
+    }
+   }
   },
   "t2_snake": {
    "src": "assets/mobs/t2_snake.png",
-   "frames": 2,
-   "fw": 80,
-   "fh": 80,
-   "base": 72,
-   "fps": 3
+   "frames": 6,
+   "fw": 96,
+   "fh": 96,
+   "base": 88,
+   "fps": 4,
+   "h": 72.7,
+   "box": [
+    0,
+    23,
+    96,
+    66
+   ],
+   "anim": {
+    "idle": {
+     "row": 0,
+     "n": 4,
+     "fps": 4
+    },
+    "walk": {
+     "row": 1,
+     "n": 6,
+     "fps": 10
+    },
+    "atk": {
+     "row": 2,
+     "n": 4,
+     "t": 0.4
+    }
+   }
   },
   "t3_bat": {
    "src": "assets/mobs/t3_bat.png",
-   "frames": 2,
-   "fw": 80,
-   "fh": 80,
-   "base": 72,
-   "fps": 3
+   "frames": 6,
+   "fw": 96,
+   "fh": 96,
+   "base": 88,
+   "fps": 4,
+   "h": 68.6,
+   "box": [
+    0,
+    16,
+    96,
+    70
+   ],
+   "anim": {
+    "idle": {
+     "row": 0,
+     "n": 4,
+     "fps": 4
+    },
+    "walk": {
+     "row": 1,
+     "n": 6,
+     "fps": 10
+    },
+    "atk": {
+     "row": 2,
+     "n": 4,
+     "t": 0.4
+    }
+   }
   },
   "t3_bee": {
    "src": "assets/mobs/t3_bee.png",
-   "frames": 2,
-   "fw": 80,
-   "fh": 80,
-   "base": 72,
-   "fps": 3
+   "frames": 6,
+   "fw": 96,
+   "fh": 96,
+   "base": 88,
+   "fps": 4,
+   "h": 78.2,
+   "box": [
+    18,
+    27,
+    78,
+    54
+   ],
+   "anim": {
+    "idle": {
+     "row": 0,
+     "n": 4,
+     "fps": 4
+    },
+    "walk": {
+     "row": 1,
+     "n": 6,
+     "fps": 10
+    },
+    "atk": {
+     "row": 2,
+     "n": 4,
+     "t": 0.4
+    }
+   }
   },
   "t3_beetle": {
    "src": "assets/mobs/t3_beetle.png",
-   "frames": 2,
-   "fw": 80,
-   "fh": 80,
-   "base": 72,
-   "fps": 3
+   "frames": 6,
+   "fw": 96,
+   "fh": 96,
+   "base": 88,
+   "fps": 4,
+   "h": 86.9,
+   "box": [
+    4,
+    36,
+    84,
+    53
+   ],
+   "anim": {
+    "idle": {
+     "row": 0,
+     "n": 4,
+     "fps": 4
+    },
+    "walk": {
+     "row": 1,
+     "n": 6,
+     "fps": 10
+    },
+    "atk": {
+     "row": 2,
+     "n": 4,
+     "t": 0.4
+    }
+   }
   },
   "t3_bunny": {
    "src": "assets/mobs/t3_bunny.png",
-   "frames": 2,
-   "fw": 80,
-   "fh": 80,
-   "base": 72,
-   "fps": 3
+   "frames": 6,
+   "fw": 96,
+   "fh": 96,
+   "base": 88,
+   "fps": 4,
+   "h": 64.7,
+   "box": [
+    16,
+    0,
+    68,
+    92
+   ],
+   "anim": {
+    "idle": {
+     "row": 0,
+     "n": 4,
+     "fps": 4
+    },
+    "walk": {
+     "row": 1,
+     "n": 6,
+     "fps": 10
+    },
+    "atk": {
+     "row": 2,
+     "n": 4,
+     "t": 0.4
+    }
+   }
   },
   "t3_crab": {
    "src": "assets/mobs/t3_crab.png",
-   "frames": 2,
-   "fw": 80,
-   "fh": 80,
-   "base": 72,
-   "fps": 3
+   "frames": 6,
+   "fw": 96,
+   "fh": 96,
+   "base": 88,
+   "fps": 4,
+   "h": 73.8,
+   "box": [
+    0,
+    24,
+    89,
+    65
+   ],
+   "anim": {
+    "idle": {
+     "row": 0,
+     "n": 4,
+     "fps": 4
+    },
+    "walk": {
+     "row": 1,
+     "n": 6,
+     "fps": 10
+    },
+    "atk": {
+     "row": 2,
+     "n": 4,
+     "t": 0.4
+    }
+   }
   },
   "t3_fox": {
    "src": "assets/mobs/t3_fox.png",
-   "frames": 2,
-   "fw": 80,
-   "fh": 80,
-   "base": 72,
-   "fps": 3
+   "frames": 6,
+   "fw": 96,
+   "fh": 96,
+   "base": 88,
+   "fps": 4,
+   "h": 77.4,
+   "box": [
+    8,
+    23,
+    88,
+    67
+   ],
+   "anim": {
+    "idle": {
+     "row": 0,
+     "n": 4,
+     "fps": 4
+    },
+    "walk": {
+     "row": 1,
+     "n": 6,
+     "fps": 10
+    },
+    "atk": {
+     "row": 2,
+     "n": 4,
+     "t": 0.4
+    }
+   }
   },
   "t3_ghost": {
    "src": "assets/mobs/t3_ghost.png",
-   "frames": 2,
-   "fw": 80,
-   "fh": 80,
-   "base": 72,
-   "fps": 3
+   "frames": 6,
+   "fw": 96,
+   "fh": 96,
+   "base": 88,
+   "fps": 4,
+   "h": 75.8,
+   "box": [
+    11,
+    20,
+    82,
+    76
+   ],
+   "anim": {
+    "idle": {
+     "row": 0,
+     "n": 4,
+     "fps": 4
+    },
+    "walk": {
+     "row": 1,
+     "n": 6,
+     "fps": 10
+    },
+    "atk": {
+     "row": 2,
+     "n": 4,
+     "t": 0.4
+    }
+   }
   },
   "t3_golem": {
    "src": "assets/mobs/t3_golem.png",
-   "frames": 2,
-   "fw": 80,
-   "fh": 80,
-   "base": 72,
-   "fps": 3
+   "frames": 6,
+   "fw": 96,
+   "fh": 96,
+   "base": 88,
+   "fps": 4,
+   "h": 94.9,
+   "box": [
+    6,
+    0,
+    83,
+    91
+   ],
+   "anim": {
+    "idle": {
+     "row": 0,
+     "n": 4,
+     "fps": 4
+    },
+    "walk": {
+     "row": 1,
+     "n": 6,
+     "fps": 10
+    },
+    "atk": {
+     "row": 2,
+     "n": 4,
+     "t": 0.4
+    }
+   }
   },
   "t3_mush": {
    "src": "assets/mobs/t3_mush.png",
-   "frames": 2,
-   "fw": 80,
-   "fh": 80,
-   "base": 72,
-   "fps": 3
+   "frames": 6,
+   "fw": 96,
+   "fh": 96,
+   "base": 88,
+   "fps": 4,
+   "h": 68.4,
+   "box": [
+    14,
+    4,
+    72,
+    87
+   ],
+   "anim": {
+    "idle": {
+     "row": 0,
+     "n": 4,
+     "fps": 4
+    },
+    "walk": {
+     "row": 1,
+     "n": 6,
+     "fps": 10
+    },
+    "atk": {
+     "row": 2,
+     "n": 4,
+     "t": 0.4
+    }
+   }
   },
   "t3_plant": {
    "src": "assets/mobs/t3_plant.png",
-   "frames": 2,
-   "fw": 80,
-   "fh": 80,
-   "base": 72,
-   "fps": 3
+   "frames": 6,
+   "fw": 96,
+   "fh": 96,
+   "base": 88,
+   "fps": 4,
+   "h": 84.0,
+   "box": [
+    17,
+    9,
+    61,
+    80
+   ],
+   "anim": {
+    "idle": {
+     "row": 0,
+     "n": 4,
+     "fps": 4
+    },
+    "walk": {
+     "row": 1,
+     "n": 6,
+     "fps": 10
+    },
+    "atk": {
+     "row": 2,
+     "n": 4,
+     "t": 0.4
+    }
+   }
   },
   "t3_slime": {
    "src": "assets/mobs/t3_slime.png",
-   "frames": 2,
-   "fw": 80,
-   "fh": 80,
-   "base": 72,
-   "fps": 3
+   "frames": 6,
+   "fw": 96,
+   "fh": 96,
+   "base": 88,
+   "fps": 4,
+   "h": 63.2,
+   "box": [
+    15,
+    14,
+    69,
+    76
+   ],
+   "anim": {
+    "idle": {
+     "row": 0,
+     "n": 4,
+     "fps": 4
+    },
+    "walk": {
+     "row": 1,
+     "n": 6,
+     "fps": 10
+    },
+    "atk": {
+     "row": 2,
+     "n": 4,
+     "t": 0.4
+    }
+   }
   },
   "t3_snake": {
    "src": "assets/mobs/t3_snake.png",
-   "frames": 2,
-   "fw": 80,
-   "fh": 80,
-   "base": 72,
-   "fps": 3
+   "frames": 6,
+   "fw": 96,
+   "fh": 96,
+   "base": 88,
+   "fps": 4,
+   "h": 64.0,
+   "box": [
+    0,
+    14,
+    96,
+    75
+   ],
+   "anim": {
+    "idle": {
+     "row": 0,
+     "n": 4,
+     "fps": 4
+    },
+    "walk": {
+     "row": 1,
+     "n": 6,
+     "fps": 10
+    },
+    "atk": {
+     "row": 2,
+     "n": 4,
+     "t": 0.4
+    }
+   }
   }
  },
  "bosses": {
   "hills_boss": {
    "src": "assets/mobs/hills_boss.png",
-   "recolor": null
+   "recolor": null,
+   "fw": 192,
+   "fh": 160,
+   "idle": {
+    "row": 0,
+    "n": 4,
+    "fps": 4
+   },
+   "atk": {
+    "row": 1,
+    "n": 4
+   }
   },
   "cave_boss": {
    "src": "assets/mobs/cave_boss.png",
-   "recolor": null
+   "recolor": null,
+   "fw": 192,
+   "fh": 160,
+   "idle": {
+    "row": 0,
+    "n": 4,
+    "fps": 4
+   },
+   "atk": {
+    "row": 1,
+    "n": 4
+   }
   },
   "magma_boss": {
    "src": "assets/mobs/magma_boss.png",
-   "recolor": null
+   "recolor": null,
+   "fw": 192,
+   "fh": 160,
+   "idle": {
+    "row": 0,
+    "n": 4,
+    "fps": 4
+   },
+   "atk": {
+    "row": 1,
+    "n": 4
+   }
   }
  },
  "maps": {
