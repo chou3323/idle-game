@@ -1,0 +1,119 @@
+/* Horde-mowing prototype layout (spec 9A). Builds on xp.css window chrome. */
+html,body{height:100%}
+body{overflow:hidden}
+#app{max-width:none;height:100%;min-height:0;padding:6px;gap:0}
+#mainwin{flex:1;min-height:0}
+#mainwin>.bd{padding:5px;display:flex;min-height:0;overflow:hidden}
+#stage{flex:1;display:grid;grid-template-columns:minmax(0,1fr) 290px;gap:6px;min-width:0;min-height:0}
+#w-scene{min-height:0;min-width:0}
+#w-scene>.bd{background:#1f2a1d;min-height:0}
+.scene-tools{display:flex;gap:4px;flex-wrap:wrap;padding:3px 5px;background:var(--panel-hdr1);border-bottom:1px solid #7d8bbd;align-items:center;font-size:12px}
+.scene-tools .sp{flex:1}
+.scene-tools .lbl{display:inline-flex;gap:3px;align-items:center}
+.zoomg{display:inline-flex;gap:3px;align-items:center}
+#z-val{min-width:38px;text-align:center}
+.scene-wrap{position:relative;flex:1;min-height:0;overflow:hidden;background:#223;touch-action:manipulation}
+#scene{position:absolute;inset:0;width:100%;height:100%;display:block}
+.hud{position:absolute;pointer-events:none;color:#fff;font-size:12px;line-height:1.35;text-shadow:0 1px 2px #000,0 0 3px #000}
+.hud-tl{left:8px;top:6px}
+.hud-tr{right:8px;top:6px;text-align:right}
+.hud .chip{display:inline-block;background:rgba(20,22,30,.62);border-radius:3px;padding:1px 7px;margin-bottom:2px;text-shadow:none}
+.hud .rank{background:rgba(20,22,30,.55);border-radius:3px;padding:2px 7px;margin-top:2px;text-align:left;min-width:128px}
+.hud .rank div{display:flex;justify-content:space-between;gap:10px}
+.hud .fps{font-family:var(--mono);font-size:12px}
+.hud .fps.bad{color:#ff9a8a}
+#bossbar{position:absolute;left:50%;top:8px;transform:translateX(-50%);width:min(46%,480px);text-align:center;color:#fff;text-shadow:0 1px 3px #000;pointer-events:none}
+#bossbar .bn{font-weight:700;font-size:14px}
+#bossbar .bb{height:12px;border:2px solid #2b0d0d;background:#300;border-radius:3px;overflow:hidden;box-shadow:0 0 6px rgba(255,0,0,.5)}
+#bossbar .bb i{display:block;height:100%;width:100%;background:linear-gradient(#ff6a5a,#c61e1e)}
+.hidden{display:none!important}
+#banner{position:absolute;left:0;right:0;top:26%;text-align:center;padding:6px 0;background:rgba(40,8,8,.66);color:#ffd9a0;font-size:22px;font-weight:700;letter-spacing:2px;pointer-events:none;animation:ban 2.2s forwards}
+@keyframes ban{0%{opacity:0;transform:scaleY(.2)}12%{opacity:1;transform:none}80%{opacity:1}100%{opacity:0}}
+#mini{position:absolute;right:8px;bottom:8px;width:132px;height:88px;background:rgba(10,14,20,.6);border:1px solid rgba(255,255,255,.35);border-radius:3px;pointer-events:none}
+/* log window */
+.logwin{position:absolute;left:8px;bottom:8px;width:430px;z-index:20;box-shadow:0 4px 14px rgba(0,0,0,.55);opacity:.97}
+.logwin>.bd{background:#2b2c30}
+.logwin .tb small{font-weight:400;color:#4a5a90;font-family:var(--font);font-size:11px;margin-left:4px}
+.logwin .seg{display:inline-flex;gap:0;margin-right:4px}
+.win>.tb .seg button{all:unset;cursor:pointer;box-sizing:border-box;width:auto;height:18px;line-height:16px;padding:0 8px;font-size:12px;font-weight:400;font-family:var(--font);border:1px solid #6f80b8;border-radius:0;background:linear-gradient(#fff,#cfd6ea);color:#33478f;text-align:center}
+.win>.tb .seg button:first-child{border-radius:9px 0 0 9px}.win>.tb .seg button:last-child{border-radius:0 9px 9px 0}
+.win>.tb .seg button+button{border-left:0}
+.win>.tb .seg button.on{background:linear-gradient(#aec4f1,#8aa5dd);font-weight:700}
+.win>.tb .seg button:focus-visible{outline:2px solid #1b2b66;z-index:1;position:relative}
+.logwin .logbox{margin:3px 4px 4px;height:112px;font-size:12.5px;line-height:1.45;padding:4px 7px;overflow-y:auto;overflow-x:hidden;background:#000;color:var(--log-text);font-family:var(--mono);border:1px solid #111;border-radius:3px;box-shadow:inset 0 0 6px #000;word-break:break-all}
+.logwin.big{width:min(680px,calc(100% - 16px))}
+.logwin.big .logbox{height:min(300px,40vh)}
+.logwin.min .bd,.logwin.min .seg{display:none}
+.logwin.min{width:200px}
+.logbox .ln{white-space:pre-wrap}
+.logbox .ts{color:#8d909a}
+.logbox .c-gold{color:#ffd84a;font-weight:700}
+.logbox .c-boss{color:#ff8a5a;font-weight:700}
+/* side */
+#side{display:flex;flex-direction:column;gap:6px;min-width:0;min-height:0;overflow:auto}
+.pad{padding:10px 12px;gap:10px;overflow:auto}
+.ctl-h{display:flex;justify-content:space-between;font-size:13px}
+.ctl-h b{font-weight:700;color:#2b3f86;font-variant-numeric:tabular-nums}
+input[type=range]{width:100%;height:28px;margin:2px 0;accent-color:#5c70b0}
+.btns2{display:grid;grid-template-columns:1fr 1fr 1fr;gap:5px}
+.note{color:var(--mut);font-size:12.5px}.note.small{font-size:11.5px;line-height:1.5}
+#cap-note b{color:#b4540a}
+.go.boss-on{filter:saturate(.4)}
+body.paused #scene{filter:saturate(.6)}
+/* big / fullscreen */
+body.big #w-scene{position:fixed;inset:0;z-index:900;border-radius:0;height:auto}
+body.big #w-scene>.tb{display:none}
+body.big #app{padding:0}
+body.big #mainwin{border:0;background:none;box-shadow:none;padding:0}
+body.big #mainwin>.tb{display:none}
+body.big #mainwin>.bd{padding:0;border:0;background:none}
+body.big #stage{display:block}
+body.big #side{display:none;position:fixed;right:8px;top:48px;width:290px;max-height:calc(100% - 60px);z-index:950}
+body.big.showside #side{display:flex}
+body.big .scene-tools{position:absolute;left:0;right:0;top:0;z-index:30;background:rgba(190,201,232,.82)}
+body.big .hud-tl{top:36px}body.big .hud-tr{top:36px}body.big #bossbar{top:40px}
+body:not(.big) #b-closeside{display:none}
+body:not(.big) #b-gear,body:not(.big) #t-gear{display:none}
+body.big #b-gear{display:inline-block}
+@media (max-width:900px) and (min-width:601px){#stage{grid-template-columns:minmax(0,1fr) 230px}}
+/* ---- mobile 390 ---- */
+@media (max-width:600px){
+  body{overflow:auto}
+  #app{height:auto;min-height:100%}
+  #mainwin>.bd{display:block;padding:3px 4px;overflow:visible}
+  #mainwin>.tb .ttl{font-size:12.5px}
+  #stage{display:flex;flex-direction:column;gap:6px}
+  #w-scene{height:auto}
+  #w-scene .scene-wrap{flex:none;height:min(66vh,560px);min-height:380px}
+  .scene-tools{gap:3px;padding:3px}
+  .scene-tools .zoomg,.scene-tools #t-full,.scene-tools #t-mini,.scene-tools .sp{display:none}
+  .scene-tools .mini{height:34px;line-height:32px;padding:0 9px;font-size:13px}
+  .scene-tools select{height:34px;font-size:13px}
+  .hud{font-size:11px}
+  .hud .rank{display:none}
+  .hud-tr .chip{font-size:10.5px}
+  #mini{width:96px;height:64px}
+  .logwin{left:4px;right:4px;bottom:4px;width:auto}
+  .logwin .logbox{height:66px;font-size:12px}
+  .logwin.big .logbox{height:calc(min(66vh,560px) * .52)}
+  .logwin.big{width:auto}
+  .logwin>.tb{height:34px}
+  .win>.tb .seg button{height:26px;line-height:24px;padding:0 9px;font-size:13px}
+  .logwin .tb small{display:none}
+  .logwin>.tb .wb button{width:28px;height:28px;line-height:26px}
+  .win>.tb{height:28px}
+  .win>.tb button{width:24px;height:24px;line-height:22px;font-size:14px}
+  #side{overflow:visible}
+  .btn{height:40px;line-height:38px}
+  .go{height:44px}
+  #banner{font-size:18px}
+  #bossbar{width:calc(100% - 20px);top:52px}
+  body.big #bossbar{top:96px}
+  body.big .hud-tl,body.big .hud-tr{top:46px}
+  body.big #w-scene>.bd{height:100%}
+  body.big #w-scene .scene-wrap{height:auto;flex:1;min-height:0}
+  body.big #side{right:4px;left:4px;width:auto;top:44px}
+  body.big .logwin{bottom:4px}
+  body.big #mini{bottom:112px}
+  body.big .logwin.big~#mini{display:none}
+}
