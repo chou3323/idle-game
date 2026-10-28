@@ -931,16 +931,17 @@ function bind(){
   $('#b-boss').onclick=()=>{if(ST.mode==='stage')return;if(S.bossCool<=0||!S.boss)spawnBoss(false)};
   $('#b-pause').onclick=e=>{S.paused=!S.paused;e.target.textContent=S.paused?'繼續':'暫停';document.body.classList.toggle('paused',S.paused)};
   $('#b-reset').onclick=()=>{if(ST.mode==='stage'){retryStage();return}S.freshUntil=.3;S.kills=0;S.killHist.length=0;S.exp=0;S.t=0;S.nextBossAt=150;S.boss=null;$('#bossbar').classList.add('hidden');makeChars();assignAnchors();makeMobs();NUMS.forEach(n=>n.on=0);FX.forEach(n=>n.on=0);PROJ.forEach(n=>n.on=0);Log.reset();chars.forEach(c=>{c.x=c.ax+rr(-30,30);c.y=c.ay+rr(-30,30)})};
-  const tog=(id,k)=>{const b=$(id);b.onclick=()=>{S.opt[k]=!S.opt[k];b.classList.toggle('on',S.opt[k])}};tog('#t-names','names');tog('#t-dmg','dmg');tog('#t-mini','mini');
+  const tog=(id,k)=>{const b=$(id);b.setAttribute('aria-pressed',String(!!S.opt[k]));b.onclick=()=>{S.opt[k]=!S.opt[k];b.classList.toggle('on',S.opt[k]);b.setAttribute('aria-pressed',String(S.opt[k]))}};tog('#t-names','names');tog('#t-dmg','dmg');tog('#t-mini','mini');
   $('#b-ring').onclick=e=>{S.opt.ring=!S.opt.ring;e.target.classList.toggle('on',S.opt.ring)};$('#b-ring').classList.add('on');
   $('#s-q').onchange=e=>{const v=e.target.value;if(v==='auto'){S.qMode='auto';S.qSince=performance.now()}else{S.qMode='lock';setQ(+v)}};
   $('#z-in').onclick=()=>{S.zoomMul=clamp(S.zoomMul+.1,.6,1.8);layout()};$('#z-out').onclick=()=>{S.zoomMul=clamp(S.zoomMul-.1,.6,1.8);layout()};
-  const setBig=v=>{document.body.classList.toggle('big',v);$('#t-big').textContent=v?'還原':'⛶ 放大';if(!v)document.body.classList.remove('showside');setTimeout(layout,30)};
+  const setBigLbl=v=>{$('#t-big').innerHTML=v?'還原':'⛶<span class="lg"> 放大</span>';$('#t-big').setAttribute('aria-pressed',v?'true':'false')};
+  const setBig=v=>{document.body.classList.toggle('big',v);setBigLbl(v);if(!v)document.body.classList.remove('showside');setTimeout(layout,30)};
   const isBig=()=>document.body.classList.contains('big');
   $('#t-big').onclick=()=>{if(document.fullscreenElement)document.exitFullscreen();setBig(!isBig())};$('#b-big').onclick=$('#t-big').onclick;
   $('#t-full').onclick=()=>{if(document.fullscreenElement){document.exitFullscreen();return}setBig(true);const el=document.documentElement;if(el.requestFullscreen)el.requestFullscreen().catch(()=>{})};
   document.addEventListener('fullscreenchange',()=>{if(!document.fullscreenElement&&isBig()&&S.fsAuto){setBig(false)}S.fsAuto=!!document.fullscreenElement;setTimeout(layout,60)});
-  const thEl=$('#t-theme'),thSync=()=>{const x=document.documentElement.getAttribute('data-theme')==='xp';thEl.textContent='外觀：'+(x?'Windows XP':'舊版 RO')};thSync();
+  const thEl=$('#t-theme'),thSync=()=>{const x=document.documentElement.getAttribute('data-theme')==='xp';thEl.innerHTML='外觀<span class="lg">：'+(x?'Windows XP':'舊版 RO')+'</span>'};thSync();
   thEl.onclick=()=>{const d=document.documentElement,n=d.getAttribute('data-theme')==='xp'?'ro':'xp';d.setAttribute('data-theme',n);try{localStorage.setItem('aur_theme',n)}catch(e){}thSync();setTimeout(layout,30)};
   $('#b-gear').onclick=$('#t-gear').onclick=()=>document.body.classList.toggle('showside');$('#b-closeside').onclick=()=>document.body.classList.remove('showside');
   document.querySelectorAll('#logwin [data-m]').forEach(b=>b.onclick=()=>Log.setMode(b.dataset.m));
@@ -953,6 +954,11 @@ function bind(){
   $('#logbox').addEventListener('click',()=>{if(MOBILE&&!lw.classList.contains('big'))$('#log-exp').onclick()});
   addEventListener('keydown',e=>{if(e.target.tagName==='INPUT'||e.target.tagName==='SELECT')return;if(e.key==='f')$('#t-full').onclick();else if(e.key==='b')$('#b-boss').click();else if(e.key==='q'){drinkPotion()}else if(e.key==='Escape'&&isBig()&&!document.fullscreenElement)setBig(false)});
   new ResizeObserver(()=>layout()).observe($('#wrap'));addEventListener('resize',layout);
+  // v5: layout classes + --logh so bottom HUD never overlaps (log / hotbar / minimap)
+  {const wr=$('#wrap'),lw2=$('#logwin');const cls=()=>{const w=wr.clientWidth,h=wr.clientHeight,big=lw2.classList.contains('big');
+     wr.classList.toggle('w-stack',w<900||big);wr.classList.toggle('w-narrow',w<780);wr.classList.toggle('w-tiny',w<420);wr.classList.toggle('w-short',h<430);
+     wr.style.setProperty('--logh',lw2.offsetHeight+'px');wr.style.setProperty('--wh',h+'px')};
+   new ResizeObserver(cls).observe(wr);new ResizeObserver(cls).observe(lw2);new MutationObserver(cls).observe(lw2,{attributes:true,attributeFilter:['class']});cls()}
 }
 // ---------- init ----------
 async function init(){
@@ -966,7 +972,7 @@ async function init(){
   if(qs.get('job')&&!had&&D.JOBS[ME.job]){ME.equip.weapon=mkInst('wp_'+D.JOBS[ME.job].wk+'_0');ME.bag=ME.bag.filter(x=>!x.id.startsWith('wp_'));ME.bag.unshift(mkInst('wp_'+D.JOBS[ME.job].wk+'_2',2))}
   await load();ME.g=selfKey(ME.job,ME.g).slice(-1);S.mapId=ME.mapId;calcMe();buildGlyphs();makeChars();makeMobs();calcMe();bind();layout();await setMap(ME.mapId,true);
   S.freshUntil=.3;S.t=0;
-  if(qs.has('big')){document.body.classList.add('big');$('#t-big').textContent='還原';layout()}
+  if(qs.has('big')){document.body.classList.add('big');setBigLbl(true);layout()}
   if(qs.has('side'))document.body.classList.add('showside');
   // optional fast-forward for deterministic screenshots
   const ff=+(qs.get('ff')||0);if(ff>0){for(let i=0;i<ff*20;i++){update(.05)}}

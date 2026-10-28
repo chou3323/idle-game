@@ -86,7 +86,6 @@ body.big #b-gear{display:inline-block}
   #w-scene{height:auto}
   #w-scene .scene-wrap{flex:none;height:min(66vh,560px);min-height:380px}
   .scene-tools{gap:3px;padding:3px}
-  .scene-tools .zoomg,.scene-tools #t-full,.scene-tools #t-mini,.scene-tools .sp{display:none}
   .scene-tools .mini{height:34px;line-height:32px;padding:0 9px;font-size:13px}
   .scene-tools select{height:34px;font-size:13px}
   .hud{font-size:11px}

@@ -13,8 +13,8 @@
 #stagehud .sh-p{display:flex;justify-content:center;gap:3px;margin-top:2px}
 #stagehud .pk{position:relative;background:rgba(20,22,30,.68);border-radius:5px;padding:0 4px;font-size:13px;text-shadow:none}
 #stagehud .pk i{font:700 9px var(--mono);font-style:normal;color:#ffe27a;margin-left:1px}
-body.stg #bossbar{top:78px}
-body.stg .hud-tl,body.stg .hud-tr{top:6px}
+body.instg #bossbar{top:78px}
+body.instg .hud-tl,body.instg .hud-tr{top:6px}
 /* combo */
 #combo{position:absolute;right:12px;top:30%;z-index:22;pointer-events:none;text-align:right;color:#fff;text-shadow:0 2px 3px #000,0 0 6px #000;--cc:#ffe27a;transition:transform .1s}
 #combo[data-t="1"]{--cc:#ffb04a}#combo[data-t="2"]{--cc:#ff7a3a}#combo[data-t="3"]{--cc:#ff4a8a}#combo[data-t="4"]{--cc:#c06aff}#combo[data-t="5"]{--cc:#5af0ff}
@@ -68,8 +68,8 @@ body.stg .hud-tl,body.stg .hud-tr{top:6px}
 @media (max-width:600px){
   #stagehud{width:min(230px,60%);font-size:11px}
   #stagehud .sh-p{display:none}
-  body.stg .hud-tl,body.stg .hud-tr{top:62px}
-  body.stg #bossbar{top:96px}
+  body.instg .hud-tl,body.instg .hud-tr{top:62px}
+  body.instg #bossbar{top:96px}
   #combo{top:22%;right:6px}#combo .cb-n b{font-size:28px}
   #streak{font-size:24px!important}#wavebanner{font-size:22px}
   .pv{width:100px;min-height:120px;padding:6px}.pv .pi{font-size:26px}.pv small{font-size:11px}

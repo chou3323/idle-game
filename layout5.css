@@ -1,0 +1,167 @@
+/* ==========================================================================
+   Aurevia horde v5 — layout / hit-area fixes (loaded LAST; theme-neutral: works for RO + XP skins)
+   - scene toolbar sits BELOW the scene (like ro-idle), single row, never wraps
+   - bottom HUD (log / hotbar / minimap) is stacked by JS classes on #wrap:
+       .w-stack (<900px or log expanded)  .w-narrow (<780px)  .w-tiny (<420px)  .w-short (<430px tall)
+   - every interactive control >= 24px on desktop, >= 40px on touch / phone
+   ========================================================================== */
+:root{--hit-d:24px;--hit-t:40px}
+.wide{display:inline}
+/* ---------- scene window: column = [menubar][scene][toolbar] ---------- */
+#w-scene>.bd{display:flex;flex-direction:column;min-height:0}
+#menubar{flex:none}
+.scene-wrap{flex:1 1 auto;min-height:0}
+.scene-tools{flex:none;order:0;flex-wrap:nowrap!important;overflow-x:auto;overflow-y:hidden;gap:4px;align-items:center;scrollbar-width:none;
+  container-type:inline-size;container-name:tools;border-bottom:0!important;border-top:1px solid #7d8bbd;-webkit-overflow-scrolling:touch;overscroll-behavior-x:contain}
+.scene-tools::-webkit-scrollbar{display:none;height:0}
+.scene-tools>*{flex:0 0 auto}
+.scene-tools .sp{flex:1 1 0;min-width:0;padding:0}
+.scene-tools .lbl{white-space:nowrap}
+.scene-tools .mini{white-space:nowrap;height:24px;line-height:22px;box-sizing:border-box}
+.scene-tools select{height:24px;font-size:12px;max-width:96px;box-sizing:border-box}
+.scene-tools #z-val{min-width:40px}
+@container tools (max-width:640px){
+  .scene-tools .lg{display:none}
+  .scene-tools #t-full{display:none}
+}
+@container tools (max-width:430px){
+  .scene-tools .zoomg{display:none}
+  .scene-tools #t-gear{display:none}
+}
+html[data-theme=ro] .scene-tools{margin:4px 5px 5px;padding:3px 6px}
+html[data-theme=xp] .scene-tools{margin:0;padding:3px 5px}
+.scene-tools .mini[aria-pressed=true]{font-weight:700}
+/* ---------- big mode: menubar + toolbar become normal rows (no overlay on the scene) ---------- */
+body.big #w-scene>.bd{height:100%}
+body.big #menubar{position:static!important;background:var(--ro-panel,#d8def0)}
+html[data-theme=xp] body.big #menubar{background:linear-gradient(var(--panel-hdr1),var(--panel-hdr2))}
+body.big .scene-tools{position:static!important;top:auto!important;background:var(--ro-panel,#cfd6ee)}
+html[data-theme=ro] body.big .scene-tools{background:linear-gradient(#e9ecf8,#d2d8ee)}
+body.big .hud-tl,body.big .hud-tr{top:6px}
+body.big #bossbar{top:8px}
+body.big #w-scene .scene-wrap{flex:1 1 auto;height:auto;min-height:0}
+body.big #side{top:8px;max-height:calc(100% - 16px)}
+body.big.instg .hud-tl,body.big.instg .hud-tr{top:6px}
+/* ---------- bottom HUD: log / hotbar / minimap never overlap ---------- */
+.logwin{max-width:calc(100% - 16px)}
+.scene-wrap.w-stack #hotbar{right:auto;left:8px;bottom:calc(var(--logh,0px) + 14px);transform:none;align-items:flex-start}
+.scene-wrap.w-stack #mini{bottom:calc(var(--logh,0px) + 14px)}
+.scene-wrap.w-stack .logwin{left:8px;bottom:8px}
+.scene-wrap.w-stack .logwin.big{width:min(680px,calc(100% - 16px))}
+.scene-wrap.w-narrow #stagehud{width:min(240px,60%);font-size:11px}
+.scene-wrap.w-narrow #stagehud .sh-p{display:none}
+body.instg .scene-wrap.w-narrow .hud-tl,body.instg .scene-wrap.w-narrow .hud-tr{top:62px}
+body.instg .scene-wrap.w-narrow #bossbar{top:96px}
+.scene-wrap.w-narrow #combo{top:max(30%,150px);right:6px}
+.scene-wrap.w-narrow .hud .rank{display:none}
+.scene-wrap.w-tiny #mini{width:76px;height:52px}
+.scene-wrap.w-tiny #hotbar .hb-bars{width:min(200px,100%)}
+.scene-wrap.w-tiny .hs{width:44px;height:44px}
+.scene-wrap.w-tiny .hb-slots{gap:4px}
+.scene-wrap.w-tiny #bossbar{width:calc(100% - 20px)}
+.scene-wrap.w-short .logwin:not(.big) .bd,.scene-wrap.w-short .logwin:not(.big) .seg{display:none}
+.scene-wrap.w-short .logwin:not(.big){width:200px}
+.scene-wrap.w-short .hud .rank{display:none}
+.scene-wrap.w-short #mini{width:96px;height:64px}
+.scene-wrap.w-short #combo{top:19%;transform-origin:right top;scale:.8}
+.scene-wrap.w-short #hud-tl{top:3px}.scene-wrap.w-short #hud-tl .chip{font-size:11px;padding:0 6px;margin-bottom:1px}
+.scene-wrap.w-short #hud-tl br{display:none}
+.scene-wrap.w-short #hud-tl .chip{display:block;width:fit-content}
+.scene-wrap.w-short #hud-tl .chip:nth-of-type(n+3){display:none}
+.scene-wrap.w-short:has(.logwin.big) #hotbar,.scene-wrap.w-short:has(.logwin.big) #mini,.scene-wrap.w-short:has(.logwin.big) #hud-tl,.scene-wrap.w-short:has(.logwin.big) #hud-tr{display:none!important}
+.scene-wrap:has(#perkov:not(.hidden)) #combo,.scene-wrap:has(#resultov:not(.hidden)) #combo{display:none}
+.scene-wrap.w-short .logwin.big .logbox{height:max(60px,calc(var(--wh,300px) * .4 - 56px))}
+.scene-wrap.w-short #banner,.scene-wrap.w-short #wavebanner{font-size:18px}
+/* ---------- window chrome hit areas: DESKTOP (>= 24px) ---------- */
+html[data-theme] .win>.tb{min-height:26px}
+html[data-theme=ro] .win>.tb,html[data-theme=ro] .ph{height:26px}
+html[data-theme] .win>.tb .wb{gap:2px}
+html[data-theme] .win>.tb .wb button,html[data-theme] .fw>.tb button{box-sizing:border-box;width:var(--hit-d);height:var(--hit-d);border:4px solid transparent;background-clip:padding-box;
+  box-shadow:inset 0 0 0 1px #4a5690;line-height:14px;font-size:9px}
+html[data-theme=xp] .win>.tb .wb button,html[data-theme=xp] .fw>.tb button{border-color:transparent;box-shadow:inset 0 0 0 1px #6f80b8;font-size:11px}
+html[data-theme] .logwin>.tb .seg{gap:0;margin-right:2px}
+html[data-theme] .logwin>.tb .seg button,html[data-theme=ro] .logwin>.tb .seg button{box-sizing:border-box;height:var(--hit-d);line-height:16px;border:4px solid transparent;background-clip:padding-box;
+  box-shadow:inset 0 0 0 1px #4a5690;padding:0 6px;margin-left:0;font-size:10.5px;border-radius:999px!important;border-width:4px 2px}
+html[data-theme=xp] .logwin>.tb .seg button{box-shadow:inset 0 0 0 1px #6f80b8}
+html[data-theme] .logwin .lf,html[data-theme] .logwin .lc{gap:2px 0}
+html[data-theme] .logwin .lf button,html[data-theme] .logwin .lc button{box-sizing:border-box;height:var(--hit-d);line-height:16px;border:4px solid transparent;border-width:4px 2px;background-clip:padding-box;
+  box-shadow:inset 0 0 0 1px #7c85ab,inset 0 -2px 0 #aab0c8;padding:0 7px;font-size:11px}
+html[data-theme] .logwin .lf button.on{box-shadow:inset 0 0 0 1px #3e5ca8,inset 1px 2px 3px rgba(20,40,100,.4)}
+html[data-theme] .logwin .lf,html[data-theme] .logwin .lc{padding-top:2px;padding-bottom:2px}
+html[data-theme] .logwin .lc label{min-height:var(--hit-d);gap:4px;padding:0 4px}
+html[data-theme] .logwin .lc select{height:var(--hit-d);font-size:12px}
+html[data-theme] .logwin .lc input[type=checkbox]{width:15px;height:15px}
+/* in-window desktop controls */
+.fw label{min-height:var(--hit-d);display:inline-flex;align-items:center;gap:4px}
+.fw .mini{height:var(--hit-d);line-height:22px}
+.fw .btn{height:28px;line-height:26px}
+#hp-reset{height:30px}
+html[data-theme] #w-ctl .btn,html[data-theme] #w-ctl .go{min-height:28px}
+/* ---------- TOUCH / PHONE (>= 40px) ---------- */
+@media (pointer:coarse),(max-width:600px){
+  html[data-theme] .win>.tb{min-height:42px;height:42px}
+  html[data-theme] #mainwin>.tb{min-height:28px;height:28px}
+  html[data-theme] .win>.tb .wb button,html[data-theme] .fw>.tb button,html[data-theme] .win>.tb button{width:var(--hit-t)!important;height:var(--hit-t)!important;border-width:11px!important;
+     font-size:11px!important;line-height:16px!important;background-clip:padding-box!important}
+  html[data-theme] #w-scene>.tb{display:none}            /* gear / enlarge live in the bottom toolbar */
+  html[data-theme] #w-ctl>.tb{min-height:42px}
+  html[data-theme] #menubar{padding:4px;gap:4px;flex-wrap:nowrap}
+  html[data-theme] #menubar .mb{height:var(--hit-t)!important;line-height:38px!important;min-width:0;flex:1 1 0;padding:0 2px;font-size:14px}
+  html[data-theme] #menubar .mb kbd{display:none}
+  .scene-tools{min-height:48px;padding-top:4px;padding-bottom:4px!important}
+  .scene-tools .mini,html[data-theme] .scene-tools .mini{height:var(--hit-t)!important;line-height:38px!important;min-width:40px;padding:0 7px!important;font-size:13px}
+  .scene-tools select{height:var(--hit-t);font-size:13px;max-width:none;width:66px;padding:0 1px}
+  .scene-tools .lbl{gap:2px}
+  html[data-theme] .logwin>.tb .seg button{height:var(--hit-t);border-width:11px 4px;font-size:11px;padding:0 4px;line-height:16px;box-shadow:inset 0 0 0 1px #4a5690}
+  html[data-theme] .logwin .lf,html[data-theme] .logwin .lc{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;padding:0 6px}
+  html[data-theme] .logwin .lf::-webkit-scrollbar,html[data-theme] .logwin .lc::-webkit-scrollbar{display:none}
+  html[data-theme] .logwin .lf button,html[data-theme] .logwin .lc button{flex:0 0 auto;height:var(--hit-t);border-width:11px 3px;font-size:12px;padding:0 6px}
+  html[data-theme] .logwin .lc label{min-height:var(--hit-t);white-space:nowrap;flex:0 0 auto}
+  html[data-theme] .logwin .lc select{height:var(--hit-t);font-size:13px}
+  html[data-theme] .logwin .lc input[type=checkbox]{width:20px;height:20px}
+  .fw .mini,html[data-theme] .fw .mini{height:var(--hit-t)!important;line-height:38px!important;padding:0 12px}
+  .fw .btn,html[data-theme] .fw .btn{height:var(--hit-t)!important;line-height:38px!important}
+  .fw label{min-height:var(--hit-t)}
+  .fw input[type=checkbox]{width:22px;height:22px}
+  .btn,.go{min-height:var(--hit-t)}
+  input[type=range]{height:var(--hit-t)!important;margin:0}
+  #hp-reset{height:var(--hit-t)}
+  .hs .au{width:20px;height:20px;line-height:18px;font-size:11px}
+  .sk-c .btn{min-width:84px}
+  .bi,html[data-theme=ro] .bi{min-height:var(--hit-t);height:var(--hit-t)}
+  .bag{grid-template-columns:repeat(auto-fill,minmax(40px,1fr))!important}
+  html[data-theme] #w-ctl .btn,html[data-theme] #w-ctl .go{min-height:var(--hit-t)}
+  .fw .mini,html[data-theme] .fw .mini{min-width:var(--hit-t)}
+}
+/* ---------- PHONE (<= 600px) page layout ---------- */
+@media (max-width:600px){
+  .wide{display:none}
+  #app{padding-left:4px;padding-right:4px}
+  #w-scene .scene-wrap{flex:none;height:calc(100vh - 206px);height:calc(100dvh - 206px);min-height:330px;max-height:none}
+  body.big #w-scene .scene-wrap{flex:1 1 auto;height:auto;min-height:0}
+  .logwin{left:4px;right:4px;bottom:4px;width:auto;max-width:none}
+  .scene-wrap.w-stack .logwin{left:4px}
+  .scene-wrap.w-stack #hotbar{left:4px;bottom:calc(var(--logh,0px) + 10px)}
+  .scene-wrap.w-stack #mini{right:4px;bottom:calc(var(--logh,0px) + 10px)}
+  .logwin>.tb{height:42px}
+  html[data-theme] .logwin .logbox{height:64px}
+  .logwin.big .logbox{height:max(80px,calc(var(--wh,500px) * .42 - 30px))!important}
+  .fw{max-height:78vh;max-height:78dvh;padding-bottom:env(safe-area-inset-bottom)}
+  .fw>.bd.fwb{padding-bottom:calc(10px + env(safe-area-inset-bottom))}
+  .fw .stg-top,.fw .stg-r{flex-wrap:wrap}
+  #toast{max-width:90%;white-space:normal;text-align:center}
+}
+@media (max-width:600px) and (max-height:700px){
+  #w-scene .scene-wrap{min-height:300px}
+}
+/* landscape phones */
+@media (max-height:520px) and (orientation:landscape){
+  #stage{grid-template-columns:minmax(0,1fr) 230px}
+  html[data-theme] #menubar .mb{min-width:44px}
+}
+@container tools (max-width:340px){.scene-tools .lt{display:none}}
+.logwin.big~#combo{display:none}
+/* expanded log on a medium-height scene: shorten the top-left chips so the hotbar never touches them */
+.scene-wrap.w-stack:has(.logwin.big) #hud-tl br{display:none}
+.scene-wrap.w-stack:has(.logwin.big) #hud-tl .chip{display:block;width:fit-content}
+.scene-wrap.w-stack:has(.logwin.big) #hud-tl .chip:nth-of-type(n+3){display:none}

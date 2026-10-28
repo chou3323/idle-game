@@ -3,6 +3,7 @@
 window.HD=window.HD||{};
 HD.UI=(function(){
 let C=null,D=null,Art=null,ME=null,S=null;const MOBILE=/mobile/.test(location.search)?/mobile=1/.test(location.search):(matchMedia('(max-width:600px)').matches||(matchMedia('(pointer:coarse)').matches&&innerWidth<=820));
+const NARROW=matchMedia('(max-width:600px)');const isN=()=>NARROW.matches;
 const $=s=>document.querySelector(s),fmt=n=>Math.round(n).toLocaleString('en-US');
 const W={};let zTop=60,sel=null,selSlot=null,dirtyDrops=true,stat=null,hb=null,toastT=0;
 const GD=t=>D.GRADES[t].d;
@@ -21,16 +22,16 @@ function mk(id,title,ic,w,pos){
   const e=el('div','win fw hidden');e.id='fw-'+id;e.style.width=w+'px';
   e.innerHTML=`<div class="tb"><span class="ic">${ic}</span><span class="ttl">${title}</span><span class="wb"><button data-x aria-label="關閉">✕</button></span></div><div class="bd fwb"></div>`;
   e.addEventListener('pointerdown',()=>front(e),true);e.querySelector('[data-x]').onclick=()=>close(id);
-  (MOBILE?document.body:$('#wrap')).appendChild(e);
+  (isN()?document.body:$('#wrap')).appendChild(e);
   const o={id,e,body:e.querySelector('.fwb'),pos,open:false};W[id]=o;
-  if(!MOBILE){const tb=e.querySelector('.tb');let dx,dy,drag=false;tb.addEventListener('pointerdown',ev=>{if(ev.target.closest('button'))return;drag=true;dx=ev.clientX-e.offsetLeft;dy=ev.clientY-e.offsetTop;tb.setPointerCapture(ev.pointerId)});
+  {const tb=e.querySelector('.tb');let dx,dy,drag=false;tb.addEventListener('pointerdown',ev=>{if(isN()||ev.target.closest('button'))return;drag=true;dx=ev.clientX-e.offsetLeft;dy=ev.clientY-e.offsetTop;tb.setPointerCapture(ev.pointerId)});
     tb.addEventListener('pointermove',ev=>{if(!drag)return;const wr=$('#wrap');e.style.left=Math.max(0,Math.min(wr.clientWidth-80,ev.clientX-dx))+'px';e.style.top=Math.max(0,Math.min(wr.clientHeight-30,ev.clientY-dy))+'px';e.style.right='auto'});
     tb.addEventListener('pointerup',()=>drag=false)}
   return o}
 function front(e){e.style.zIndex=++zTop}
 const RENDER={};
-function open(id){const o=W[id];if(!o)return;if(MOBILE)Object.values(W).forEach(x=>{if(x!==o&&x.open)close(x.id)});o.open=true;o.e.classList.remove('hidden');front(o.e);
-  if(!MOBILE&&!o.placed){o.placed=true;const wr=$('#wrap');o.e.style.left=Math.max(6,Math.min(wr.clientWidth-o.e.offsetWidth-6,o.pos[0]<0?wr.clientWidth+o.pos[0]-o.e.offsetWidth:o.pos[0]))+'px';o.e.style.top=o.pos[1]+'px'}
+function open(id){const o=W[id];if(!o)return;if(isN())Object.values(W).forEach(x=>{if(x!==o&&x.open)close(x.id)});o.open=true;o.e.classList.remove('hidden');front(o.e);
+  if(!isN()&&!o.placed){o.placed=true;const wr=$('#wrap');o.e.style.left=Math.max(6,Math.min(wr.clientWidth-o.e.offsetWidth-6,o.pos[0]<0?wr.clientWidth+o.pos[0]-o.e.offsetWidth:o.pos[0]))+'px';o.e.style.top=o.pos[1]+'px'}
   RENDER[id]();updMenu()}
 function close(id){const o=W[id];if(!o)return;o.open=false;o.e.classList.add('hidden');updMenu()}
 function toggle(id){W[id].open?close(id):open(id)}
@@ -161,7 +162,7 @@ function buildStageUI(){
     resov.classList.add('hidden')}}
 function perkDesc(pk,l){const a=pk.v[Math.max(0,l-1)],b=pk.v2?pk.v2[Math.max(0,l-1)]:'';return pk.d.replace('{a}',a).replace('{b}',b)}
 function stageHud(){
-  const ST=C.ST;if(!sh)return;document.body.classList.toggle('stg',ST.mode==='stage'&&ST.state!=='idle');
+  const ST=C.ST;if(!sh)return;document.body.classList.toggle('instg',ST.mode==='stage'&&ST.state!=='idle');
   if(ST.mode!=='stage'||ST.state==='idle'){sh.classList.add('hidden');cmb.classList.toggle('hidden',!(C.CB.n>=2));return}
   sh.classList.remove('hidden');const d=D.DIFFS[ST.d],mp=D.MAPS[ST.si],boss=ST.w>=D.WAVES;
   const prog=boss?(S.boss?Math.max(0,S.boss.hp/S.boss.maxhp):0):Math.min(1,ST.wk/ST.wt);
@@ -228,9 +229,9 @@ function onKey(e){if(e.target.tagName==='INPUT'||e.target.tagName==='SELECT'||e.
 function init(core){
   C=core;D=C.D;Art=C.Art;ME=C.ME;S=C.S;
   const mb=el('div','','');mb.id='menubar';mb.innerHTML=[['stage','討伐','S'],['equip','裝備','E'],['skills','技能','K'],['map','地圖','M'],['drops','掉落','L'],['help','說明','H']].map(([w,n,k])=>`<button class="mb" data-w="${w}">${n}<kbd>${k}</kbd></button>`).join('');
-  const st=$('.scene-tools');st.parentNode.insertBefore(mb,st);mb.onclick=ev=>{const b=ev.target.closest('[data-w]');if(b)toggle(b.dataset.w)};
-  mk('stage','討伐（關卡）','⚑',MOBILE?0:400,[-10,34]);mk('equip','裝備與背包','⚔',MOBILE?0:310,[10,34]);mk('skills','技能','✦',MOBILE?0:350,[-10,34]);mk('map','地圖與圖鑑','◈',MOBILE?0:380,[-10,34]);mk('drops','掉落紀錄','❖',MOBILE?0:340,[10,34]);mk('help','說明','?',MOBILE?0:340,[-10,34]);
-  if(MOBILE)Object.values(W).forEach(o=>{o.e.style.width=''});
+  const wrp=$('#wrap');wrp.parentNode.insertBefore(mb,wrp);mb.onclick=ev=>{const b=ev.target.closest('[data-w]');if(b)toggle(b.dataset.w)};
+  mk('stage','討伐（關卡）','⚑',400,[-10,34]);mk('equip','裝備與背包','⚔',310,[10,34]);mk('skills','技能','✦',350,[-10,34]);mk('map','地圖與圖鑑','◈',380,[-10,34]);mk('drops','掉落紀錄','❖',340,[10,34]);mk('help','說明','?',340,[-10,34]);
+  const remount=()=>{Object.values(W).forEach(o=>{(isN()?document.body:$('#wrap')).appendChild(o.e);o.placed=false;o.e.style.left=o.e.style.top=o.e.style.right='';if(!isN()&&o.open){o.open=false;open(o.id)}})};NARROW.addEventListener?NARROW.addEventListener('change',remount):NARROW.addListener(remount);
   const t=el('div','','');t.id='toast';$('#wrap').appendChild(t);
   buildStat();buildStageUI();buildHotbar();hbSync();hudTick();addEventListener('keydown',onKey);
   const q=new URLSearchParams(location.search).get('open');if(q&&W[q])open(q)}

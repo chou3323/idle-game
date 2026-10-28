@@ -2,25 +2,18 @@
 <html lang="zh-Hant" data-theme="ro"><head><meta charset="utf-8">
 <script>(function(){var d=document.documentElement;try{var q=new URLSearchParams(location.search).get("theme"),t=q||localStorage.getItem("aur_theme")||"ro";d.setAttribute("data-theme",t==="xp"?"xp":"ro")}catch(e){d.setAttribute("data-theme","ro")}})()</script>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<link rel="icon" href="data:,"><title>曙光 Aurevia · 仙境冒險 · 割草大畫面 v4</title>
-<link rel="stylesheet" href="xp.css?v=4"><link rel="stylesheet" href="horde.css?v=4"><link rel="stylesheet" href="ui.css?v=4"><link rel="stylesheet" href="stage.css?v=4"><link rel="stylesheet" href="rotheme.css?v=4">
+<link rel="icon" href="data:,"><title>曙光 Aurevia · 仙境冒險 · 割草大畫面 v5</title>
+<link rel="stylesheet" href="xp.css?v=5"><link rel="stylesheet" href="horde.css?v=5"><link rel="stylesheet" href="ui.css?v=5"><link rel="stylesheet" href="stage.css?v=5"><link rel="stylesheet" href="rotheme.css?v=5"><link rel="stylesheet" href="layout5.css?v=5">
 </head><body>
 <div id="app">
  <div class="win" id="mainwin">
-  <div class="tb"><span class="ic">◆</span><span class="ttl">曙光 Aurevia 仙境冒險 - 割草大畫面 v4（原型・全部是假資料）</span></div>
+  <div class="tb"><span class="ic">◆</span><span class="ttl">曙光 Aurevia 仙境冒險<span class="wide"> - 割草大畫面 v5（原型・全部是假資料）</span></span></div>
   <div class="bd">
    <div id="stage">
     <div class="win" id="w-scene">
      <div class="tb"><span class="ic">▣</span><span class="ttl" id="scene-title">戰鬥場景 - 霧沼濕地 08（割草）</span>
       <span class="wb"><button id="b-gear" title="控制面板" aria-label="控制面板">⚙</button><button id="b-big" title="放大 / 還原" aria-label="放大">⇱</button></span></div>
      <div class="bd">
-      <div class="scene-tools">
-       <label class="lbl">畫質 <select id="s-q" aria-label="畫質"><option value="auto">自動</option><option value="3">Q3 高</option><option value="2">Q2 中</option><option value="1">Q1 低</option><option value="0">Q0 省電</option></select></label>
-       <button class="mini on" id="t-names">名牌</button><button class="mini on" id="t-dmg">傷害數字</button><button class="mini on" id="t-mini">小地圖</button>
-       <span class="zoomg"><button class="mini" id="z-out" aria-label="縮小">−</button><span id="z-val">100%</span><button class="mini" id="z-in" aria-label="放大">＋</button></span>
-       <span class="sp"></span>
-       <button class="mini" id="t-theme" title="切換視窗外觀：舊版 RO ⇄ Windows XP">外觀：舊版 RO</button><button class="mini" id="t-gear" aria-label="控制面板">⚙ 控制</button><button class="mini" id="t-big">⛶ 放大</button><button class="mini" id="t-full">全螢幕</button>
-      </div>
       <div class="scene-wrap" id="wrap">
        <canvas id="scene"></canvas>
        <div class="hud hud-tl" id="hud-tl"></div>
@@ -36,6 +29,13 @@
          <div class="lc"><button id="lg-clear" type="button">清除</button><label><input type="checkbox" id="lg-auto" checked> 自動捲動</label><span class="sp"></span><label>字體 <select id="lg-fs" aria-label="字體大小"><option value="11">11px</option><option value="12.5" selected>13px</option><option value="14">14px</option></select></label></div>
         </div>
        </div>
+      </div>
+      <div class="scene-tools" id="scene-tools" role="toolbar" aria-label="場景工具列">
+       <label class="lbl"><span class="lt">畫質</span> <select id="s-q" aria-label="畫質"><option value="auto">自動</option><option value="3">Q3 高</option><option value="2">Q2 中</option><option value="1">Q1 低</option><option value="0">Q0 省電</option></select></label>
+       <button class="mini on" id="t-names" title="顯示角色名牌">名牌</button><button class="mini on" id="t-dmg" title="顯示傷害數字">傷害<span class="lg">數字</span></button><button class="mini on" id="t-mini" title="顯示小地圖">小地圖</button>
+       <span class="zoomg"><button class="mini" id="z-out" aria-label="縮小">−</button><span id="z-val">100%</span><button class="mini" id="z-in" aria-label="放大">＋</button></span>
+       <span class="sp"></span>
+       <button class="mini" id="t-theme" title="切換視窗外觀：舊版 RO ⇄ Windows XP">外觀<span class="lg">：舊版 RO</span></button><button class="mini" id="t-gear" aria-label="控制面板">⚙<span class="lg"> 控制</span></button><button class="mini" id="t-big" title="放大場景">⛶<span class="lg"> 放大</span></button><button class="mini" id="t-full">全螢幕</button>
       </div>
      </div>
     </div>
@@ -60,9 +60,9 @@
   </div>
  </div>
 </div>
-<script src="data.js?v=4"></script>
-<script src="art.js?v=4"></script>
+<script src="data.js?v=5"></script>
+<script src="art.js?v=5"></script>
 <script src="bgart.js"></script>
-<script src="ui.js?v=4"></script>
-<script src="horde.js?v=4"></script>
+<script src="ui.js?v=5"></script>
+<script src="horde.js?v=5"></script>
 </body></html>
