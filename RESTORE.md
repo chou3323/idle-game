@@ -8,7 +8,7 @@
 
 ## 還原到 v3 之前（v2）— 推薦（revert，保留歷史、不 force-push）
     git clone https://github.com/chou3323/idle-game.git && cd idle-game
-    git revert --no-edit <v3 commit>   # v3 commit 見 git log 第一筆「horde v3 …」
+    git revert --no-edit 3b31439   # v3 commit
     git push origin main
 ## 或直接把檔案內容回到 tag
     git checkout pre-horde3-20261028-1648 -- . && git commit -am "restore pre-horde3" && git push origin main
