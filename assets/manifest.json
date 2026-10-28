@@ -1,0 +1,338 @@
+{
+ "version": 1,
+ "_doc": "Asset manifest. See README.md '換成官方風格素材'. Put overrides in assets/custom/manifest.json (same schema, merged on top). 'h' = on-screen height (game px at 100% zoom) of one frame; 'base' = baseline (feet) y inside the frame in source px; optional 'recolor':{hue,sat,bri,con,tint,tintA}; optional 'flip':true if your sprite faces right.",
+ "chars": {
+  "sheets": "assets/chars/sheets.json",
+  "dir": "assets/chars/",
+  "grade": {
+   "bri": 1.05,
+   "sat": 1.03,
+   "con": 0.98
+  }
+ },
+ "mobs": {
+  "t1_bat": {
+   "src": "assets/mobs/t1_bat.png",
+   "frames": 2,
+   "fw": 80,
+   "fh": 80,
+   "base": 72,
+   "fps": 3
+  },
+  "t1_bee": {
+   "src": "assets/mobs/t1_bee.png",
+   "frames": 2,
+   "fw": 80,
+   "fh": 80,
+   "base": 72,
+   "fps": 3
+  },
+  "t1_beetle": {
+   "src": "assets/mobs/t1_beetle.png",
+   "frames": 2,
+   "fw": 80,
+   "fh": 80,
+   "base": 72,
+   "fps": 3
+  },
+  "t1_bunny": {
+   "src": "assets/mobs/t1_bunny.png",
+   "frames": 2,
+   "fw": 80,
+   "fh": 80,
+   "base": 72,
+   "fps": 3
+  },
+  "t1_crab": {
+   "src": "assets/mobs/t1_crab.png",
+   "frames": 2,
+   "fw": 80,
+   "fh": 80,
+   "base": 72,
+   "fps": 3
+  },
+  "t1_fox": {
+   "src": "assets/mobs/t1_fox.png",
+   "frames": 2,
+   "fw": 80,
+   "fh": 80,
+   "base": 72,
+   "fps": 3
+  },
+  "t1_ghost": {
+   "src": "assets/mobs/t1_ghost.png",
+   "frames": 2,
+   "fw": 80,
+   "fh": 80,
+   "base": 72,
+   "fps": 3
+  },
+  "t1_golem": {
+   "src": "assets/mobs/t1_golem.png",
+   "frames": 2,
+   "fw": 80,
+   "fh": 80,
+   "base": 72,
+   "fps": 3
+  },
+  "t1_mush": {
+   "src": "assets/mobs/t1_mush.png",
+   "frames": 2,
+   "fw": 80,
+   "fh": 80,
+   "base": 72,
+   "fps": 3
+  },
+  "t1_plant": {
+   "src": "assets/mobs/t1_plant.png",
+   "frames": 2,
+   "fw": 80,
+   "fh": 80,
+   "base": 72,
+   "fps": 3
+  },
+  "t1_slime": {
+   "src": "assets/mobs/t1_slime.png",
+   "frames": 2,
+   "fw": 80,
+   "fh": 80,
+   "base": 72,
+   "fps": 3
+  },
+  "t1_snake": {
+   "src": "assets/mobs/t1_snake.png",
+   "frames": 2,
+   "fw": 80,
+   "fh": 80,
+   "base": 72,
+   "fps": 3
+  },
+  "t2_bat": {
+   "src": "assets/mobs/t2_bat.png",
+   "frames": 2,
+   "fw": 80,
+   "fh": 80,
+   "base": 72,
+   "fps": 3
+  },
+  "t2_bee": {
+   "src": "assets/mobs/t2_bee.png",
+   "frames": 2,
+   "fw": 80,
+   "fh": 80,
+   "base": 72,
+   "fps": 3
+  },
+  "t2_beetle": {
+   "src": "assets/mobs/t2_beetle.png",
+   "frames": 2,
+   "fw": 80,
+   "fh": 80,
+   "base": 72,
+   "fps": 3
+  },
+  "t2_bunny": {
+   "src": "assets/mobs/t2_bunny.png",
+   "frames": 2,
+   "fw": 80,
+   "fh": 80,
+   "base": 72,
+   "fps": 3
+  },
+  "t2_crab": {
+   "src": "assets/mobs/t2_crab.png",
+   "frames": 2,
+   "fw": 80,
+   "fh": 80,
+   "base": 72,
+   "fps": 3
+  },
+  "t2_fox": {
+   "src": "assets/mobs/t2_fox.png",
+   "frames": 2,
+   "fw": 80,
+   "fh": 80,
+   "base": 72,
+   "fps": 3
+  },
+  "t2_ghost": {
+   "src": "assets/mobs/t2_ghost.png",
+   "frames": 2,
+   "fw": 80,
+   "fh": 80,
+   "base": 72,
+   "fps": 3
+  },
+  "t2_golem": {
+   "src": "assets/mobs/t2_golem.png",
+   "frames": 2,
+   "fw": 80,
+   "fh": 80,
+   "base": 72,
+   "fps": 3
+  },
+  "t2_mush": {
+   "src": "assets/mobs/t2_mush.png",
+   "frames": 2,
+   "fw": 80,
+   "fh": 80,
+   "base": 72,
+   "fps": 3
+  },
+  "t2_plant": {
+   "src": "assets/mobs/t2_plant.png",
+   "frames": 2,
+   "fw": 80,
+   "fh": 80,
+   "base": 72,
+   "fps": 3
+  },
+  "t2_slime": {
+   "src": "assets/mobs/t2_slime.png",
+   "frames": 2,
+   "fw": 80,
+   "fh": 80,
+   "base": 72,
+   "fps": 3
+  },
+  "t2_snake": {
+   "src": "assets/mobs/t2_snake.png",
+   "frames": 2,
+   "fw": 80,
+   "fh": 80,
+   "base": 72,
+   "fps": 3
+  },
+  "t3_bat": {
+   "src": "assets/mobs/t3_bat.png",
+   "frames": 2,
+   "fw": 80,
+   "fh": 80,
+   "base": 72,
+   "fps": 3
+  },
+  "t3_bee": {
+   "src": "assets/mobs/t3_bee.png",
+   "frames": 2,
+   "fw": 80,
+   "fh": 80,
+   "base": 72,
+   "fps": 3
+  },
+  "t3_beetle": {
+   "src": "assets/mobs/t3_beetle.png",
+   "frames": 2,
+   "fw": 80,
+   "fh": 80,
+   "base": 72,
+   "fps": 3
+  },
+  "t3_bunny": {
+   "src": "assets/mobs/t3_bunny.png",
+   "frames": 2,
+   "fw": 80,
+   "fh": 80,
+   "base": 72,
+   "fps": 3
+  },
+  "t3_crab": {
+   "src": "assets/mobs/t3_crab.png",
+   "frames": 2,
+   "fw": 80,
+   "fh": 80,
+   "base": 72,
+   "fps": 3
+  },
+  "t3_fox": {
+   "src": "assets/mobs/t3_fox.png",
+   "frames": 2,
+   "fw": 80,
+   "fh": 80,
+   "base": 72,
+   "fps": 3
+  },
+  "t3_ghost": {
+   "src": "assets/mobs/t3_ghost.png",
+   "frames": 2,
+   "fw": 80,
+   "fh": 80,
+   "base": 72,
+   "fps": 3
+  },
+  "t3_golem": {
+   "src": "assets/mobs/t3_golem.png",
+   "frames": 2,
+   "fw": 80,
+   "fh": 80,
+   "base": 72,
+   "fps": 3
+  },
+  "t3_mush": {
+   "src": "assets/mobs/t3_mush.png",
+   "frames": 2,
+   "fw": 80,
+   "fh": 80,
+   "base": 72,
+   "fps": 3
+  },
+  "t3_plant": {
+   "src": "assets/mobs/t3_plant.png",
+   "frames": 2,
+   "fw": 80,
+   "fh": 80,
+   "base": 72,
+   "fps": 3
+  },
+  "t3_slime": {
+   "src": "assets/mobs/t3_slime.png",
+   "frames": 2,
+   "fw": 80,
+   "fh": 80,
+   "base": 72,
+   "fps": 3
+  },
+  "t3_snake": {
+   "src": "assets/mobs/t3_snake.png",
+   "frames": 2,
+   "fw": 80,
+   "fh": 80,
+   "base": 72,
+   "fps": 3
+  }
+ },
+ "bosses": {
+  "hills_boss": {
+   "src": "assets/mobs/hills_boss.webp",
+   "recolor": null
+  },
+  "cave_boss": {
+   "src": "assets/mobs/cave_boss.webp",
+   "recolor": null
+  },
+  "magma_boss": {
+   "src": "assets/mobs/magma_boss.webp",
+   "recolor": null
+  }
+ },
+ "maps": {
+  "f1": {
+   "bg": null
+  },
+  "d1": {
+   "bg": null
+  },
+  "c2": {
+   "bg": null
+  },
+  "s2": {
+   "bg": null
+  },
+  "l3": {
+   "bg": null
+  },
+  "r3": {
+   "bg": null
+  }
+ },
+ "icons": {}
+}

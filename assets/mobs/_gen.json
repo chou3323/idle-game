@@ -1,0 +1,146 @@
+{
+ "t1_bunny": {
+  "tpl": "bunny",
+  "name": "花兔"
+ },
+ "t1_slime": {
+  "tpl": "blob",
+  "name": "綠團"
+ },
+ "t1_bee": {
+  "tpl": "bee",
+  "name": "蜜蜂"
+ },
+ "t1_beetle": {
+  "tpl": "beetle",
+  "name": "甲蟲"
+ },
+ "t1_mush": {
+  "tpl": "mush",
+  "name": "紅傘菇"
+ },
+ "t1_ghost": {
+  "tpl": "ghost",
+  "name": "霧靈"
+ },
+ "t1_bat": {
+  "tpl": "bat",
+  "name": "灰蝠"
+ },
+ "t1_snake": {
+  "tpl": "snake",
+  "name": "草蛇"
+ },
+ "t1_crab": {
+  "tpl": "crab",
+  "name": "沙蟹"
+ },
+ "t1_golem": {
+  "tpl": "golem",
+  "name": "苔石怪"
+ },
+ "t1_plant": {
+  "tpl": "plant",
+  "name": "食人花"
+ },
+ "t1_fox": {
+  "tpl": "fox",
+  "name": "小狐"
+ },
+ "t2_bunny": {
+  "tpl": "bunny",
+  "name": "霜兔"
+ },
+ "t2_slime": {
+  "tpl": "blob",
+  "name": "冰凝團"
+ },
+ "t2_bee": {
+  "tpl": "bee",
+  "name": "冰針蜂"
+ },
+ "t2_beetle": {
+  "tpl": "beetle",
+  "name": "岩甲蟲"
+ },
+ "t2_mush": {
+  "tpl": "mush",
+  "name": "藍幽菇"
+ },
+ "t2_ghost": {
+  "tpl": "ghost",
+  "name": "寒魂"
+ },
+ "t2_bat": {
+  "tpl": "bat",
+  "name": "洞穴蝠"
+ },
+ "t2_snake": {
+  "tpl": "snake",
+  "name": "毒鱗蛇"
+ },
+ "t2_crab": {
+  "tpl": "crab",
+  "name": "岩蟹"
+ },
+ "t2_golem": {
+  "tpl": "golem",
+  "name": "水晶石魔"
+ },
+ "t2_plant": {
+  "tpl": "plant",
+  "name": "刺棘花"
+ },
+ "t2_fox": {
+  "tpl": "fox",
+  "name": "雪狐"
+ },
+ "t3_bunny": {
+  "tpl": "bunny",
+  "name": "焰兔"
+ },
+ "t3_slime": {
+  "tpl": "blob",
+  "name": "熔岩團"
+ },
+ "t3_bee": {
+  "tpl": "bee",
+  "name": "火針蜂"
+ },
+ "t3_beetle": {
+  "tpl": "beetle",
+  "name": "赤焰甲"
+ },
+ "t3_mush": {
+  "tpl": "mush",
+  "name": "灼熱菇"
+ },
+ "t3_ghost": {
+  "tpl": "ghost",
+  "name": "怨靈"
+ },
+ "t3_bat": {
+  "tpl": "bat",
+  "name": "暗影蝠"
+ },
+ "t3_snake": {
+  "tpl": "snake",
+  "name": "烈焰蛇"
+ },
+ "t3_crab": {
+  "tpl": "crab",
+  "name": "熔殼蟹"
+ },
+ "t3_golem": {
+  "tpl": "golem",
+  "name": "熔岩巨像"
+ },
+ "t3_plant": {
+  "tpl": "plant",
+  "name": "灰燼花"
+ },
+ "t3_fox": {
+  "tpl": "fox",
+  "name": "煉獄狐"
+ }
+}
