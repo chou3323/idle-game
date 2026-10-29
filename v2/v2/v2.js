@@ -302,3 +302,7 @@ function init(){
 }
 init();
 })();
+/* mobile r2: collapsible 隊伍輸出 panel (collapsed by default on narrow screens) */
+(function(){const L=document.getElementById('left');if(!L)return;const h=L.querySelector('.ph');if(!h)return;let s=null;try{s=localStorage.getItem('hd.dpsCol')}catch(e){}
+const col=s===null?innerWidth<=900:s==='1';L.classList.toggle('col',col);
+h.addEventListener('click',e=>{if(e.target.closest('#dpsTabs'))return;const c=L.classList.toggle('col');try{localStorage.setItem('hd.dpsCol',c?'1':'0')}catch(_){}});})();

@@ -47,3 +47,9 @@ aside{background:var(--pn);overflow:auto}#left{grid-area:left;border-right:1px s
 [hidden]{display:none!important}
 #pips{display:inline-flex;gap:3px;margin-left:4px}#pips i{width:12px;height:12px;border-radius:3px;background:#27314e;border:1px solid #3a4670;display:block}#pips i.done{background:#3fa86a;border-color:#6fe0a0}#pips i.cur{background:#ffc857;border-color:#fff2c0;box-shadow:0 0 6px #ffc857}#pips i.el{border-radius:6px}#pips i.bs{background:#5a2a3a;border-color:#ff6a7a;width:16px}#pips i.bs.cur{background:#ff6a5a}#pips i.bs.done{background:#3fa86a}
 .vnote{font-size:11px;color:#8d99b8;margin:0 6px;white-space:nowrap}
+/* mobile r2: top bar fit + collapsible DPS panel */
+#left>.ph:first-child{cursor:pointer;user-select:none}#left>.ph:first-child::before{content:"▾";margin-right:4px;opacity:.7}#left.col>.ph:first-child::before{content:"▸"}#left.col>:not(.ph:first-child){display:none}
+@media (max-width:900px){#left{pointer-events:auto;width:auto;max-width:min(190px,48vw)}#left.col{max-height:none}#left>.ph:first-child{padding:4px 8px}
+#top{gap:6px;padding:0 6px}#top .brand,#vfxNote{display:none}#stageInfo{gap:4px;min-width:0;flex:1 1 auto;overflow:hidden}#rgName{max-width:64px;overflow:hidden;text-overflow:ellipsis}#stNo{font-size:13px}
+#pips{gap:2px;margin-left:2px}#pips i{width:7px;height:9px;border-radius:2px}#pips i.bs{width:10px}#tierTag{font-size:10px;padding:1px 4px}
+#top .ctl{flex:0 0 auto;gap:3px}#top .ctl button{padding:2px 6px;min-width:28px;min-height:28px}}
