@@ -372,7 +372,7 @@ const KEY='hd.lastSeen',TOT='hd.offTot',MAXS=12*3600;
 window.offTotHTML=()=>offTot();function offTot(){let t={};try{t=JSON.parse(localStorage.getItem(TOT)||'{}')}catch(e){}return `<div class="mrow"><span>累計離線收益</span><b>EXP ${fmt(t.exp||0)} · 金幣 ${fmt(t.zeny||0)} · 裝備 ${t.items||0}</b></div>`}
 function fmt(n){return n>=1e6?(n/1e6).toFixed(1)+'M':n>=1e4?(n/1e3).toFixed(0)+'K':Math.round(n)}
 function seen(){try{localStorage.setItem(KEY,Date.now())}catch(e){}}
-function claim(){let last=0;try{last=+localStorage.getItem(KEY)||0}catch(e){}seen();if(!last)return;const sec=Math.min(MAXS,(Date.now()-last)/1000);if(sec<60)return;
+function claim(){if(window.HDA&&HDA.on()){seen();return}let last=0;try{last=+localStorage.getItem(KEY)||0}catch(e){}seen();if(!last)return;const sec=Math.min(MAXS,(Date.now()-last)/1000);if(sec<60)return;
  const v=V(),reg=v?v.C.region:1,tierI=v?['normal','hard','nightmare','hell'].indexOf(v.C.tier):0,rate=(1+reg*.6)*(1+tierI*.5)*0.8;
  const exp=Math.round(sec*rate*12),zeny=Math.round(sec*rate*5),kills=Math.round(sec*rate*1.5),items=Math.floor(kills/400);
  let t={};try{t=JSON.parse(localStorage.getItem(TOT)||'{}')}catch(e){}t.exp=(t.exp||0)+exp;t.zeny=(t.zeny||0)+zeny;t.items=(t.items||0)+items;try{localStorage.setItem(TOT,JSON.stringify(t))}catch(e){}
