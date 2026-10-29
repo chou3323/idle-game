@@ -38,4 +38,4 @@
 ## 首頁換成仙境冒險 v2（2026-10-29 14:35 UTC+8）
 根目錄 index.html 改為 v2（`<base href="/v2/">`），舊首頁移到 `/prev-horde-20261029/`，/old/、gm.html、API、資料庫未動；sw.js 快取名改 aur-hdv2-1。
 備份 tag：`pre-hdv2-root-20261029-1431`；離線檔 /workspace/backups/idle-game-pre-hdv2-root-20261029-1431.tar.gz
-一行還原：`git revert --no-edit <本次 commit> && git push origin main`
+一行還原：`git revert --no-edit 3afd33d && git push origin main`
