@@ -30,9 +30,10 @@ function sheetKey(job,g){const j=SHEET_FB[job]&&!imgs.sheets?.['ch_'+job+'_m']&&
 const roster=rg=>{const o={reg:[],elite:[],boss:[]};for(const [id,m] of Object.entries(imgs.mobs.mobs))if(m.rg===rg)o[m.tier].push(id);return o};
 
 // ================= room
-function parseTeam(key){return TEAMS[key][1].split(',').map((s,i)=>{const ai=s.endsWith('*');const job=s.replace('*','');return{job,ai,name:(['你','阿','小','大','莉','凱','諾','米','朵','布','晴','嵐','夏','雪','風'][i]||'隊')+(JOBS[job].name.slice(0,2)),perfect:false}})}
+function parseTeam(key){const a=parseTeam0(key);return window.HDG&&HDG.on()?HDG.team(a):a}
+function parseTeam0(key){return TEAMS[key][1].split(',').map((s,i)=>{const ai=s.endsWith('*');const job=s.replace('*','');return{job,ai,name:(['你','阿','小','大','莉','凱','諾','米','朵','布','晴','嵐','夏','雪','風'][i]||'隊')+(JOBS[job].name.slice(0,2)),perfect:false}})}
 function newRoom(){fx=[];nums=[];corpses=[];marks=[];prev.clear();anim.clear();hurtFlash={};acc=0;
- room=Sim.create({tables:T,region:C.region,tier:C.tier,seed:C.seed,team:parseTeam(C.team),events:true,dt:.1,startStage:C.startStage});window.HDL&&HDL.apply(room,{T,SK,JOBS});C.sel=clamp(C.sel,0,room.players.length-1);
+ room=Sim.create({tables:T,region:C.region,tier:C.tier,seed:C.seed,team:parseTeam(C.team),events:true,dt:.1,startStage:C.startStage});window.HDL&&HDL.apply(room,{T,SK,JOBS});window.HDG&&HDG.on()&&window.__v2&&HDG.onRoom(room);C.sel=clamp(C.sel,0,room.players.length-1);
  room.roster=roster(C.region);EQ.clear();$('overlay').hidden=true;camX=room.arena[0]/2;camY=room.arena[1]/2;buildParty();buildSkills();buildEquip();snapPrev();updVfxNote()}
 function snapPrev(){for(const p of room.players)prev.set('p'+p.id,{x:p.x,y:p.y});for(const m of room.mobs)prev.set('m'+m.id,{x:m.x,y:m.y})}
 function stepSim(){snapPrev();room.ev.length=0;room.step();handleEvents(room.ev)}
@@ -80,7 +81,7 @@ const FLOAT=[];function floatText(x,y,txt,c,s,o,kd){nums.push({x,y,txt,c:-3,col:
 function icoShield(x,y,r,c){ctx.save();ctx.translate(x,y);ctx.fillStyle=c||'#5aa8ff';ctx.strokeStyle='#0b1a33';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(0,-r);ctx.lineTo(r*.85,-r*.6);ctx.quadraticCurveTo(r*.8,r*.5,0,r);ctx.quadraticCurveTo(-r*.8,r*.5,-r*.85,-r*.6);ctx.closePath();ctx.fill();ctx.stroke();ctx.fillStyle='rgba(255,255,255,.55)';ctx.fillRect(-r*.12,-r*.6,r*.24,r*1.2);ctx.restore()}
 function icoSkull(x,y,r,c){ctx.save();ctx.translate(x,y);ctx.fillStyle=c||'#f2f2f2';ctx.strokeStyle='#300';ctx.lineWidth=2;ctx.beginPath();ctx.arc(0,-r*.15,r*.75,Math.PI*.95,Math.PI*.05);ctx.lineTo(r*.45,r*.7);ctx.lineTo(-r*.45,r*.7);ctx.closePath();ctx.fill();ctx.stroke();ctx.fillStyle='#300';ctx.beginPath();ctx.arc(-r*.3,-r*.1,r*.2,0,7);ctx.arc(r*.3,-r*.1,r*.2,0,7);ctx.fill();ctx.restore()}
 function icoBang(x,y,r,c){ctx.save();ctx.translate(x,y);ctx.fillStyle=c||'#ff4a3a';ctx.strokeStyle='#fff';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(0,-r);ctx.lineTo(r,r*.8);ctx.lineTo(-r,r*.8);ctx.closePath();ctx.fill();ctx.stroke();ctx.fillStyle='#fff';ctx.font=`900 ${r*1.2|0}px sans-serif`;ctx.textAlign='center';ctx.fillText('!',0,r*.65);ctx.restore()}
-function playerLv(p){return 10*C.region+5+((p.id*7)%9)*3}
+function playerLv(p){if(window.HDG&&HDG.on())return HDG.lvOf(p);return 10*C.region+5+((p.id*7)%9)*3}
 const VFX_ZH={auto:'自動',mine:'只看自己',party:'自己＋隊伍支援／選定隊員',all:'全部'};
 function vfxMode(){if(C.vfx!=='auto')return C.vfx;return room&&room.players.length<=5?'all':'party'}
 function vfxA(o,kd,num){if(o==null||o===0)return 1;const m=vfxMode();if(m==='all')return 1;if(m==='party'&&(o===C.sel||kd==='sup'))return 1;return num?0:(m==='party'?.22:0)}
@@ -88,7 +89,7 @@ let lowQ=false,fpsAvg=60;
 function updVfxNote(){const el=$('vfxNote');if(el)el.textContent='特效：'+VFX_ZH[vfxMode()]+(lowQ?'（低畫質）':C.vfx==='auto'?'（自動）':'')}
 function mobVariant(id,type){const r=room.roster;const l=type==='boss'?r.boss:type==='elite'?r.elite:r.reg;return l.length?l[Math.abs(id*2654435761|0)%l.length]:null}
 function endCards(win){const k=room.stats.kills,ti=TIERS.indexOf(C.tier),m=(1+C.region*.6)*(1+ti*.5);const c=[['ic_skill','擊殺',fmt(k)],['ic_settings','用時',room.t.toFixed(0)+' 秒'],['ic_char','經驗',(win?'+':'')+fmt(Math.round(k*m*8*(win?1:.5)))],['ic_bag','金幣','+'+fmt(Math.round(k*(2+C.region)))],['ic_party','倒地',room.players.reduce((a,p)=>a+p.deaths,0)+' 次']];return `<div class="endc">${c.map(x=>`<div class="rwt"><img src="v2/ic/${x[0]}.webp" alt=""><b>${x[2]}</b><span>${x[1]}</span></div>`).join('')}</div>`+(win?`<div class="endd"><span>王之遺物</span>${['wpn','body','acc1'].map((s,i)=>`<div class="eqt q-${i?'SSR':'UR'}">${SLOT_IC[s]}</div>`).join('')}<small>（展示，實際掉落待伺服器）</small></div>`:'')}
-function showEnd(r){const o=$('overlay');o.hidden=false;const win=r==='win'||r==='clear'||r==='victory';o.innerHTML=`<div class="endT ${win?'win':'lose'}">${win?'◆ 區域通關 ◆':r==='wipe'?'全隊倒下':'戰鬥結束'}</div>${endCards(win)}<button id="btnAgain">再來一次</button>`;$('btnAgain').onclick=()=>{C.seed++;newRoom()}}
+function showEnd(r){if(window.HDG&&HDG.on())return HDG.end(r);const o=$('overlay');o.hidden=false;const win=r==='win'||r==='clear'||r==='victory';o.innerHTML=`<div class="endT ${win?'win':'lose'}">${win?'◆ 區域通關 ◆':r==='wipe'?'全隊倒下':'戰鬥結束'}</div>${endCards(win)}<button id="btnAgain">再來一次</button>`;$('btnAgain').onclick=()=>{C.seed++;newRoom()}}
 
 // ================= drawing
 let PPU=24,OX=0,OY=0;
@@ -289,10 +290,10 @@ const EQ=new Map();const AFF=[['破防 %','pen',.25],['爆擊率 %','crit',.35],
 const NAMES={wpn:['晨曦長弓','赤鋼長劍','風語法杖','月影短刃','裂岩戰錘'],off:['守誓盾牌','星砂副手','靈石魔導書'],head:['鷹羽頭盔','寶石額環','鋼鐵護盔'],body:['旅者胸甲','織光長袍','暗影皮衣'],cape:['雲織披風','荊棘斗篷','霜絨披肩'],boots:['疾風之靴','履霜長靴','輕羽便鞋'],acc1:['星砂戒指','赤銅戒環','碧玉指環'],acc2:['月石項鍊','雷紋護符','晨露墜飾']};
 function rng(s){return()=>{s=(s*1664525+1013904223)>>>0;return s/4294967296}}
 function genItem(p,slot,seed,bonus){const r=rng(seed*131+slot.length*17+p.id*977),B=T.equip_budget,AB=T.affix_budget;const qi=Math.min(2,Math.floor(r()*r()*3+bonus));const q=['SR','SSR','UR'][qi];const refine=Math.floor(r()*r()*13)+(qi*2),stars=qi>0?Math.floor(r()*4)+(qi===2?1:0):0,asc=qi===2?Math.floor(r()*3.4):0;
- const heroPow=p.atk*20,base=heroPow*B.slots[slot]/1.0*(0.7+r()*.5);const qm=B.qualityMul[qi+2]||1,am=1+(B.ascMul[asc]||0),sm=B.starMul[stars]||1,rm=1+refine*.02;const power=Math.round(base*qm*am*sm*rm);
+ const heroPow=p.atk/(p.power||1)*20,base=heroPow*B.slots[slot]/1.0*(0.7+r()*.5);const qm=B.qualityMul[qi+2]||1,am=1+(B.ascMul[asc]||0),sm=B.starMul[stars]||1,rm=1+refine*.02;const power=Math.round(base*qm*am*sm*rm);
  const pts=AB.pointsPerPiece[q];let left=pts;const aff=[];const n=qi+1;for(let i=0;i<n;i++){const a=AFF[Math.floor(r()*AFF.length)];if(aff.find(x=>x.n===a[0]))continue;const share=left/(n-i)*(0.7+r()*.6);left-=share;aff.push({n:a[0],v:+(Math.abs(a[2])*share/AB.pointsPerPiece.UR*(a[2]<0?-1:1)*100*1.2).toFixed(1)})}
  const nm=NAMES[slot];return{slot,q,name:nm[Math.floor(r()*nm.length)],refine,stars,asc,power,base:Math.round(base),qm,am,sm,rm,aff,set:r()<.35?'旅行者套裝':null}}
-function equipOf(p){if(!EQ.has(p.id)){const gear={},bag={};for(const s of Object.keys(T.equip_budget.slots)){if(p.job==='arc'&&s==='off')continue;gear[s]=genItem(p,s,p.id*10+s.length,.5);bag[s]=genItem(p,s,p.id*10+s.length+99,.9)}EQ.set(p.id,{gear,bag})}return EQ.get(p.id)}
+function equipOf(p){if(p.id===0&&window.HDG&&HDG.on())return HDG.E(p);if(!EQ.has(p.id)){const gear={},bag={};for(const s of Object.keys(T.equip_budget.slots)){if(p.job==='arc'&&s==='off')continue;gear[s]=genItem(p,s,p.id*10+s.length,.5);bag[s]=genItem(p,s,p.id*10+s.length+99,.9)}EQ.set(p.id,{gear,bag})}return EQ.get(p.id)}
 function setCount(g,name){return Object.values(g).filter(x=>x&&x.set===name).length}
 function buildEquip(){const p=room.players[C.sel];if(!p)return;const E=equipOf(p);const jn=JOBS[p.job];$('eqTitle').textContent='裝備 · '+p.name+'（'+jn.name.slice(0,5)+'）';const total=Object.values(E.gear).reduce((a,x)=>a+(x?x.power:0),0);$('eqPower').innerHTML='總戰力 <b style="color:#ffc857;font-size:15px">'+fmt(total)+'</b>';
  const el=$('eqSlots');el.innerHTML='';for(const s of Object.keys(T.equip_budget.slots)){const it=E.gear[s],cand=E.bag[s];const d=document.createElement('div');d.className='slot'+(eqSel===s?' sel':'');
@@ -332,7 +333,7 @@ function init(){
  document.querySelectorAll('#dpsTabs button').forEach(b=>b.onclick=()=>{C.dmgMode=b.dataset.m;document.querySelectorAll('#dpsTabs button').forEach(x=>x.classList.toggle('on',x===b))});
  addEventListener('keydown',e=>{if(/^[1-8]$/.test(e.key)){const p=room.players[C.sel];const s=p.kit[+e.key-1];if(s)manualCast(p,s)}});
  addEventListener('resize',resize);
- loadAssets().then(()=>{newRoom();resize();requestAnimationFrame(frame);window.__v2={C,get room(){return room},get fx(){return fx},get nums(){return nums},stepSim,newRoom,buildSkills,equipOf,genItem,buildEquip,T,JOBS,SK,SLOT_IC,SLOT_ZH,QCOL,imgs,sheetKey,fmt,showEnd,ready:true}});
+ loadAssets().then(()=>{window.__v2={C,get room(){return room},get fx(){return fx},get nums(){return nums},stepSim,newRoom,buildSkills,equipOf,genItem,buildEquip,T,JOBS,SK,SLOT_IC,SLOT_ZH,QCOL,imgs,sheetKey,fmt,showEnd,sigBanner,floatText,fitCam,ready:false};newRoom();resize();requestAnimationFrame(frame);window.__v2.ready=true});
 }
 init();
 })();
@@ -374,7 +375,7 @@ function fmt(n){return n>=1e6?(n/1e6).toFixed(1)+'M':n>=1e4?(n/1e3).toFixed(0)+'
 function seen(){try{localStorage.setItem(KEY,Date.now())}catch(e){}}
 function claim(){if(window.HDA&&HDA.on()){seen();return}let last=0;try{last=+localStorage.getItem(KEY)||0}catch(e){}seen();if(!last)return;const sec=Math.min(MAXS,(Date.now()-last)/1000);if(sec<60)return;
  const v=V(),reg=v?v.C.region:1,tierI=v?['normal','hard','nightmare','hell'].indexOf(v.C.tier):0,rate=(1+reg*.6)*(1+tierI*.5)*0.8;
- const exp=Math.round(sec*rate*12),zeny=Math.round(sec*rate*5),kills=Math.round(sec*rate*1.5),items=Math.floor(kills/400);
+ let exp=Math.round(sec*rate*12),zeny=Math.round(sec*rate*5),kills=Math.round(sec*rate*1.5),items=Math.floor(kills/400);if(window.HDG&&HDG.on()){exp=Math.round(kills*HDG.perKill(reg,v?v.C.tier:'normal')*.5);HDG.addExp(exp,1)};
  let t={};try{t=JSON.parse(localStorage.getItem(TOT)||'{}')}catch(e){}t.exp=(t.exp||0)+exp;t.zeny=(t.zeny||0)+zeny;t.items=(t.items||0)+items;try{localStorage.setItem(TOT,JSON.stringify(t))}catch(e){}
  const h=Math.floor(sec/3600),m=Math.floor(sec%3600/60),o=$('offline');o.innerHTML=`<div class="ob"><div class="ot">離線收益</div><div class="mnote">你的角色在隊伍中持續割草 ${h?h+' 小時 ':''}${m} 分鐘${sec>=MAXS?'（上限 12 小時）':''}</div><div class="rwg">${[['ic_skill','擊殺',fmt(kills),'k'],['ic_char','經驗','+'+fmt(exp),'e'],['ic_bag','金幣','+'+fmt(zeny),'z'],['ic_equip','裝備','+'+items,'i']].map(x=>`<div class="rwt rw-${x[3]}"><img src="v2/ic/${x[0]}.webp" alt=""><b>${x[2]}</b><span>${x[1]}</span></div>`).join('')}</div><div class="mnote" style="padding:0 12px 6px">暫存在此瀏覽器；伺服器上線後改為帳號離線掛機。</div><button id="offOk">領取</button></div>`;o.hidden=false;$('offOk').onclick=()=>o.hidden=true}
 setInterval(seen,15000);addEventListener('pagehide',seen);document.addEventListener('visibilitychange',()=>{if(document.hidden)seen();else claim()});
@@ -391,7 +392,7 @@ function inv(p){const {equipOf,genItem,buildEquip,T,JOBS,SK,SLOT_IC,SLOT_ZH,QCOL
 function refreshBest(E){for(const s in E.bag){const c=E.inv.filter(x=>x.slot===s).sort((a,b)=>b.power-a.power)[0];E.bag[s]=c||null}}
 setInterval(()=>{const v=W();if(!v||!v.room)return;const r=v.room,k=(r.totalKills||0)+r.killed+(r.stage||0)*1000;const d=Math.max(0,k-lastK);lastK=k;if(d>500)return;coins+=d*(2+(v.C.region||1));dropAcc+=d;sv('hd.coins',coins);
  if(window.HDA&&HDA.on())dropAcc=0;
- while(dropAcc>=60){const {equipOf,genItem,buildEquip,T,JOBS,SK,SLOT_IC,SLOT_ZH,QCOL}=W();dropAcc-=60;const p=r.players[v.C.sel];if(!p)break;const E=inv(p);const ss=Object.keys(E.gear).filter(s=>E.gear[s]);const s=ss[Math.floor(Math.random()*ss.length)];if(E.inv.length<40){E.inv.push({...genItem(p,s,Math.floor(Math.random()*1e6),Math.random()*.9),uid:Math.random().toString(36).slice(2),nw:1});refreshBest(E)}}},1000);
+ while(dropAcc>=60){const {equipOf,genItem,buildEquip,T,JOBS,SK,SLOT_IC,SLOT_ZH,QCOL}=W();dropAcc-=60;const p=r.players[window.HDG&&HDG.on()?0:v.C.sel];if(!p)break;const E=inv(p);const ss=Object.keys(E.gear).filter(s=>E.gear[s]);const s=ss[Math.floor(Math.random()*ss.length)];if(E.inv.length<40){E.inv.push({...genItem(p,s,Math.floor(Math.random()*1e6),Math.random()*.9),uid:Math.random().toString(36).slice(2),nw:1});refreshBest(E)}}},1000);
 function ar(d){return d>0?`<span class="up">▲${f(d)}</span>`:d<0?`<span class="dn">▼${f(-d)}</span>`:'<span style="color:#8a90a8">＝</span>'}
 function bag(body){const {equipOf,genItem,buildEquip,T,JOBS,SK,SLOT_IC,SLOT_ZH,QCOL}=W();const v=W(),p=v.room.players[v.C.sel];const E=inv(p);const d=document.createElement('div');d.className='tmp';body.append(d);
  const draw=()=>{const it=E.inv.slice().sort((a,b)=>(b.power-(E.gear[b.slot]?.power||0))-(a.power-(E.gear[a.slot]?.power||0)));

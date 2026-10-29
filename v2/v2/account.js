@@ -10,11 +10,11 @@ function rpc(msg){return new Promise((res,rej)=>{let w;try{w=new WebSocket(WSU)}
  w.onopen=()=>w.send(JSON.stringify({...msg,id:1}));w.onerror=()=>{clearTimeout(t);rej('無法連線伺服器')};
  w.onmessage=ev=>{let m;try{m=JSON.parse(ev.data)}catch(e){return}if(m.t==='r'&&m.id===1){clearTimeout(t);try{w.close()}catch(e){}m.e?rej(m.e):res(m)}}})}
 let api=async function(m,p,b){const r=await fetch(API+p,{method:m,headers:{'content-type':'application/json',authorization:'Bearer '+tok},body:b?JSON.stringify(b):undefined,keepalive:m==='POST'});let j={};try{j=await r.json()}catch(e){}return[r.status,j]}
-function selP(){const v=W();return v&&v.room&&v.room.players[v.C.sel]}
+function selP(){const v=W();return v&&v.room&&v.room.players[window.HDG&&HDG.on()?0:v.C.sel]}
 function invOf(){const p=selP();if(!p||!W().equipOf)return null;const E=W().equipOf(p);if(!E.inv)E.inv=Object.values(E.bag).filter(Boolean).map(x=>({...x,uid:Math.random().toString(36).slice(2)}));return E}
 function snapshot(imp){const st=X()&&X().st,E=invOf();const d={gold:Math.floor(st?st.coins:0),stone:Math.floor(st?st.mats:0),dust:Math.floor(F()?F().M.dust:0),region:W()?W().C.region:1,tier:W()?W().C.tier:'normal'};
- if(E){let b=E.inv.slice(0,40).map(x=>{const y={...x};delete y.nw;return y});while(b.length&&JSON.stringify(b).length>38000)b.pop();d.bagx=b}if(E){const g={};for(const k in E.gear)if(E.gear[k])g[k]=E.gear[k];d.gearx=g}const p=selP();if(p&&p.atk)d.heroAtk=Math.round(p.atk);if(imp)d.import=1;return d}
-function applySrv(d){if(!d)return;const st=X()&&X().st;if(st){st.coins=d.gold||0;st.mats=d.stone||0}if(F())F().M.dust=d.dust||0;
+ if(E){let b=E.inv.slice(0,40).map(x=>{const y={...x};delete y.nw;return y});while(b.length&&JSON.stringify(b).length>38000)b.pop();d.bagx=b}if(E){const g={};for(const k in E.gear)if(E.gear[k])g[k]=E.gear[k];d.gearx=g}const p=selP();if(p&&p.atk)d.heroAtk=Math.round(p.atk);if(window.HDG&&HDG.on())d.prog=HDG.P;if(imp)d.import=1;return d}
+function applySrv(d){if(!d)return;window.HDG&&HDG.fromServer(d);const st=X()&&X().st;if(st){st.coins=d.gold||0;st.mats=d.stone||0}if(F())F().M.dust=d.dust||0;
  const E=invOf();if(E){if(Array.isArray(d.bagx)&&d.bagx.length)E.inv=d.bagx.map(x=>({...x}));if(d.gearx)for(const k in d.gearx)if(d.gearx[k]&&k in E.gear)E.gear[k]={...d.gearx[k]};X().refreshBest&&X().refreshBest(E)}}
 // ---- 登入畫面 ----
 function box(){let o=document.getElementById('acctBox');if(!o){o=document.createElement('div');o.id='acctBox';document.body.append(o)}return o}
@@ -40,10 +40,10 @@ function showLogin(msg,mode){mode=mode||'login';const o=box();o.hidden=false;
 function showClaim(off){const o=document.getElementById('offline');if(!o)return;const h=Math.floor(off.secs/3600),m=Math.floor(off.secs%3600/60);
  const cell=(ic,n,v)=>`<div class="rw"><img src="v2/ic/${ic}.webp" alt=""><small>${n}</small><b>${v}</b></div>`;
  o.innerHTML=`<div class="ob acclaim"><div class="ot">離線收益</div><div class="acin"><div class="mnote">${esc(acc)} 的隊伍在你離線時持續割草 ${h?h+' 小時 ':''}${m} 分鐘${off.secs>=43200?'（上限 12 小時）':''}</div>
- <div class="rwg">${cell('ic_skill','擊殺',fmt(off.kills))}${cell('ic_char','經驗','+'+fmt(off.exp))}${cell('ic_bag','金幣','+'+fmt(off.gold))}${cell('ic_equip','強化石','+'+fmt(off.stone))}${cell('ic_settings','星塵','+'+fmt(off.dust))}${cell('ic_bag','裝備',off.items+' 件')}</div>
+ <div class="rwg">${cell('ic_skill','擊殺',fmt(off.kills))}${cell('ic_char','經驗','+'+fmt(window.HDG&&HDG.on()?Math.round((off.kills||0)*HDG.perKill(W().C.region,W().C.tier)*.5):off.exp))}${cell('ic_bag','金幣','+'+fmt(off.gold))}${cell('ic_equip','強化石','+'+fmt(off.stone))}${cell('ic_settings','星塵','+'+fmt(off.dust))}${cell('ic_bag','裝備',off.items+' 件')}</div>
  <div class="acmsg"></div><button class="mbtn acgo" id="acClaim">領取</button><div class="mnote">已存入帳號，換裝置登入也看得到。每段離線只能領一次。</div></div></div>`;o.hidden=false;
  o.querySelector('#acClaim').onclick=async ev=>{ev.target.disabled=true;const [s,j]=await api('POST','/api/hd/claim',{}).catch(()=>[0,{}]);
-  if(s===200&&j.data){rev=j.rev;applySrv(j.data);addDrops(j.drops||[]);o.hidden=true;save()}else if(s===200&&j.none){o.hidden=true}else{o.querySelector('.acmsg').textContent=j.error||'領取失敗，請稍後再試';ev.target.disabled=false}}}
+  if(s===200&&j.data){rev=j.rev;if(window.HDG&&HDG.on()){const v=W();HDG.addExp(Math.round((off.kills||0)*HDG.perKill(v.C.region,v.C.tier)*.5),1)}applySrv(j.data);addDrops(j.drops||[]);o.hidden=true;save()}else if(s===200&&j.none){o.hidden=true}else{o.querySelector('.acmsg').textContent=j.error||'領取失敗，請稍後再試';ev.target.disabled=false}}}
 function addDrops(ds){const E=invOf();if(!E)return;for(const d of ds){if(E.inv.length>=40)break;if(!E.inv.find(x=>x.uid===d.uid))E.inv.push({...d,nw:1})}X().refreshBest&&X().refreshBest(E)}
 // ---- 同步 ----
 async function boot(fresh){if(!tok)return;const [s,j]=await api('GET','/api/hd/state').catch(()=>[0,{}]);
