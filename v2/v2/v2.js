@@ -298,7 +298,7 @@ function init(){
  document.querySelectorAll('#dpsTabs button').forEach(b=>b.onclick=()=>{C.dmgMode=b.dataset.m;document.querySelectorAll('#dpsTabs button').forEach(x=>x.classList.toggle('on',x===b))});
  addEventListener('keydown',e=>{if(/^[1-8]$/.test(e.key)){const p=room.players[C.sel];const s=p.kit[+e.key-1];if(s)manualCast(p,s)}});
  addEventListener('resize',resize);
- loadAssets().then(()=>{newRoom();resize();requestAnimationFrame(frame);window.__v2={C,get room(){return room},get fx(){return fx},get nums(){return nums},stepSim,newRoom,ready:true}});
+ loadAssets().then(()=>{newRoom();resize();requestAnimationFrame(frame);window.__v2={C,get room(){return room},get fx(){return fx},get nums(){return nums},stepSim,newRoom,equipOf,genItem,buildEquip,T,JOBS,SK,SLOT_IC,SLOT_ZH,QCOL,ready:true}});
 }
 init();
 })();
@@ -322,10 +322,10 @@ function unpark(){const L0=$('left');if(L0&&L0.dataset.wc){L0.classList.toggle('
 const V=()=>window.__v2,T={char:'角色',equip:'裝備',skill:'技能設定',bag:'背包',party:'隊伍 / 輸出',set:'設定'};
 function info(html){const d=document.createElement('div');d.className='tmp mi';d.innerHTML=html;body.append(d)}
 function open(k){unpark();const v=V();if(!v)return;const r=v.room,p=r&&r.players[v.C.sel];$('msTitle').textContent=T[k];
- if(k==='char'&&p)info(`<div class="mrow"><b>${p.name||''}</b><span>${(p.jd&&p.jd.name)||p.job||''}</span></div><div class="mrow"><span>生命</span><b>${Math.round(p.hp)} / ${Math.round(p.maxhp)}</b></div><div class="mrow"><span>攻擊</span><b>${Math.round(p.atk||0)}</b></div><div class="mrow"><span>防禦</span><b>${Math.round(p.def||0)}</b></div><div class="mrow"><span>倒地</span><b>${p.deaths||0}</b></div>${offTot()}`);
+ if(k==='char'&&p&&window.HDX)HDX.char(body);
  if(k==='equip'){park($('right'))}
  if(k==='skill'&&p){info('<div class="mnote">技能自動依順序施放，可在下方技能列手動搶時機。</div>'+p.kit.map((s,i)=>`<div class="mrow"><span>${i+1}${s.ult?' · 大招':''} ${s.name}</span><b>CD ${s.cd}s</b></div>`).join(''))}
- if(k==='bag')info('<div class="mnote">背包與道具系統開發中。目前顯示離線與本次掉落統計。</div>'+offTot());
+ if(k==='bag'&&p&&window.HDX)HDX.bag(body);
  if(k==='party'){park($('party'));const L=$('left');L.dataset.wc=L.classList.contains('col')?'1':'0';park(L);L.classList.remove('col')}
  if(k==='set'){const sp=$('setPanel');if(sp)body.append(sp)}
  sh.hidden=false;app.classList.add('msh')}
@@ -334,7 +334,7 @@ document.querySelectorAll('#mnav button').forEach(b=>b.onclick=()=>{const k=b.da
 mq.addEventListener&&mq.addEventListener('change',()=>{if(!mq.matches)close()});
 // offline progress (interim, client-side only; real version = server party sim)
 const KEY='hd.lastSeen',TOT='hd.offTot',MAXS=12*3600;
-function offTot(){let t={};try{t=JSON.parse(localStorage.getItem(TOT)||'{}')}catch(e){}return `<div class="mrow"><span>累計離線收益</span><b>EXP ${fmt(t.exp||0)} · 金幣 ${fmt(t.zeny||0)} · 裝備 ${t.items||0}</b></div>`}
+window.offTotHTML=()=>offTot();function offTot(){let t={};try{t=JSON.parse(localStorage.getItem(TOT)||'{}')}catch(e){}return `<div class="mrow"><span>累計離線收益</span><b>EXP ${fmt(t.exp||0)} · 金幣 ${fmt(t.zeny||0)} · 裝備 ${t.items||0}</b></div>`}
 function fmt(n){return n>=1e6?(n/1e6).toFixed(1)+'M':n>=1e4?(n/1e3).toFixed(0)+'K':Math.round(n)}
 function seen(){try{localStorage.setItem(KEY,Date.now())}catch(e){}}
 function claim(){let last=0;try{last=+localStorage.getItem(KEY)||0}catch(e){}seen();if(!last)return;const sec=Math.min(MAXS,(Date.now()-last)/1000);if(sec<60)return;
@@ -344,3 +344,39 @@ function claim(){let last=0;try{last=+localStorage.getItem(KEY)||0}catch(e){}see
  const h=Math.floor(sec/3600),m=Math.floor(sec%3600/60),o=$('offline');o.innerHTML=`<div class="ob"><div class="ot">離線收益</div><div class="mnote">你的角色在隊伍中持續割草 ${h?h+' 小時 ':''}${m} 分鐘${sec>=MAXS?'（上限 12 小時）':''}</div><div class="mrow"><span>擊殺</span><b>${fmt(kills)}</b></div><div class="mrow"><span>經驗</span><b>+${fmt(exp)}</b></div><div class="mrow"><span>金幣</span><b>+${fmt(zeny)}</b></div><div class="mrow"><span>裝備</span><b>+${items}</b></div><button id="offOk">領取</button></div>`;o.hidden=false;$('offOk').onclick=()=>o.hidden=true}
 setInterval(seen,15000);addEventListener('pagehide',seen);document.addEventListener('visibilitychange',()=>{if(document.hidden)seen();else claim()});
 const w=setInterval(()=>{if(V()&&V().ready){clearInterval(w);claim()}},300);})();
+/* r6: real bag/inventory (client-local until server backend) + richer character panel */
+;(function(){const ROLE_ZH={tank:'坦克',subtank:'副坦',bruiser:'鬥士',std:'輸出',glass:'玻璃大砲',healer:'治療',support:'輔助'};
+const PASS={tank:'鋼鐵意志：嘲諷成功後 4 秒承傷 -25%，仇恨 ×2.5',subtank:'堅守陣地：生命低於 50% 時防禦 +20%',bruiser:'越戰越勇：每擊殺 1 隻 +1% 傷害（上限 20%）',std:'穩定輸出：技能冷卻結束立即施放時傷害 +8%',glass:'孤注一擲：傷害 +25%，但承傷 +20%',healer:'聖光庇護：治療溢出的 30% 轉為護盾',support:'激勵：周圍隊友技能冷卻 -6%'};
+const WZ={dagger:'短劍',sword:'單手劍',sword2:'雙手劍',spear1:'單手槍',spear2:'雙手槍',axe1:'單手斧',axe2:'雙手斧',mace:'鈍器',knuckle:'拳套',staff:'法杖',rod:'短杖',bow:'弓',book:'書',whip:'鞭',instrument:'樂器',katar:'拳刃',huuma:'風魔',gun:'槍械',rifle:'步槍'};
+const TAGZ={tank:'坦克',support:'輔助',cc:'控制',debuff:'減益',ult:'大招',phys:'物理',magic:'魔法',aoe:'範圍',single:'單體',heal:'治療',buff:'增益',taunt:'嘲諷',fire:'火',water:'水',wind:'風',earth:'地',holy:'聖',dark:'暗',dot:'持續',melee:'近戰',ranged:'遠程'};
+const ld=(k,d)=>{try{return JSON.parse(localStorage.getItem(k))??d}catch(e){return d}},sv=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}};
+const f=n=>n>=1e6?(n/1e6).toFixed(1)+'M':n>=1e4?(n/1e3).toFixed(0)+'K':Math.round(n);
+const W=()=>window.__v2;let lastK=0,coins=ld('hd.coins',0),mats=ld('hd.mats',0),dropAcc=0;
+function inv(p){const {equipOf,genItem,buildEquip,T,JOBS,SK,SLOT_IC,SLOT_ZH,QCOL}=W();const E=equipOf(p);if(!E.inv){E.inv=Object.values(E.bag).filter(Boolean).map(x=>({...x,uid:Math.random().toString(36).slice(2)}))}return E}
+function refreshBest(E){for(const s in E.bag){const c=E.inv.filter(x=>x.slot===s).sort((a,b)=>b.power-a.power)[0];E.bag[s]=c||null}}
+setInterval(()=>{const v=W();if(!v||!v.room)return;const r=v.room,k=(r.totalKills||0)+r.killed+(r.stage||0)*1000;const d=Math.max(0,k-lastK);lastK=k;if(d>500)return;coins+=d*(2+(v.C.region||1));dropAcc+=d;sv('hd.coins',coins);
+ while(dropAcc>=60){const {equipOf,genItem,buildEquip,T,JOBS,SK,SLOT_IC,SLOT_ZH,QCOL}=W();dropAcc-=60;const p=r.players[v.C.sel];if(!p)break;const E=inv(p);const ss=Object.keys(E.gear).filter(s=>E.gear[s]);const s=ss[Math.floor(Math.random()*ss.length)];if(E.inv.length<40){E.inv.push({...genItem(p,s,Math.floor(Math.random()*1e6),Math.random()*.9),uid:Math.random().toString(36).slice(2),nw:1});refreshBest(E)}}},1000);
+function ar(d){return d>0?`<span class="up">▲${f(d)}</span>`:d<0?`<span class="dn">▼${f(-d)}</span>`:'<span style="color:#8a90a8">＝</span>'}
+function bag(body){const {equipOf,genItem,buildEquip,T,JOBS,SK,SLOT_IC,SLOT_ZH,QCOL}=W();const v=W(),p=v.room.players[v.C.sel];const E=inv(p);const d=document.createElement('div');d.className='tmp';body.append(d);
+ const draw=()=>{const it=E.inv.slice().sort((a,b)=>(b.power-(E.gear[b.slot]?.power||0))-(a.power-(E.gear[a.slot]?.power||0)));
+  d.innerHTML=`<div class="mrow"><span>金幣（遊戲內）</span><b>${f(coins)}</b></div><div class="mrow"><span>分解材料</span><b>${f(mats)}</b></div><div class="mnote">${p.name} 的背包 ${E.inv.length}/40 · 每擊殺 60 隻掉 1 件 · ▲▼ 為與目前穿戴比較</div>`+
+  (it.length?it.map(x=>{const g=E.gear[x.slot],df=x.power-(g?g.power:0);return `<div class="bagi"><div class="ico q-${x.q}">${SLOT_IC[x.slot]}</div><div class="bn"><span style="color:${QCOL[x.q]}">[${x.q}]</span> ${x.name} +${x.refine}${x.nw?' <i class="nw">NEW</i>':''}<small>${SLOT_ZH[x.slot]} · 戰力 ${f(x.power)} ${ar(df)}${x.aff.map(a=>' · '+a.n.replace(' %','')+' '+a.v).join('')}</small></div><div class="bb"><button class="mbtn" data-a="eq" data-u="${x.uid}">裝備</button><button data-a="sell" data-u="${x.uid}">賣 ${f(sellP(x))}</button><button data-a="sal" data-u="${x.uid}">分解</button></div></div>`}).join(''):'<div class="mnote">背包是空的，繼續割草會掉裝備。</div>')+
+  `<div class="bball"><button data-a="sellw">一鍵賣出較差的 SR</button><button data-a="salw">一鍵分解較差的</button></div><div class="mnote">目前存在這支手機的瀏覽器；伺服器上線後改為帳號存檔。UR 可上交易所（鑽石），SR 以下綁定。</div>`;
+  E.inv.forEach(x=>delete x.nw)};
+ d.onclick=e=>{const b=e.target.closest('button');if(!b)return;const a=b.dataset.a,i=E.inv.findIndex(x=>x.uid===b.dataset.u),x=E.inv[i];
+  if(a==='eq'&&x){const old=E.gear[x.slot];E.gear[x.slot]=x;E.inv.splice(i,1);if(old)E.inv.push({...old,uid:Math.random().toString(36).slice(2)})}
+  if(a==='sell'&&x){coins+=sellP(x);E.inv.splice(i,1)}if(a==='sal'&&x){mats+=salP(x);E.inv.splice(i,1)}
+  if(a==='sellw'||a==='salw'){E.inv=E.inv.filter(x=>{const g=E.gear[x.slot];const bad=g&&x.power<=g.power&&(a==='salw'||x.q==='SR');if(bad){if(a==='sellw')coins+=sellP(x);else mats+=salP(x)}return !bad})}
+  sv('hd.coins',coins);sv('hd.mats',mats);refreshBest(E);try{W().buildEquip()}catch(_){}draw()};draw()}
+const sellP=x=>Math.round(x.power*({SR:.2,SSR:.5,UR:1.5}[x.q])),salP=x=>({SR:1,SSR:4,UR:15}[x.q])+x.refine;
+function char(body){const {equipOf,genItem,buildEquip,T,JOBS,SK,SLOT_IC,SLOT_ZH,QCOL}=W();const v=W(),p=v.room.players[v.C.sel],J=JOBS[p.job]||{},R=T.roles[J.role]||{};const E=equipOf(p);const pw=Object.values(E.gear).reduce((a,x)=>a+(x?x.power:0),0);
+ const tc={};(J.kit||[]).forEach(id=>((SK[id]||{}).tags||[]).forEach(t=>tc[t]=(tc[t]||0)+1));const aff=Object.entries(tc).sort((a,b)=>b[1]-a[1]).slice(0,3).map(x=>TAGZ[x[0]]||x[0]);
+ const pc=x=>(x>=1?'+':'')+Math.round((x-1)*100)+'%';const d=document.createElement('div');d.className='tmp';
+ d.innerHTML=`<div class="chd"><b>${p.name}</b><span>${J.name||p.job} · ${ROLE_ZH[J.role]||J.role}</span></div>
+ <div class="ph2">能力值</div><div class="g2"><div class="mrow"><span>生命</span><b>${Math.round(p.hp)} / ${Math.round(p.maxhp)}</b></div><div class="mrow"><span>攻擊</span><b>${Math.round(p.atk||0)}</b></div><div class="mrow"><span>防禦</span><b>${p.def?Math.round(p.def):pc(R.def||1)}</b></div><div class="mrow"><span>爆擊率</span><b>${Math.round((J.crit||0)*100)}%</b></div><div class="mrow"><span>射程</span><b>${J.range||'-'}</b></div><div class="mrow"><span>裝備戰力</span><b>${f(pw)}</b></div></div>
+ <div class="ph2">職業定位</div><div class="mrow"><span>生命 / 防禦</span><b>${pc(R.hp||1)} / ${pc(R.def||1)}</b></div><div class="mrow"><span>傷害 / 仇恨</span><b>${pc((R.dmg||1)*((T.roles.classDmgDeal||{})[p.job]||1))} / ×${R.threat||1}</b></div><div class="mrow"><span>承受傷害</span><b>${pc((T.roles.classDmgTaken||{})[p.job]||1)}</b></div>
+ <div class="ph2">核心被動</div><div class="mnote" style="color:#262b40">${PASS[J.role]||'—'}</div>
+ <div class="ph2">技能親和</div><div class="mnote" style="color:#262b40">${aff.join('、')||'—'} 技能 100% 效果；非親和技能約 70%</div>
+ <div class="ph2">可用武器（半綁定）</div><div class="wch">${(J.weap||[]).map(w=>`<span>${WZ[w]||w}</span>`).join('')}</div>
+ <div class="ph2">本場</div><div class="mrow"><span>倒地</span><b>${p.deaths||0}</b></div>${typeof offTotHTML==='function'?offTotHTML():''}`;body.append(d)}
+window.HDX={bag,char}})();
