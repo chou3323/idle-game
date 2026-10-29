@@ -88,3 +88,34 @@ html,body{height:100%}#app{height:100dvh;grid-template-rows:40px 1fr auto auto;g
 #msBody #setPanel{display:flex!important;position:static;box-shadow:none;border:0;background:none;padding:0}#msBody #setPanel select{width:100%}
 #btnSet{display:none!important}
 }
+
+/* r5: classic RO window skin for mobile nav / sheets / popups (matches earlier desktop build) */
+:root{--r5-strip:repeating-linear-gradient(180deg,rgba(255,255,255,.28) 0 1px,rgba(255,255,255,0) 1px 3px),linear-gradient(180deg,#d4e6f8 0%,#a9b8e0 38%,#c6cfe6 62%,#8a96c0 100%);--r5-ink:#262b40;--r5-bd:#8e9ac0}
+.ob{background:#eef0f8;border:1px solid var(--r5-bd);border-radius:8px;padding:0;box-shadow:inset 0 0 0 1px #fff,0 4px 18px rgba(0,0,0,.55);color:var(--r5-ink);overflow:hidden}
+.ob>*:not(.ot){margin-left:12px;margin-right:12px}.ob>button{width:calc(100% - 24px);margin-bottom:12px}
+.ot{background:var(--r5-strip);color:#1d2656;font-size:14px;padding:6px 12px;margin:0 0 8px;border-bottom:1px solid var(--r5-bd);text-shadow:0 1px 0 rgba(255,255,255,.7)}
+.ob button,.mbtn{background:linear-gradient(#d8e6ff,#7d9fdc);border:1px solid #3a5290;color:#14224a;border-radius:6px;font-weight:700;box-shadow:inset 0 1px 0 #fff,inset 0 -2px 0 #5472b4}
+.ob .mrow,#msheet .mrow{border-bottom:1px solid #cdd3e8;color:var(--r5-ink)}.ob .mnote,#msheet .mnote{color:#6a7090}.ob .mrow b{color:#10204e}
+@media (max-width:900px){
+#mnav{background:linear-gradient(#e9ecf8,#d2d8ee);border-top:1px solid var(--r5-bd);box-shadow:inset 0 1px 0 #fff;gap:4px;padding:4px 4px calc(4px + env(safe-area-inset-bottom))}
+#mnav button{min-height:46px;background:linear-gradient(180deg,#fff 0%,#fff 30%,#d6d9e6 100%);border:1px solid #7c85ab;border-radius:5px;box-shadow:inset 0 1px 0 #fff,0 1px 0 #aab0c8;color:#27346c;font-weight:700;-webkit-tap-highlight-color:transparent}
+#mnav button:active,#mnav button.on{background:linear-gradient(#cfe2fb,#7fa4e6);border-color:#3e5ca8;box-shadow:inset 1px 2px 3px rgba(20,40,100,.4);color:#10204e}
+#mnav span{font-size:11px;margin-top:1px}
+#msheet:not([hidden]){bottom:calc(58px + env(safe-area-inset-bottom));left:6px;right:6px;background:#eef0f8;border:1px solid var(--r5-bd);border-radius:8px;box-shadow:inset 0 0 0 1px #fff,0 -2px 14px rgba(0,0,0,.5);overflow:hidden;color:var(--r5-ink)}
+#msheet .mh{background:var(--r5-strip);border-bottom:1px solid var(--r5-bd);padding:4px 6px 4px 12px;color:#1d2656;text-shadow:0 1px 0 rgba(255,255,255,.7)}
+#msheet .mh button{color:#27346c;font-size:14px;min-width:34px;min-height:30px;background:linear-gradient(#fff,#d6d9e6);border:1px solid #7c85ab;border-radius:4px}
+#msBody{background:#f3f5fa;color:var(--r5-ink)}
+#msBody *{color:inherit}#msBody b{color:#10204e}
+#msBody select,#msBody button:not(.mbtn){background:linear-gradient(#fff,#d6d9e6);border:1px solid #7c85ab;border-radius:4px;color:#27346c;min-height:32px}
+#msBody #right,#msBody #left,#msBody #party>*,#msBody .card,#msBody .pc{background:#fff!important;border-color:#b4bcd8!important}
+#msBody #setPanel .t{color:#6a7090}
+}
+@media (max-width:900px){
+#msBody .ph{background:var(--r5-strip)!important;border:1px solid #b4bcd8;border-radius:4px;color:#1d2656;position:static}
+#msBody #dpsTabs .on{background:linear-gradient(#cfe2fb,#7fa4e6)!important;border-color:#3e5ca8}
+#msBody #dpsList .row{background-color:#fff;border-bottom:1px solid #e1e5f2}#msBody #aggro{color:#6a7090}
+#msBody #eqDetail .main{color:#10204e}#msBody #eqDetail .aff{color:#1f6fb0}#msBody #eqDetail .set{color:#a06a00}#msBody .up{color:#1a9a4a}#msBody .dn{color:#d03a3a}
+#msBody #eqSlots>*,#msBody .eqs,#msBody [class*=slot]{background-color:#fff;border-color:#c5cbe2}
+/* floating DPS panel never overlaps an open sheet */
+#app.msh #left{display:none}#app.msh #msBody #left{display:block!important}
+}

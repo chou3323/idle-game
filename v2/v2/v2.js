@@ -83,7 +83,7 @@ let PPU=24,OX=0,OY=0;
 function resize(){DPR=Math.min(2,window.devicePixelRatio||1);const r=cv.getBoundingClientRect();VW=r.width;VH=r.height;cv.width=Math.round(VW*DPR);cv.height=Math.round(VH*DPR);fitCam()}
 let camX=24,camY=16;const VIEW_W=+qs.get('view')||30;
 function fitCam(){const a=room?room.arena:[48,32];PPU=Math.max(VW/VIEW_W,VW/a[0],VH/a[1]);camTo(1)}
-function camTo(k){const a=room.arena;let sx=0,sy=0,n=0;for(const p of room.players){if(p.down>0||p.soul>0)continue;sx+=p.x;sy+=p.y;n++}if(n){sx/=n;sy/=n}else{sx=a[0]/2;sy=a[1]/2}
+function camTo(k){if(!room)return;const a=room.arena;let sx=0,sy=0,n=0;for(const p of room.players){if(p.down>0||p.soul>0)continue;sx+=p.x;sy+=p.y;n++}if(n){sx/=n;sy/=n}else{sx=a[0]/2;sy=a[1]/2}
  const hw=VW/PPU/2,hh=VH/PPU/2;sx=clamp(sx,hw,a[0]-hw);sy=clamp(sy,hh,a[1]-hh);camX+=(sx-camX)*k;camY+=(sy-camY)*k;OX=VW/2-camX*PPU;OY=VH/2-camY*PPU}
 const S2=(x,y)=>[OX+x*PPU,OY+y*PPU];
 // ---- ground per region (procedural placeholder, no copied art)
@@ -318,7 +318,7 @@ document.addEventListener('click',e=>{if(app.classList.contains('set')&&!sp.cont
 /* r4: mobile bottom nav + sheets, offline progress (client interim) */
 ;(function(){const $=i=>document.getElementById(i),app=$('app'),sh=$('msheet'),body=$('msBody'),mq=matchMedia('(max-width:900px)');
 const home={};function park(el){if(!el)return;if(!home[el.id])home[el.id]={p:el.parentNode,n:el.nextSibling};body.append(el)}
-function unpark(){for(const id in home){const e=$(id),h=home[id];if(e&&e.parentNode===body)h.p.insertBefore(e,h.n&&h.n.parentNode===h.p?h.n:null)}const sp=$('setPanel');if(sp&&sp.parentNode===body)$('top').append(sp);body.querySelectorAll('.tmp').forEach(e=>e.remove())}
+function unpark(){const L0=$('left');if(L0&&L0.dataset.wc){L0.classList.toggle('col',L0.dataset.wc==='1');delete L0.dataset.wc}for(const id in home){const e=$(id),h=home[id];if(e&&e.parentNode===body)h.p.insertBefore(e,h.n&&h.n.parentNode===h.p?h.n:null)}const sp=$('setPanel');if(sp&&sp.parentNode===body)$('top').append(sp);body.querySelectorAll('.tmp').forEach(e=>e.remove())}
 const V=()=>window.__v2,T={char:'角色',equip:'裝備',skill:'技能設定',bag:'背包',party:'隊伍 / 輸出',set:'設定'};
 function info(html){const d=document.createElement('div');d.className='tmp mi';d.innerHTML=html;body.append(d)}
 function open(k){unpark();const v=V();if(!v)return;const r=v.room,p=r&&r.players[v.C.sel];$('msTitle').textContent=T[k];
@@ -326,11 +326,11 @@ function open(k){unpark();const v=V();if(!v)return;const r=v.room,p=r&&r.players
  if(k==='equip'){park($('right'))}
  if(k==='skill'&&p){info('<div class="mnote">技能自動依順序施放，可在下方技能列手動搶時機。</div>'+p.kit.map((s,i)=>`<div class="mrow"><span>${i+1}${s.ult?' · 大招':''} ${s.name}</span><b>CD ${s.cd}s</b></div>`).join(''))}
  if(k==='bag')info('<div class="mnote">背包與道具系統開發中。目前顯示離線與本次掉落統計。</div>'+offTot());
- if(k==='party'){park($('party'));park($('left'));$('left').classList.remove('col')}
+ if(k==='party'){park($('party'));const L=$('left');L.dataset.wc=L.classList.contains('col')?'1':'0';park(L);L.classList.remove('col')}
  if(k==='set'){const sp=$('setPanel');if(sp)body.append(sp)}
  sh.hidden=false;app.classList.add('msh')}
-function close(){unpark();sh.hidden=true;app.classList.remove('msh','set')}
-document.querySelectorAll('#mnav button').forEach(b=>b.onclick=()=>{const k=b.dataset.p;if(!sh.hidden&&sh.dataset.k===k){close();return}sh.dataset.k=k;open(k)});$('msClose').onclick=close;
+function close(){document.querySelectorAll('#mnav button').forEach(x=>x.classList.remove('on'));unpark();sh.hidden=true;app.classList.remove('msh','set')}
+document.querySelectorAll('#mnav button').forEach(b=>b.onclick=()=>{const k=b.dataset.p;if(!sh.hidden&&sh.dataset.k===k){close();return}sh.dataset.k=k;document.querySelectorAll('#mnav button').forEach(x=>x.classList.toggle('on',x===b));open(k)});$('msClose').onclick=close;
 mq.addEventListener&&mq.addEventListener('change',()=>{if(!mq.matches)close()});
 // offline progress (interim, client-side only; real version = server party sim)
 const KEY='hd.lastSeen',TOT='hd.offTot',MAXS=12*3600;
