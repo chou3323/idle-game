@@ -238,3 +238,4 @@ html,body{height:100%}#app{height:100dvh;grid-template-rows:40px 1fr auto auto;g
 #msBody .wch span{border:1px solid #7c85ab;background:linear-gradient(#fff,#d6d9e6);border-radius:12px;padding:3px 9px}
 #msBody #setPanel{flex-direction:column;gap:6px}#msBody #setPanel select{min-height:40px;border:1px solid #7c85ab;border-radius:6px;background:linear-gradient(#fff,#e2e5f0);color:#1d2656;font-size:14px;padding:0 10px;box-shadow:inset 0 1px 0 #fff}
 #msBody .chd2 b{color:#fff}#msBody .chd2 .cpw b{color:#ffe08a}
+#msBody .lst i{color:#dfe6ff!important;opacity:1!important;font-size:10px}#msBody .lst b{color:#ffe08a!important}
