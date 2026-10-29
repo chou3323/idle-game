@@ -86,7 +86,8 @@ function vfxA(o,kd,num){if(o==null||o===0)return 1;const m=vfxMode();if(m==='all
 let lowQ=false,fpsAvg=60;
 function updVfxNote(){const el=$('vfxNote');if(el)el.textContent='特效：'+VFX_ZH[vfxMode()]+(lowQ?'（低畫質）':C.vfx==='auto'?'（自動）':'')}
 function mobVariant(id,type){const r=room.roster;const l=type==='boss'?r.boss:type==='elite'?r.elite:r.reg;return l.length?l[Math.abs(id*2654435761|0)%l.length]:null}
-function showEnd(r){const o=$('overlay');o.hidden=false;const win=r==='win'||r==='clear'||r==='victory';o.innerHTML=`<div class="endT ${win?'win':'lose'}">${win?'◆ 區域通關 ◆':r==='wipe'?'全隊倒下':'戰鬥結束'}</div><div style="font-size:14px;color:#8d99b8">用時 ${room.t.toFixed(0)} 秒 · 擊殺 ${room.stats.kills} · 倒地 ${room.players.reduce((a,p)=>a+p.deaths,0)} 次</div><button id="btnAgain">再來一次</button>`;$('btnAgain').onclick=()=>{C.seed++;newRoom()}}
+function endCards(win){const k=room.stats.kills,ti=TIERS.indexOf(C.tier),m=(1+C.region*.6)*(1+ti*.5);const c=[['ic_skill','擊殺',fmt(k)],['ic_settings','用時',room.t.toFixed(0)+' 秒'],['ic_char','經驗',(win?'+':'')+fmt(Math.round(k*m*8*(win?1:.5)))],['ic_bag','金幣','+'+fmt(Math.round(k*(2+C.region)))],['ic_party','倒地',room.players.reduce((a,p)=>a+p.deaths,0)+' 次']];return `<div class="endc">${c.map(x=>`<div class="rwt"><img src="v2/ic/${x[0]}.webp" alt=""><b>${x[2]}</b><span>${x[1]}</span></div>`).join('')}</div>`+(win?`<div class="endd"><span>王之遺物</span>${['wpn','body','acc1'].map((s,i)=>`<div class="eqt q-${i?'SSR':'UR'}">${SLOT_IC[s]}</div>`).join('')}<small>（展示，實際掉落待伺服器）</small></div>`:'')}
+function showEnd(r){const o=$('overlay');o.hidden=false;const win=r==='win'||r==='clear'||r==='victory';o.innerHTML=`<div class="endT ${win?'win':'lose'}">${win?'◆ 區域通關 ◆':r==='wipe'?'全隊倒下':'戰鬥結束'}</div>${endCards(win)}<button id="btnAgain">再來一次</button>`;$('btnAgain').onclick=()=>{C.seed++;newRoom()}}
 
 // ================= drawing
 let PPU=24,OX=0,OY=0;
@@ -329,7 +330,7 @@ function init(){
  document.querySelectorAll('#dpsTabs button').forEach(b=>b.onclick=()=>{C.dmgMode=b.dataset.m;document.querySelectorAll('#dpsTabs button').forEach(x=>x.classList.toggle('on',x===b))});
  addEventListener('keydown',e=>{if(/^[1-8]$/.test(e.key)){const p=room.players[C.sel];const s=p.kit[+e.key-1];if(s)manualCast(p,s)}});
  addEventListener('resize',resize);
- loadAssets().then(()=>{newRoom();resize();requestAnimationFrame(frame);window.__v2={C,get room(){return room},get fx(){return fx},get nums(){return nums},stepSim,newRoom,buildSkills,equipOf,genItem,buildEquip,T,JOBS,SK,SLOT_IC,SLOT_ZH,QCOL,ready:true}});
+ loadAssets().then(()=>{newRoom();resize();requestAnimationFrame(frame);window.__v2={C,get room(){return room},get fx(){return fx},get nums(){return nums},stepSim,newRoom,buildSkills,equipOf,genItem,buildEquip,T,JOBS,SK,SLOT_IC,SLOT_ZH,QCOL,imgs,sheetKey,fmt,showEnd,ready:true}});
 }
 init();
 })();
@@ -354,10 +355,10 @@ const V=()=>window.__v2,T={char:'角色',equip:'裝備',skill:'技能設定',bag
 function info(html){const d=document.createElement('div');d.className='tmp mi';d.innerHTML=html;body.append(d)}
 function open(k){unpark();const v=V();if(!v)return;const r=v.room,p=r&&r.players[v.C.sel];$('msTitle').textContent=T[k];
  if(k==='char'&&p&&window.HDX)HDX.char(body);
- if(k==='equip'){park($('right'))}
+ if(k==='equip'){if(window.HDP)HDP.equip(body);else park($('right'))}
  if(k==='skill'&&p&&window.HDL){const d=document.createElement('div');d.className='tmp';body.append(d);HDL.render(d)}
- if(k==='bag'&&p&&window.HDX)HDX.bag(body);
- if(k==='party'){park($('party'));const L=$('left');L.dataset.wc=L.classList.contains('col')?'1':'0';park(L);L.classList.remove('col')}
+ if(k==='bag'&&p&&window.HDX)(window.HDP?HDP.bag(body):HDX.bag(body));
+ if(k==='party'&&window.HDP){HDP.party(body)}else if(k==='party'){park($('party'));const L=$('left');L.dataset.wc=L.classList.contains('col')?'1':'0';park(L);L.classList.remove('col')}
  if(k==='set'){const sp=$('setPanel');if(sp)body.append(sp)}
  sh.hidden=false;app.classList.add('msh');requestAnimationFrame(visH)}
 function visH(){const st=$('stage');if(sh.hidden||!st){window.__visH=0;return}const r=st.getBoundingClientRect(),t=sh.getBoundingClientRect().top;window.__visH=Math.max(120,t-r.top)}
@@ -373,7 +374,7 @@ function claim(){let last=0;try{last=+localStorage.getItem(KEY)||0}catch(e){}see
  const v=V(),reg=v?v.C.region:1,tierI=v?['normal','hard','nightmare','hell'].indexOf(v.C.tier):0,rate=(1+reg*.6)*(1+tierI*.5)*0.8;
  const exp=Math.round(sec*rate*12),zeny=Math.round(sec*rate*5),kills=Math.round(sec*rate*1.5),items=Math.floor(kills/400);
  let t={};try{t=JSON.parse(localStorage.getItem(TOT)||'{}')}catch(e){}t.exp=(t.exp||0)+exp;t.zeny=(t.zeny||0)+zeny;t.items=(t.items||0)+items;try{localStorage.setItem(TOT,JSON.stringify(t))}catch(e){}
- const h=Math.floor(sec/3600),m=Math.floor(sec%3600/60),o=$('offline');o.innerHTML=`<div class="ob"><div class="ot">離線收益</div><div class="mnote">你的角色在隊伍中持續割草 ${h?h+' 小時 ':''}${m} 分鐘${sec>=MAXS?'（上限 12 小時）':''}</div><div class="mrow"><span>擊殺</span><b>${fmt(kills)}</b></div><div class="mrow"><span>經驗</span><b>+${fmt(exp)}</b></div><div class="mrow"><span>金幣</span><b>+${fmt(zeny)}</b></div><div class="mrow"><span>裝備</span><b>+${items}</b></div><button id="offOk">領取</button></div>`;o.hidden=false;$('offOk').onclick=()=>o.hidden=true}
+ const h=Math.floor(sec/3600),m=Math.floor(sec%3600/60),o=$('offline');o.innerHTML=`<div class="ob"><div class="ot">離線收益</div><div class="mnote">你的角色在隊伍中持續割草 ${h?h+' 小時 ':''}${m} 分鐘${sec>=MAXS?'（上限 12 小時）':''}</div><div class="rwg">${[['ic_skill','擊殺',fmt(kills),'k'],['ic_char','經驗','+'+fmt(exp),'e'],['ic_bag','金幣','+'+fmt(zeny),'z'],['ic_equip','裝備','+'+items,'i']].map(x=>`<div class="rwt rw-${x[3]}"><img src="v2/ic/${x[0]}.webp" alt=""><b>${x[2]}</b><span>${x[1]}</span></div>`).join('')}</div><div class="mnote" style="padding:0 12px 6px">暫存在此瀏覽器；伺服器上線後改為帳號離線掛機。</div><button id="offOk">領取</button></div>`;o.hidden=false;$('offOk').onclick=()=>o.hidden=true}
 setInterval(seen,15000);addEventListener('pagehide',seen);document.addEventListener('visibilitychange',()=>{if(document.hidden)seen();else claim()});
 const w=setInterval(()=>{if(V()&&V().ready){clearInterval(w);claim()}},300);})();
 /* r6: real bag/inventory (client-local until server backend) + richer character panel */
@@ -411,4 +412,4 @@ function char(body){const {equipOf,genItem,buildEquip,T,JOBS,SK,SLOT_IC,SLOT_ZH,
  <div class="ph2">技能親和</div><div class="pcard aff">${aff.join('、')||'—'} 技能 100% 效果；非親和技能約 70%</div>
  <div class="ph2">可用武器（半綁定）</div><div class="wch">${(J.weap||[]).map(w=>`<span>${WZ[w]||w}</span>`).join('')}</div>
  <div class="ph2">本場</div><div class="mrow"><span>倒地</span><b>${p.deaths||0}</b></div>${typeof offTotHTML==='function'?offTotHTML():''}`;body.append(d)}
-window.HDX={bag,char}})();
+window.HDX={bag,char,inv,refreshBest,sellP,salP,st:{get coins(){return coins},set coins(v){coins=v;sv('hd.coins',v)},get mats(){return mats},set mats(v){mats=v;sv('hd.mats',v)}}}})();
