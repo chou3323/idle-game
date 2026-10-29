@@ -269,7 +269,7 @@
      "fps": 6
     }
    },
-   "colors": 18,
+   "colors": 21,
    "cap": 28,
    "frames": 36
   },
@@ -540,7 +540,7 @@
      "fps": 6
     }
    },
-   "colors": 15,
+   "colors": 21,
    "cap": 28,
    "frames": 36
   },
@@ -811,7 +811,7 @@
      "fps": 6
     }
    },
-   "colors": 16,
+   "colors": 20,
    "cap": 28,
    "frames": 36
   },
@@ -1082,7 +1082,7 @@
      "fps": 6
     }
    },
-   "colors": 17,
+   "colors": 18,
    "cap": 28,
    "frames": 36
   },
@@ -1315,7 +1315,7 @@
      "fps": 6
     }
    },
-   "colors": 12,
+   "colors": 19,
    "cap": 28,
    "frames": 36
   },
@@ -1548,7 +1548,7 @@
      "fps": 6
     }
    },
-   "colors": 18,
+   "colors": 22,
    "cap": 28,
    "frames": 36
   },
@@ -1781,7 +1781,7 @@
      "fps": 6
     }
    },
-   "colors": 17,
+   "colors": 20,
    "cap": 28,
    "frames": 36
   },
@@ -2014,7 +2014,7 @@
      "fps": 6
     }
    },
-   "colors": 14,
+   "colors": 19,
    "cap": 28,
    "frames": 36
   },
@@ -2247,7 +2247,7 @@
      "fps": 6
     }
    },
-   "colors": 11,
+   "colors": 21,
    "cap": 28,
    "frames": 36
   },
@@ -2480,7 +2480,7 @@
      "fps": 6
     }
    },
-   "colors": 16,
+   "colors": 19,
    "cap": 28,
    "frames": 36
   },
@@ -2713,7 +2713,7 @@
      "fps": 6
     }
    },
-   "colors": 18,
+   "colors": 20,
    "cap": 28,
    "frames": 36
   },
@@ -3179,7 +3179,7 @@
      "fps": 6
     }
    },
-   "colors": 16,
+   "colors": 22,
    "cap": 28,
    "frames": 36
   },

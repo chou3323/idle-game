@@ -225,9 +225,10 @@ function create(o){
      const cl=nearestMob(p,60);const cx=avgX(),cy=avgY();
      const tk_=room.players.find(q=>(q.role==='tank'||q.bot==='tank')&&alive(q));
      // formation (r11): tank front toward enemy; healers/support/ranged in an arc behind the tank; spread by party index
-     const fslot=(q,back)=>{const ux0=tk_.x-cl.x,uy0=tk_.y-cl.y,L=Math.hypot(ux0,uy0)||1,ux=ux0/L,uy=uy0/L;const i=room.players.indexOf(q),n=room.players.length;const lat=((i%7)-3)*1.3,b=back+((i/7)|0)*1.4;return[tk_.x+ux*b-uy*lat,tk_.y+uy*b+ux*lat]};
+     const fslot=(q,back)=>{const ux0=tk_.x-cl.x,uy0=tk_.y-cl.y,L=Math.hypot(ux0,uy0)||1,ux=ux0/L,uy=uy0/L;const i=room.players.indexOf(q),n=room.players.length;const lat=((i%7)-3)*1.8,b=back+((i/7)|0)*1.8+(cl.type==='boss'?2:0);return[tk_.x+ux*b-uy*lat,tk_.y+uy*b+ux*lat]};
      if(p.bot==='healer'||p.bot==='support'){if(tk_&&tk_!==p&&cl){const[ax,ay]=fslot(p,4.2);moveTo(p,ax,ay,d,.6)}else{const tk=tk_||p;moveTo(p,tk.x-Math.cos(0.6)*5,tk.y+4,d,3.5)}}
      else if(p.role==='tank'||p.bot==='tank'){const c=cl;if(c)moveTo(p,c.x,c.y,d,Math.max(.8,rng-.5))}
+     else if(cl&&rng<5&&cl.type!=='norm'&&tk_&&tk_!==p){const i=room.players.indexOf(p),ux0=tk_.x-cl.x,uy0=tk_.y-cl.y,L=Math.hypot(ux0,uy0)||1,a0=Math.atan2(uy0,ux0),a=a0+((i%2?1:-1)*(0.6+((i>>1)%4)*0.35)),R=Math.max(rng*.85,1.8);moveTo(p,cl.x+Math.cos(a)*R,cl.y+Math.sin(a)*R,d,.4)}
      else if(cl&&rng>=5&&tk_&&tk_!==p&&dist(tk_,cl)<rng*.6&&!(p.hp<p.maxhp*.5&&dist(p,cl)<rng*.25)){const[ax,ay]=fslot(p,2.6);moveTo(p,ax,ay,d,.6)}
      else if(cl){const dd=dist(p,cl);const want=rng>=5?rng*.8:rng;if(dd>want+.3)moveTo(p,cl.x,cl.y,d,want);else if(rng>=5&&dd<rng*.25&&p.hp<p.maxhp*.5){moveTo(p,p.x-(cl.x-p.x),p.y-(cl.y-p.y),d,0)}}
     }

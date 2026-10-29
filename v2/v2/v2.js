@@ -61,7 +61,7 @@ function handleEvents(evs){
   case 'revive':setAnim('p'+e.p,'idle',0);fxPush({t:'heal',x:e.x,y:e.y,r:2.5,t0:tNow,dur:1,c:'#fff2b0'});floatText(e.x,e.y-2.4,'復活','#fff2b0',1.4);break;
   case 'mark':{marks.push({p:e.p,until:tNow+3.2});sigBanner('目標轉火：'+room.players[e.p].name,1.6,'sig');break}
   case 'tele':{if(e.t&&e.t.move){const nm=SIG_ZH[e.t.move]||e.t.move;sigBanner('BOSS施放招牌技「'+nm+'」',Math.max(1.6,e.t.dur||1.6),'sig');bossFx.sig=tNow+(e.t.dur||1.5);bossFx.sigM=e.t.move}break}
-  case 'move':fxPush({t:'bossmove',x:e.x,y:e.y,m:e.m,t0:tNow,dur:.9});ultFlash=Math.max(ultFlash,tNow+.18);break;
+  case 'move':fxPush({t:'bossmove',x:e.x,y:e.y,m:e.m,t0:tNow,dur:.9,vid:room.boss?mobVariant(room.boss.id,'boss'):null});ultFlash=Math.max(ultFlash,tNow+.18);break;
   case 'stage':if(room.isBoss){sigBanner('◆ 區域王降臨 ◆',2.4,'intro');dropPrev.t=tNow+5}else sigBanner(room.isElite?'精英隊長關':'第 '+e.i+' 關',1.6,'');bossStart=room.t;break;
   case 'clear':banner.t=tNow+1.3;banner.txt='關卡完成';break;
   case 'end':showEnd(e.r);break;
@@ -152,6 +152,7 @@ function drawMob(m,k){const id=mobVariant(m.id,m.type);if(!id)return;const man=i
  if(m.taunt&&m.taunt.until>room.t){if(m.type==='norm'){ctx.strokeStyle='rgba(255,170,60,.9)';ctx.lineWidth=2;ctx.beginPath();ctx.ellipse(sx0,sy0,PPU*.7,PPU*.25,0,0,7);ctx.stroke()}else icoShield(sx0,sy0-cell*.92,PPU*.4,'#ffb040')}
  if(m.type==='elite'&&(m.onlyLow||m.onlyHealer))icoBang(sx0+PPU*1.1,sy0-cell*.8,PPU*.35,m.onlyHealer?'#3ad07a':'#ff4a3a')
  if(m.type!=='norm'&&tg){ctx.strokeStyle='rgba(255,90,70,.55)';ctx.setLineDash([4,5]);ctx.lineWidth=1.5;const[tx,ty]=S2(tg.x,tg.y);ctx.beginPath();ctx.moveTo(sx0,sy0-cell*.2);ctx.lineTo(tx,ty-PPU*1.2);ctx.stroke();ctx.setLineDash([])}}
+const BOSS_STYLE={garlandking:'petal',mirehydra:'poison',elderroot:'petal',glaciercolossus:'shard',dunewarden:'sand',hollowmatriarch:'web',redclaydrake:'flame',gateguardian:'shard',aurorawyrm:'poison',cindertyrant:'flame',ashendragon:'flame',prismcolossus:'shard',thundergriffin:'bolt',nightsovereign:'shard'};
 const BOSS_AURA={"garlandking":["#7fdc82","#fff2b0"],"mirehydra":["#6ad08a","#e0f0a0"],"elderroot":["#c8e070","#e8a060"],"glaciercolossus":["#4a90d8","#c8f0ff"],"dunewarden":["#e8a03c","#ffe0a0"],"hollowmatriarch":["#b060e0","#f0d0ff"],"redclaydrake":["#ff9a3c","#f0e0a0"],"gateguardian":["#68c8e8","#d8b048"],"aurorawyrm":["#a078f0","#f0a0e0"],"cindertyrant":["#ffd050","#c8402c"],"ashendragon":["#ff6a3c","#ffc050"],"prismcolossus":["#68e8f0","#ffe888"],"thundergriffin":["#f0e048","#fff8d0"],"nightsovereign":["#58c8ff","#a8b8d8"]};
 function drawBossAura(x,y,cell,vid){const AC=BOSS_AURA[vid]||['#3a8cff','#c8ecff'];const sig=bossFx.sig>tNow,k=sig?1.6:1;ctx.save();ctx.translate(x,y);ctx.globalCompositeOperation='lighter';
  const R=cell*.42;ctx.globalAlpha=.28*k;ctx.fillStyle=AC[0];ctx.beginPath();ctx.ellipse(0,0,R,R*.32,0,0,7);ctx.fill();
@@ -171,8 +172,16 @@ function drawFx(f){const u=(tNow-f.t0)/f.dur;if(u<0)return true;if(u>1)return fa
  else if(f.t==='taunt'){ctx.globalAlpha=DIM*(1-u)*.8;ctx.strokeStyle=f.c;ctx.lineWidth=3;for(let i=0;i<2;i++){const uu=clamp(u*1.4-i*.25,0,1);ctx.beginPath();ctx.ellipse(0,0,R*uu,Ry*uu,0,0,7);ctx.stroke()}}
  else if(f.t==='burst'){ctx.globalAlpha=DIM*(1-u);ctx.strokeStyle=f.c;ctx.lineWidth=4;ctx.beginPath();ctx.ellipse(0,-PPU,R*u,R*u*.6,0,0,7);ctx.stroke();ctx.fillStyle=f.c;for(let i=0;i<12;i++){const a=i/12*6.283;ctx.fillRect(Math.cos(a)*R*u*1.1-2,-PPU+Math.sin(a)*R*u*.7-2,5,5)}}
  else if(f.t==='hitspark'){ctx.globalAlpha=DIM*1-u;ctx.strokeStyle=f.c;ctx.lineWidth=2.5;for(let i=0;i<4;i++){const a=i*1.57+.4;ctx.beginPath();ctx.moveTo(Math.cos(a)*PPU*.3,-PPU*1.2+Math.sin(a)*PPU*.3);ctx.lineTo(Math.cos(a)*PPU*(.3+u),-PPU*1.2+Math.sin(a)*PPU*(.3+u));ctx.stroke()}}
- else if(f.t==='bossmove'){const e=Math.min(1,u*2.2);ctx.globalCompositeOperation='lighter';const RR=PPU*(f.m==='pulse'?14:8)*e;ctx.globalAlpha=(1-u)*.8;ctx.strokeStyle='#8fd8ff';ctx.lineWidth=PPU*.5*(1-u)+2;ctx.beginPath();ctx.ellipse(0,0,RR,RR*.6,0,0,7);ctx.stroke();
-  const n=LOWQ()?10:18;ctx.fillStyle='#d6f2ff';for(let i=0;i<n;i++){const a=i*6.283/n,d=RR*(.5+.5*((i*7)%5)/5);ctx.save();ctx.translate(Math.cos(a)*d,Math.sin(a)*d*.6);ctx.beginPath();ctx.moveTo(-PPU*.25,0);ctx.lineTo(0,-PPU*2.2*(1-u)-PPU*.3);ctx.lineTo(PPU*.25,0);ctx.closePath();ctx.globalAlpha=(1-u)*.9;ctx.fill();ctx.restore()}ctx.globalCompositeOperation='source-over'}
+ else if(f.t==='bossmove'){const e=Math.min(1,u*2.2);ctx.globalCompositeOperation='lighter';const RR=PPU*(f.m==='pulse'?14:8)*e;ctx.globalAlpha=(1-u)*.8;const AC=BOSS_AURA[f.vid]||['#8fd8ff','#d6f2ff'],ST=BOSS_STYLE[f.vid]||'shard';ctx.strokeStyle=AC[0];ctx.lineWidth=PPU*.5*(1-u)+2;ctx.beginPath();ctx.ellipse(0,0,RR,RR*.6,0,0,7);ctx.stroke();
+  const n=LOWQ()?10:18;ctx.fillStyle=AC[1];for(let i=0;i<n;i++){const a=i*6.283/n,d=RR*(.5+.5*((i*7)%5)/5);ctx.save();ctx.translate(Math.cos(a)*d,Math.sin(a)*d*.6);ctx.globalAlpha=(1-u)*.9;ctx.beginPath();
+   if(ST==='shard'){ctx.moveTo(-PPU*.25,0);ctx.lineTo(0,-PPU*2.2*(1-u)-PPU*.3);ctx.lineTo(PPU*.25,0);ctx.closePath();ctx.fill()}
+   else if(ST==='flame'){const h=PPU*(1.6+(i%3)*.5)*(1-u*.6);ctx.moveTo(-PPU*.35,0);ctx.quadraticCurveTo(-PPU*.1,-h*.6,0,-h-u*PPU);ctx.quadraticCurveTo(PPU*.1,-h*.6,PPU*.35,0);ctx.fill()}
+   else if(ST==='petal'){ctx.rotate(a+u*4);ctx.ellipse(0,-u*PPU*2,PPU*.35,PPU*.18,0,0,7);ctx.fill()}
+   else if(ST==='bolt'){ctx.strokeStyle=AC[1];ctx.lineWidth=2;let y=0;ctx.moveTo(0,0);for(let k=0;k<4;k++){y-=PPU*.6;ctx.lineTo((k%2?1:-1)*PPU*.3,y)}ctx.stroke()}
+   else if(ST==='sand'){ctx.arc(Math.cos(a+u*6)*PPU*.8,-u*PPU*1.2,PPU*.16,0,7);ctx.fill()}
+   else if(ST==='poison'){ctx.arc(0,-u*PPU*1.8,PPU*(.15+.2*(1-u)),0,7);ctx.fill()}
+   else if(ST==='web'){ctx.strokeStyle=AC[1];ctx.lineWidth=1.5;ctx.moveTo(0,0);ctx.lineTo(-Math.cos(a)*d,-Math.sin(a)*d*.6);ctx.stroke()}
+   ctx.restore()}ctx.globalCompositeOperation='source-over'}
  ctx.restore();return true}
 function jobFx(f,u,R,Ry){const c=f.fx.c,t=f.fx.t,e=1-Math.pow(1-u,2.2),A0=(1-u);ctx.strokeStyle=c;ctx.fillStyle=c;ctx.lineWidth=f.ult?5:3;
  const ring=(s,a)=>{ctx.globalAlpha=DIM*a;ctx.beginPath();ctx.ellipse(0,0,R*s,Ry*s,0,0,7);ctx.stroke()};

@@ -192,6 +192,115 @@ A.rider=(g,d,z)=>{const s=d.s||1,c=g.c,L=z.lg,gal=k=>Math.sin(L+k)*4*s;
  for(const sd of[-1,1])cel(g,PG([[sd*3.5*s,-54*s],[sd*8*s,-60*s],[sd*5*s,-53*s]]),'b',{flat:true});
  for(let i=0;i<3;i++){const h=(7+i*2)*s+Math.sin(z.ph*12.6+i*2)*2;flat(g,g.P.c.light,PG([[-2.2*s-i*1.5*s,-55*s],[-4*s-i*3*s,-55*s-h],[1.5*s-i*1.5*s,-55*s]]))}
 };
+// ---------- r12 boss archetypes (original designs). hues a=main b=secondary c=element glow d=dark e=trim
+const flame=(g,x,y,h,w,hue,t)=>{flat(g,g.P[hue].light,PG([[x-w,y],[x+Math.sin(t)*w*.6,y-h],[x+w,y]]));flat(g,g.P[hue].high,PG([[x-w*.45,y],[x+Math.sin(t)*w*.4,y-h*.55],[x+w*.45,y]]))};
+const shard=(g,x,y,h,w,hue,lean)=>{cel(g,PG([[x-w,y],[x+(lean||0),y-h],[x+w,y]]),hue,{flat:true});flat(g,g.P[hue].high,PG([[x-w*.2,y-h*.2],[x+(lean||0)*.9,y-h*.9],[x+w*.2,y-h*.3]]))};
+// colossus: towering humanoid giant; d.th theme: ice|sand|stone|magma|prism
+A.colossus=(g,d,z)=>{const s=d.s||1,c=g.c,th=d.th,sw=Math.sin(z.lg)*2.4*s,at=z.at,T=z.ph*6.283;
+ if(th==='sand'){cel(g,PG([[-10*s,-44*s],[10*s,-44*s],[16*s,-6*s+Math.sin(T)*1.5],[8*s,-10*s],[0,-4*s],[-8*s,-10*s],[-16*s,-6*s-Math.sin(T)*1.5]]),'d',{flat:true})}
+ if(th==='magma'||th==='prism'||th==='ice')for(let i=0;i<5;i++){const x=(-12+i*6)*s,h=(8+(i%2)*6)*s;th==='magma'?flame(g,x,-46*s,h+Math.sin(T*2+i)*2,2.6*s,'c',T*3+i):shard(g,x,-44*s,h,2.2*s,th==='ice'?'b':'c',(i-2)*1.2)}
+ limb(g,'a',-6*s,-22*s,-7*s-sw,-1,6*s);limb(g,'a',6*s,-22*s,7*s+sw,-1,6*s);
+ for(const x of[-7*s-sw,7*s+sw])part(g,'d','r',x,-2*s,4.4*s,2.4*s,{r:1});
+ part(g,'a','r',0,-33*s,13*s,12*s,{r:5*s});
+ if(th==='stone'){c.fillStyle=g.P.e.base;for(let i=0;i<3;i++)c.fillRect(-11*s,(-40+i*5)*s,22*s,1.2*s)}
+ if(th==='sand'){cel(g,E(0,-36*s,6*s,4*s),'e',{flat:true});flat(g,g.P.c.light,E(0,-36*s,2*s,2*s))}
+ if(th==='prism'){for(let i=0;i<3;i++)shard(g,(-6+i*6)*s,-24*s,12*s,2.6*s,'b',0)}
+ flat(g,g.P.c.light,E(0,-31*s,3.4*s+at,3.4*s+at));flat(g,g.P.c.high,E(0,-31*s,1.6*s,1.6*s));
+ if(th==='magma'||th==='ice'||th==='prism'){c.strokeStyle=g.P.c.light;c.lineWidth=.9;c.beginPath();c.moveTo(-9*s,-40*s);c.lineTo(-4*s,-33*s);c.lineTo(-7*s,-26*s);c.moveTo(8*s,-41*s);c.lineTo(4*s,-35*s);c.lineTo(9*s,-27*s);c.stroke()}
+ // shoulders
+ for(const sd of[-1,1]){part(g,'b','e',sd*14*s,-42*s,6*s,5*s,{});if(th==='ice'||th==='prism')shard(g,sd*15*s,-46*s,9*s,2.4*s,th==='ice'?'b':'c',sd*3);if(th==='magma')flame(g,sd*15*s,-46*s,7*s,2.2*s,'c',T*3+sd);if(th==='stone'){c.fillStyle=g.P.e.base;c.fillRect(sd*14*s-4*s,-45*s,8*s,1.4*s)}}
+ // back arm
+ limb(g,'a',-14*s,-40*s,-18*s,-26*s,5*s);part(g,'d','e',-18*s,-23*s,4*s,4*s,{});
+ // weapon arm
+ const ax=at*10*s,ay=-at*8*s;limb(g,'a',14*s,-40*s,19*s+ax*.4,-28*s+ay*.3,5*s);
+ if(th==='stone'){limb(g,'d',20*s+ax*.4,-8*s,20*s+ax*.4,-62*s+ay,1.8*s);cel(g,PG([[20*s+ax*.4,-62*s+ay],[30*s+ax*.4,-56*s+ay],[20*s+ax*.4,-50*s+ay]]),'e',{flat:true})}
+ else if(th==='sand'){limb(g,'e',20*s+ax*.4,-10*s,22*s+ax*.4,-58*s+ay,1.6*s);cel(g,E(22*s+ax*.4,-60*s+ay,4*s,4*s),'e',{flat:true});flat(g,g.P.c.light,E(22*s+ax*.4,-60*s+ay,2*s,2*s))}
+ else if(th==='magma'){part(g,'d','r',22*s+ax*.4,-26*s+ay*.3,6*s,6*s,{r:2});flame(g,22*s+ax*.4,-30*s+ay*.3,10*s,4*s,'c',T*4)}
+ else if(th==='ice'){part(g,'b','e',21*s+ax*.4,-26*s+ay*.3,6*s,6*s,{});shard(g,24*s+ax*.4,-28*s+ay*.3,12*s,2.4*s,'b',4)}
+ else{part(g,'d','e',21*s+ax*.4,-26*s+ay*.3,5*s,5*s,{});shard(g,21*s+ax*.4,-30*s+ay*.3,16*s,3*s,'c',2)}
+ // head
+ const hy=-50*s;part(g,'b','r',0,hy,6.4*s,6*s,{r:2*s});flat(g,g.P.out,RR(-4.5*s,hy-1*s,9*s,2.4*s,.6));flat(g,g.P.c.high,RR(-3*s,hy-.6*s,2.4*s,1.4*s,.4));flat(g,g.P.c.high,RR(.8*s,hy-.6*s,2.4*s,1.4*s,.4));
+ if(th==='sand'){cel(g,PG([[-8*s,hy-2*s],[0,hy-14*s],[8*s,hy-2*s]]),'d',{flat:true});flat(g,g.P.e.base,E(0,hy-6*s,1.6*s,1.6*s))}
+ if(th==='stone'){cel(g,PG([[-7*s,hy-5*s],[-3*s,hy-12*s],[0,hy-6*s],[3*s,hy-12*s],[7*s,hy-5*s]]),'e',{flat:true})}
+ if(th==='magma'){for(let i=0;i<4;i++)flame(g,(-5+i*3.3)*s,hy-5*s,(6+i%2*3)*s,1.6*s,'c',T*5+i)}
+ if(th==='ice'||th==='prism')for(let i=0;i<3;i++)shard(g,(-4+i*4)*s,hy-5*s,(6+(i===1?5:0))*s,1.8*s,th==='ice'?'b':'c',0)};
+// dragon: winged wyvern
+A.dragon=(g,d,z)=>{const s=d.s||1,c=g.c,T=z.ph*6.283,fl=Math.sin(T)*8*s,sw=Math.sin(z.lg)*2*s;
+ const wing=(x,y,k)=>{const tip=[x-30*s*k,y-20*s-fl],p=PG([[x,y],[tip[0],tip[1]],[x-26*s*k,y-6*s-fl*.5],[x-20*s*k,y+2*s-fl*.2],[x-12*s*k,y+4*s],[x-4*s,y+4*s]]);cel(g,p,'d',{flat:true});c.strokeStyle=g.P.a.dark;c.lineWidth=1.4*s;c.beginPath();for(const q of[[tip[0],tip[1]],[x-26*s*k,y-6*s-fl*.5],[x-20*s*k,y+2*s-fl*.2]]){c.moveTo(x,y);c.lineTo(q[0],q[1])}c.stroke()};
+ wing(-2*s,-30*s,.9);
+ limb(g,'a',-16*s,-18*s,-30*s,-14*s+Math.sin(T)*2,4*s);limb(g,'a',-30*s,-14*s+Math.sin(T)*2,-38*s,-20*s,2.2*s);cel(g,PG([[-38*s,-20*s],[-44*s,-25*s],[-40*s,-16*s]]),'e',{flat:true});
+ limb(g,'a',-8*s,-16*s,-10*s-sw,-1,4.6*s);
+ part(g,'a','e',-4*s,-22*s,14*s,9*s,{});part(g,'b','e',-2*s,-18*s,10*s,4.4*s,{hi:false});
+ for(let i=0;i<5;i++)cel(g,PG([[-14*s+i*5*s,-29*s],[-12*s+i*5*s,-35*s],[-10*s+i*5*s,-29*s]]),'e',{flat:true});
+ limb(g,'a',6*s,-16*s,6*s+sw,-1,4.6*s);
+ const hx=18*s+z.at*5*s,hy=-38*s;limb(g,'a',6*s,-26*s,hx-3*s,hy+4*s,6*s);
+ part(g,'a','e',hx,hy,7*s,5.4*s,{});part(g,'a','e',hx+7*s,hy+2*s,5*s,3*s,{hi:false});flat(g,g.P.out,PG([[hx+3*s,hy+3.6*s],[hx+12*s,hy+3*s+z.at*2*s],[hx+3*s,hy+5*s+z.at*3*s]]));
+ eye(g,hx+2*s,hy-1.4*s,1.6*s,.6);for(const k of[0,1])cel(g,PG([[hx-3*s+k*3*s,hy-4*s],[hx-9*s+k*2*s,hy-12*s],[hx-1*s+k*3*s,hy-4.6*s]]),'e',{flat:true});
+ wing(4*s,-30*s,1.05);
+ if(d.fire||z.at>0){const fx=hx+12*s;for(let i=0;i<3;i++)flame(g,fx+i*3*s,hy+4*s,(5+z.at*6)*s,1.8*s,'c',T*4+i)}
+ if(d.ash)for(let i=0;i<6;i++)flat(g,g.P.c.light,E((-20+i*8)*s,(-40-(i%3)*6)*s-Math.sin(T+i)*3,1.1*s,1.1*s))};
+// hydra: three-headed bog serpent
+A.hydra=(g,d,z)=>{const s=d.s||1,c=g.c,T=z.ph*6.283;
+ part(g,'d','e',0,-4*s,24*s,6*s,{hi:false});flat(g,g.P.e.light,E(-10*s,-3*s,5*s,1.4*s));flat(g,g.P.e.light,E(12*s,-4*s,4*s,1.2*s));
+ part(g,'a','e',0,-12*s,17*s,10*s,{});part(g,'b','e',3*s,-9*s,11*s,5*s,{hi:false});
+ for(let i=0;i<4;i++)cel(g,PG([[-12*s+i*6*s,-20*s],[-10*s+i*6*s,-26*s],[-8*s+i*6*s,-20*s]]),'c',{flat:true});
+ const heads=[[-12,-40,-.9],[4,-50,0],[18,-38,.9]];
+ heads.forEach(([hx0,hy0,k],i)=>{const wob=Math.sin(T+i*2.1)*3*s,hx=hx0*s+wob+(i===1?z.at*6*s:0),hy=hy0*s+Math.cos(T+i)*2*s;c.lineCap='round';
+  for(let j=0;j<4;j++){const t0=j/4,t1=(j+1)/4,bx=(-4+i*6)*s,by=-18*s;limb(g,'a',bx+(hx-bx)*t0+Math.sin(t0*3+T)*3*s,by+(hy-by)*t0,bx+(hx-bx)*t1+Math.sin(t1*3+T)*3*s,by+(hy-by)*t1,(6-j*.6)*s)}
+  part(g,'a','e',hx+2*s,hy,7*s,5*s,{});cel(g,PG([[hx-3*s,hy-3*s],[hx-7*s,hy-11*s],[hx+1*s,hy-4*s]]),'c',{flat:true});
+  flat(g,g.P.out,PG([[hx+3*s,hy+2*s],[hx+11*s,hy+1*s+z.at*2*s],[hx+4*s,hy+5*s+z.at*2*s]]));flat(g,g.P.eye,PG([[hx+5*s,hy+2*s],[hx+6*s,hy+4.6*s],[hx+7*s,hy+2*s]]));eye(g,hx+3*s,hy-1.4*s,1.5*s,.6);
+  if(z.at>0||d.spit)flat(g,g.P.e.light,E(hx+12*s,hy+3*s,2*s+z.at*2*s,1.4*s))})};
+// arachne: spider matriarch with humanoid torso
+A.arachne=(g,d,z)=>{const s=d.s||1,c=g.c,T=z.ph*6.283;
+ for(let i=0;i<4;i++){for(const sd of[-1,1]){const ph=Math.sin(z.lg+i*1.4+(sd>0?1.5:0))*2.4*s,kx=sd*(14+i*4)*s,ky=-24*s+ph;limb(g,'d',sd*6*s,-14*s,kx,ky,2.6*s);limb(g,'d',kx,ky,sd*(20+i*5)*s,0,2*s);flat(g,g.P.b.base,E(kx,ky,1.4*s,1.4*s))}}
+ part(g,'a','e',-10*s,-16*s,15*s,11*s,{});flat(g,g.P.b.base,PG([[-16*s,-22*s],[-10*s,-12*s],[-4*s,-22*s],[-10*s,-18*s]]));for(let i=0;i<3;i++)flat(g,g.P.c.light,E((-16+i*5)*s,-10*s,1.2*s,1.2*s));
+ part(g,'a','e',6*s,-16*s,8*s,7*s,{});
+ // humanoid torso
+ part(g,'d','r',8*s,-32*s,5.4*s,9*s,{r:3*s});cel(g,E(8*s,-30*s,3*s,3*s),'b',{flat:true});flat(g,g.P.c.high,E(8*s,-30*s,1.2*s,1.2*s));
+ for(const sd of[-1,1]){limb(g,'d',8*s+sd*4*s,-38*s,8*s+sd*10*s,-30*s-z.at*6*s,2.2*s);cel(g,PG([[8*s+sd*10*s,-30*s-z.at*6*s],[8*s+sd*14*s,-36*s-z.at*8*s],[8*s+sd*11*s,-28*s]]),'c',{flat:true})}
+ const hy=-46*s;part(g,'a','e',8*s,hy,4.6*s,5.2*s,{});for(let i=0;i<3;i++)eye(g,(6+i*2)*s,hy-(i%2)*1.2*s,1*s,.4);
+ // hair/crown of fangs
+ for(let i=0;i<5;i++)cel(g,PG([[(3+i*2.5)*s,hy-4*s],[(1+i*3)*s,hy-(11+(i%2)*3)*s],[(5+i*2.5)*s,hy-4*s]]),'b',{flat:true});
+ for(let i=0;i<2;i++){const y=-60*s+i*6*s+Math.sin(T+i)*2;c.strokeStyle=g.P.e.light;c.lineWidth=.6;c.beginPath();c.moveTo(-30*s,y);c.lineTo(-18*s,y+8*s);c.stroke()}};
+// treantlord: ancient tree king with antler canopy
+A.treantlord=(g,d,z)=>{const s=d.s||1,c=g.c,T=z.ph*6.283,sw=Math.sin(z.lg)*2*s;
+ for(let i=0;i<5;i++){const a=-2.6+i*.5,r=10*s;limb(g,'d',Math.cos(a)*r*.3,-2*s,Math.cos(a)*r*1.6-sw*.5,0,2.4*s)}
+ limb(g,'a',-6*s,-16*s,-8*s-sw,-1,6*s);limb(g,'a',6*s,-16*s,8*s+sw,-1,6*s);
+ cel(g,PG([[-12*s,-14*s],[12*s,-14*s],[10*s,-46*s],[-10*s,-46*s]]),'a',{cx:0,cy:-30*s,rx:10*s,ry:16*s});
+ c.strokeStyle=g.P.a.dark;c.lineWidth=1;for(let i=0;i<4;i++){c.beginPath();c.moveTo((-8+i*5)*s,-16*s);c.quadraticCurveTo((-6+i*5)*s,-30*s,(-8+i*5)*s,-44*s);c.stroke()}
+ flat(g,g.P.out,E(0,-36*s,6*s,4*s));flat(g,g.P.c.light,E(-2.5*s,-37*s,1.6*s,1.4*s));flat(g,g.P.c.light,E(2.5*s,-37*s,1.6*s,1.4*s));flat(g,g.P.out,E(0,-27*s,3*s,2*s+z.at*2*s));
+ // arms (branch)
+ limb(g,'a',-10*s,-40*s,-22*s,-30*s-z.at*4*s,4*s);limb(g,'a',-22*s,-30*s-z.at*4*s,-26*s,-18*s,2.6*s);
+ limb(g,'a',10*s,-40*s,22*s+z.at*6*s,-34*s-z.at*8*s,4*s);limb(g,'a',22*s+z.at*6*s,-34*s-z.at*8*s,28*s+z.at*8*s,-24*s,2.6*s);
+ // canopy + antler branches
+ for(const sd of[-1,1]){limb(g,'a',sd*6*s,-46*s,sd*14*s,-60*s,2.4*s);limb(g,'a',sd*14*s,-60*s,sd*20*s,-64*s,1.6*s);limb(g,'a',sd*10*s,-54*s,sd*4*s,-66*s,1.6*s)}
+ for(let i=0;i<7;i++){const x=(-21+i*7)*s,y=(-58-(i%3)*5)*s+Math.sin(T+i)*1;cel(g,E(x,y,7*s,5*s),'b',{cx:x,cy:y,rx:7*s,ry:5*s})}
+ for(let i=0;i<5;i++)flat(g,g.P.e.light,E((-16+i*8)*s,(-62+(i%2)*6)*s,1.6*s,1.6*s));
+ for(let i=0;i<4;i++)flat(g,g.P.c.high,E((-12+i*8)*s,(-50-(i*13%9))*s-Math.sin(T*2+i)*2,.9*s,.9*s))};
+// griffin: storm griffin (eagle front, lion back)
+A.griffin=(g,d,z)=>{const s=d.s||1,c=g.c,T=z.ph*6.283,fl=Math.sin(T*(d.fl||1))*9*s,sw=Math.sin(z.lg)*2.4*s;
+ const wing=(x,y,k)=>{for(let i=0;i<5;i++){const a=-.3-i*.28;cel(g,PG([[x,y],[x-Math.cos(a)*(24+i*2)*s*k,y+Math.sin(a)*(24+i*2)*s-fl],[x-Math.cos(a)*(18+i)*s*k+3*s,y+Math.sin(a)*(18+i)*s-fl+4*s]]),i%2?'a':'e',{flat:true})}};
+ wing(-2*s,-30*s,.9);
+ limb(g,'b',-16*s,-22*s,-28*s,-28*s+Math.sin(T)*3,2.2*s);cel(g,E(-29*s,-29*s+Math.sin(T)*3,3*s,2*s),'d',{flat:true});
+ limb(g,'b',-12*s,-16*s,-12*s-sw,-1,4*s);part(g,'b','e',-6*s,-22*s,12*s,8*s,{});limb(g,'b',-2*s,-16*s,-2*s+sw,-1,4*s);
+ part(g,'a','e',6*s,-26*s,8*s,9*s,{});limb(g,'c',8*s,-18*s,10*s+sw,-1,2.4*s);
+ const hx=12*s+z.at*5*s,hy=-38*s;part(g,'e','e',hx,hy,6*s,5.4*s,{});cel(g,PG([[hx+4*s,hy-2*s],[hx+11*s,hy+1*s],[hx+5*s,hy+4*s+z.at*2*s]]),'c',{flat:true});
+ eye(g,hx+1.6*s,hy-1.2*s,1.5*s,.6);for(let i=0;i<3;i++)cel(g,PG([[hx-4*s,hy-2*s+i*2*s],[hx-11*s,hy-6*s+i*2*s],[hx-4*s,hy+i*2*s]]),'a',{flat:true});
+ wing(4*s,-32*s,1.05);
+ if(z.at>0||d.storm){c.strokeStyle=g.P.c.high;c.lineWidth=1.2*s;c.beginPath();let x=hx+2*s,y=hy-8*s;c.moveTo(x,y);for(let i=0;i<4;i++){x+=(i%2?4:-3)*s;y-=5*s;c.lineTo(x,y)}c.stroke()}};
+// florabeast: blossom-maned lion king
+A.florabeast=(g,d,z)=>{const s=d.s||1,c=g.c,T=z.ph*6.283,sw=Math.sin(z.lg)*2.6*s,sw2=Math.sin(z.lg+3.14)*2.6*s;
+ cel(g,E(-22*s,-22*s+Math.sin(T)*2,6*s,4*s,-.5),'b',{});limb(g,'a',-14*s,-16*s,-21*s,-21*s,2.4*s);
+ limb(g,'a',-10*s,-10*s,-10*s+sw2,-1,4.6*s);limb(g,'a',10*s,-10*s,10*s+sw2,-1,4.6*s);
+ part(g,'a','e',0,-17*s,16*s,10*s,{});for(let i=0;i<3;i++){c.fillStyle=g.P.d.base;c.fillRect((-8+i*6)*s,-26*s,1.4*s,5*s)}
+ limb(g,'a',-6*s,-10*s,-6*s+sw,-1,4.6*s);limb(g,'a',13*s,-10*s,13*s+sw,-1,4.6*s);
+ const hx=17*s+z.at*4*s,hy=-28*s;
+ for(let i=0;i<10;i++){const a=i/10*6.283+Math.sin(T)*.1,x=hx-2*s+Math.cos(a)*10*s,y=hy+Math.sin(a)*9*s;cel(g,E(x,y,4.4*s,3.6*s,a),i%2?'b':'e',{cx:x,cy:y,rx:4*s,ry:3*s})}
+ part(g,'a','e',hx,hy,7*s,6.4*s,{});part(g,'e','e',hx+4.6*s,hy+2.6*s,3.6*s,2.6*s,{hi:false});flat(g,g.P.out,E(hx+7.6*s,hy+1.4*s,1.2*s,.9*s));
+ eye(g,hx+1.4*s,hy-1.4*s,1.8*s,.6);flat(g,g.P.out,PG([[hx+3*s,hy+4*s],[hx+8*s,hy+4*s+z.at*3*s],[hx+3*s,hy+6*s]]));
+ // flower crown
+ for(let i=0;i<5;i++){const x=hx+(-6+i*3)*s,y=hy-9*s-(i%2)*2*s;cel(g,E(x,y,2*s,2*s),'c',{flat:true});flat(g,g.P.e.high,E(x,y,.8*s,.8*s))}
+ for(let i=0;i<5;i++)flat(g,g.P.b.light,E((-24+i*10)*s+Math.sin(T+i)*3,(-40-(i%3)*5)*s+((T*3+i)%6)*s,1.4*s,.9*s))};
 // ---------- extras (applied to elites/bosses): crown / aura / armor plates
 function extras(g,d,z,sz){const s=sz/48;if(d.aura){const c=g.c;c.save();c.globalAlpha=.0;c.restore()}}
 const ARCH=A;
