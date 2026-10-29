@@ -404,11 +404,11 @@ const sellP=x=>Math.round(x.power*({SR:.2,SSR:.5,UR:1.5}[x.q])),salP=x=>({SR:1,S
 function char(body){const {equipOf,genItem,buildEquip,T,JOBS,SK,SLOT_IC,SLOT_ZH,QCOL}=W();const v=W(),p=v.room.players[v.C.sel],J=JOBS[p.job]||{},R=T.roles[J.role]||{};const E=equipOf(p);const pw=Object.values(E.gear).reduce((a,x)=>a+(x?x.power:0),0);
  const tc={};(J.kit||[]).forEach(id=>((SK[id]||{}).tags||[]).forEach(t=>tc[t]=(tc[t]||0)+1));const aff=Object.entries(tc).sort((a,b)=>b[1]-a[1]).slice(0,3).map(x=>TAGZ[x[0]]||x[0]);
  const pc=x=>(x>=1?'+':'')+Math.round((x-1)*100)+'%';const d=document.createElement('div');d.className='tmp';
- d.innerHTML=`<div class="chd"><b>${p.name}</b><span>${J.name||p.job} · ${ROLE_ZH[J.role]||J.role}</span></div>
+ d.innerHTML=`<div class="chd2"><img src="v2/ic/ic_char.webp" alt=""><div><b>${p.name}</b><span class="rb r-${J.role}">${ROLE_ZH[J.role]||J.role}</span><small>${J.name||p.job}</small></div><div class="cpw"><i>總戰力</i><b>${f(pw)}</b></div></div><div class="chp"><i style="width:${Math.round(100*p.hp/p.maxhp)}%"></i><span>HP ${Math.round(p.hp)} / ${Math.round(p.maxhp)}</span></div>
  <div class="ph2">能力值</div><div class="g2"><div class="mrow"><span>生命</span><b>${Math.round(p.hp)} / ${Math.round(p.maxhp)}</b></div><div class="mrow"><span>攻擊</span><b>${Math.round(p.atk||0)}</b></div><div class="mrow"><span>防禦</span><b>${p.def?Math.round(p.def):pc(R.def||1)}</b></div><div class="mrow"><span>爆擊率</span><b>${Math.round((J.crit||0)*100)}%</b></div><div class="mrow"><span>射程</span><b>${J.range||'-'}</b></div><div class="mrow"><span>裝備戰力</span><b>${f(pw)}</b></div></div>
  <div class="ph2">職業定位</div><div class="mrow"><span>生命 / 防禦</span><b>${pc(R.hp||1)} / ${pc(R.def||1)}</b></div><div class="mrow"><span>傷害 / 仇恨</span><b>${pc((R.dmg||1)*((T.roles.classDmgDeal||{})[p.job]||1))} / ×${R.threat||1}</b></div><div class="mrow"><span>承受傷害</span><b>${pc((T.roles.classDmgTaken||{})[p.job]||1)}</b></div>
- <div class="ph2">核心被動</div><div class="mnote" style="color:#262b40">${PASS[J.role]||'—'}</div>
- <div class="ph2">技能親和</div><div class="mnote" style="color:#262b40">${aff.join('、')||'—'} 技能 100% 效果；非親和技能約 70%</div>
+ <div class="ph2">核心被動</div><div class="pcard">${PASS[J.role]||'—'}</div>
+ <div class="ph2">技能親和</div><div class="pcard aff">${aff.join('、')||'—'} 技能 100% 效果；非親和技能約 70%</div>
  <div class="ph2">可用武器（半綁定）</div><div class="wch">${(J.weap||[]).map(w=>`<span>${WZ[w]||w}</span>`).join('')}</div>
  <div class="ph2">本場</div><div class="mrow"><span>倒地</span><b>${p.deaths||0}</b></div>${typeof offTotHTML==='function'?offTotHTML():''}`;body.append(d)}
 window.HDX={bag,char}})();
