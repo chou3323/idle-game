@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="zh-Hant"><head><meta charset="utf-8"><link rel="icon" href="/icon.svg">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>仙境冒險 Aurevia · 割草 v2（本機原型）</title>
+<title>仙境冒險 Aurevia · 割草</title>
 <link rel="stylesheet" href="v2/v2.css">
 </head><body>
 <div id="app">
@@ -11,8 +11,8 @@
     <div id="questWrap" title="關卡擊殺進度（無連殺）"><div id="questBar"><i id="questFill"></i><span id="questTxt">0 / 0</span></div></div>
     <div id="bossWrap" hidden><span id="bossName">王</span><div class="bar boss"><i id="bossFill"></i></div><span id="bossHp"></span></div>
     <div class="ctl">
-      <select id="selRegion"></select><select id="selTier"></select><select id="selTeam"></select><select id="selVfx" title="技能特效顯示：自動＝5 人以下全部，6 人以上只看自己＋隊伍治療/挑釁與選定隊員；低畫質自動只看自己"></select><span id="vfxNote" class="vnote"></span>
-      <button id="btnPause" title="暫停">❚❚</button><button id="btnSpeed" title="速度">×1</button><button id="btnRestart" title="重新開始">↺</button>
+      <select id="selRegion"></select><select id="selTier"></select><select id="selTeam"></select><select id="selVfx" title="技能特效顯示：自動＝5 人以下全部，6 人以上只看自己＋隊伍治療/挑釁與選定隊員；低畫質自動只看自己"></select><select id="selQ" title="畫質"><option value="auto">畫質：自動</option><option value="high">畫質：高</option><option value="low">畫質：低</option></select><span id="vfxNote" class="vnote"></span>
+      <button id="btnSet" title="設定">⚙</button><button id="btnPause" title="暫停">❚❚</button><button id="btnSpeed" title="速度">×1</button><button id="btnRestart" title="重新開始">↺</button>
     </div>
   </header>
   <aside id="left">

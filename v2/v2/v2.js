@@ -17,7 +17,7 @@ const QCOL={SR:'#6aa8ff',SSR:'#c07aff',UR:'#ffb43a'};
 const fmt=n=>n>=1e6?(n/1e6).toFixed(2)+'M':n>=1e4?(n/1e3).toFixed(1)+'K':''+Math.round(n);
 const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
 const cv=$('cv'),ctx=cv.getContext('2d');let DPR=1,VW=0,VH=0;
-const C={region:+qs.get('region')||1,tier:TIERS.includes(qs.get('tier'))?qs.get('tier'):'normal',team:TEAMS[qs.get('team')]?qs.get('team'):'full4',seed:+qs.get('seed')||7,speed:+qs.get('speed')||1,startStage:+qs.get('stage')||1,paused:false,dmgMode:'dmg',sel:0,vfx:['auto','mine','party','all'].includes(qs.get('vfx'))?qs.get('vfx'):(localStorage.getItem('hd.vfx')||'auto'),qmode:qs.get('q')||'auto'};
+const C={region:+qs.get('region')||1,tier:TIERS.includes(qs.get('tier'))?qs.get('tier'):'normal',team:TEAMS[qs.get('team')]?qs.get('team'):'full4',seed:+qs.get('seed')||7,speed:+qs.get('speed')||1,startStage:+qs.get('stage')||1,paused:false,dmgMode:'dmg',sel:0,vfx:['auto','mine','party','all'].includes(qs.get('vfx'))?qs.get('vfx'):(localStorage.getItem('hd.vfx')||'auto'),qmode:qs.get('q')||(localStorage.getItem('hd.q')||'auto')};
 let room=null,fx=[],nums=[],corpses=[],marks=[],hurtFlash={},banner={t:0,txt:''},acc=0,tNow=0,lastTs=0,prev=new Map(),anim=new Map(),batchDelay=0,eqSel='wpn',killMsg=null;
 const imgs={sheets:null,chars:{},mobs:null,mobImg:{}};
 
@@ -306,3 +306,11 @@ init();
 (function(){const L=document.getElementById('left');if(!L)return;const h=L.querySelector('.ph');if(!h)return;let s=null;try{s=localStorage.getItem('hd.dpsCol')}catch(e){}
 const col=s===null?innerWidth<=900:s==='1';L.classList.toggle('col',col);
 h.addEventListener('click',e=>{if(e.target.closest('#dpsTabs'))return;const c=L.classList.toggle('col');try{localStorage.setItem('hd.dpsCol',c?'1':'0')}catch(_){}});})();
+
+;(function(){const q=document.getElementById('selQ');if(q){q.value=(()=>{let v=new URLSearchParams(location.search).get("q");try{v=v||localStorage.getItem("hd.q")}catch(e){}return ["auto","high","low"].includes(v)?v:"auto"})();q.onchange=()=>{const C=window.__v2&&window.__v2.C;if(C)C.qmode=q.value;try{localStorage.setItem('hd.q',q.value)}catch(e){}}}
+const app=document.getElementById('app'),top=document.getElementById('top'),ctl=top.querySelector('.ctl'),sp=document.createElement('div');sp.id='setPanel';sp.innerHTML='<div class="t">設定</div>';top.append(sp);
+const ids=['selRegion','selTier','selTeam','selVfx','selQ'],mq=matchMedia('(max-width:900px)');
+function place(){const m=mq.matches;ids.forEach(i=>{const e=document.getElementById(i);if(!e)return;if(m)sp.append(e);else ctl.insertBefore(e,document.getElementById('vfxNote'))});if(!m)app.classList.remove('set')}
+place();mq.addEventListener?mq.addEventListener('change',place):mq.addListener(place);
+document.getElementById('btnSet').onclick=e=>{e.stopPropagation();app.classList.toggle('set')};
+document.addEventListener('click',e=>{if(app.classList.contains('set')&&!sp.contains(e.target))app.classList.remove('set')});})();

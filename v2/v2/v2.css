@@ -53,3 +53,19 @@ aside{background:var(--pn);overflow:auto}#left{grid-area:left;border-right:1px s
 #top{gap:6px;padding:0 6px}#top .brand,#vfxNote{display:none}#stageInfo{gap:4px;min-width:0;flex:1 1 auto;overflow:hidden}#rgName{max-width:64px;overflow:hidden;text-overflow:ellipsis}#stNo{font-size:13px}
 #pips{gap:2px;margin-left:2px}#pips i{width:7px;height:9px;border-radius:2px}#pips i.bs{width:10px}#tierTag{font-size:10px;padding:1px 4px}
 #top .ctl{flex:0 0 auto;gap:3px}#top .ctl button{padding:2px 6px;min-width:28px;min-height:28px}}
+
+/* mobile r3: settings menu + kill progress */
+#btnSet{display:none}
+@media (max-width:900px){#btnSet{display:inline-block}
+#top{position:relative;overflow:visible}
+#app.set #top .ctl select{display:block}
+#app.set #top .ctl{position:static}
+#top .ctl select{position:relative}
+#app.set #setPanel{display:flex}
+#questWrap{display:block!important;position:absolute;left:0;right:0;top:100%;height:14px;z-index:6;padding:0 6px}
+#questBar{height:12px;font-size:9px;line-height:12px}
+}
+#setPanel{display:none;position:absolute;right:6px;top:calc(100% + 18px);z-index:20;flex-direction:column;gap:6px;padding:10px;background:rgba(14,18,32,.96);border:1px solid #4a5a90;border-radius:10px;box-shadow:0 6px 20px rgba(0,0,0,.6)}
+#setPanel select{display:block!important;min-height:34px;font-size:14px;width:200px}
+#setPanel .t{font-size:12px;color:#8d99b8}
+@media (max-width:900px){#left{margin-top:20px}}
