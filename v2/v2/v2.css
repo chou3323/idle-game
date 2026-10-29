@@ -288,3 +288,12 @@ html,body{height:100%}#app{height:100dvh;grid-template-rows:40px 1fr auto auto;g
 .rw-e b{color:#7a3ad0}.rw-z b{color:#b07a00}.rw-i b{color:#d0501a}
 .endd{display:flex;align-items:center;gap:8px;font-size:13px;color:#ffe08a;flex-wrap:wrap;justify-content:center}.endd small{font-size:10px;color:#a0a8c8;width:100%;text-align:center}.endd .eqt{width:40px;height:40px}
 @media (min-width:901px){#top .brand{color:#ffe08a;text-shadow:0 1px 2px #000,0 0 8px rgba(255,180,60,.45);font-size:15px}}
+/* it18 forge (blue-lavender bevel) */
+.forge{margin:8px 0;border:1px solid #7c85ab;border-radius:6px;background:linear-gradient(#e9ecf8,#c9cfe6);color:#27346c;box-shadow:inset 0 1px 0 #fff,inset 0 -2px 0 #9aa3c8;padding:6px 8px}
+.fgh{display:flex;justify-content:space-between;align-items:center;font-weight:700;border-bottom:1px solid #9aa3c8;padding-bottom:4px;margin-bottom:4px}.fgh small{font-weight:400;color:#4a5684}.fgh b{color:#27346c}
+.fgr{background:linear-gradient(#f7f8fd,#dfe3f2);border:1px solid #9aa3c8;border-radius:5px;padding:6px;margin:6px 0;display:grid;grid-template-columns:1fr auto;gap:3px 8px;align-items:center}
+.fgt{font-weight:700}.fgt .nx{color:#2a62c9}.fgt small{font-weight:400;color:#5a6690}.fgs,.fgc{grid-column:1;display:flex;flex-wrap:wrap;gap:4px 10px;font-size:12px}.fgs .up{color:#1f9a4a;font-weight:700}
+.fgc span{background:#fff;border:1px solid #b5bcd8;border-radius:4px;padding:1px 5px}.fgc .lack{color:#c43a3a;border-color:#e3a0a0}.fgc .rt{color:#2a62c9}.fgc .sf{color:#6a4cb0}
+.fgb{grid-column:2;grid-row:1/4;min-width:64px;min-height:40px}.fgb[disabled]{filter:grayscale(1);opacity:.55}
+.fgmsg{font-weight:700;text-align:center;padding:3px;border-radius:4px}.fgmsg.ok{color:#1f9a4a;background:#e3f6ea}.fgmsg.bad{color:#c43a3a;background:#fbe6e6}
+.forge .mnote{color:#4a5684}
