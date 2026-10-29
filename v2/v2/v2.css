@@ -355,3 +355,4 @@ html,body{height:100%}#app{height:100dvh;grid-template-rows:40px 1fr auto auto;g
 @media (min-width:901px){#top .devsel{display:none}}
 .ls.lk{opacity:.55;background:repeating-linear-gradient(135deg,#e7ebf6 0 6px,#dde2f0 6px 12px)!important;cursor:not-allowed}.ls.lk .ls0{font-size:11px;line-height:1.2;color:#4a5378}
 .ls.drag{z-index:5;position:relative;box-shadow:0 6px 16px rgba(0,0,0,.45);opacity:.9}
+.endc #hdGold{font:inherit;color:inherit;letter-spacing:inherit;display:inline;opacity:1;text-transform:none}

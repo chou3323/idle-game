@@ -32,7 +32,7 @@ const roster=rg=>{const o={reg:[],elite:[],boss:[]};for(const [id,m] of Object.e
 // ================= room
 function parseTeam(key){const a=parseTeam0(key);return window.HDG&&HDG.on()?HDG.team(a):a}
 function parseTeam0(key){return TEAMS[key][1].split(',').map((s,i)=>{const ai=s.endsWith('*');const job=s.replace('*','');return{job,ai,name:(['你','阿','小','大','莉','凱','諾','米','朵','布','晴','嵐','夏','雪','風'][i]||'隊')+(JOBS[job].name.slice(0,2)),perfect:false}})}
-function newRoom(){fx=[];nums=[];corpses=[];marks=[];prev.clear();anim.clear();hurtFlash={};acc=0;
+function newRoom(){for(const f of fx)fxFree(f);fx.length=0;nums=[];corpses=[];marks=[];prev.clear();anim.clear();hurtFlash={};acc=0;
  room=Sim.create({tables:T,region:C.region,tier:C.tier,seed:C.seed,team:parseTeam(C.team),events:true,dt:.1,startStage:C.startStage});window.HDL&&HDL.apply(room,{T,SK,JOBS});window.HDG&&HDG.on()&&window.__v2&&HDG.onRoom(room);C.sel=clamp(C.sel,0,room.players.length-1);
  room.roster=roster(C.region);EQ.clear();$('overlay').hidden=true;camX=room.arena[0]/2;camY=room.arena[1]/2;buildParty();buildSkills();buildEquip();snapPrev();updVfxNote()}
 function snapPrev(){for(const p of room.players)prev.set('p'+p.id,{x:p.x,y:p.y});for(const m of room.mobs)prev.set('m'+m.id,{x:m.x,y:m.y})}
@@ -72,7 +72,9 @@ let ultFlash=0;
 const SIG_ZH={heavy:'毀滅重擊',mark:'死亡宣告',pulse:'震地爆發',sweep:'橫掃千軍',summon:'眷屬召喚'};
 const bossFx={aura:0,sig:0,sigM:null};
 function sigBanner(txt,dur,cls){banner.t=tNow+dur;banner.txt=txt;banner.cls=cls||''}
-function fxPush(f){if(fx.length>=(LOWQ()?90:180))fx.splice(0,fx.length-(LOWQ()?89:179));fx.push(f)}
+const FXPOOL=[];function fxPush(f){const cap=LOWQ()?90:180;if(fx.length>=cap){const d=fx.length-cap+1;for(let i=0;i<d;i++)fxFree(fx[i]);fx.copyWithin(0,d);fx.length-=d}const o=FXPOOL.pop()||{};o.t=o.o=o.kd=o.x=o.y=o.r=o.t0=o.dur=o.c=o.ult=o.job=o.fx=o.name=o.dx=o.dy=o.m=o.vid=undefined;for(const k in f)o[k]=f[k];fx.push(o)}
+function fxFree(o){if(FXPOOL.length<256)FXPOOL.push(o)}
+function fxKeep(pred){let j=0;for(let i=0;i<fx.length;i++){const f=fx[i];if(pred(f))fx[j++]=f;else fxFree(f)}fx.length=j}
 function LOWQ(){return VW<900}
 
 const FLOAT=[];function floatText(x,y,txt,c,s,o,kd){nums.push({x,y,txt,c:-3,col:typeof c==='string'?c:'#fff',t0:tNow,vy:1,size:s||1,p:o,kd})}
@@ -239,12 +241,12 @@ function render(k){camTo(.12);ctx.setTransform(DPR,0,0,DPR,0,0);ctx.clearRect(0,
  const g=ground(C.region),a=room.arena;const gw=a[0]*PPU,gh=a[1]*PPU;for(let ix=-1;ix<=1;ix++)for(let iy=-1;iy<=1;iy++){const x0=OX+ix*gw,y0=OY+iy*gh;if(x0>VW||y0>VH||x0+gw<0||y0+gh<0)continue;ctx.drawImage(g,x0,y0,gw,gh)}
  ctx.strokeStyle='rgba(255,255,255,.12)';ctx.strokeRect(OX,OY,a[0]*PPU,a[1]*PPU);
  // ground fx first
- fx=fx.filter(f=>f.t==='tele'||f.t==='job'||f.t==='heal'||f.t==='taunt'?drawFx(f):true);
+ fxKeep(f=>f.t==='tele'||f.t==='job'||f.t==='heal'||f.t==='taunt'?drawFx(f):true);
  drawBossTele();
  for(const c of corpses.slice())if(!drawCorpse(c))corpses.splice(corpses.indexOf(c),1);
  // y-sorted entities
  const ents=[];for(const m of room.mobs)if(!m.dead)ents.push({y:m.y,d:()=>drawMob(m,k)});for(const p of room.players)ents.push({y:p.y,d:()=>drawChar(p,k)});ents.sort((a,b)=>a.y-b.y);for(const e of ents)e.d();
- fx=fx.filter(f=>f.t==='burst'||f.t==='hitspark'||f.t==='bolt'||f.t==='bossmove'?drawFx(f):true);
+ fxKeep(f=>f.t==='burst'||f.t==='hitspark'||f.t==='bolt'||f.t==='bossmove'?drawFx(f):true);
  drawNums();
  if(ultFlash>tNow){ctx.fillStyle=`rgba(255,240,200,${(ultFlash-tNow)*.8})`;ctx.fillRect(0,0,VW,VH)}
  if(room.phase==='rest'){ctx.fillStyle='rgba(10,14,28,.55)';ctx.fillRect(0,0,VW,VH);ctx.fillStyle='#fff';ctx.font='700 28px sans-serif';ctx.textAlign='center';ctx.fillText('休息站 '+Math.ceil(room.restT)+' 秒',VW/2,VH/2)}

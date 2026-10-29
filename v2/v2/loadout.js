@@ -3,7 +3,7 @@
 const TZ={phys:'物理',magic:'魔法',holy:'神聖',aoe:'範圍',single:'單體',tank:'坦克',support:'輔助',rescue:'救援',ultimate:'大招'};
 const SH={single:'單體',multi:'多段',aoe_s:'小範圍',aoe_l:'大範圍',ramp:'蓄力',half:'半場',field:'場地',proc:'觸發',trap:'陷阱',line:'直線',burst:'爆發',summon:'召喚'};
 const FN={guard:'減傷架勢',taunt:'嘲諷',devotion:'守護隊友',debuff:'削弱敵人',partyBuff:'全隊增益',heal:'治療隊友',partyHeal:'全隊治療',barrier:'護盾',revive:'復活',selfHeal:'自我治療',tauntGroup:'群體嘲諷',cleanse:'淨化'};
-const FILT=[['all','全部'],['aff','親和'],['atk','攻擊'],['fn','功能'],['ult','大招'],['phys','物理'],['magic','魔法'],['holy','神聖'],['fire','火'],['water','水'],['wind','風'],['earth','地'],['dark','暗'],['aoe','範圍'],['single','單體'],['tank','坦克'],['support','輔助'],['rescue','救援']];
+const FILT=[['all','全部'],['aff','親和'],['atk','攻擊'],['fn','功能'],['ult','大招'],['phys','物理'],['magic','魔法'],['fire','火'],['water','水'],['wind','風'],['earth','地'],['dark','暗'],['holy','聖'],['aoe','範圍'],['single','單體'],['tank','坦克'],['support','輔助'],['rescue','救援']];
 let st={slot:0,f:'all',sel:null,q:''};
 const UNL=[1,1,1,4,8,14,20,10];const LV=()=>window.HDG&&HDG.on()?HDG.P.lv:999;const open_=i=>LV()>=UNL[i];
 const ELK=[['fire',/火|炎|焰|爆|熔|燃/],['water',/冰|霜|水|雪|凍|寒/],['wind',/風|雷|電|旋|嵐/],['earth',/地|岩|石|土|震|大地/],['holy',/聖|光|天使|神|祝福|治癒/],['dark',/暗|影|毒|詛|魔|血|死/]];
