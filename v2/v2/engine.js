@@ -220,6 +220,7 @@ function create(o){
    // movement + basic attack
    if(room.phase==='fight'&&p.lock<=0){
     const rng=p.jd.range;let tgt=nearestMob(p,Math.max(rng+1,6));
+    const SPR=!!(T.party&&T.party.spread),SEP=(T.party&&T.party.sepMin)||1.1;
     if(p.dodgeAt&&room.t>=p.dodgeAt){const z=p.dodgeZone;p.dodgeAt=0;if(z&&inZone(p,z)){let dx=p.x-(z.x),dy=p.y-(z.y);const L=Math.hypot(dx,dy)||1;if(z.type==='cone'){const a=z.a+Math.PI/2*(R()<.5?1:-1);dx=Math.cos(a);dy=Math.sin(a);p.x+=dx*3.2;p.y+=dy*3.2}else{p.x+=dx/L*(z.r+.6-L+Math.min(L,0));p.y+=dy/L*(z.r+.6-L)}}}
     else{
      const cl0=nearestMob(p,60);const cx=avgX(),cy=avgY();
@@ -231,12 +232,12 @@ function create(o){
      const fslot=(q,back)=>{const ux0=tk_.x-cl.x,uy0=tk_.y-cl.y,L=Math.hypot(ux0,uy0)||1,ux=ux0/L,uy=uy0/L;const i=room.players.indexOf(q),n=room.players.length;const lat=((i%7)-3)*1.8,b=back+((i/7)|0)*1.8+(cl.type==='boss'?2:0);return[tk_.x+ux*b-uy*lat,tk_.y+uy*b+ux*lat]};
      if(p.bot==='healer'||p.bot==='support'){if(tk_&&tk_!==p&&cl){const[ax,ay]=fslot(p,4.2);moveTo(p,ax,ay,d,.6)}else{const tk=tk_||p;moveTo(p,tk.x-Math.cos(0.6)*5,tk.y+4,d,3.5)}}
      else if(p.role==='tank'||p.bot==='tank'){const c=cl;if(c)moveTo(p,c.x,c.y,d,Math.max(.8,rng-.5))}
-     else if(cl&&rng<5&&cl.type!=='norm'&&tk_&&tk_!==p){const i=room.players.indexOf(p),ux0=tk_.x-cl.x,uy0=tk_.y-cl.y,L=Math.hypot(ux0,uy0)||1,a0=Math.atan2(uy0,ux0),a=a0+((i%2?1:-1)*(0.6+((i>>1)%4)*0.35)),R=Math.max(rng*.85,1.8);moveTo(p,cl.x+Math.cos(a)*R,cl.y+Math.sin(a)*R,d,.4)}
-     else if(cl&&rng>=5&&tk_&&tk_!==p&&dist(tk_,cl)<rng*.6&&!(p.hp<p.maxhp*.5&&dist(p,cl)<rng*.25)){const[ax,ay]=fslot(p,2.6);moveTo(p,ax,ay,d,.6)}
+     else if(cl&&rng<5&&(cl.type!=='norm'||SPR)&&tk_&&tk_!==p){const i=room.players.indexOf(p),ux0=tk_.x-cl.x,uy0=tk_.y-cl.y,L=Math.hypot(ux0,uy0)||1,a0=Math.atan2(uy0,ux0),a=a0+((i%2?1:-1)*(0.6+((i>>1)%4)*0.35)),R=Math.max(rng*.85,1.8);moveTo(p,cl.x+Math.cos(a)*R,cl.y+Math.sin(a)*R,d,.4)}
+     else if(cl&&rng>=5&&tk_&&tk_!==p&&(SPR||dist(tk_,cl)<rng*.6)&&!(p.hp<p.maxhp*.5&&dist(p,cl)<rng*.25)){const[ax,ay]=fslot(p,2.6);moveTo(p,ax,ay,d,.6)}
      else if(cl){const dd=dist(p,cl);const want=rng>=5?rng*.8:rng;if(dd>want+.3)moveTo(p,cl.x,cl.y,d,want);else if(rng>=5&&dd<rng*.25&&p.hp<p.maxhp*.5){moveTo(p,p.x-(cl.x-p.x),p.y-(cl.y-p.y),d,0)}}
     }
     // r13: soft separation between party members (min spacing 1.1) to avoid stacking
-    for(const q of room.players){if(q===p||!alive(q))continue;const sx=p.x-q.x,sy=p.y-q.y,sl=Math.hypot(sx,sy);if(sl<1.1){const k=(1.1-sl)*.5,ux=sl>1e-3?sx/sl:Math.cos(room.players.indexOf(p)),uy=sl>1e-3?sy/sl:Math.sin(room.players.indexOf(p));p.x+=ux*k;p.y+=uy*k}}
+    for(const q of room.players){if(q===p||!alive(q))continue;const sx=p.x-q.x,sy=p.y-q.y,sl=Math.hypot(sx,sy);if(sl<SEP){const k=(SEP-sl)*.5,ux=sl>1e-3?sx/sl:Math.cos(room.players.indexOf(p)),uy=sl>1e-3?sy/sl:Math.sin(room.players.indexOf(p));p.x+=ux*k;p.y+=uy*k}}
     p.x=Math.max(.5,Math.min(room.arena[0]-.5,p.x));p.y=Math.max(.5,Math.min(room.arena[1]-.5,p.y));
     tgt=nearestMob(p,rng+.4);
     if(tgt&&p.aspdCd<=0){p.aspdCd=1/Math.min(1.6,p.jd.aspd*(1+(T.cooldown_caps.basicAspdBonus&&p.basicAspd||0)));hit(p,tgt,p.atk,'basic',1)}
