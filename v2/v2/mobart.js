@@ -317,11 +317,11 @@ const ACTS={reg:[['idle',4,6],['walk',6,10],['atk',4,10],['hurt',2,8],['die',4,8
 const SIZE={reg:48,elite:64,boss:128};const PALCAP={reg:16,elite:20,boss:28};
 function drawBig(d,tier,act,i,n,fs,dx){const fw=SIZE[tier],P=d._P||(d._P=mkPal(d));const big=document.createElement('canvas');big.width=big.height=fw*SS;const c=big.getContext('2d');
  c.scale(SS,SS);const scale=(tier==='boss'?fw/48*0.9:tier==='elite'?fw/48*.92:1)*fs;const z=pose(act,i,n);
- c.translate(fw/2+dx+z.lunge*scale,fw-3);c.scale(scale*z.sx,scale*z.sy);c.rotate(z.lean);c.translate(0,-z.bob);
+ c.translate(fw/2+dx+z.lunge*scale*(tier==='boss'?.35:1),fw-3);c.scale(scale*z.sx,scale*z.sy);c.rotate(z.lean);c.translate(0,-z.bob);
  try{ARCH[d.arch]({c,P},d,z)}catch(e){console.error('mobart',d.id,e)}return big}
 function bounds(cv){const w=cv.width,x=cv.getContext('2d').getImageData(0,0,w,w).data;let x0=w,x1=0,y0=w;for(let y=0;y<w;y++)for(let xx=0;xx<w;xx++)if(x[(y*w+xx)*4+3]>140){if(xx<x0)x0=xx;if(xx>x1)x1=xx;if(y<y0)y0=y}return[x0/SS,x1/SS,y0/SS]}
-function fit(d,tier){if(d._fit)return d._fit;const fw=SIZE[tier];let ux0=1e9,ux1=-1e9,uy0=1e9;for(const[a,i,n]of[['idle',0,4],['walk',1,6],['walk',4,6],['atk',2,4],['atk',3,4],['charge',2,6]]){const b=bounds(drawBig(d,tier,a,i,n,1,0));ux0=Math.min(ux0,b[0]);ux1=Math.max(ux1,b[1]);uy0=Math.min(uy0,b[2])}
- const m=3,cx=fw/2;let fs=1;const wd=Math.max(cx-ux0,ux1-cx),ht=fw-3-uy0;fs=Math.min(1,(fw/2-m)/Math.max(1,wd),(fw-3-m)/Math.max(1,ht));
+function fit(d,tier){if(d._fit)return d._fit;const fw=SIZE[tier];let ux0=1e9,ux1=-1e9,uy0=1e9;for(const[a,i,n]of ACTS[tier].flatMap(r=>Array.from({length:r[1]},(_,k)=>[r[0],k,r[1]]))){const b0=bounds(drawBig(d,tier,a,i,n,.5,0)),cx0=fw/2,ay=fw-3,b=[cx0+(b0[0]-cx0)*2,cx0+(b0[1]-cx0)*2,ay+(b0[2]-ay)*2];ux0=Math.min(ux0,b[0]);ux1=Math.max(ux1,b[1]);uy0=Math.min(uy0,b[2])}
+ const m=3,cx=fw/2;let fs=1;const wd=Math.max(cx-ux0,ux1-cx),ht=fw-3-uy0;fs=Math.min(1,(fw-2*m)/Math.max(1,ux1-ux0),(fw-3-m)/Math.max(1,ht));
  // after scaling about the anchor (cx,fw-3), re-centre horizontally
  const nx0=cx+(ux0-cx)*fs,nx1=cx+(ux1-cx)*fs;const dx=Math.max(-(nx0-m),Math.min(fw-m-nx1,0))+((nx0+nx1)/2<cx-1?0:0);
  const mid=(nx0+nx1)/2;let off=cx-mid;off=Math.max(m-nx0,Math.min(fw-m-nx1,off));return d._fit={fs,dx:off}}
