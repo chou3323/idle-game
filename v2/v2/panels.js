@@ -27,7 +27,7 @@ function equip(body){body.scrollTop=0;const d=document.createElement('div');d.cl
   <div class="eqg">${slots.map(s=>{const g=Ei.gear[s],bb=bestInv(Ei,s),up=g&&bb&&bb.power>g.power;return `<button class="eqc${st.eq===s?' on':''}" data-s="${s}">${tile(g,s,up?'<span class="upd">▲</span>':'')}<span class="eqn">${v.SLOT_ZH[s]}</span><span class="eqp">${g?f(g.power):'—'}</span></button>`}).join('')}</div>
   ${it?card(it,null,'目前穿戴 · '+v.SLOT_ZH[st.eq])+(window.HDF?HDF.html(it):''):`<div class="mnote">${v.JOBS[p.job].name} 不能裝備${v.SLOT_ZH[st.eq]}。</div>`}
   ${b?card(b,it,'背包最佳 · 與穿戴比較')+`<div class="bball"><button class="mbtn" data-a="eq" data-u="${b.uid}">換上這件 ${arw(b.power-(it?it.power:0))}</button></div>`:it?'<div class="mnote">背包沒有這個部位的裝備，繼續割草會掉落。</div>':''}`};
- d.onclick=e=>{const fg=e.target.closest('[data-fg]');if(fg){const {E:Ei}=E();HDF.act(fg.dataset.fg,Ei.gear[st.eq]);try{W().buildEquip()}catch(_){}draw();return}const c=e.target.closest('[data-s]');if(c){st.eq=c.dataset.s;window.HDF&&HDF.clear();draw();return}const b=e.target.closest('button[data-a]');if(!b)return;const {E:Ei}=E();const i=Ei.inv.findIndex(x=>x.uid===b.dataset.u),x=Ei.inv[i];if(x){const old=Ei.gear[x.slot];Ei.gear[x.slot]=x;Ei.inv.splice(i,1);if(old)Ei.inv.push({...old,uid:Math.random().toString(36).slice(2)});X().refreshBest(Ei);try{W().buildEquip()}catch(_){}draw()}};draw()}
+ d.onclick=e=>{const fg=e.target.closest('[data-fg]');if(fg){const {E:Ei}=E();HDF.act(fg.dataset.fg,Ei.gear[st.eq]);try{W().buildEquip()}catch(_){}draw();return}const c=e.target.closest('[data-s]');if(c){st.eq=c.dataset.s;window.HDF&&HDF.clear();draw();return}const b=e.target.closest('button[data-a]');if(!b)return;const {E:Ei}=E();const i=Ei.inv.findIndex(x=>x.uid===b.dataset.u),x=Ei.inv[i];if(x){const old=Ei.gear[x.slot];Ei.gear[x.slot]=x;Ei.inv.splice(i,1);if(old)Ei.inv.push({...old,uid:old.uid||Math.random().toString(36).slice(2)});X().refreshBest(Ei);try{W().buildEquip()}catch(_){}draw()}};draw()}
 function bag(body){body.scrollTop=0;const d=document.createElement('div');d.className='tmp';body.append(d);
  const draw=()=>{const {v,p,E:Ei}=E(),H=X(),S=H.st;const slots=Object.keys(v.T.equip_budget.slots);
   const list=Ei.inv.filter(x=>st.bagF==='all'||x.slot===st.bagF||(st.bagF==='up'&&x.power>(Ei.gear[x.slot]?.power||0))).sort((a,b)=>({UR:3,SSR:2,SR:1}[b.q]-{UR:3,SSR:2,SR:1}[a.q])||b.power-a.power);
@@ -42,13 +42,13 @@ function bag(body){body.scrollTop=0;const d=document.createElement('div');d.clas
  d.onclick=e=>{const fb=e.target.closest('[data-f]');if(fb){st.bagF=fb.dataset.f;draw();return}const b=e.target.closest('button');if(!b)return;const {E:Ei}=E(),H=X(),S=H.st;
   if(b.dataset.u&&!b.dataset.a){st.bagU=st.bagU===b.dataset.u?null:b.dataset.u;draw();return}
   const a=b.dataset.a,i=Ei.inv.findIndex(x=>x.uid===st.bagU),x=Ei.inv[i];
-  if(a==='eq'&&x){const old=Ei.gear[x.slot];Ei.gear[x.slot]=x;Ei.inv.splice(i,1);if(old){const o={...old,uid:Math.random().toString(36).slice(2)};Ei.inv.push(o);st.bagU=o.uid}else st.bagU=null}
+  if(a==='eq'&&x){const old=Ei.gear[x.slot];Ei.gear[x.slot]=x;Ei.inv.splice(i,1);if(old){const o={...old,uid:old.uid||Math.random().toString(36).slice(2)};Ei.inv.push(o);st.bagU=o.uid}else st.bagU=null}
   if(a==='sell'&&x){S.coins+=H.sellP(x);Ei.inv.splice(i,1);st.bagU=null}if(a==='sal'&&x){S.mats+=H.salP(x);Ei.inv.splice(i,1);st.bagU=null}
   if(a==='sellw'||a==='salw'){Ei.inv=Ei.inv.filter(x=>{const g=Ei.gear[x.slot];const bad=g&&x.power<=g.power&&(a==='salw'||x.q==='SR');if(bad){if(a==='sellw')S.coins+=H.sellP(x);else S.mats+=H.salP(x)}return !bad})}
   H.refreshBest(Ei);try{W().buildEquip()}catch(_){}draw()};draw()}
 const VZ=[['auto','自動'],['mine','只看自己'],['party','自己＋隊伍'],['all','全部']];
 let ptT=0;
-function party(body){body.scrollTop=0;const d=document.createElement('div');d.className='tmp';body.append(d);let mode='dmg';
+function party(body){body.scrollTop=0;if(window.HDA&&HDA.partyUI)HDA.partyUI(body);const d=document.createElement('div');d.className='tmp';body.append(d);let mode='dmg';
  const draw=()=>{const v=W(),r=v.room;if(!r)return;const vals=r.players.map(p=>mode==='dmg'?p.st.dmg:mode==='heal'?p.st.heal:p.st.taken),tot=vals.reduce((a,b)=>a+b,0)||1,mx=Math.max(1,...vals),t=Math.max(1,r.t);
   d.innerHTML=`<div class="ph2">技能特效顯示</div><div class="seg">${VZ.map(x=>`<button data-v="${x[0]}" class="${v.C.vfx===x[0]?'on':''}">${x[1]}</button>`).join('')}</div>
   <div class="ph2">測試模式</div><div class="seg"><button data-full="1" class="${v.C.team==='full15'?'on':''}">15 人滿編（AI 補位・坦補齊全）</button><button data-full="0" class="${v.C.team!=='full15'?'on':''}">一般 4 人</button></div>

@@ -318,3 +318,15 @@ html,body{height:100%}#app{height:100dvh;grid-template-rows:40px 1fr auto auto;g
 .acrowset{display:flex;align-items:center;gap:8px}.acrowset b{flex:1;text-align:right}.acrowset .acoff{color:#8a90a8!important;font-weight:400}
 .mbtn.acsm{min-height:30px;padding:0 10px;font-size:12px}
 .actoast{position:fixed;left:50%;top:calc(env(safe-area-inset-top) + 64px);transform:translateX(-50%);z-index:70;padding:8px 14px;border-radius:6px;background:linear-gradient(#eef2fc,#c9d3ee);border:1px solid #6f80b8;color:#1d2656;font-size:13px;font-weight:700;box-shadow:0 3px 12px rgba(0,0,0,.4)}
+/* it20 online party */
+.acparty{margin:0 0 10px;padding:8px 10px 10px;border:1px solid #b9c2de;border-radius:8px;background:linear-gradient(#fbfcff,#e7ebf7);box-shadow:inset 0 1px 0 #fff;color:#262b40;display:flex;flex-direction:column;gap:6px}
+.acph{font-weight:700;color:#1d2656;font-size:14px;display:flex;align-items:baseline;gap:6px}.acph b{color:#3a5ab0}.acph small{margin-left:auto;color:#6a7090;font-size:12px}
+.acml{display:flex;flex-direction:column;gap:4px}
+.acm{display:flex;align-items:center;gap:8px;padding:6px 8px;border:1px solid #cdd3e8;border-radius:6px;background:#fff}
+.acm i{width:9px;height:9px;border-radius:50%;background:#9aa2bc;box-shadow:inset 0 1px 1px rgba(0,0,0,.3)}.acm i.on{background:#3cbf5a}
+.acm b{font-size:13px;color:#10204e}.acm small{margin-left:auto;font-size:11px;color:#6a7090}
+.acm.ai{background:repeating-linear-gradient(135deg,#f3f5fb 0 6px,#eaeef8 6px 12px);border-style:dashed}.acm.ai b{color:#5a6488}
+.acl{font-size:10px;padding:1px 6px;border-radius:4px;background:linear-gradient(#ffe7a6,#e0b44c);border:1px solid #a07a20;color:#4a3300;font-weight:700}
+.acrow2{display:flex;gap:6px}.acrow2 .mbtn{flex:1;min-height:36px}.acrow2 input{flex:1;height:36px;padding:0 10px;font-size:16px;border:1px solid #8e9ac0;border-radius:5px;background:linear-gradient(#e9edf8,#fff 40%)}
+.acparty .acgo{width:100%;min-height:38px}
+.mbtn.acwarn{background:linear-gradient(#ffe0e0,#d98a8a);border-color:#8a3a3a;color:#4a1010;box-shadow:inset 0 1px 0 #fff,inset 0 -2px 0 #b05656}

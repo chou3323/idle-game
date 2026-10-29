@@ -32,8 +32,8 @@ function html(it){if(!it||!W())return '';const f=W().fmt,ec=enhCost(it),sc=starC
   <div class="fgc"><span class="${M.dust>=sc.dust?'':'lack'}">星塵 ${sc.dust}</span><span class="${M.coins>=sc.gold?'':'lack'}">金幣 ${f(sc.gold)}</span><span class="rt">成功率 100%</span></div>
   <button class="mbtn fgb" data-fg="star" ${ok?'':'disabled'}>升星</button></div>`}else h+=`<div class="fgr"><div class="fgt">星級已滿 ${cap}★（${it.q}）</div></div>`;
  return h+(last?`<div class="fgmsg ${last.ok?'ok':'bad'}">${last.t}</div>`:'')+`<div class="mnote">材料由擊殺怪物掉落，地區與難度越高掉越多；分解裝備也可獲得強化石。不需要鑽石。</div></div>`}
-let last=null;
-function act(k,it){if(!it)return;if(k==='enh'){const c=enhCost(it);if(it.refine>=MAXREF||M.stone<c.stone||M.coins<c.gold)return;M.stone-=c.stone;M.coins-=c.gold;
+let last=null,busy=0;
+function act(k,it){if(!it)return;if(window.HDA&&HDA.on()&&it.srv){if(busy)return;busy=1;last={ok:1,t:'處理中…'};HDA.forge(k,it).then(r=>{last=r.ok?{ok:1,t:r.msg}:{ok:0,t:r.msg||r.error||'失敗'}}).catch(()=>{last={ok:0,t:'連線失敗，請稍後再試'}}).finally(()=>{busy=0;HDA.refreshSheet()});return}if(k==='enh'){const c=enhCost(it);if(it.refine>=MAXREF||M.stone<c.stone||M.coins<c.gold)return;M.stone-=c.stone;M.coins-=c.gold;
   if(Math.random()<RATE[it.refine]){it.refine++;last={ok:1,t:'強化成功！+'+it.refine}}else if(it.refine>=10&&it.refine>10){it.refine--;last={ok:0,t:'強化失敗，降為 +'+it.refine}}else last={ok:0,t:'強化失敗，等級保留 +'+it.refine}}
  if(k==='star'){const c=starCost(it);if(it.stars>=STARCAP[it.q]||M.dust<c.dust||M.coins<c.gold)return;M.dust-=c.dust;M.coins-=c.gold;it.stars++;last={ok:1,t:'升星成功！'+it.stars+'★'}}
  recalc(it);try{X().refreshBest&&0}catch(e){}}

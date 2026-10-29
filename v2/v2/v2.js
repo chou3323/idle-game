@@ -390,6 +390,7 @@ const W=()=>window.__v2;let lastK=0,coins=ld('hd.coins',0),mats=ld('hd.mats',0),
 function inv(p){const {equipOf,genItem,buildEquip,T,JOBS,SK,SLOT_IC,SLOT_ZH,QCOL}=W();const E=equipOf(p);if(!E.inv){E.inv=Object.values(E.bag).filter(Boolean).map(x=>({...x,uid:Math.random().toString(36).slice(2)}))}return E}
 function refreshBest(E){for(const s in E.bag){const c=E.inv.filter(x=>x.slot===s).sort((a,b)=>b.power-a.power)[0];E.bag[s]=c||null}}
 setInterval(()=>{const v=W();if(!v||!v.room)return;const r=v.room,k=(r.totalKills||0)+r.killed+(r.stage||0)*1000;const d=Math.max(0,k-lastK);lastK=k;if(d>500)return;coins+=d*(2+(v.C.region||1));dropAcc+=d;sv('hd.coins',coins);
+ if(window.HDA&&HDA.on())dropAcc=0;
  while(dropAcc>=60){const {equipOf,genItem,buildEquip,T,JOBS,SK,SLOT_IC,SLOT_ZH,QCOL}=W();dropAcc-=60;const p=r.players[v.C.sel];if(!p)break;const E=inv(p);const ss=Object.keys(E.gear).filter(s=>E.gear[s]);const s=ss[Math.floor(Math.random()*ss.length)];if(E.inv.length<40){E.inv.push({...genItem(p,s,Math.floor(Math.random()*1e6),Math.random()*.9),uid:Math.random().toString(36).slice(2),nw:1});refreshBest(E)}}},1000);
 function ar(d){return d>0?`<span class="up">▲${f(d)}</span>`:d<0?`<span class="dn">▼${f(-d)}</span>`:'<span style="color:#8a90a8">＝</span>'}
 function bag(body){const {equipOf,genItem,buildEquip,T,JOBS,SK,SLOT_IC,SLOT_ZH,QCOL}=W();const v=W(),p=v.room.players[v.C.sel];const E=inv(p);const d=document.createElement('div');d.className='tmp';body.append(d);
@@ -399,7 +400,7 @@ function bag(body){const {equipOf,genItem,buildEquip,T,JOBS,SK,SLOT_IC,SLOT_ZH,Q
   `<div class="bball"><button data-a="sellw">一鍵賣出較差的 SR</button><button data-a="salw">一鍵分解較差的</button></div><div class="mnote">目前存在這支手機的瀏覽器；伺服器上線後改為帳號存檔。UR 可上交易所（鑽石），SR 以下綁定。</div>`;
   E.inv.forEach(x=>delete x.nw)};
  d.onclick=e=>{const b=e.target.closest('button');if(!b)return;const a=b.dataset.a,i=E.inv.findIndex(x=>x.uid===b.dataset.u),x=E.inv[i];
-  if(a==='eq'&&x){const old=E.gear[x.slot];E.gear[x.slot]=x;E.inv.splice(i,1);if(old)E.inv.push({...old,uid:Math.random().toString(36).slice(2)})}
+  if(a==='eq'&&x){const old=E.gear[x.slot];E.gear[x.slot]=x;E.inv.splice(i,1);if(old)E.inv.push({...old,uid:old.uid||Math.random().toString(36).slice(2)})}
   if(a==='sell'&&x){coins+=sellP(x);E.inv.splice(i,1)}if(a==='sal'&&x){mats+=salP(x);E.inv.splice(i,1)}
   if(a==='sellw'||a==='salw'){E.inv=E.inv.filter(x=>{const g=E.gear[x.slot];const bad=g&&x.power<=g.power&&(a==='salw'||x.q==='SR');if(bad){if(a==='sellw')coins+=sellP(x);else mats+=salP(x)}return !bad})}
   sv('hd.coins',coins);sv('hd.mats',mats);refreshBest(E);try{W().buildEquip()}catch(_){}draw()};draw()}
