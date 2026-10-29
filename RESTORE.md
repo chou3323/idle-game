@@ -34,3 +34,8 @@
 ## 仙境冒險 v2 測試版（/v2/，2026-10-29 14:26 UTC+8）
 只新增 `v2/` 資料夾（靜態測試頁），首頁、/old/、API、資料庫皆未變動。備份 tag：`pre-hdv2-20261029-1425`，離線檔 /workspace/backups/idle-game-pre-hdv2-20261029-1425.tar.gz
 移除：`git rm -r v2 && git commit -m "remove v2 test" && git push origin main`（或 git revert 該 commit）
+
+## 首頁換成仙境冒險 v2（2026-10-29 14:35 UTC+8）
+根目錄 index.html 改為 v2（`<base href="/v2/">`），舊首頁移到 `/prev-horde-20261029/`，/old/、gm.html、API、資料庫未動；sw.js 快取名改 aur-hdv2-1。
+備份 tag：`pre-hdv2-root-20261029-1431`；離線檔 /workspace/backups/idle-game-pre-hdv2-root-20261029-1431.tar.gz
+一行還原：`git revert --no-edit <本次 commit> && git push origin main`
