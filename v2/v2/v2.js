@@ -16,7 +16,7 @@ const SLOT_IC=Object.fromEntries(Object.entries({wpn:'w_sword',off:'a_shield',he
 const QCOL={SR:'#6aa8ff',SSR:'#c07aff',UR:'#ffb43a'};
 const fmt=n=>n>=1e6?(n/1e6).toFixed(2)+'M':n>=1e4?(n/1e3).toFixed(1)+'K':''+Math.round(n);
 const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
-const cv=$('cv'),ctx=cv.getContext('2d');let DPR=1,VW=0,VH=0;
+const cv=$('cv'),ctx=cv.getContext('2d');let DPR=1,VW=0,VH=0;const VWIN=()=>window.innerWidth;
 const C={region:+qs.get('region')||1,tier:TIERS.includes(qs.get('tier'))?qs.get('tier'):'normal',team:TEAMS[qs.get('team')]?qs.get('team'):'full4',seed:+qs.get('seed')||7,speed:1,startStage:+qs.get('stage')||1,paused:false,dmgMode:'dmg',sel:0,vfx:['auto','mine','party','all'].includes(qs.get('vfx'))?qs.get('vfx'):(localStorage.getItem('hd.vfx')||'auto'),qmode:qs.get('q')||(localStorage.getItem('hd.q')||'auto')};
 let room=null,fx=[],nums=[],corpses=[],marks=[],hurtFlash={},banner={t:0,txt:''},acc=0,tNow=0,lastTs=0,prev=new Map(),anim=new Map(),batchDelay=0,eqSel='wpn',killMsg=null;
 const imgs={sheets:null,chars:{},mobs:null,mobImg:{}};
@@ -71,7 +71,7 @@ const FLOAT=[];function floatText(x,y,txt,c,s,o,kd){nums.push({x,y,txt,c:-3,col:
 // ---- skill-effect display filter: auto | mine | party | all. auto: <=5 players -> all, else party. Low quality forces mine.
 // party = mine + selected member + everyone's heals/taunts; other players' FX dimmed, their damage numbers hidden. Owner undefined (boss/system) always visible.
 const VFX_ZH={auto:'自動',mine:'只看自己',party:'自己＋隊伍支援／選定隊員',all:'全部'};
-function vfxMode(){if(lowQ)return'mine';if(C.vfx!=='auto')return C.vfx;return room&&room.players.length<=5?'all':'party'}
+function vfxMode(){if(C.vfx!=='auto')return C.vfx;return room&&room.players.length<=5?'all':'party'}
 function vfxA(o,kd,num){if(o==null||o===0)return 1;const m=vfxMode();if(m==='all')return 1;if(m==='party'&&(o===C.sel||kd==='sup'))return 1;return num?0:(m==='party'?.22:0)}
 let lowQ=false,fpsAvg=60;
 function updVfxNote(){const el=$('vfxNote');if(el)el.textContent='特效：'+VFX_ZH[vfxMode()]+(lowQ?'（低畫質）':C.vfx==='auto'?'（自動）':'')}
@@ -80,11 +80,11 @@ function showEnd(r){const o=$('overlay');o.hidden=false;const win=r==='win'||r==
 
 // ================= drawing
 let PPU=24,OX=0,OY=0;
-function resize(){DPR=Math.min(2,window.devicePixelRatio||1);const r=cv.getBoundingClientRect();VW=r.width;VH=r.height;cv.width=Math.round(VW*DPR);cv.height=Math.round(VH*DPR);fitCam()}
+function resize(){DPR=Math.min(VWIN()<760?1.5:2,window.devicePixelRatio||1);const r=cv.getBoundingClientRect();VW=r.width;VH=r.height;cv.width=Math.round(VW*DPR);cv.height=Math.round(VH*DPR);fitCam()}
 let camX=24,camY=16;const VIEW_W=+qs.get('view')||30;
-function fitCam(){const a=room?room.arena:[48,32];PPU=Math.max(VW/VIEW_W,VW/a[0],VH/a[1]);camTo(1)}
+function fitCam(){const a=room?room.arena:[48,32];PPU=Math.max(VW/VIEW_W,VW/a[0],VH/a[1]);if(VH>VW*1.2)PPU=Math.max(VW/a[0],VH/a[1]*(+qs.get('mz')||.78));camTo(1)}
 function camTo(k){if(!room)return;const a=room.arena;let sx=0,sy=0,n=0;for(const p of room.players){if(p.down>0||p.soul>0)continue;sx+=p.x;sy+=p.y;n++}if(n){sx/=n;sy/=n}else{sx=a[0]/2;sy=a[1]/2}
- const hw=VW/PPU/2,hh=VH/PPU/2;sx=clamp(sx,hw,a[0]-hw);sy=clamp(sy,hh,a[1]-hh);camX+=(sx-camX)*k;camY+=(sy-camY)*k;OX=VW/2-camX*PPU;OY=VH/2-camY*PPU}
+ const hw=VW/PPU/2,hh=VH/PPU/2;sx=clamp(sx,hw,a[0]-hw);sy=hh*2>=a[1]?clamp(sy,a[1]*.35,a[1]*.65):clamp(sy,hh,a[1]-hh);camX+=(sx-camX)*k;camY+=(sy-camY)*k;OX=VW/2-camX*PPU;OY=VH/2-camY*PPU}
 const S2=(x,y)=>[OX+x*PPU,OY+y*PPU];
 // ---- ground per region (procedural placeholder, no copied art)
 const GP=[['#6aa04a','#86bf5e','#4d8a3a'],['#4f7a5a','#6fa07a','#3a5f48'],['#3f7a46','#5a9a5e','#2f6038'],['#cfe4ee','#e8f6ff','#a9c8da'],['#d9bd78','#ecd596','#b89a58'],['#2c4a38','#3c6a4c','#20382a'],['#bb7b4e','#d69a68','#9a5f38'],['#8c8470','#a8a088','#6c6454'],['#b6d4e6','#d8eefa','#8eb2c8'],['#6a3a2c','#8c4e38','#4c2a22'],['#5a5658','#74707a','#403c42'],['#3a3466','#564a90','#2a2450'],['#566a8a','#7088b0','#3e4e6c'],['#26223e','#3a3260','#181428']];
@@ -204,7 +204,7 @@ function drawNums(){const out=[];
   ctx.restore()}
  nums=out.length>400?out.slice(-400):out}
 function render(k){camTo(.12);ctx.setTransform(DPR,0,0,DPR,0,0);ctx.clearRect(0,0,VW,VH);ctx.fillStyle='#06080e';ctx.fillRect(0,0,VW,VH);
- const g=ground(C.region),a=room.arena;ctx.drawImage(g,OX,OY,a[0]*PPU,a[1]*PPU);
+ const g=ground(C.region),a=room.arena;const gw=a[0]*PPU,gh=a[1]*PPU;for(let ix=-1;ix<=1;ix++)for(let iy=-1;iy<=1;iy++){const x0=OX+ix*gw,y0=OY+iy*gh;if(x0>VW||y0>VH||x0+gw<0||y0+gh<0)continue;ctx.drawImage(g,x0,y0,gw,gh)}
  ctx.strokeStyle='rgba(255,255,255,.12)';ctx.strokeRect(OX,OY,a[0]*PPU,a[1]*PPU);
  // ground fx first
  fx=fx.filter(f=>f.t==='tele'||f.t==='job'||f.t==='heal'||f.t==='taunt'?drawFx(f):true);

@@ -225,7 +225,7 @@ function create(o){
      const cl=nearestMob(p,60);const cx=avgX(),cy=avgY();
      if(p.bot==='healer'||p.bot==='support'){const tk=room.players.find(q=>q.role==='tank'&&alive(q))||p;const ax=tk.x-Math.cos(0.6)*5,ay=tk.y+4;moveTo(p,ax,ay,d,3.5)}
      else if(p.role==='tank'||p.bot==='tank'){const c=cl;if(c)moveTo(p,c.x,c.y,d,Math.max(.8,rng-.5))}
-     else if(cl){const dd=dist(p,cl);const want=rng>=5?rng*.8:rng;if(dd>want+.3)moveTo(p,cl.x,cl.y,d,want);else if(rng>=5&&dd<rng*.4){moveTo(p,p.x-(cl.x-p.x),p.y-(cl.y-p.y),d,0)}}
+     else if(cl){const dd=dist(p,cl);const want=rng>=5?rng*.8:rng;if(dd>want+.3)moveTo(p,cl.x,cl.y,d,want);else if(rng>=5&&dd<rng*.25&&p.hp<p.maxhp*.5){moveTo(p,p.x-(cl.x-p.x),p.y-(cl.y-p.y),d,0)}}
     }
     tgt=nearestMob(p,rng+.4);
     if(tgt&&p.aspdCd<=0){p.aspdCd=1/Math.min(1.6,p.jd.aspd*(1+(T.cooldown_caps.basicAspdBonus&&p.basicAspd||0)));hit(p,tgt,p.atk,'basic',1)}
