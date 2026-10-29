@@ -152,6 +152,46 @@ A.drake=(g,d,z)=>{const s=d.s||1,sw=Math.sin(z.lg)*2.2,fl=Math.sin(z.ph*6.283)*6
  cel(g,PG([[hx-4*s,hy-5*s],[hx-9*s,hy-14*s],[hx-1*s,hy-6*s]]),'b',{flat:true});cel(g,PG([[hx+1*s,hy-6*s],[hx+0*s,hy-15*s],[hx+4*s,hy-5*s]]),'b',{flat:true});
  for(let i=0;i<5;i++)cel(g,PG([[-12*s+i*5*s-2,-29*s],[-12*s+i*5*s,-34*s-(i%2)*2],[-12*s+i*5*s+2,-29*s]]),'b',{flat:true});
  if(d.fire){flat(g,g.P.c.light,E(hx+13*s,hy+3*s,4*s+z.at*5,2.4*s));flat(g,g.P.c.high,E(hx+12*s,hy+3*s,2*s+z.at*3,1.2*s))}};
+// rider: original armored knight on a skeletal warhorse wreathed in elemental flame (hues a=armor b=bone c=flame d=cloth e=trim)
+A.rider=(g,d,z)=>{const s=d.s||1,c=g.c,L=z.lg,gal=k=>Math.sin(L+k)*4*s;
+ // flame mane/tail behind
+ for(let i=0;i<5;i++){const fx=-20*s-i*2.2*s,fy=-24*s+i*2*s,h=(7+((i*5)%3)*2)*s+Math.sin(z.ph*12.6+i)*2;flat(g,g.P.c.light,PG([[fx-2.4*s,fy+3*s],[fx-5*s-i,fy-h],[fx+2.4*s,fy+2*s]]))}
+ // far legs
+ limb(g,'b',-11*s,-20*s,-14*s+gal(2),-1,2.2*s);limb(g,'b',9*s,-20*s,11*s+gal(3),-1,2.2*s);
+ // tattered barding cloth
+ cel(g,PG([[-15*s,-26*s],[13*s,-26*s],[15*s,-16*s],[9*s,-13*s],[5*s,-17*s],[0,-12*s],[-5*s,-17*s],[-10*s,-12*s],[-16*s,-17*s]]),'d',{flat:true});
+ // ribcage torso
+ cel(g,E(-1*s,-24*s,15*s,6.2*s),'b',{cx:-1*s,cy:-24*s,rx:15*s,ry:6*s});
+ for(let i=0;i<6;i++){c.fillStyle=g.P.b.dark;c.fillRect((-11+i*4)*s,-27*s,1.1*s,7*s)}
+ flat(g,g.P.c.base,E(-1*s,-24*s,4*s,2.2*s));flat(g,g.P.c.high,E(-1*s,-24.4*s,2*s,1*s));
+ // near legs
+ limb(g,'b',-9*s,-20*s,-7*s-gal(0),-1,2.6*s);limb(g,'b',11*s,-20*s,8*s-gal(1),-1,2.6*s);
+ for(const hx of[-7*s-gal(0),8*s-gal(1)])flat(g,g.P.e.base,E(hx,-1,2.4*s,1.2*s));
+ // neck + skull head
+ limb(g,'b',12*s,-26*s,18*s,-35*s,4.4*s);
+ const hx=21*s+z.at*3,hy=-37*s;cel(g,PG([[hx-6*s,hy-6*s],[hx+11*s,hy-1*s],[hx+11*s,hy+4*s],[hx-4*s,hy+5*s]]),'b',{cx:hx,cy:hy,rx:6*s,ry:4*s});
+ flat(g,g.P.c.high,E(hx,hy-1*s,1.6*s,1.4*s));c.fillStyle=g.P.b.dark;for(let i=0;i<3;i++)c.fillRect(hx+(3+i*1.6)*s,hy+2*s,.8*s,1.6*s);
+ cel(g,PG([[hx-2*s,hy-4*s],[hx-5*s,hy-10*s],[hx+1*s,hy-5*s]]),'e',{flat:true});
+ // flame mane on neck
+ for(let i=0;i<4;i++){const mx=10*s+i*2.6*s,my=-30*s-i*2.2*s,h=(6+i)*s+Math.sin(z.ph*12.6+i*1.7)*2;flat(g,g.P.c.base,PG([[mx-2*s,my+2*s],[mx-4*s,my-h],[mx+2*s,my+1*s]]));flat(g,g.P.c.high,PG([[mx-1*s,my+1*s],[mx-2.4*s,my-h*.55],[mx+1*s,my]]))}
+ // rider: legs, torso armor, pauldrons, cape
+ cel(g,PG([[-6*s,-32*s],[-14*s,-24*s+Math.sin(z.ph*6.28)*1.5],[-12*s,-30*s],[-4*s,-40*s]]),'d',{flat:true});
+ limb(g,'a',0,-31*s,3*s,-22*s,3.4*s);
+ part(g,'a','r',0,-38*s,5.4*s,7*s,{r:2.5*s});
+ cel(g,E(0,-38*s,3.2*s,4*s),'e',{flat:true});flat(g,g.P.c.light,E(0,-38*s,1.2*s,1.6*s));
+ part(g,'a','e',-4.5*s,-44*s,4*s,2.8*s,{});part(g,'a','e',4.5*s,-44*s,4*s,2.8*s,{});
+ for(const sd of[-1,1])cel(g,PG([[sd*6*s,-46*s],[sd*9*s,-50*s],[sd*8*s,-44*s]]),'e',{flat:true});
+ // lance arm
+ const ax=z.at*8;limb(g,'a',4*s,-42*s,10*s+ax,-36*s,2.8*s);
+ limb(g,"e",8*s+ax,-28*s,14*s+ax*1.4,-62*s,1.5*s);flat(g,g.P.e.high,PG([[12.6*s+ax*1.4,-62*s],[14.6*s+ax*1.5,-70*s],[15.6*s+ax*1.4,-61*s]]));
+ flat(g,g.P.c.light,E(14.6*s+ax*1.5,-69*s,1.8*s+z.at*2,1.8*s+z.at*2));
+ // shield arm
+ limb(g,'a',-4*s,-42*s,-8*s,-35*s,2.6*s);cel(g,RR(-12*s,-40*s,6*s,9*s,2.4*s),'e',{cx:-9*s,cy:-35*s,rx:3*s,ry:4*s});flat(g,g.P.c.base,E(-9*s,-35.5*s,1.2*s,1.8*s));
+ // helm with visor glow + horns + flame plume
+ part(g,'a','e',0,-51*s,4.8*s,5*s,{});flat(g,g.P.out,RR(-3*s,-51*s,7*s,1.6*s,.5));flat(g,g.P.c.high,RR(.5*s,-50.8*s,3.4*s,.9*s,.4));
+ for(const sd of[-1,1])cel(g,PG([[sd*3.5*s,-54*s],[sd*8*s,-60*s],[sd*5*s,-53*s]]),'b',{flat:true});
+ for(let i=0;i<3;i++){const h=(7+i*2)*s+Math.sin(z.ph*12.6+i*2)*2;flat(g,g.P.c.light,PG([[-2.2*s-i*1.5*s,-55*s],[-4*s-i*3*s,-55*s-h],[1.5*s-i*1.5*s,-55*s]]))}
+};
 // ---------- extras (applied to elites/bosses): crown / aura / armor plates
 function extras(g,d,z,sz){const s=sz/48;if(d.aura){const c=g.c;c.save();c.globalAlpha=.0;c.restore()}}
 const ARCH=A;

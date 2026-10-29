@@ -62,7 +62,7 @@ function handleEvents(evs){
   case 'mark':{marks.push({p:e.p,until:tNow+3.2});sigBanner('目標轉火：'+room.players[e.p].name,1.6,'sig');break}
   case 'tele':{if(e.t&&e.t.move){const nm=SIG_ZH[e.t.move]||e.t.move;sigBanner('BOSS施放招牌技「'+nm+'」',Math.max(1.6,e.t.dur||1.6),'sig');bossFx.sig=tNow+(e.t.dur||1.5);bossFx.sigM=e.t.move}break}
   case 'move':fxPush({t:'bossmove',x:e.x,y:e.y,m:e.m,t0:tNow,dur:.9});ultFlash=Math.max(ultFlash,tNow+.18);break;
-  case 'stage':if(room.isBoss){sigBanner('⚔ 區域王降臨 ⚔',2.4,'intro');dropPrev.t=tNow+5}else sigBanner(room.isElite?'精英隊長關':'第 '+e.i+' 關',1.6,'');bossStart=room.t;break;
+  case 'stage':if(room.isBoss){sigBanner('◆ 區域王降臨 ◆',2.4,'intro');dropPrev.t=tNow+5}else sigBanner(room.isElite?'精英隊長關':'第 '+e.i+' 關',1.6,'');bossStart=room.t;break;
   case 'clear':banner.t=tNow+1.3;banner.txt='關卡完成';break;
   case 'end':showEnd(e.r);break;
  }}}
@@ -86,7 +86,7 @@ function vfxA(o,kd,num){if(o==null||o===0)return 1;const m=vfxMode();if(m==='all
 let lowQ=false,fpsAvg=60;
 function updVfxNote(){const el=$('vfxNote');if(el)el.textContent='特效：'+VFX_ZH[vfxMode()]+(lowQ?'（低畫質）':C.vfx==='auto'?'（自動）':'')}
 function mobVariant(id,type){const r=room.roster;const l=type==='boss'?r.boss:type==='elite'?r.elite:r.reg;return l.length?l[Math.abs(id*2654435761|0)%l.length]:null}
-function showEnd(r){const o=$('overlay');o.hidden=false;const win=r==='win'||r==='clear'||r==='victory';o.innerHTML=`<div>${win?'🏆 區域通關':r==='wipe'?'💀 全隊倒下':'⏱ 結束 ('+r+')'}</div><div style="font-size:14px;color:#8d99b8">用時 ${room.t.toFixed(0)} 秒 · 擊殺 ${room.stats.kills} · 倒地 ${room.players.reduce((a,p)=>a+p.deaths,0)} 次</div><button id="btnAgain">再來一次</button>`;$('btnAgain').onclick=()=>{C.seed++;newRoom()}}
+function showEnd(r){const o=$('overlay');o.hidden=false;const win=r==='win'||r==='clear'||r==='victory';o.innerHTML=`<div class="endT ${win?'win':'lose'}">${win?'◆ 區域通關 ◆':r==='wipe'?'全隊倒下':'戰鬥結束'}</div><div style="font-size:14px;color:#8d99b8">用時 ${room.t.toFixed(0)} 秒 · 擊殺 ${room.stats.kills} · 倒地 ${room.players.reduce((a,p)=>a+p.deaths,0)} 次</div><button id="btnAgain">再來一次</button>`;$('btnAgain').onclick=()=>{C.seed++;newRoom()}}
 
 // ================= drawing
 let PPU=24,OX=0,OY=0;
@@ -142,7 +142,7 @@ function drawMob(m,k){const id=mobVariant(m.id,m.type);if(!id)return;const man=i
  const t=room.tele.length&&m.type==='boss'&&m.windup>0;if(t&&man.rows.charge){row=man.rows.charge;fi=Math.floor(tNow*row.fps)%row.n}
  const tg=m.tgt&&!m.tgt.dead?m.tgt:null;if(tg){const dx=tg.x-m.x;if(Math.abs(dx)>.25)a.face=dx>0?1:-1}
  const cell=(m.type==='boss'?13:m.type==='elite'?5.2:3.2)*PPU,fw=man.fw;
- if(m.type==='boss')drawBossAura(sx0,sy0,cell);
+ if(m.type==='boss')drawBossAura(sx0,sy0,cell,id);
  ctx.save();ctx.translate(sx0,sy0);ctx.fillStyle='rgba(0,0,0,.35)';ctx.beginPath();ctx.ellipse(0,-cell*.01,cell*.25,cell*.07,0,0,7);ctx.fill();
  ctx.imageSmoothingEnabled=false;ctx.scale(a.face,1);const sy=row.r*fw;
  ctx.drawImage(im,fi*fw,sy,fw,fw,-cell/2,-cell*(fw-3)/fw,cell,cell);
@@ -152,11 +152,12 @@ function drawMob(m,k){const id=mobVariant(m.id,m.type);if(!id)return;const man=i
  if(m.taunt&&m.taunt.until>room.t){if(m.type==='norm'){ctx.strokeStyle='rgba(255,170,60,.9)';ctx.lineWidth=2;ctx.beginPath();ctx.ellipse(sx0,sy0,PPU*.7,PPU*.25,0,0,7);ctx.stroke()}else icoShield(sx0,sy0-cell*.92,PPU*.4,'#ffb040')}
  if(m.type==='elite'&&(m.onlyLow||m.onlyHealer))icoBang(sx0+PPU*1.1,sy0-cell*.8,PPU*.35,m.onlyHealer?'#3ad07a':'#ff4a3a')
  if(m.type!=='norm'&&tg){ctx.strokeStyle='rgba(255,90,70,.55)';ctx.setLineDash([4,5]);ctx.lineWidth=1.5;const[tx,ty]=S2(tg.x,tg.y);ctx.beginPath();ctx.moveTo(sx0,sy0-cell*.2);ctx.lineTo(tx,ty-PPU*1.2);ctx.stroke();ctx.setLineDash([])}}
-function drawBossAura(x,y,cell){const sig=bossFx.sig>tNow,k=sig?1.6:1;ctx.save();ctx.translate(x,y);ctx.globalCompositeOperation='lighter';
- const R=cell*.42;ctx.globalAlpha=.28*k;ctx.fillStyle='#3a8cff';ctx.beginPath();ctx.ellipse(0,0,R,R*.32,0,0,7);ctx.fill();
+const BOSS_AURA={"garlandking":["#7fdc82","#fff2b0"],"mirehydra":["#6ad08a","#e0f0a0"],"elderroot":["#c8e070","#e8a060"],"glaciercolossus":["#4a90d8","#c8f0ff"],"dunewarden":["#e8a03c","#ffe0a0"],"hollowmatriarch":["#b060e0","#f0d0ff"],"redclaydrake":["#ff9a3c","#f0e0a0"],"gateguardian":["#68c8e8","#d8b048"],"aurorawyrm":["#a078f0","#f0a0e0"],"cindertyrant":["#ffd050","#c8402c"],"ashendragon":["#ff6a3c","#ffc050"],"prismcolossus":["#68e8f0","#ffe888"],"thundergriffin":["#f0e048","#fff8d0"],"nightsovereign":["#58c8ff","#a8b8d8"]};
+function drawBossAura(x,y,cell,vid){const AC=BOSS_AURA[vid]||['#3a8cff','#c8ecff'];const sig=bossFx.sig>tNow,k=sig?1.6:1;ctx.save();ctx.translate(x,y);ctx.globalCompositeOperation='lighter';
+ const R=cell*.42;ctx.globalAlpha=.28*k;ctx.fillStyle=AC[0];ctx.beginPath();ctx.ellipse(0,0,R,R*.32,0,0,7);ctx.fill();
  const n=LOWQ()?14:24;for(let i=0;i<n;i++){const ph=(tNow*(.7+(i%5)*.12)+i*.37)%1,a=i*2.399;const px=Math.cos(a)*R*.8*(.4+((i*13)%7)/10),py=-ph*cell*.7*k;const w=cell*.035*(1-ph)*(1+(i%3)*.4)*k;
-  ctx.globalAlpha=(1-ph)*.75;ctx.fillStyle=i%3?'#58b4ff':'#c8ecff';ctx.beginPath();ctx.moveTo(px-w,py);ctx.quadraticCurveTo(px,py-w*5,px+w,py);ctx.quadraticCurveTo(px,py+w,px-w,py);ctx.fill()}
- if(sig){const u=(bossFx.sig-tNow);ctx.globalAlpha=.35+.25*Math.sin(tNow*18);ctx.strokeStyle='#9fe0ff';ctx.lineWidth=4;ctx.beginPath();ctx.ellipse(0,0,R*1.25,R*.42,0,0,7);ctx.stroke()}
+  ctx.globalAlpha=(1-ph)*.75;ctx.fillStyle=i%3?AC[0]:AC[1];ctx.beginPath();ctx.moveTo(px-w,py);ctx.quadraticCurveTo(px,py-w*5,px+w,py);ctx.quadraticCurveTo(px,py+w,px-w,py);ctx.fill()}
+ if(sig){const u=(bossFx.sig-tNow);ctx.globalAlpha=.35+.25*Math.sin(tNow*18);ctx.strokeStyle=AC[1];ctx.lineWidth=4;ctx.beginPath();ctx.ellipse(0,0,R*1.25,R*.42,0,0,7);ctx.stroke()}
  ctx.restore()}
 function drawCorpse(c){const a=(tNow-c.t0)/.7;if(a>1)return false;const id=c.variant;if(!id)return false;const man=imgs.mobs.mobs[id],im=imgs.mobImg[id];if(!man||!im)return false;const row=man.rows.die;const fw=man.fw;const fi=Math.min(row.n-1,Math.floor((tNow-c.t0)*row.fps));const cell=(c.type==='boss'?13:c.type==='elite'?4.8:3.2)*PPU;const[sx,sy]=S2(c.x,c.y);
  ctx.save();ctx.translate(sx,sy);ctx.globalAlpha=1-Math.max(0,(a-.5)*2);ctx.scale(c.face||1,1);ctx.imageSmoothingEnabled=false;ctx.drawImage(im,fi*fw,row.r*fw,fw,fw,-cell/2,-cell*(fw-3)/fw,cell,cell);ctx.restore();ctx.imageSmoothingEnabled=true;return true}
@@ -265,7 +266,10 @@ function updateHud(){
  [...$('party').children].forEach(d=>{const p=r.players[+d.dataset.i];d.classList.toggle('sel',p.id===C.sel);d.classList.toggle('down',p.down>0||p.soul>0);d.children[0].children[0].textContent=p.name+' · '+JOBS[p.job].name.slice(0,3)+(p.ai?' (AI)':'');d.children[0].children[1].textContent=p.down>0?'倒地 '+Math.ceil(p.down):p.soul>0?'靈魂':fmt(p.hp)+'/'+fmt(p.maxhp);const f=clamp(p.hp/p.maxhp,0,1);const i=d.children[1].children[0];i.style.width=f*100+'%';i.className=f<.25?'cr':f<.5?'lo':''});
  // skills
  const sp=r.players[C.sel];[...$('skills').children].forEach(d=>{const id=d.dataset.id;if(!id)return;const s=SK[id],cd=Math.max(0,sp.cd[id]||0),full=s.cd||1;d.classList.toggle('rdy',cd<=0);d.style.setProperty('--p',Math.min(100,cd/full*100).toFixed(1));d.querySelector('.cdt').textContent=cd>0?cd.toFixed(cd<10?1:0):''});
- const bn=$('banner');bn.hidden=!(banner.t>tNow);if(bn.textContent!==banner.txt)bn.textContent=banner.txt;bn.className=banner.cls||'';if(r.boss&&!r.boss.dead&&!r.boss._seen){r.boss._seen=1;dropPrev.t=tNow+6;bossStart=r.t;sigBanner('⚔ 區域王降臨 ⚔',2.4,'intro')}const dp=$('dropPrev');if(dp){const on=dropPrev.t>tNow&&r.boss&&!r.boss.dead;dp.hidden=!on}const bt=$('bossTime');if(bt&&r.boss&&!r.boss.dead){const s2=Math.max(0,r.t-bossStart)|0;bt.textContent=String(s2/60|0).padStart(2,'0')+':'+String(s2%60).padStart(2,'0')}}
+ const bn=$('banner');bn.hidden=!(banner.t>tNow);if(bn.textContent!==banner.txt)bn.textContent=banner.txt;bn.className=banner.cls||'';if(r.boss&&!r.boss.dead&&!r.boss._seen){r.boss._seen=1;dropPrev.t=tNow+6;bossStart=r.t;sigBanner('◆ 區域王降臨 ◆',2.4,'intro')}const dp=$('dropPrev');if(dp&&dropPrev.t>tNow&&r.boss&&dp._for!==r.boss.id){dp._for=r.boss.id;fillDropPrev(dp,r.boss)}if(dp){const on=dropPrev.t>tNow&&r.boss&&!r.boss.dead;dp.hidden=!on}const bt=$('bossTime');if(bt&&r.boss&&!r.boss.dead){const s2=Math.max(0,r.t-bossStart)|0;bt.textContent=String(s2/60|0).padStart(2,'0')+':'+String(s2%60).padStart(2,'0')}}
+
+function fillDropPrev(dp,b){const ks=Object.keys(NAMES),rr=rng((C.region||1)*7919+(b.id|0));const pick=[];while(pick.length<3){const k=ks[Math.floor(rr()*ks.length)];if(!pick.includes(k))pick.push(k)}
+ dp.innerHTML='<span>打倒王有機會掉落</span>'+pick.map((k,i)=>{const q=i===0?'UR':'SSR',nm=NAMES[k][Math.floor(rr()*NAMES[k].length)];return `<i class="dpi q-${q}">${SLOT_IC[k]}<em style="color:${QCOL[q]}">${nm}</em></i>`}).join('')}
 function roster1(r){const id=r.boss&&mobVariant(r.boss.id,'boss');return id&&imgs.mobs.mobs[id]?imgs.mobs.mobs[id].zh:''}
 
 // ================= equipment panel (A12.4) — demo gear generated deterministically from the equip/affix budget tables

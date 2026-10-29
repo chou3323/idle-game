@@ -3375,7 +3375,7 @@
   },
   "nightsovereign": {
    "id": "nightsovereign",
-   "zh": "永夜君王",
+   "zh": "永夜霜騎",
    "tier": "boss",
    "rg": 14,
    "fw": 128,
@@ -3412,7 +3412,7 @@
      "fps": 6
     }
    },
-   "colors": 15,
+   "colors": 21,
    "cap": 28,
    "frames": 36
   }

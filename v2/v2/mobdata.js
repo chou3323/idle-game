@@ -103,7 +103,7 @@ D('gargoyle','滴水獸','reg',14,'flyer',{a:'#6a6a7a',b:'#a85ad0'},{kind:'bat',
 D('nightrat','夜鼠群','reg',14,'beast',{a:'#3a3048',b:'#c85a88'},{ear:'round',tail:'whip',s:.85});
 D('voidchampion','虛空勇者','elite',14,'biped',{a:'#2a2a48',b:'#a868e8',c:'#e8e0ff',d:'#14142a'},{kind:'knight',weapon:'spear',armor:1,s:1.3});
 D('dusksorcerer','黃昏術師','elite',14,'ghost',{a:'#48386a',b:'#d8a8ff',c:'#a868e8',d:'#1e1a38'},{kind:'wraith',hood:1,s:1.25});
-D('nightsovereign','永夜君王','boss',14,'biped',{a:'#2e2848',b:'#a868e8',c:'#ffd868',d:'#14102a',e:'#e8e0ff'},{kind:'knight',hood:1,horns:1,weapon:'sword',armor:1,s:1.45});
+D('nightsovereign','永夜霜騎','boss',14,'rider',{a:'#3c4660',b:'#d8d0c0',c:'#58c8ff',d:'#1e1a34',e:'#a8b8d8'},{s:.62});
 const byRegion={};for(const d of L){(byRegion[d.rg]=byRegion[d.rg]||{reg:[],elite:[],boss:[]})[d.tier].push(d)}
 root.MobData={list:L,byRegion,get:id=>L.find(d=>d.id===id)};
 })(window);
