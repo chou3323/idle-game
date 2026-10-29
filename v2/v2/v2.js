@@ -12,7 +12,7 @@ const SHEET_FB={smg:'mnk',nin:'hsn',thf:'hsn',msw:'arc',brd:'brd',dnc:'dnc'};
 const FX={lnc:{c:'#ffd45a',t:'spears'},mer:{c:'#ff9a3c',t:'gears'},kni:{c:'#ffe28a',t:'shock'},mnk:{c:'#ff5a4a',t:'spirit'},smg:{c:'#7be05a',t:'cloud'},gun:{c:'#ffe85a',t:'bullets'},nin:{c:'#b078ff',t:'shuriken'},hsn:{c:'#8a5acb',t:'slash'},arc:{c:'#6ab0ff',t:'rune'},thf:{c:'#ff6a7a',t:'cross'},rgr:{c:'#8de05a',t:'arrows'},msw:{c:'#ff7a2a',t:'flame'},acl:{c:'#fff2b0',t:'pillar'},brd:{c:'#ff8ad0',t:'notes'},dnc:{c:'#ff5ac8',t:'ribbon'}};
 const JOB_ROLE_ZH={tank:'坦克',subtank:'副坦',healer:'補師',support:'輔助',bruiser:'鬥士',std:'輸出',glass:'玻璃砲'};
 const SLOT_ZH={wpn:'武器',off:'副手',head:'頭部',body:'身體',cape:'披風',boots:'鞋子',acc1:'飾品 I',acc2:'飾品 II'};
-const SLOT_IC={wpn:'⚔',off:'🛡',head:'⛑',body:'🥋',cape:'🧣',boots:'👢',acc1:'💍',acc2:'📿'};
+const SLOT_IC=Object.fromEntries(Object.entries({wpn:'w_sword',off:'a_shield',head:'a_hat',body:'a_armor',cape:'a_cloak',boots:'a_boots',acc1:'a_ring',acc2:'a_glass'}).map(([k,v])=>[k,`<img class="eqi" src="v2/ic/eq/${v}.webp" alt="">`]));
 const QCOL={SR:'#6aa8ff',SSR:'#c07aff',UR:'#ffb43a'};
 const fmt=n=>n>=1e6?(n/1e6).toFixed(2)+'M':n>=1e4?(n/1e3).toFixed(1)+'K':''+Math.round(n);
 const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
@@ -221,7 +221,7 @@ function render(k){camTo(.12);ctx.setTransform(DPR,0,0,DPR,0,0);ctx.clearRect(0,
 
 // ================= HUD
 function buildParty(){const el=$('party');el.innerHTML='';room.players.forEach(p=>{const d=document.createElement('div');d.className='pm';d.dataset.i=p.id;d.innerHTML=`<div class="t"><span></span><span></span></div><div class="hb"><i></i></div>`;d.onclick=()=>{C.sel=p.id;buildSkills();buildEquip();hudPartyNow()};el.append(d)})}
-function buildSkills(){const el=$('skills');el.innerHTML='';const p=room.players[C.sel];if(!p)return;p.kit.forEach((s,i)=>{const d=document.createElement('div');d.className='sk'+(s.ult?' ult':'');d.dataset.id=s.id;d.innerHTML=`<div class="k">${i+1}${s.ult?' · 大招':''}</div><div class="n">${s.name}</div><div class="m">CD ${s.cd}s</div><div class="cdv"></div><div class="cdt"></div>`;d.onclick=()=>manualCast(p,s);el.append(d)});
+function buildSkills(){const el=$('skills');el.innerHTML='';const p=room.players[C.sel];if(!p)return;p.kit.forEach((s,i)=>{const d=document.createElement('div');d.className='sk'+(s.ult?' ult':'');d.dataset.id=s.id;d.innerHTML=`<img class="ski" src="v2/ic/s/${s.id}.webp" alt=""><div class="k">${i+1}${s.ult?' · 大招':''}</div><div class="n">${s.name}</div><div class="m">CD ${s.cd}s</div><div class="cdv"></div><div class="cdt"></div>`;d.onclick=()=>manualCast(p,s);el.append(d)});
  for(let i=p.kit.length;i<8;i++){const d=document.createElement('div');d.className='sk lock';d.innerHTML=`<div class="k">${i+1}</div><div class="n">未解鎖</div><div class="m">${[0,0,0,0,25,50,100,130][i]?'Base '+[0,0,0,0,25,50,100,130][i]:''}</div>`;el.append(d)}}
 function manualCast(p,s){if(!room||room.result||p.down>0||p.soul>0||p.cd[s.id]>0||p.lock>0)return;let tgt=null;if(s.type==='atk'||s.fn==='taunt'){let b=1e9;for(const m of room.mobs){if(m.dead)continue;const d=(m.x-p.x)**2+(m.y-p.y)**2;if(d<b){b=d;tgt=m}}if(!tgt)return}room.ev.length=0;room.cast(p,s,tgt);handleEvents(room.ev);room.ev.length=0}
 function hudPartyNow(){}
@@ -246,7 +246,7 @@ function updateHud(){
  // party strip
  [...$('party').children].forEach(d=>{const p=r.players[+d.dataset.i];d.classList.toggle('sel',p.id===C.sel);d.classList.toggle('down',p.down>0||p.soul>0);d.children[0].children[0].textContent=p.name+' · '+JOBS[p.job].name.slice(0,3)+(p.ai?' (AI)':'');d.children[0].children[1].textContent=p.down>0?'倒地 '+Math.ceil(p.down):p.soul>0?'靈魂':fmt(p.hp)+'/'+fmt(p.maxhp);const f=clamp(p.hp/p.maxhp,0,1);const i=d.children[1].children[0];i.style.width=f*100+'%';i.className=f<.25?'cr':f<.5?'lo':''});
  // skills
- const sp=r.players[C.sel];[...$('skills').children].forEach(d=>{const id=d.dataset.id;if(!id)return;const s=SK[id],cd=Math.max(0,sp.cd[id]||0),full=s.cd||1;d.classList.toggle('rdy',cd<=0);d.querySelector('.cdv').style.height=Math.min(100,cd/full*100)+'%';d.querySelector('.cdt').textContent=cd>0?cd.toFixed(cd<10?1:0):''});
+ const sp=r.players[C.sel];[...$('skills').children].forEach(d=>{const id=d.dataset.id;if(!id)return;const s=SK[id],cd=Math.max(0,sp.cd[id]||0),full=s.cd||1;d.classList.toggle('rdy',cd<=0);d.style.setProperty('--p',Math.min(100,cd/full*100).toFixed(1));d.querySelector('.cdt').textContent=cd>0?cd.toFixed(cd<10?1:0):''});
  const bn=$('banner');bn.hidden=!(banner.t>tNow);bn.textContent=banner.txt}
 function roster1(r){const id=r.boss&&mobVariant(r.boss.id,'boss');return id&&imgs.mobs.mobs[id]?imgs.mobs.mobs[id].zh:''}
 
