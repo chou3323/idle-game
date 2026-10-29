@@ -3,8 +3,11 @@
 const TZ={phys:'物理',magic:'魔法',holy:'神聖',aoe:'範圍',single:'單體',tank:'坦克',support:'輔助',rescue:'救援',ultimate:'大招'};
 const SH={single:'單體',multi:'多段',aoe_s:'小範圍',aoe_l:'大範圍',ramp:'蓄力',half:'半場',field:'場地',proc:'觸發',trap:'陷阱',line:'直線',burst:'爆發',summon:'召喚'};
 const FN={guard:'減傷架勢',taunt:'嘲諷',devotion:'守護隊友',debuff:'削弱敵人',partyBuff:'全隊增益',heal:'治療隊友',partyHeal:'全隊治療',barrier:'護盾',revive:'復活',selfHeal:'自我治療',tauntGroup:'群體嘲諷',cleanse:'淨化'};
-const FILT=[['all','全部'],['aff','親和'],['atk','攻擊'],['fn','功能'],['ult','大招'],['phys','物理'],['magic','魔法'],['holy','神聖'],['aoe','範圍'],['single','單體'],['tank','坦克'],['support','輔助'],['rescue','救援']];
+const FILT=[['all','全部'],['aff','親和'],['atk','攻擊'],['fn','功能'],['ult','大招'],['phys','物理'],['magic','魔法'],['holy','神聖'],['fire','火'],['water','水'],['wind','風'],['earth','地'],['dark','暗'],['aoe','範圍'],['single','單體'],['tank','坦克'],['support','輔助'],['rescue','救援']];
 let st={slot:0,f:'all',sel:null,q:''};
+const UNL=[1,1,1,4,8,14,20,10];const LV=()=>window.HDG&&HDG.on()?HDG.P.lv:999;const open_=i=>LV()>=UNL[i];
+const ELK=[['fire',/火|炎|焰|爆|熔|燃/],['water',/冰|霜|水|雪|凍|寒/],['wind',/風|雷|電|旋|嵐/],['earth',/地|岩|石|土|震|大地/],['holy',/聖|光|天使|神|祝福|治癒/],['dark',/暗|影|毒|詛|魔|血|死/]];
+function elInit(){const S=SK();if(S.__el)return;for(const s of Object.values(S)){if(!s||!s.name)continue;s.tags=(s.tags||[]).slice();for(const [k,re] of ELK)if(re.test(s.name)&&!s.tags.includes(k)){s.tags.push(k);break}}Object.defineProperty(S,'__el',{value:1,enumerable:false})}
 const V=()=>window.__v2;
 let D=null;function T(){return(D||V()).T}function SK(){return(D||V()).SK}function JB(){return(D||V()).JOBS}
 function me(){const v=V();return v&&v.room&&v.room.players[0]}
@@ -16,22 +19,24 @@ function norm(ids){ids=ids.filter(id=>SK()[id]);const u=ids.filter(id=>SK()[id].
 function get(job){let ids=null;try{ids=JSON.parse(localStorage.getItem(key(job))||'null')}catch(e){}if(!Array.isArray(ids)||ids.length!==8)ids=norm(JB()[job].kit||[]);return ids}
 function save(job,ids){try{localStorage.setItem(key(job),JSON.stringify(ids))}catch(e){}}
 function clone(s,job){const[a,k]=aff(s,job);const c=Object.assign({},s,{_aff:a,_k:k});if(k!==1){if(c.m)c.m*=k;if(c.pct)c.pct*=k;if(c.dr)c.dr*=k;if(c.dmg&&typeof c.dmg==='number')c.dmg*=k}return c}
-function apply(room,d){if(d)D=d;const p=room&&room.players[0];if(!p)return;const ids=get(p.job).filter(Boolean);if(!ids.length)return;p.kit=ids.map(id=>clone(SK()[id],p.job));p.cd=p.cd||{};ids.forEach(id=>{if(p.cd[id]==null)p.cd[id]=0})}
+function apply(room,d){if(d)D=d;const p=room&&room.players[0];if(!p)return;const ids=get(p.job).filter((x,i)=>x&&open_(i));if(!ids.length)return;p.kit=ids.map(id=>clone(SK()[id],p.job));p.cd=p.cd||{};ids.forEach(id=>{if(p.cd[id]==null)p.cd[id]=0})}
 function commit(ids){const p=me();if(!p)return;save(p.job,ids);apply(V().room);V().buildSkills&&V().buildSkills()}
 function desc(s){const a=[];if(s.type==='atk'){a.push(`對${SH[s.shape]||'敵人'}造成 ${Math.round((s.m||0)*100)}% ${s.scale==='matk'?'魔攻':'攻擊'}傷害${s.f>1?` ×${s.f} 段`:''}`);if(s.radius)a.push(`範圍半徑 ${s.radius} 公尺`)}else{a.push(FN[s.fn]||'特殊效果');if(s.pct)a.push(`回復 ${Math.round(s.pct*100)}% 生命`);if(s.dr)a.push(`減傷 ${Math.round(s.dr*100)}%`);if(s.taken)a.push(`承傷 ${Math.round((1-s.taken)*100)}%↓`);if(typeof s.dmg==='number')a.push(`傷害 +${Math.round(s.dmg*100)}%`);if(s.dur)a.push(`持續 ${s.dur} 秒`);if(s.radius)a.push(`範圍 ${s.radius} 公尺`)}return a.join('，')}
 function ic(s){return`<img src="v2/ic/s/${s.id}.webp" alt="" loading="lazy">`}
 function power(s){return s.type==='atk'?Math.round((s.m||0)*100)+'%':(s.pct?Math.round(s.pct*100)+'%':s.dr?Math.round(s.dr*100)+'%':'—')}
-function render(body){const p=me();if(!p){body.innerHTML='';return}const job=p.job,J=JB()[job],ids=get(job);
+function render(body){elInit();const p=me();if(!p){body.innerHTML='';return}const job=p.job,J=JB()[job],ids=get(job);
  const lib=Object.values(SK()).filter(s=>{const f=st.f;if(f==='all')return true;if(f==='aff')return aff(s,job)[0]!=='off';if(f==='atk'||f==='fn')return s.type===f&&!s.ult;if(f==='ult')return s.ult;return(s.tags||[]).includes(f)}).sort((a,b)=>{const ra={own:0,sib:1,off:2};return ra[aff(a,job)[0]]-ra[aff(b,job)[0]]||(a.ult-b.ult)||a.cd-b.cd});
- const slots=ids.map((id,i)=>{const s=id&&SK()[id];const af=s?aff(s,job)[0]:'';return`<button class="ls${i===7?' u':''}${i===st.slot?' on':''}" data-i="${i}">${s?ic(s):`<span class="ls0">${i===7?'大招':'空'}</span>`}<em>${i+1}</em>${s?`<b>${s.name}</b><i class="af ${af}"></i>`:''}</button>`}).join('');
+ const slots=ids.map((id,i)=>{const s=id&&SK()[id];const af=s?aff(s,job)[0]:'';if(!open_(i))return`<button class="ls lk${i===7?' u':''}" data-i="${i}" disabled><span class="ls0">Lv.${UNL[i]}<br>解鎖</span><em>${i+1}</em></button>`;return`<button class="ls${i===7?' u':''}${i===st.slot?' on':''}" data-i="${i}">${s?ic(s):`<span class="ls0">${i===7?'大招':'空'}</span>`}<em>${i+1}</em>${s?`<b>${s.name}</b><i class="af ${af}"></i>`:''}</button>`}).join('');
  const card=st.sel&&SK()[st.sel]?detail(SK()[st.sel],job,ids):'';
- body.innerHTML=`<div class="lo tmp"><div class="loHd"><span class="lj">${J.name}</span><span class="lt">自動施放依格子順序 1→8，第 8 格限大招</span></div>
+ body.innerHTML=`<div class="lo tmp"><div class="loHd"><span class="lj">${J.name}</span><span class="lt">自動施放依格子順序 1→8（可拖曳換位），第 8 格限大招</span></div>
  <div class="lsg">${slots}</div>
  <div class="loAct"><button data-a="left">◀ 前移</button><button data-a="right">後移 ▶</button><button data-a="clear">卸下</button><button data-a="reset">恢復預設</button></div>
  ${card}
  <div class="lf">${FILT.map(([k,v])=>`<button data-f="${k}" class="${st.f===k?'on':''}">${v}</button>`).join('')}</div>
  <div class="lg">${lib.map(s=>{const[a,k]=aff(s,job);const eq=ids.indexOf(s.id);return`<button class="lc${s.ult?' u':''}${st.sel===s.id?' on':''}" data-s="${s.id}">${ic(s)}<b>${s.name}</b><small>CD ${s.cd}s · ${power(s)}</small><i class="af ${a}">${a==='own'?'本職':Math.round(k*100)+'%'}</i>${eq>=0?`<em class="eq">${eq+1}</em>`:''}</button>`}).join('')}</div></div>`;
  body.querySelectorAll('.ls').forEach(b=>b.onclick=()=>{st.slot=+b.dataset.i;const id=ids[st.slot];if(id)st.sel=id;render(body)});
+ body.querySelectorAll('.ls:not(.lk)').forEach(b=>{b.style.touchAction='none';b.querySelectorAll('img').forEach(m=>m.draggable=false);b.ondragstart=e=>e.preventDefault();b.onpointerdown=e=>{e.preventDefault();const i=+b.dataset.i;let moved=false;const sx=e.clientX,sy=e.clientY;const mv=ev=>{if(Math.hypot(ev.clientX-sx,ev.clientY-sy)>8){moved=true;b.classList.add('drag');b.style.transform=`translate(${ev.clientX-sx}px,${ev.clientY-sy}px)`}};
+  const up=ev=>{removeEventListener('pointermove',mv);removeEventListener('pointerup',up);removeEventListener('pointercancel',up);b.style.transform='';b.classList.remove('drag');if(!moved)return;b.style.pointerEvents='none';const t=document.elementFromPoint(ev.clientX,ev.clientY);b.style.pointerEvents='';const tb=t&&t.closest('.ls');if(!tb||tb.classList.contains('lk'))return;const j=+tb.dataset.i;if(i===j||i===7||j===7)return;const n=get(me().job).slice();[n[i],n[j]]=[n[j],n[i]];st.slot=j;commit(n);render(body);b._dragged=1};addEventListener('pointermove',mv);addEventListener('pointerup',up);addEventListener('pointercancel',up)}});
  body.querySelectorAll('.lf button').forEach(b=>b.onclick=()=>{st.f=b.dataset.f;render(body)});
  body.querySelectorAll('.lc').forEach(b=>b.onclick=()=>{st.sel=b.dataset.s;const s=SK()[st.sel];if(s.ult)st.slot=7;else if(st.slot===7)st.slot=Math.max(0,ids.findIndex(x=>!x));render(body);const c=body.querySelector('.ld');c&&c.scrollIntoView({block:'nearest',behavior:'smooth'})});
  body.querySelectorAll('[data-a]').forEach(b=>b.onclick=()=>{const a=b.dataset.a,i=st.slot,n=ids.slice();
@@ -50,5 +55,5 @@ function detail(s,job,ids){const[a,k]=aff(s,job);const eq=ids.indexOf(s.id);cons
  <div class="ldd">${desc(s)}${k<1?`。目前職業效果為 ${Math.round(k*100)}%`:''}</div>
  <button class="leq" data-a="equip">${eq>=0?(eq===t?`已在第 ${eq+1} 格`:`移到第 ${t+1} 格`):`裝備到第 ${t+1} 格`}</button></div></div>`}
 function toast(body,m){const d=document.createElement('div');d.className='ltoast';d.textContent=m;body.append(d);setTimeout(()=>d.remove(),1500)}
-window.HDL={apply,render,get};
+window.HDL={apply,render,get,UNL};
 })();

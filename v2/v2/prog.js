@@ -9,9 +9,9 @@ const GRP=r=>r==='tank'||r==='subtank'?'t':r==='healer'?'h':r==='support'?'s':'d
 const NREG=14,TIER_UNLOCK=5,ROOMKILLS=1300;
 let P=ld('hd.prog',null),G=ld('hd.g0',null),E0=null,run=null,lastSave='',toastQ=[];
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-const expLv=r=>1+(r-1)*6;
+const TOFF={normal:0,hard:24,nightmare:48,hell:72};const expLv=(r,t)=>1+(r-1)*6+(TOFF[t||(W()&&W().C.tier)]||0);
 const need=lv=>Math.round(30*Math.pow(lv,1.5)+20);
-function perKill(r,t){let s=0;for(let l=expLv(r);l<expLv(r+1);l++)s+=need(l);return s*.85/ROOMKILLS*(TM[t]||1)}
+function perKill(r,t){let s=0;for(let l=expLv(r,t);l<expLv(r+1,t);l++)s+=need(l);return s*.85/ROOMKILLS}
 function on(){return !!P}
 function save(){if(!P)return;sv('hd.prog',P);if(E0){const g={gear:E0.gear,inv:(E0.inv||[]).map(x=>{const y={...x};delete y.nw;return y})};const s=JSON.stringify(g);if(s!==lastSave){lastSave=s;sv('hd.g0',g)}}}
 // ---------- power: level + gear vs what the region expects
@@ -22,16 +22,18 @@ function recPower(r){return Math.round(atk0(r)*22.8*1.0+expLv(r)*40)}
 function myPower(){return Math.round(gearPow()+P.lv*40)}
 // ---------- team: you are slot 0 with your chosen job
 function team(arr){if(!P)return arr;const v=W(),J=v.JOBS,g=GRP(J[P.job].role);let i=arr.findIndex(m=>!m.ai&&J[m.job]&&GRP(J[m.job].role)===g);if(i<0)i=arr.findIndex(m=>!m.ai&&GRP(J[m.job].role)==='d');if(i<0)i=0;
- const me=arr.splice(i,1)[0];me.job=P.job;me.name=P.name;me.power=power(v.C.region);const NN=['阿','小','大','莉','凱','諾','米','朵','布','晴','嵐','夏','雪','風','雲'];arr.forEach((m,k)=>{m.name=NN[k%15]+J[m.job].name.slice(0,2)});arr.unshift(me);return arr}
+ const me=arr.splice(i,1)[0];me.job=P.job;me.name=P.name;me.power=power(v.C.region);const NN=['阿','小','大','莉','凱','諾','米','朵','布','晴','嵐','夏','雪','風','雲'];arr.forEach((m,k)=>{m.name=NN[k%15]+J[m.job].name.slice(0,2);const tl=Math.max(1,P.lv+((k*7)%5)-2);m.power=Math.max(.6,Math.min(1.6,Math.pow(1.035,tl-expLv(v.C.region))))});arr.unshift(me);return arr}
 // ---------- persistent gear for you (slot 0)
 function newGear(p){const v=W(),B=v.T.equip_budget,gear={};for(const s of Object.keys(B.slots)){if(p.job==='arc'&&s==='off')continue;const it=v.genItem(p,s,(Date.now()%1e5)+s.length*7,0);
  Object.assign(it,{q:'SR',qm:B.qualityMul[2],refine:0,stars:0,asc:0,am:1,sm:1,rm:1,aff:it.aff.slice(0,1),set:null,uid:Math.random().toString(36).slice(2)});it.power=Math.round(it.base*it.qm);gear[s]=it}return gear}
 function E(p){if(!E0){if(G&&G.gear&&Object.keys(G.gear).length)E0={gear:G.gear,inv:G.inv||[],bag:{}};else E0={gear:newGear(p),inv:[],bag:{}};for(const s of Object.keys(W().T.equip_budget.slots))if(!(s in E0.gear))E0.gear[s]=null;window.HDX&&HDX.refreshBest(E0)}return E0}
 // ---------- exp / level
-function addExp(n,quiet){if(!P||!(n>0))return;P.exp+=n;let up=0;while(P.exp>=need(P.lv)&&P.lv<200){P.exp-=need(P.lv);P.lv++;up++}if(up){if(!quiet)lvUp();applyPow()}hud()}
-function lvUp(){const v=W();try{v.sigBanner('等級提升  Lv.'+P.lv,2,'intro')}catch(e){}const p=v.room&&v.room.players[0];if(p)try{v.floatText(p.x,p.y-2.6,'LEVEL UP','#ffe680',1.5,0,'sup')}catch(e){}toast('等級提升到 Lv.'+P.lv+'，攻擊與生命提升')}
-function applyPow(){const v=W(),p=v&&v.room&&v.room.players[0];if(!p||!P)return;const nw=power(v.C.region),k=nw/(p.power||1);if(Math.abs(k-1)<.002)return;p.atk*=k;p.maxhp*=k;p.hp=Math.min(p.maxhp,p.hp*k);p.power=nw}
-function lvOf(p){if(p.id===0)return P.lv;return Math.max(1,P.lv+((p.id*7)%5)-2)}
+function addExp(n,quiet){if(!P||!(n>0))return;P.exp+=n;let up=0;const l0=P.lv;while(P.exp>=need(P.lv)&&P.lv<200){P.exp-=need(P.lv);P.lv++;up++}if(up){if(!quiet)lvUp(l0);else unl(l0);applyPow()}hud()}
+function unl(l0,say){const v=W();if(!(window.HDL&&HDL.UNL))return;const ix=HDL.UNL.map((l,i)=>l>l0&&l<=P.lv?i+1:0).filter(Boolean);if(ix.length){if(say)toast('技能第 '+ix.join('、')+' 格解鎖');try{HDL.apply(v.room);v.buildSkills()}catch(e){}}}
+function lvUp(l0){const v=W();unl(l0,1);try{v.sigBanner('等級提升  Lv.'+P.lv,2,'intro')}catch(e){}const p=v.room&&v.room.players[0];if(p)try{v.floatText(p.x,p.y-2.6,'LEVEL UP','#ffe680',1.5,0,'sup')}catch(e){}toast('等級提升到 Lv.'+P.lv+'，攻擊與生命提升')}
+function scaleP(p,nw){const k=nw/(p.power||1);if(Math.abs(k-1)<.002)return;p.atk*=k;p.maxhp*=k;p.hp=Math.min(p.maxhp,p.hp*k);p.power=nw}
+function applyPow(){const v=W(),r=v&&v.room;if(!r||!P||!r.players[0])return;scaleP(r.players[0],power(v.C.region));r.players.forEach((p,k)=>{if(k&&!p.ai)scaleP(p,Math.max(.6,Math.min(1.6,Math.pow(1.035,lvOf(p)-expLv(v.C.region)))))})}
+function lvOf(p){if(p.id===0)return P.lv;return Math.max(1,P.lv+(((p.id-1)*7)%5)-2)}
 // ---------- per-run tracking (kills -> exp, gold delta)
 function flush(){const v=W();if(!v||!v.room||!P||!run||run.room!==v.room)return;const k=v.room.stats.kills||0,d=k-run.k0;run.k0=k;if(d>0){const x=d*perKill(v.C.region,v.C.tier);run.exp+=x;addExp(x)}}
 function onRoom(room){run={room,k0:0,exp:0,gold0:window.HDX?HDX.st.coins:0,inv0:run&&E0?Math.min(run.inv0,E0.inv.length):E0?E0.inv.length:0,t:Date.now()};P.region=W().C.region;P.tier=W().C.tier;save();lockSel();hud()}
@@ -57,10 +59,10 @@ let tbusy=0;function toast(html){toastQ.push(html);if(toastQ.length>4)toastQ.shi
 function nextT(){const h=toastQ.shift();if(!h){tbusy=0;return}tbusy=1;let d=$('hdToast');if(!d){d=document.createElement('div');d.id='hdToast';document.body.append(d)}d.innerHTML=h;d.className='on';setTimeout(()=>{d.className='';setTimeout(nextT,250)},1800)}
 // ---------- end of run: clear / wipe
 let cdT=null;
-function end(res){flush();const v=W(),o=$('overlay');o.hidden=false;clearInterval(cdT);const reg=v.C.region,t=v.C.tier,win=res==='clear';const gold=Math.round((v.room.stats.kills||0)*(2+v.C.region));
+function end(res){flush();const v=W(),o=$('overlay');o.hidden=false;clearInterval(cdT);const reg=v.C.region,t=v.C.tier,win=res==='clear';const g0=run?run.gold0:0;const gold=Math.max(0,Math.round((window.HDX?HDX.st.coins:0)-g0));setTimeout(()=>{const c=document.getElementById('hdGold');if(c&&window.HDX)c.textContent='+'+v.fmt(Math.max(0,Math.round(HDX.st.coins-g0)))},1300);
  const cell=(ic,n,val)=>`<div class="rwt"><img src="v2/ic/${ic}.webp" alt=""><b>${val}</b><span>${n}</span></div>`;
  const fmt=v.fmt;let body='',btns='',auto=null,label='';
- const cards=`<div class="endc">${cell('ic_skill','擊殺',fmt(v.room.stats.kills))}${cell('ic_char','經驗','+'+fmt(run?run.exp:0))}${cell('ic_bag','金幣','+'+fmt(gold))}${cell('ic_char','等級','Lv.'+P.lv)}</div>`;
+ const cards=`<div class="endc">${cell('ic_skill','擊殺',fmt(v.room.stats.kills))}${cell('ic_char','經驗','+'+fmt(run?run.exp:0))}${cell('ic_bag','金幣','<span id="hdGold">+'+fmt(gold)+'</span>')}${cell('ic_char','等級','Lv.'+P.lv)}</div>`;
  if(win){P.fails={};let first=false,tierMsg='';if(reg>=maxR(t)){first=reg>=maxR(t)&&!(P.cleared&&P.cleared[t+reg]);P.max=P.max||{};P.max[t]=Math.min(NREG,Math.max(maxR(t),reg+1));if(reg===NREG)P.max[t]=NREG}
   P.cleared=P.cleared||{};const firstClear=!P.cleared[t+reg];P.cleared[t+reg]=1;if(reg===TIER_UNLOCK&&firstClear&&TIERS[TIERS.indexOf(t)+1])tierMsg=`<div class="endu">解鎖新難度：${TZ[TIERS[TIERS.indexOf(t)+1]]}</div>`;
   // real boss relic
@@ -96,6 +98,6 @@ function guide(i,re){let o=$('hdGuide');if(!o){o=document.createElement('div');o
 // ---------- boot: wait for game + login dialog to close
 const w=setInterval(()=>{const v=W();if(!v||!v.ready)return;const ab=$('acctBox');if(ab&&!ab.hidden)return;if($('offline')&&!$('offline').hidden)return;clearInterval(w);setRow();if(!P){create();return}lockSel();hud();if(!P.guided)guide(0)},400);
 function setRow(){const sp=$('setPanel');if(!sp||$('hdSetRow'))return;const r=document.createElement('div');r.className='mrow acrowset';r.id='hdSetRow';r.innerHTML='<span>角色</span><b id="hdSetNm"></b><button class="mbtn acsm" id="hdChg">更換職業／名稱</button>';sp.insertBefore(r,sp.children[1]||null);$('hdChg').onclick=()=>create();setInterval(()=>{const n=$('hdSetNm');if(n&&P)n.textContent=P.name+' · Lv.'+P.lv},1500)}
-function fromServer(d){if(d&&d.prog&&d.prog.job&&(!P||(d.prog.lv||0)*1e9+(d.prog.exp||0)>(P.lv||0)*1e9+(P.exp||0))){P=d.prog;save();const n=$('hdNew');if(n){n.remove()}go(P.region||1,P.tier||'normal')}}
+function fromServer(d){if(d&&d.prog&&d.prog.job&&(!P||JSON.stringify([d.prog.lv,d.prog.job,d.prog.max])!==JSON.stringify([P.lv,P.job,P.max]))){const same=P&&P.job===d.prog.job&&P.lv===d.prog.lv;P=d.prog;save();const n=$('hdNew');if(n){n.remove()}if(!same)go(Math.min(P.region||1,(P.max&&P.max[P.tier||'normal'])||1),P.tier||'normal');else{lockSel();hud()}}}
 window.HDG={perKill,on,team,E,lvOf,end,onRoom,addExp,power,fromServer,create,guide,get P(){return P},need,expLv};
 })();

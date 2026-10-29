@@ -254,7 +254,7 @@ function render(k){camTo(.12);ctx.setTransform(DPR,0,0,DPR,0,0);ctx.clearRect(0,
 // ================= HUD
 function buildParty(){const el=$('party');el.innerHTML='';room.players.forEach(p=>{const d=document.createElement('div');d.className='pm';d.dataset.i=p.id;d.innerHTML=`<div class="t"><span></span><span></span></div><div class="hb"><i></i></div>`;d.onclick=()=>{C.sel=p.id;buildSkills();buildEquip();hudPartyNow()};el.append(d)})}
 function buildSkills(){const el=$('skills');el.innerHTML='';const p=room.players[C.sel];if(!p)return;p.kit.forEach((s,i)=>{const d=document.createElement('div');d.className='sk'+(s.ult?' ult':'');d.dataset.id=s.id;d.innerHTML=`<img class="ski" src="v2/ic/s/${s.id}.webp" alt=""><div class="k">${i+1}${s.ult?' · 大招':''}</div><div class="n">${s.name}</div><div class="m">CD ${s.cd}s</div><div class="cdv"></div><div class="cdt"></div>`;d.onclick=()=>manualCast(p,s);el.append(d)});
- for(let i=p.kit.length;i<8;i++){const d=document.createElement('div');d.className='sk lock';d.innerHTML=`<div class="k">${i+1}</div><div class="n">未解鎖</div><div class="m">${[0,0,0,0,25,50,100,130][i]?'Base '+[0,0,0,0,25,50,100,130][i]:''}</div>`;el.append(d)}}
+ {const U=(window.HDL&&HDL.UNL)||[],lv=(window.HDG&&HDG.P&&HDG.P.lv)||1,lk=U.map((l,i)=>[l,i]).filter(x=>x[0]>lv);for(let j=0;j<8-p.kit.length;j++){const x=lk[j];const d=document.createElement('div');d.className='sk lock';d.innerHTML=`<div class="k">${x?x[1]+1:''}</div><div class="n">${x?'Lv.'+x[0]+' 解鎖':'未設定'}</div><div class="m"></div>`;el.append(d)}}}
 function manualCast(p,s){if(!room||room.result||p.down>0||p.soul>0||p.cd[s.id]>0||p.lock>0)return;let tgt=null;if(s.type==='atk'||s.fn==='taunt'){let b=1e9;for(const m of room.mobs){if(m.dead)continue;const d=(m.x-p.x)**2+(m.y-p.y)**2;if(d<b){b=d;tgt=m}}if(!tgt)return}room.ev.length=0;room.cast(p,s,tgt);handleEvents(room.ev);room.ev.length=0}
 function hudPartyNow(){}
 function fmtPct(v){return (v*100).toFixed(0)+'%'}
@@ -344,6 +344,7 @@ h.addEventListener('click',e=>{if(e.target.closest('#dpsTabs'))return;const c=L.
 
 ;(function(){const q=document.getElementById('selQ');if(q){q.value=(()=>{let v=new URLSearchParams(location.search).get("q");try{v=v||localStorage.getItem("hd.q")}catch(e){}return ["auto","high","low"].includes(v)?v:"auto"})();q.onchange=()=>{const C=window.__v2&&window.__v2.C;if(C)C.qmode=q.value;try{localStorage.setItem('hd.q',q.value)}catch(e){}}}
 const app=document.getElementById('app'),top=document.getElementById('top'),ctl=top.querySelector('.ctl'),sp=document.createElement('div');sp.id='setPanel';sp.innerHTML='<div class="t">設定</div>';top.append(sp);
+if(!/[?&](full|dev)=1/.test(location.search))['selTeam','selVfx','selQ'].forEach(i=>{const e=document.getElementById(i);if(e)e.classList.add('devsel')});
 const ids=['selRegion','selTier','selTeam','selVfx','selQ'],mq=matchMedia('(max-width:900px)');
 function place(){const m=mq.matches;ids.forEach(i=>{const e=document.getElementById(i);if(!e)return;if(m)sp.append(e);else ctl.insertBefore(e,document.getElementById('vfxNote'))});if(!m)app.classList.remove('set')}
 place();mq.addEventListener?mq.addEventListener('change',place):mq.addListener(place);
