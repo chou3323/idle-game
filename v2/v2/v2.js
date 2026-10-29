@@ -32,7 +32,7 @@ const roster=rg=>{const o={reg:[],elite:[],boss:[]};for(const [id,m] of Object.e
 // ================= room
 function parseTeam(key){return TEAMS[key][1].split(',').map((s,i)=>{const ai=s.endsWith('*');const job=s.replace('*','');return{job,ai,name:(['你','阿','小','大','莉','凱','諾','米','朵','布','晴','嵐','夏','雪','風'][i]||'隊')+(JOBS[job].name.slice(0,2)),perfect:false}})}
 function newRoom(){fx=[];nums=[];corpses=[];marks=[];prev.clear();anim.clear();hurtFlash={};acc=0;
- room=Sim.create({tables:T,region:C.region,tier:C.tier,seed:C.seed,team:parseTeam(C.team),events:true,dt:.1,startStage:C.startStage});C.sel=clamp(C.sel,0,room.players.length-1);
+ room=Sim.create({tables:T,region:C.region,tier:C.tier,seed:C.seed,team:parseTeam(C.team),events:true,dt:.1,startStage:C.startStage});window.HDL&&HDL.apply(room,{T,SK,JOBS});C.sel=clamp(C.sel,0,room.players.length-1);
  room.roster=roster(C.region);EQ.clear();$('overlay').hidden=true;camX=room.arena[0]/2;camY=room.arena[1]/2;buildParty();buildSkills();buildEquip();snapPrev();updVfxNote()}
 function snapPrev(){for(const p of room.players)prev.set('p'+p.id,{x:p.x,y:p.y});for(const m of room.mobs)prev.set('m'+m.id,{x:m.x,y:m.y})}
 function stepSim(){snapPrev();room.ev.length=0;room.step();handleEvents(room.ev)}
@@ -94,7 +94,7 @@ function resize(){DPR=Math.min(VWIN()<760?1.5:2,window.devicePixelRatio||1);cons
 let camX=24,camY=16;const VIEW_W=+qs.get('view')||30;
 function fitCam(){const a=room?room.arena:[48,32];PPU=Math.max(VW/VIEW_W,VW/a[0],VH/a[1]);if(VH>VW*1.2)PPU=Math.max(VW/a[0],VH/a[1]*(+qs.get('mz')||.78));camTo(1)}
 function camTo(k){if(!room)return;const a=room.arena;let sx=0,sy=0,n=0;for(const p of room.players){if(p.down>0||p.soul>0)continue;sx+=p.x;sy+=p.y;n++}if(n){sx/=n;sy/=n}else{sx=a[0]/2;sy=a[1]/2}const bb=room.boss&&!room.boss.dead?room.boss:null;if(bb&&n){sx=sx*.6+bb.x*.4;sy=sy*.55+bb.y*.45}
- const hw=VW/PPU/2,hh=VH/PPU/2;sx=clamp(sx,hw,a[0]-hw);sy=hh*2>=a[1]?clamp(sy,a[1]*.35,a[1]*.65):clamp(sy,hh,a[1]-hh);camX+=(sx-camX)*k;camY+=(sy-camY)*k;OX=VW/2-camX*PPU;OY=VH/2-camY*PPU}
+ const hw=VW/PPU/2,hh=VH/PPU/2;sx=clamp(sx,hw,a[0]-hw);sy=hh*2>=a[1]?clamp(sy,a[1]*.35,a[1]*.65):clamp(sy,hh,a[1]-hh);camX+=(sx-camX)*k;camY+=(sy-camY)*k;OX=VW/2-camX*PPU;OY=(window.__visH||VH)/2-camY*PPU}
 const S2=(x,y)=>[OX+x*PPU,OY+y*PPU];
 // ---- ground per region (procedural placeholder, no copied art)
 const GP=[['#6aa04a','#86bf5e','#4d8a3a'],['#4f7a5a','#6fa07a','#3a5f48'],['#3f7a46','#5a9a5e','#2f6038'],['#cfe4ee','#e8f6ff','#a9c8da'],['#d9bd78','#ecd596','#b89a58'],['#2c4a38','#3c6a4c','#20382a'],['#bb7b4e','#d69a68','#9a5f38'],['#8c8470','#a8a088','#6c6454'],['#b6d4e6','#d8eefa','#8eb2c8'],['#6a3a2c','#8c4e38','#4c2a22'],['#5a5658','#74707a','#403c42'],['#3a3466','#564a90','#2a2450'],['#566a8a','#7088b0','#3e4e6c'],['#26223e','#3a3260','#181428']];
@@ -329,7 +329,7 @@ function init(){
  document.querySelectorAll('#dpsTabs button').forEach(b=>b.onclick=()=>{C.dmgMode=b.dataset.m;document.querySelectorAll('#dpsTabs button').forEach(x=>x.classList.toggle('on',x===b))});
  addEventListener('keydown',e=>{if(/^[1-8]$/.test(e.key)){const p=room.players[C.sel];const s=p.kit[+e.key-1];if(s)manualCast(p,s)}});
  addEventListener('resize',resize);
- loadAssets().then(()=>{newRoom();resize();requestAnimationFrame(frame);window.__v2={C,get room(){return room},get fx(){return fx},get nums(){return nums},stepSim,newRoom,equipOf,genItem,buildEquip,T,JOBS,SK,SLOT_IC,SLOT_ZH,QCOL,ready:true}});
+ loadAssets().then(()=>{newRoom();resize();requestAnimationFrame(frame);window.__v2={C,get room(){return room},get fx(){return fx},get nums(){return nums},stepSim,newRoom,buildSkills,equipOf,genItem,buildEquip,T,JOBS,SK,SLOT_IC,SLOT_ZH,QCOL,ready:true}});
 }
 init();
 })();
@@ -355,12 +355,13 @@ function info(html){const d=document.createElement('div');d.className='tmp mi';d
 function open(k){unpark();const v=V();if(!v)return;const r=v.room,p=r&&r.players[v.C.sel];$('msTitle').textContent=T[k];
  if(k==='char'&&p&&window.HDX)HDX.char(body);
  if(k==='equip'){park($('right'))}
- if(k==='skill'&&p){info('<div class="mnote">技能自動依順序施放，可在下方技能列手動搶時機。</div>'+p.kit.map((s,i)=>`<div class="mrow"><span>${i+1}${s.ult?' · 大招':''} ${s.name}</span><b>CD ${s.cd}s</b></div>`).join(''))}
+ if(k==='skill'&&p&&window.HDL){const d=document.createElement('div');d.className='tmp';body.append(d);HDL.render(d)}
  if(k==='bag'&&p&&window.HDX)HDX.bag(body);
  if(k==='party'){park($('party'));const L=$('left');L.dataset.wc=L.classList.contains('col')?'1':'0';park(L);L.classList.remove('col')}
  if(k==='set'){const sp=$('setPanel');if(sp)body.append(sp)}
- sh.hidden=false;app.classList.add('msh')}
-function close(){document.querySelectorAll('#mnav button').forEach(x=>x.classList.remove('on'));unpark();sh.hidden=true;app.classList.remove('msh','set')}
+ sh.hidden=false;app.classList.add('msh');requestAnimationFrame(visH)}
+function visH(){const st=$('stage');if(sh.hidden||!st){window.__visH=0;return}const r=st.getBoundingClientRect(),t=sh.getBoundingClientRect().top;window.__visH=Math.max(120,t-r.top)}
+function close(){document.querySelectorAll('#mnav button').forEach(x=>x.classList.remove('on'));unpark();sh.hidden=true;app.classList.remove('msh','set');window.__visH=0}
 document.querySelectorAll('#mnav button').forEach(b=>b.onclick=()=>{const k=b.dataset.p;if(!sh.hidden&&sh.dataset.k===k){close();return}sh.dataset.k=k;document.querySelectorAll('#mnav button').forEach(x=>x.classList.toggle('on',x===b));open(k)});$('msClose').onclick=close;
 mq.addEventListener&&mq.addEventListener('change',()=>{if(!mq.matches)close()});
 // offline progress (interim, client-side only; real version = server party sim)
