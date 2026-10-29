@@ -13,8 +13,8 @@ function create(o){
  const reg=RG.rows[(o.region||1)-1],rk=((tune.regDmgK||{})[o.region||1])||1, tier=T.tiers[o.tier||'normal'], tierIdx=TIERS.indexOf(o.tier||'normal');
  const rnd=mulberry(o.seed||1), R=()=>rnd(); const rr=(a,b)=>a+(b-a)*R();
  const n=o.team.length, P=T.party, dt=o.dt||0.1;
- const SS=(n===1&&P.solo)||{hp:1,dmg:1,cap:1}, BH=(P.bigHpK&&P.bigHpK[n])||1;
- const hpMul=(1+P.hpPerExtra*(n-1))*SS.hp*BH, dmgMul=(1+P.dmgPerExtra*(n-1))*SS.dmg, capN=Math.min(P.capMax,Math.round(P.mobCap*(1+P.capPerExtra*(n-1))*tier.count*SS.cap));
+ const SS0=(n===1&&P.solo)||{hp:1,dmg:1,cap:1}, SS=(()=>{const c=SS0.byRegion;if(!c)return SS0;let k=1;for(const r of Object.keys(c).map(Number).sort((a,b)=>a-b))if((+o.region||1)>=r)k=c[r];return Object.assign({},SS0,{hp:SS0.hp*k,dmg:SS0.dmg*k})})(), BH=(P.bigHpK&&P.bigHpK[n])||1;
+ const hpMul=(1+P.hpPerExtra*(n-1))*SS.hp*BH, dmgMul=(1+P.dmgPerExtra*(n-1))*SS.dmg*(()=>{const v=P.bigDmgK&&P.bigDmgK[n];if(!v)return 1;if(typeof v==='number')return v;return v[o.tier||'normal']||v.def||1})(), capN=Math.min(P.capMax,Math.round(P.mobCap*(1+P.capPerExtra*(n-1))*tier.count*SS.cap));
  const room={t:0,dt,reg,tier:o.tier||'normal',tierIdx,n,players:[],mobs:[],tele:[],ev:o.events?[]:null,stage:o.startStage||1,endStage:o.endStage||RG.stages,phase:'fight',result:null,
    killed:0,spawned:0,quota:0,restT:0,feathers:tier.feathers,featherCd:0,wipeT:0,boss:null,mark:null,stats:{kills:0,wipes:0,stageClear:[],finSamples:0,finSum:0,tankUp:0,tankN:0,time:0},stageT:0,idN:1,enemyTaken:{v:0,until:0},buff:{dmg:0,until:0},arena:RG.arena,opts:o,tune};
  const ev=(e)=>{if(room.ev)room.ev.push(e)};
@@ -88,7 +88,7 @@ function create(o){
   if(m.hp<=0)kill(m,p)}
  function kill(m,p){if(m.dead)return;m.dead=true;room.killed+=m.type==='norm'?1:0;room.stats.kills++;if(p)p.st.kills++;ev({k:'die',x:m.x,y:m.y,t:m.type,id:m.id});
   if(m.taunt)endLock(m);if(m.type==='elite'&&room.isElite)room.eliteDone=true;if(m.type==='boss')room.bossDead=true}
- function hurt(p,v,src){if(p.down>0||p.soul)return;let mul=1;if(p.buffs.guard>room.t)mul*=1-p.buffs.guardDr;if(p.buffs.barrier>room.t)mul*=1-p.buffs.barrierDr;v*=mul;
+ function hurt(p,v,src){if(p.down>0||p.soul)return;if(globalThis.__HDTRACE)globalThis.__HDTRACE(p,v,room,src);let mul=1;if(p.buffs.guard>room.t)mul*=1-p.buffs.guardDr;if(p.buffs.barrier>room.t)mul*=1-p.buffs.barrierDr;v*=mul;
   // devotion: tank absorbs 30%
   if(p.role!=='tank'){const tk=room.players.find(q=>q.buffs.devotion>room.t&&q.down<=0&&!q.soul&&q!==p&&dist(q,p)<10);if(tk){const ab=v*.3;v-=ab;tk.hp-=ab*(1-(tk.buffs.guard>room.t?tk.buffs.guardDr:0));tk.st.taken+=ab;tk.st.absorbed+=ab;if(tk.hp<=0)die(tk)}}
   p.hp-=v;p.st.taken+=v;room.stats.finSum+=v;ev({k:'hurt',x:p.x,y:p.y,v:Math.round(v),p:p.id});if(p.hp<=0)die(p)}
@@ -196,8 +196,8 @@ function create(o){
   if(k==='heavy'){const t=b.moveTgt;if(t&&alive(t)&&inZone(t,z)){hurtBoss(b,t,3.0);any=1;if(tierIdx>=1&&R()<.5)addStatus(t,'poison')}}
   else if(k==='mark'){for(const p of al)if(inZone(p,z)){hurtBoss(b,p,2.5);any=1;if(tierIdx>=2)addStatus(p,R()<.5?'curse':'poison')}}
   else if(k==='sweep'){for(const p of al)if(inZone(p,z)){hurtBoss(b,p,1.8);any=1}}
-  else if(k==='pulse'){const f=.12*tier.pulse*(1+P.bossMechPerExtra*(n-1));for(const p of al){hurt(p,p.maxhp*f);if(tierIdx>=1&&R()<.4)addStatus(p,'silence')}any=1}
-  else if(k==='summon'){spawnAround(b,Math.round(6+n*.8));b.summonDr=room.t+15;any=1}
+  else if(k==='pulse'){const nM=P.bossMechCapN?Math.min(n,P.bossMechCapN):n;const f=.12*tier.pulse*(1+P.bossMechPerExtra*(nM-1));for(const p of al){hurt(p,p.maxhp*f);if(tierIdx>=1&&R()<.4)addStatus(p,'silence')}any=1}
+  else if(k==='summon'){spawnAround(b,Math.round(6+(P.bossMechCapN?Math.min(n,P.bossMechCapN):n)*.8));b.summonDr=room.t+15;any=1}
   if(!any&&(k==='heavy'||k==='mark')){b.stun=5;ev({k:'stun',id:b.id})}
   ev({k:'move',m:k,x:b.x,y:b.y,id:b.id});b.gap=2.5}
  function hurtBoss(b,p,k){hurt(p,b.atk*k)}
