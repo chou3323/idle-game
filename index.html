@@ -3,14 +3,14 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>仙境冒險 Aurevia · 割草</title>
 <meta http-equiv="Cache-Control" content="no-cache"><script>window.addEventListener('error',function(e){if(window.__v2&&window.__v2.ready)return;var d=document.getElementById('bootErr');if(!d){d=document.createElement('div');d.id='bootErr';d.style.cssText='position:fixed;left:10px;right:10px;top:30%;z-index:99;background:#eef0f8;color:#262b40;border:1px solid #8e9ac0;border-radius:8px;padding:14px;font:14px sans-serif;text-align:center';d.innerHTML='載入失敗，請重新整理<br><button onclick="location.reload(true)" style="margin-top:10px;min-height:40px;padding:0 20px">重新載入</button>';(document.body||document.documentElement).appendChild(d)}});</script>
-<link rel="stylesheet" href="v2/v2.css?v=r9">
+<link rel="stylesheet" href="v2/v2.css?v=r10">
 </head><body>
 <div id="app">
   <header id="top">
     <div class="brand">仙境冒險 · 割草</div>
     <div id="stageInfo"><span id="rgName">—</span><b id="stNo">1/10</b><span id="pips"></span><span id="tierTag" class="tag">普通</span></div>
     <div id="questWrap" title="關卡擊殺進度（無連殺）"><div id="questBar"><i id="questFill"></i><span id="questTxt">0 / 0</span></div></div>
-    <div id="bossWrap" hidden><span id="bossName">王</span><div class="bar boss"><i id="bossFill"></i></div><span id="bossHp"></span></div>
+    <div id="bossWrap" hidden><span id="bossName">王</span><div class="bar boss"><i id="bossFill"></i></div><span id="bossHp"></span><span id="bossTime">00:00</span></div>
     <div class="ctl">
       <select id="selRegion"></select><select id="selTier"></select><select id="selTeam"></select><select id="selVfx" title="技能特效顯示：自動＝5 人以下全部，6 人以上只看自己＋隊伍治療/挑釁與選定隊員；低畫質自動只看自己"></select><select id="selQ" title="畫質"><option value="auto">畫質：自動</option><option value="high">畫質：高</option><option value="low">畫質：低</option></select><span id="vfxNote" class="vnote"></span>
       <button id="btnSet" title="設定">⚙</button><button id="btnRestart" title="重新開始">↺</button>
@@ -22,7 +22,7 @@
     <div class="ph"><b>仇恨／目標</b></div>
     <div id="aggro"></div>
   </aside>
-  <main id="stage"><canvas id="cv"></canvas><div id="banner" hidden></div><div id="overlay" hidden></div></main>
+  <main id="stage"><canvas id="cv"></canvas><div id="banner" hidden></div><div id="dropPrev" hidden><span>打倒王有機會掉落</span><img src="v2/ic/eq/w_sword.webp" onerror="this.style.display='none'" alt=""><b>王之遺物（UR 裝備）</b></div><div id="overlay" hidden></div></main>
   <aside id="right">
     <div class="ph"><b id="eqTitle">裝備</b><span id="eqPower"></span></div>
     <div id="eqSlots"></div>
@@ -36,7 +36,7 @@
   <div id="msheet" hidden><div class="mh"><b id="msTitle"></b><button id="msClose">✕</button></div><div id="msBody"></div></div>
   <div id="offline" hidden></div>
 </div>
-<script src="v2/tables.js?v=r9"></script>
-<script src="v2/engine.js?v=r9"></script>
-<script src="v2/v2.js?v=r9"></script>
+<script src="v2/tables.js?v=r10"></script>
+<script src="v2/engine.js?v=r10"></script>
+<script src="v2/v2.js?v=r10"></script>
 </body></html>
