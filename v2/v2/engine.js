@@ -14,7 +14,7 @@ function create(o){
  const rnd=mulberry(o.seed||1), R=()=>rnd(); const rr=(a,b)=>a+(b-a)*R();
  const n=o.team.length, P=T.party, dt=o.dt||0.1;
  const SS0=(n===1&&P.solo)||{hp:1,dmg:1,cap:1}, SS=(()=>{const c=SS0.byRegion;if(!c)return SS0;let k=1;for(const r of Object.keys(c).map(Number).sort((a,b)=>a-b))if((+o.region||1)>=r)k=c[r];return Object.assign({},SS0,{hp:SS0.hp*k,dmg:SS0.dmg*k})})(), BH=(P.bigHpK&&P.bigHpK[n])||1;
- const hpMul=(1+P.hpPerExtra*(n-1))*SS.hp*BH, dmgMul=(1+P.dmgPerExtra*(n-1))*SS.dmg*(()=>{const v=P.bigDmgK&&P.bigDmgK[n];if(!v)return 1;if(typeof v==='number')return v;return v[o.tier||'normal']||v.def||1})(), capN=Math.min(P.capMax,Math.round(P.mobCap*(1+P.capPerExtra*(n-1))*tier.count*SS.cap));
+ const hpMul=(1+P.hpPerExtra*(n-1))*SS.hp*BH, dmgMul=(1+P.dmgPerExtra*(n-1))*SS.dmg*(()=>{const v=P.bigDmgK&&P.bigDmgK[n];if(!v)return 1;if(typeof v==='number')return v;const w=v[o.tier||'normal']||v.def||1;if(typeof w==='number')return w;let k=1;for(const r of Object.keys(w).map(Number).sort((a,b)=>a-b))if((+o.region||1)>=r)k=w[r];return k})(), capN=Math.min(P.capMax,Math.round(P.mobCap*(1+P.capPerExtra*(n-1))*tier.count*SS.cap));
  const room={t:0,dt,reg,tier:o.tier||'normal',tierIdx,n,players:[],mobs:[],tele:[],ev:o.events?[]:null,stage:o.startStage||1,endStage:o.endStage||RG.stages,phase:'fight',result:null,
    killed:0,spawned:0,quota:0,restT:0,feathers:tier.feathers,featherCd:0,wipeT:0,boss:null,mark:null,stats:{kills:0,wipes:0,stageClear:[],finSamples:0,finSum:0,tankUp:0,tankN:0,time:0},stageT:0,idN:1,enemyTaken:{v:0,until:0},buff:{dmg:0,until:0},arena:RG.arena,opts:o,tune};
  const ev=(e)=>{if(room.ev)room.ev.push(e)};
