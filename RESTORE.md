@@ -42,3 +42,6 @@
 
 ## v2 更新 r3（2026-10-29 14:36 UTC+8）
 手機設定選單、手機擊殺進度條、畫質選項、標題修正、平衡數值 it6。備份 tag：`pre-hdv2-r3-20261029-1436`；離線檔 /workspace/backups/idle-game-pre-hdv2-r3-20261029-1436.tar.gz。還原：`git revert <此 commit>` 後 push。
+
+## v2 r4（2026-10-29 14:39 UTC+8）
+手機底部選單與面板、safe-area、移除暫停/加速、離線收益（僅本機）。備份 tag：`pre-hdv2-r4-20261029-1439`。還原：git revert 此 commit 後 push。

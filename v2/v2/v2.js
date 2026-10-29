@@ -17,7 +17,7 @@ const QCOL={SR:'#6aa8ff',SSR:'#c07aff',UR:'#ffb43a'};
 const fmt=n=>n>=1e6?(n/1e6).toFixed(2)+'M':n>=1e4?(n/1e3).toFixed(1)+'K':''+Math.round(n);
 const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
 const cv=$('cv'),ctx=cv.getContext('2d');let DPR=1,VW=0,VH=0;
-const C={region:+qs.get('region')||1,tier:TIERS.includes(qs.get('tier'))?qs.get('tier'):'normal',team:TEAMS[qs.get('team')]?qs.get('team'):'full4',seed:+qs.get('seed')||7,speed:+qs.get('speed')||1,startStage:+qs.get('stage')||1,paused:false,dmgMode:'dmg',sel:0,vfx:['auto','mine','party','all'].includes(qs.get('vfx'))?qs.get('vfx'):(localStorage.getItem('hd.vfx')||'auto'),qmode:qs.get('q')||(localStorage.getItem('hd.q')||'auto')};
+const C={region:+qs.get('region')||1,tier:TIERS.includes(qs.get('tier'))?qs.get('tier'):'normal',team:TEAMS[qs.get('team')]?qs.get('team'):'full4',seed:+qs.get('seed')||7,speed:1,startStage:+qs.get('stage')||1,paused:false,dmgMode:'dmg',sel:0,vfx:['auto','mine','party','all'].includes(qs.get('vfx'))?qs.get('vfx'):(localStorage.getItem('hd.vfx')||'auto'),qmode:qs.get('q')||(localStorage.getItem('hd.q')||'auto')};
 let room=null,fx=[],nums=[],corpses=[],marks=[],hurtFlash={},banner={t:0,txt:''},acc=0,tNow=0,lastTs=0,prev=new Map(),anim=new Map(),batchDelay=0,eqSel='wpn',killMsg=null;
 const imgs={sheets:null,chars:{},mobs:null,mobImg:{}};
 
@@ -291,12 +291,12 @@ function init(){
  const st=$('selTier');TIERS.forEach(t=>{const o=document.createElement('option');o.value=t;o.textContent=TIER_ZH[t];st.append(o)});st.value=C.tier;
  const sm=$('selTeam');Object.entries(TEAMS).forEach(([k,v])=>{const o=document.createElement('option');o.value=k;o.textContent=v[0];sm.append(o)});sm.value=C.team;
  sr.onchange=()=>{C.region=+sr.value;C.startStage=1;newRoom();fitCam()};st.onchange=()=>{C.tier=st.value;C.startStage=1;newRoom()};sm.onchange=()=>{C.team=sm.value;C.sel=0;C.startStage=1;newRoom()};
- $('btnPause').onclick=()=>{C.paused=!C.paused;$('btnPause').textContent=C.paused?'▶':'❚❚'};
- $('btnSpeed').onclick=()=>{C.speed=C.speed>=8?1:C.speed*2;$('btnSpeed').textContent='×'+C.speed};$('btnSpeed').textContent='×'+C.speed;
+ 
+ 
  const sv=$('selVfx');Object.entries(VFX_ZH).forEach(([k,v])=>{const o=document.createElement('option');o.value=k;o.textContent='技能特效：'+v;sv.append(o)});sv.value=C.vfx;sv.onchange=()=>{C.vfx=sv.value;try{localStorage.setItem('hd.vfx',C.vfx)}catch(e){}updVfxNote()};
  $('btnRestart').onclick=()=>{C.seed++;C.startStage=1;newRoom()};
  document.querySelectorAll('#dpsTabs button').forEach(b=>b.onclick=()=>{C.dmgMode=b.dataset.m;document.querySelectorAll('#dpsTabs button').forEach(x=>x.classList.toggle('on',x===b))});
- addEventListener('keydown',e=>{if(/^[1-8]$/.test(e.key)){const p=room.players[C.sel];const s=p.kit[+e.key-1];if(s)manualCast(p,s)}else if(e.key===' '){$('btnPause').click();e.preventDefault()}});
+ addEventListener('keydown',e=>{if(/^[1-8]$/.test(e.key)){const p=room.players[C.sel];const s=p.kit[+e.key-1];if(s)manualCast(p,s)}});
  addEventListener('resize',resize);
  loadAssets().then(()=>{newRoom();resize();requestAnimationFrame(frame);window.__v2={C,get room(){return room},get fx(){return fx},get nums(){return nums},stepSim,newRoom,ready:true}});
 }
@@ -314,3 +314,33 @@ function place(){const m=mq.matches;ids.forEach(i=>{const e=document.getElementB
 place();mq.addEventListener?mq.addEventListener('change',place):mq.addListener(place);
 document.getElementById('btnSet').onclick=e=>{e.stopPropagation();app.classList.toggle('set')};
 document.addEventListener('click',e=>{if(app.classList.contains('set')&&!sp.contains(e.target))app.classList.remove('set')});})();
+
+/* r4: mobile bottom nav + sheets, offline progress (client interim) */
+;(function(){const $=i=>document.getElementById(i),app=$('app'),sh=$('msheet'),body=$('msBody'),mq=matchMedia('(max-width:900px)');
+const home={};function park(el){if(!el)return;if(!home[el.id])home[el.id]={p:el.parentNode,n:el.nextSibling};body.append(el)}
+function unpark(){for(const id in home){const e=$(id),h=home[id];if(e&&e.parentNode===body)h.p.insertBefore(e,h.n&&h.n.parentNode===h.p?h.n:null)}const sp=$('setPanel');if(sp&&sp.parentNode===body)$('top').append(sp);body.querySelectorAll('.tmp').forEach(e=>e.remove())}
+const V=()=>window.__v2,T={char:'角色',equip:'裝備',skill:'技能設定',bag:'背包',party:'隊伍 / 輸出',set:'設定'};
+function info(html){const d=document.createElement('div');d.className='tmp mi';d.innerHTML=html;body.append(d)}
+function open(k){unpark();const v=V();if(!v)return;const r=v.room,p=r&&r.players[v.C.sel];$('msTitle').textContent=T[k];
+ if(k==='char'&&p)info(`<div class="mrow"><b>${p.name||''}</b><span>${(p.jd&&p.jd.name)||p.job||''}</span></div><div class="mrow"><span>生命</span><b>${Math.round(p.hp)} / ${Math.round(p.maxhp)}</b></div><div class="mrow"><span>攻擊</span><b>${Math.round(p.atk||0)}</b></div><div class="mrow"><span>防禦</span><b>${Math.round(p.def||0)}</b></div><div class="mrow"><span>倒地</span><b>${p.deaths||0}</b></div>${offTot()}`);
+ if(k==='equip'){park($('right'))}
+ if(k==='skill'&&p){info('<div class="mnote">技能自動依順序施放，可在下方技能列手動搶時機。</div>'+p.kit.map((s,i)=>`<div class="mrow"><span>${i+1}${s.ult?' · 大招':''} ${s.name}</span><b>CD ${s.cd}s</b></div>`).join(''))}
+ if(k==='bag')info('<div class="mnote">背包與道具系統開發中。目前顯示離線與本次掉落統計。</div>'+offTot());
+ if(k==='party'){park($('party'));park($('left'));$('left').classList.remove('col')}
+ if(k==='set'){const sp=$('setPanel');if(sp)body.append(sp)}
+ sh.hidden=false;app.classList.add('msh')}
+function close(){unpark();sh.hidden=true;app.classList.remove('msh','set')}
+document.querySelectorAll('#mnav button').forEach(b=>b.onclick=()=>{const k=b.dataset.p;if(!sh.hidden&&sh.dataset.k===k){close();return}sh.dataset.k=k;open(k)});$('msClose').onclick=close;
+mq.addEventListener&&mq.addEventListener('change',()=>{if(!mq.matches)close()});
+// offline progress (interim, client-side only; real version = server party sim)
+const KEY='hd.lastSeen',TOT='hd.offTot',MAXS=12*3600;
+function offTot(){let t={};try{t=JSON.parse(localStorage.getItem(TOT)||'{}')}catch(e){}return `<div class="mrow"><span>累計離線收益</span><b>EXP ${fmt(t.exp||0)} · 金幣 ${fmt(t.zeny||0)} · 裝備 ${t.items||0}</b></div>`}
+function fmt(n){return n>=1e6?(n/1e6).toFixed(1)+'M':n>=1e4?(n/1e3).toFixed(0)+'K':Math.round(n)}
+function seen(){try{localStorage.setItem(KEY,Date.now())}catch(e){}}
+function claim(){let last=0;try{last=+localStorage.getItem(KEY)||0}catch(e){}seen();if(!last)return;const sec=Math.min(MAXS,(Date.now()-last)/1000);if(sec<60)return;
+ const v=V(),reg=v?v.C.region:1,tierI=v?['normal','hard','nightmare','hell'].indexOf(v.C.tier):0,rate=(1+reg*.6)*(1+tierI*.5)*0.8;
+ const exp=Math.round(sec*rate*12),zeny=Math.round(sec*rate*5),kills=Math.round(sec*rate*1.5),items=Math.floor(kills/400);
+ let t={};try{t=JSON.parse(localStorage.getItem(TOT)||'{}')}catch(e){}t.exp=(t.exp||0)+exp;t.zeny=(t.zeny||0)+zeny;t.items=(t.items||0)+items;try{localStorage.setItem(TOT,JSON.stringify(t))}catch(e){}
+ const h=Math.floor(sec/3600),m=Math.floor(sec%3600/60),o=$('offline');o.innerHTML=`<div class="ob"><div class="ot">離線收益</div><div class="mnote">你的角色在隊伍中持續割草 ${h?h+' 小時 ':''}${m} 分鐘${sec>=MAXS?'（上限 12 小時）':''}</div><div class="mrow"><span>擊殺</span><b>${fmt(kills)}</b></div><div class="mrow"><span>經驗</span><b>+${fmt(exp)}</b></div><div class="mrow"><span>金幣</span><b>+${fmt(zeny)}</b></div><div class="mrow"><span>裝備</span><b>+${items}</b></div><button id="offOk">領取</button></div>`;o.hidden=false;$('offOk').onclick=()=>o.hidden=true}
+setInterval(seen,15000);addEventListener('pagehide',seen);document.addEventListener('visibilitychange',()=>{if(document.hidden)seen();else claim()});
+const w=setInterval(()=>{if(V()&&V().ready){clearInterval(w);claim()}},300);})();
