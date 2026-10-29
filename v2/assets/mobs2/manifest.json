@@ -1,0 +1,3420 @@
+{
+ "version": 1,
+ "note": "original procedural designs (A13.4)",
+ "mobs": {
+  "dewslime": {
+   "id": "dewslime",
+   "zh": "露滴史萊姆",
+   "tier": "reg",
+   "rg": 1,
+   "fw": 48,
+   "fh": 48,
+   "rows": {
+    "idle": {
+     "r": 0,
+     "n": 4,
+     "fps": 6
+    },
+    "walk": {
+     "r": 1,
+     "n": 6,
+     "fps": 10
+    },
+    "atk": {
+     "r": 2,
+     "n": 4,
+     "fps": 10
+    },
+    "hurt": {
+     "r": 3,
+     "n": 2,
+     "fps": 8
+    },
+    "die": {
+     "r": 4,
+     "n": 4,
+     "fps": 8
+    }
+   },
+   "colors": 10,
+   "cap": 16,
+   "frames": 20
+  },
+  "thickethare": {
+   "id": "thickethare",
+   "zh": "草叢野兔",
+   "tier": "reg",
+   "rg": 1,
+   "fw": 48,
+   "fh": 48,
+   "rows": {
+    "idle": {
+     "r": 0,
+     "n": 4,
+     "fps": 6
+    },
+    "walk": {
+     "r": 1,
+     "n": 6,
+     "fps": 10
+    },
+    "atk": {
+     "r": 2,
+     "n": 4,
+     "fps": 10
+    },
+    "hurt": {
+     "r": 3,
+     "n": 2,
+     "fps": 8
+    },
+    "die": {
+     "r": 4,
+     "n": 4,
+     "fps": 8
+    }
+   },
+   "colors": 9,
+   "cap": 16,
+   "frames": 20
+  },
+  "cloverbee": {
+   "id": "cloverbee",
+   "zh": "三葉蜂",
+   "tier": "reg",
+   "rg": 1,
+   "fw": 48,
+   "fh": 48,
+   "rows": {
+    "idle": {
+     "r": 0,
+     "n": 4,
+     "fps": 6
+    },
+    "walk": {
+     "r": 1,
+     "n": 6,
+     "fps": 10
+    },
+    "atk": {
+     "r": 2,
+     "n": 4,
+     "fps": 10
+    },
+    "hurt": {
+     "r": 3,
+     "n": 2,
+     "fps": 8
+    },
+    "die": {
+     "r": 4,
+     "n": 4,
+     "fps": 8
+    }
+   },
+   "colors": 13,
+   "cap": 16,
+   "frames": 20
+  },
+  "mossbeetle": {
+   "id": "mossbeetle",
+   "zh": "苔甲蟲",
+   "tier": "reg",
+   "rg": 1,
+   "fw": 48,
+   "fh": 48,
+   "rows": {
+    "idle": {
+     "r": 0,
+     "n": 4,
+     "fps": 6
+    },
+    "walk": {
+     "r": 1,
+     "n": 6,
+     "fps": 10
+    },
+    "atk": {
+     "r": 2,
+     "n": 4,
+     "fps": 10
+    },
+    "hurt": {
+     "r": 3,
+     "n": 2,
+     "fps": 8
+    },
+    "die": {
+     "r": 4,
+     "n": 4,
+     "fps": 8
+    }
+   },
+   "colors": 10,
+   "cap": 16,
+   "frames": 20
+  },
+  "thornboar": {
+   "id": "thornboar",
+   "zh": "荊背野豬",
+   "tier": "elite",
+   "rg": 1,
+   "fw": 64,
+   "fh": 64,
+   "rows": {
+    "idle": {
+     "r": 0,
+     "n": 6,
+     "fps": 6
+    },
+    "walk": {
+     "r": 1,
+     "n": 6,
+     "fps": 10
+    },
+    "atk": {
+     "r": 2,
+     "n": 6,
+     "fps": 10
+    },
+    "hurt": {
+     "r": 3,
+     "n": 2,
+     "fps": 8
+    },
+    "die": {
+     "r": 4,
+     "n": 4,
+     "fps": 8
+    }
+   },
+   "colors": 15,
+   "cap": 20,
+   "frames": 24
+  },
+  "queenwasp": {
+   "id": "queenwasp",
+   "zh": "女王蜂",
+   "tier": "elite",
+   "rg": 1,
+   "fw": 64,
+   "fh": 64,
+   "rows": {
+    "idle": {
+     "r": 0,
+     "n": 6,
+     "fps": 6
+    },
+    "walk": {
+     "r": 1,
+     "n": 6,
+     "fps": 10
+    },
+    "atk": {
+     "r": 2,
+     "n": 6,
+     "fps": 10
+    },
+    "hurt": {
+     "r": 3,
+     "n": 2,
+     "fps": 8
+    },
+    "die": {
+     "r": 4,
+     "n": 4,
+     "fps": 8
+    }
+   },
+   "colors": 15,
+   "cap": 20,
+   "frames": 24
+  },
+  "garlandking": {
+   "id": "garlandking",
+   "zh": "花冠獸王",
+   "tier": "boss",
+   "rg": 1,
+   "fw": 128,
+   "fh": 128,
+   "rows": {
+    "idle": {
+     "r": 0,
+     "n": 8,
+     "fps": 6
+    },
+    "walk": {
+     "r": 1,
+     "n": 6,
+     "fps": 8
+    },
+    "atk": {
+     "r": 2,
+     "n": 8,
+     "fps": 10
+    },
+    "charge": {
+     "r": 3,
+     "n": 6,
+     "fps": 10
+    },
+    "hurt": {
+     "r": 4,
+     "n": 2,
+     "fps": 8
+    },
+    "die": {
+     "r": 5,
+     "n": 6,
+     "fps": 6
+    }
+   },
+   "colors": 18,
+   "cap": 28,
+   "frames": 36
+  },
+  "bogtoad": {
+   "id": "bogtoad",
+   "zh": "沼澤蟾蜍",
+   "tier": "reg",
+   "rg": 2,
+   "fw": 48,
+   "fh": 48,
+   "rows": {
+    "idle": {
+     "r": 0,
+     "n": 4,
+     "fps": 6
+    },
+    "walk": {
+     "r": 1,
+     "n": 6,
+     "fps": 10
+    },
+    "atk": {
+     "r": 2,
+     "n": 4,
+     "fps": 10
+    },
+    "hurt": {
+     "r": 3,
+     "n": 2,
+     "fps": 8
+    },
+    "die": {
+     "r": 4,
+     "n": 4,
+     "fps": 8
+    }
+   },
+   "colors": 10,
+   "cap": 16,
+   "frames": 20
+  },
+  "miredwisp": {
+   "id": "miredwisp",
+   "zh": "沼火精",
+   "tier": "reg",
+   "rg": 2,
+   "fw": 48,
+   "fh": 48,
+   "rows": {
+    "idle": {
+     "r": 0,
+     "n": 4,
+     "fps": 6
+    },
+    "walk": {
+     "r": 1,
+     "n": 6,
+     "fps": 10
+    },
+    "atk": {
+     "r": 2,
+     "n": 4,
+     "fps": 10
+    },
+    "hurt": {
+     "r": 3,
+     "n": 2,
+     "fps": 8
+    },
+    "die": {
+     "r": 4,
+     "n": 4,
+     "fps": 8
+    }
+   },
+   "colors": 10,
+   "cap": 16,
+   "frames": 20
+  },
+  "reedling": {
+   "id": "reedling",
+   "zh": "蘆葦怪",
+   "tier": "reg",
+   "rg": 2,
+   "fw": 48,
+   "fh": 48,
+   "rows": {
+    "idle": {
+     "r": 0,
+     "n": 4,
+     "fps": 6
+    },
+    "walk": {
+     "r": 1,
+     "n": 6,
+     "fps": 10
+    },
+    "atk": {
+     "r": 2,
+     "n": 4,
+     "fps": 10
+    },
+    "hurt": {
+     "r": 3,
+     "n": 2,
+     "fps": 8
+    },
+    "die": {
+     "r": 4,
+     "n": 4,
+     "fps": 8
+    }
+   },
+   "colors": 10,
+   "cap": 16,
+   "frames": 20
+  },
+  "leechworm": {
+   "id": "leechworm",
+   "zh": "水蛭蟲",
+   "tier": "reg",
+   "rg": 2,
+   "fw": 48,
+   "fh": 48,
+   "rows": {
+    "idle": {
+     "r": 0,
+     "n": 4,
+     "fps": 6
+    },
+    "walk": {
+     "r": 1,
+     "n": 6,
+     "fps": 10
+    },
+    "atk": {
+     "r": 2,
+     "n": 4,
+     "fps": 10
+    },
+    "hurt": {
+     "r": 3,
+     "n": 2,
+     "fps": 8
+    },
+    "die": {
+     "r": 4,
+     "n": 4,
+     "fps": 8
+    }
+   },
+   "colors": 10,
+   "cap": 16,
+   "frames": 20
+  },
+  "fenhag": {
+   "id": "fenhag",
+   "zh": "泥沼蟾后",
+   "tier": "elite",
+   "rg": 2,
+   "fw": 64,
+   "fh": 64,
+   "rows": {
+    "idle": {
+     "r": 0,
+     "n": 6,
+     "fps": 6
+    },
+    "walk": {
+     "r": 1,
+     "n": 6,
+     "fps": 10
+    },
+    "atk": {
+     "r": 2,
+     "n": 6,
+     "fps": 10
+    },
+    "hurt": {
+     "r": 3,
+     "n": 2,
+     "fps": 8
+    },
+    "die": {
+     "r": 4,
+     "n": 4,
+     "fps": 8
+    }
+   },
+   "colors": 14,
+   "cap": 20,
+   "frames": 24
+  },
+  "mistwraith": {
+   "id": "mistwraith",
+   "zh": "霧中幽影",
+   "tier": "elite",
+   "rg": 2,
+   "fw": 64,
+   "fh": 64,
+   "rows": {
+    "idle": {
+     "r": 0,
+     "n": 6,
+     "fps": 6
+    },
+    "walk": {
+     "r": 1,
+     "n": 6,
+     "fps": 10
+    },
+    "atk": {
+     "r": 2,
+     "n": 6,
+     "fps": 10
+    },
+    "hurt": {
+     "r": 3,
+     "n": 2,
+     "fps": 8
+    },
+    "die": {
+     "r": 4,
+     "n": 4,
+     "fps": 8
+    }
+   },
+   "colors": 14,
+   "cap": 20,
+   "frames": 24
+  },
+  "mirehydra": {
+   "id": "mirehydra",
+   "zh": "迷沼多頭蛇",
+   "tier": "boss",
+   "rg": 2,
+   "fw": 128,
+   "fh": 128,
+   "rows": {
+    "idle": {
+     "r": 0,
+     "n": 8,
+     "fps": 6
+    },
+    "walk": {
+     "r": 1,
+     "n": 6,
+     "fps": 8
+    },
+    "atk": {
+     "r": 2,
+     "n": 8,
+     "fps": 10
+    },
+    "charge": {
+     "r": 3,
+     "n": 6,
+     "fps": 10
+    },
+    "hurt": {
+     "r": 4,
+     "n": 2,
+     "fps": 8
+    },
+    "die": {
+     "r": 5,
+     "n": 6,
+     "fps": 6
+    }
+   },
+   "colors": 15,
+   "cap": 28,
+   "frames": 36
+  },
+  "fernsprite": {
+   "id": "fernsprite",
+   "zh": "蕨葉精靈",
+   "tier": "reg",
+   "rg": 3,
+   "fw": 48,
+   "fh": 48,
+   "rows": {
+    "idle": {
+     "r": 0,
+     "n": 4,
+     "fps": 6
+    },
+    "walk": {
+     "r": 1,
+     "n": 6,
+     "fps": 10
+    },
+    "atk": {
+     "r": 2,
+     "n": 4,
+     "fps": 10
+    },
+    "hurt": {
+     "r": 3,
+     "n": 2,
+     "fps": 8
+    },
+    "die": {
+     "r": 4,
+     "n": 4,
+     "fps": 8
+    }
+   },
+   "colors": 14,
+   "cap": 16,
+   "frames": 20
+  },
+  "gloomwolf": {
+   "id": "gloomwolf",
+   "zh": "幽影狼",
+   "tier": "reg",
+   "rg": 3,
+   "fw": 48,
+   "fh": 48,
+   "rows": {
+    "idle": {
+     "r": 0,
+     "n": 4,
+     "fps": 6
+    },
+    "walk": {
+     "r": 1,
+     "n": 6,
+     "fps": 10
+    },
+    "atk": {
+     "r": 2,
+     "n": 4,
+     "fps": 10
+    },
+    "hurt": {
+     "r": 3,
+     "n": 2,
+     "fps": 8
+    },
+    "die": {
+     "r": 4,
+     "n": 4,
+     "fps": 8
+    }
+   },
+   "colors": 10,
+   "cap": 16,
+   "frames": 20
+  },
+  "webweaver": {
+   "id": "webweaver",
+   "zh": "結網蛛",
+   "tier": "reg",
+   "rg": 3,
+   "fw": 48,
+   "fh": 48,
+   "rows": {
+    "idle": {
+     "r": 0,
+     "n": 4,
+     "fps": 6
+    },
+    "walk": {
+     "r": 1,
+     "n": 6,
+     "fps": 10
+    },
+    "atk": {
+     "r": 2,
+     "n": 4,
+     "fps": 10
+    },
+    "hurt": {
+     "r": 3,
+     "n": 2,
+     "fps": 8
+    },
+    "die": {
+     "r": 4,
+     "n": 4,
+     "fps": 8
+    }
+   },
+   "colors": 10,
+   "cap": 16,
+   "frames": 20
+  },
+  "barkimp": {
+   "id": "barkimp",
+   "zh": "樹皮小鬼",
+   "tier": "reg",
+   "rg": 3,
+   "fw": 48,
+   "fh": 48,
+   "rows": {
+    "idle": {
+     "r": 0,
+     "n": 4,
+     "fps": 6
+    },
+    "walk": {
+     "r": 1,
+     "n": 6,
+     "fps": 10
+    },
+    "atk": {
+     "r": 2,
+     "n": 4,
+     "fps": 10
+    },
+    "hurt": {
+     "r": 3,
+     "n": 2,
+     "fps": 8
+    },
+    "die": {
+     "r": 4,
+     "n": 4,
+     "fps": 8
+    }
+   },
+   "colors": 10,
+   "cap": 16,
+   "frames": 20
+  },
+  "saplingtreant": {
+   "id": "saplingtreant",
+   "zh": "老樹幼靈",
+   "tier": "elite",
+   "rg": 3,
+   "fw": 64,
+   "fh": 64,
+   "rows": {
+    "idle": {
+     "r": 0,
+     "n": 6,
+     "fps": 6
+    },
+    "walk": {
+     "r": 1,
+     "n": 6,
+     "fps": 10
+    },
+    "atk": {
+     "r": 2,
+     "n": 6,
+     "fps": 10
+    },
+    "hurt": {
+     "r": 3,
+     "n": 2,
+     "fps": 8
+    },
+    "die": {
+     "r": 4,
+     "n": 4,
+     "fps": 8
+    }
+   },
+   "colors": 14,
+   "cap": 20,
+   "frames": 24
+  },
+  "shadowstag": {
+   "id": "shadowstag",
+   "zh": "影之牡鹿",
+   "tier": "elite",
+   "rg": 3,
+   "fw": 64,
+   "fh": 64,
+   "rows": {
+    "idle": {
+     "r": 0,
+     "n": 6,
+     "fps": 6
+    },
+    "walk": {
+     "r": 1,
+     "n": 6,
+     "fps": 10
+    },
+    "atk": {
+     "r": 2,
+     "n": 6,
+     "fps": 10
+    },
+    "hurt": {
+     "r": 3,
+     "n": 2,
+     "fps": 8
+    },
+    "die": {
+     "r": 4,
+     "n": 4,
+     "fps": 8
+    }
+   },
+   "colors": 16,
+   "cap": 20,
+   "frames": 24
+  },
+  "elderroot": {
+   "id": "elderroot",
+   "zh": "古樹之王",
+   "tier": "boss",
+   "rg": 3,
+   "fw": 128,
+   "fh": 128,
+   "rows": {
+    "idle": {
+     "r": 0,
+     "n": 8,
+     "fps": 6
+    },
+    "walk": {
+     "r": 1,
+     "n": 6,
+     "fps": 8
+    },
+    "atk": {
+     "r": 2,
+     "n": 8,
+     "fps": 10
+    },
+    "charge": {
+     "r": 3,
+     "n": 6,
+     "fps": 10
+    },
+    "hurt": {
+     "r": 4,
+     "n": 2,
+     "fps": 8
+    },
+    "die": {
+     "r": 5,
+     "n": 6,
+     "fps": 6
+    }
+   },
+   "colors": 16,
+   "cap": 28,
+   "frames": 36
+  },
+  "snowpuff": {
+   "id": "snowpuff",
+   "zh": "雪團團",
+   "tier": "reg",
+   "rg": 4,
+   "fw": 48,
+   "fh": 48,
+   "rows": {
+    "idle": {
+     "r": 0,
+     "n": 4,
+     "fps": 6
+    },
+    "walk": {
+     "r": 1,
+     "n": 6,
+     "fps": 10
+    },
+    "atk": {
+     "r": 2,
+     "n": 4,
+     "fps": 10
+    },
+    "hurt": {
+     "r": 3,
+     "n": 2,
+     "fps": 8
+    },
+    "die": {
+     "r": 4,
+     "n": 4,
+     "fps": 8
+    }
+   },
+   "colors": 10,
+   "cap": 16,
+   "frames": 20
+  },
+  "rimewolf": {
+   "id": "rimewolf",
+   "zh": "霜牙狼",
+   "tier": "reg",
+   "rg": 4,
+   "fw": 48,
+   "fh": 48,
+   "rows": {
+    "idle": {
+     "r": 0,
+     "n": 4,
+     "fps": 6
+    },
+    "walk": {
+     "r": 1,
+     "n": 6,
+     "fps": 10
+    },
+    "atk": {
+     "r": 2,
+     "n": 4,
+     "fps": 10
+    },
+    "hurt": {
+     "r": 3,
+     "n": 2,
+     "fps": 8
+    },
+    "die": {
+     "r": 4,
+     "n": 4,
+     "fps": 8
+    }
+   },
+   "colors": 12,
+   "cap": 16,
+   "frames": 20
+  },
+  "iciclebat": {
+   "id": "iciclebat",
+   "zh": "冰錐蝠",
+   "tier": "reg",
+   "rg": 4,
+   "fw": 48,
+   "fh": 48,
+   "rows": {
+    "idle": {
+     "r": 0,
+     "n": 4,
+     "fps": 6
+    },
+    "walk": {
+     "r": 1,
+     "n": 6,
+     "fps": 10
+    },
+    "atk": {
+     "r": 2,
+     "n": 4,
+     "fps": 10
+    },
+    "hurt": {
+     "r": 3,
+     "n": 2,
+     "fps": 8
+    },
+    "die": {
+     "r": 4,
+     "n": 4,
+     "fps": 8
+    }
+   },
+   "colors": 10,
+   "cap": 16,
+   "frames": 20
+  },
+  "frostbones": {
+   "id": "frostbones",
+   "zh": "凍骨戰士",
+   "tier": "reg",
+   "rg": 4,
+   "fw": 48,
+   "fh": 48,
+   "rows": {
+    "idle": {
+     "r": 0,
+     "n": 4,
+     "fps": 6
+    },
+    "walk": {
+     "r": 1,
+     "n": 6,
+     "fps": 10
+    },
+    "atk": {
+     "r": 2,
+     "n": 4,
+     "fps": 10
+    },
+    "hurt": {
+     "r": 3,
+     "n": 2,
+     "fps": 8
+    },
+    "die": {
+     "r": 4,
+     "n": 4,
+     "fps": 8
+    }
+   },
+   "colors": 10,
+   "cap": 16,
+   "frames": 20
+  },
+  "hoarbrute": {
+   "id": "hoarbrute",
+   "zh": "霜毛巨漢",
+   "tier": "elite",
+   "rg": 4,
+   "fw": 64,
+   "fh": 64,
+   "rows": {
+    "idle": {
+     "r": 0,
+     "n": 6,
+     "fps": 6
+    },
+    "walk": {
+     "r": 1,
+     "n": 6,
+     "fps": 10
+    },
+    "atk": {
+     "r": 2,
+     "n": 6,
+     "fps": 10
+    },
+    "hurt": {
+     "r": 3,
+     "n": 2,
+     "fps": 8
+    },
+    "die": {
+     "r": 4,
+     "n": 4,
+     "fps": 8
+    }
+   },
+   "colors": 15,
+   "cap": 20,
+   "frames": 24
+  },
+  "iceshade": {
+   "id": "iceshade",
+   "zh": "寒冰幽魂",
+   "tier": "elite",
+   "rg": 4,
+   "fw": 64,
+   "fh": 64,
+   "rows": {
+    "idle": {
+     "r": 0,
+     "n": 6,
+     "fps": 6
+    },
+    "walk": {
+     "r": 1,
+     "n": 6,
+     "fps": 10
+    },
+    "atk": {
+     "r": 2,
+     "n": 6,
+     "fps": 10
+    },
+    "hurt": {
+     "r": 3,
+     "n": 2,
+     "fps": 8
+    },
+    "die": {
+     "r": 4,
+     "n": 4,
+     "fps": 8
+    }
+   },
+   "colors": 13,
+   "cap": 20,
+   "frames": 24
+  },
+  "glaciercolossus": {
+   "id": "glaciercolossus",
+   "zh": "冰川巨像",
+   "tier": "boss",
+   "rg": 4,
+   "fw": 128,
+   "fh": 128,
+   "rows": {
+    "idle": {
+     "r": 0,
+     "n": 8,
+     "fps": 6
+    },
+    "walk": {
+     "r": 1,
+     "n": 6,
+     "fps": 8
+    },
+    "atk": {
+     "r": 2,
+     "n": 8,
+     "fps": 10
+    },
+    "charge": {
+     "r": 3,
+     "n": 6,
+     "fps": 10
+    },
+    "hurt": {
+     "r": 4,
+     "n": 2,
+     "fps": 8
+    },
+    "die": {
+     "r": 5,
+     "n": 6,
+     "fps": 6
+    }
+   },
+   "colors": 17,
+   "cap": 28,
+   "frames": 36
+  },
+  "dunescorp": {
+   "id": "dunescorp",
+   "zh": "沙丘蠍",
+   "tier": "reg",
+   "rg": 5,
+   "fw": 48,
+   "fh": 48,
+   "rows": {
+    "idle": {
+     "r": 0,
+     "n": 4,
+     "fps": 6
+    },
+    "walk": {
+     "r": 1,
+     "n": 6,
+     "fps": 10
+    },
+    "atk": {
+     "r": 2,
+     "n": 4,
+     "fps": 10
+    },
+    "hurt": {
+     "r": 3,
+     "n": 2,
+     "fps": 8
+    },
+    "die": {
+     "r": 4,
+     "n": 4,
+     "fps": 8
+    }
+   },
+   "colors": 10,
+   "cap": 16,
+   "frames": 20
+  },
+  "sandworm": {
+   "id": "sandworm",
+   "zh": "流沙蟲",
+   "tier": "reg",
+   "rg": 5,
+   "fw": 48,
+   "fh": 48,
+   "rows": {
+    "idle": {
+     "r": 0,
+     "n": 4,
+     "fps": 6
+    },
+    "walk": {
+     "r": 1,
+     "n": 6,
+     "fps": 10
+    },
+    "atk": {
+     "r": 2,
+     "n": 4,
+     "fps": 10
+    },
+    "hurt": {
+     "r": 3,
+     "n": 2,
+     "fps": 8
+    },
+    "die": {
+     "r": 4,
+     "n": 4,
+     "fps": 8
+    }
+   },
+   "colors": 10,
+   "cap": 16,
+   "frames": 20
+  },
+  "dustmummy": {
+   "id": "dustmummy",
+   "zh": "乾屍旅者",
+   "tier": "reg",
+   "rg": 5,
+   "fw": 48,
+   "fh": 48,
+   "rows": {
+    "idle": {
+     "r": 0,
+     "n": 4,
+     "fps": 6
+    },
+    "walk": {
+     "r": 1,
+     "n": 6,
+     "fps": 10
+    },
+    "atk": {
+     "r": 2,
+     "n": 4,
+     "fps": 10
+    },
+    "hurt": {
+     "r": 3,
+     "n": 2,
+     "fps": 8
+    },
+    "die": {
+     "r": 4,
+     "n": 4,
+     "fps": 8
+    }
+   },
+   "colors": 10,
+   "cap": 16,
+   "frames": 20
+  },
+  "scarablord": {
+   "id": "scarablord",
+   "zh": "聖甲蟲領主",
+   "tier": "elite",
+   "rg": 5,
+   "fw": 64,
+   "fh": 64,
+   "rows": {
+    "idle": {
+     "r": 0,
+     "n": 6,
+     "fps": 6
+    },
+    "walk": {
+     "r": 1,
+     "n": 6,
+     "fps": 10
+    },
+    "atk": {
+     "r": 2,
+     "n": 6,
+     "fps": 10
+    },
+    "hurt": {
+     "r": 3,
+     "n": 2,
+     "fps": 8
+    },
+    "die": {
+     "r": 4,
+     "n": 4,
+     "fps": 8
+    }
+   },
+   "colors": 16,
+   "cap": 20,
+   "frames": 24
+  },
+  "sandwraith": {
+   "id": "sandwraith",
+   "zh": "沙塵幻影",
+   "tier": "elite",
+   "rg": 5,
+   "fw": 64,
+   "fh": 64,
+   "rows": {
+    "idle": {
+     "r": 0,
+     "n": 6,
+     "fps": 6
+    },
+    "walk": {
+     "r": 1,
+     "n": 6,
+     "fps": 10
+    },
+    "atk": {
+     "r": 2,
+     "n": 6,
+     "fps": 10
+    },
+    "hurt": {
+     "r": 3,
+     "n": 2,
+     "fps": 8
+    },
+    "die": {
+     "r": 4,
+     "n": 4,
+     "fps": 8
+    }
+   },
+   "colors": 13,
+   "cap": 20,
+   "frames": 24
+  },
+  "dunewarden": {
+   "id": "dunewarden",
+   "zh": "沙海守衛",
+   "tier": "boss",
+   "rg": 5,
+   "fw": 128,
+   "fh": 128,
+   "rows": {
+    "idle": {
+     "r": 0,
+     "n": 8,
+     "fps": 6
+    },
+    "walk": {
+     "r": 1,
+     "n": 6,
+     "fps": 8
+    },
+    "atk": {
+     "r": 2,
+     "n": 8,
+     "fps": 10
+    },
+    "charge": {
+     "r": 3,
+     "n": 6,
+     "fps": 10
+    },
+    "hurt": {
+     "r": 4,
+     "n": 2,
+     "fps": 8
+    },
+    "die": {
+     "r": 5,
+     "n": 6,
+     "fps": 6
+    }
+   },
+   "colors": 12,
+   "cap": 28,
+   "frames": 36
+  },
+  "toadstool": {
+   "id": "toadstool",
+   "zh": "毒傘菇",
+   "tier": "reg",
+   "rg": 6,
+   "fw": 48,
+   "fh": 48,
+   "rows": {
+    "idle": {
+     "r": 0,
+     "n": 4,
+     "fps": 6
+    },
+    "walk": {
+     "r": 1,
+     "n": 6,
+     "fps": 10
+    },
+    "atk": {
+     "r": 2,
+     "n": 4,
+     "fps": 10
+    },
+    "hurt": {
+     "r": 3,
+     "n": 2,
+     "fps": 8
+    },
+    "die": {
+     "r": 4,
+     "n": 4,
+     "fps": 8
+    }
+   },
+   "colors": 10,
+   "cap": 16,
+   "frames": 20
+  },
+  "nightbat": {
+   "id": "nightbat",
+   "zh": "夜行蝠",
+   "tier": "reg",
+   "rg": 6,
+   "fw": 48,
+   "fh": 48,
+   "rows": {
+    "idle": {
+     "r": 0,
+     "n": 4,
+     "fps": 6
+    },
+    "walk": {
+     "r": 1,
+     "n": 6,
+     "fps": 10
+    },
+    "atk": {
+     "r": 2,
+     "n": 4,
+     "fps": 10
+    },
+    "hurt": {
+     "r": 3,
+     "n": 2,
+     "fps": 8
+    },
+    "die": {
+     "r": 4,
+     "n": 4,
+     "fps": 8
+    }
+   },
+   "colors": 10,
+   "cap": 16,
+   "frames": 20
+  },
+  "thornling": {
+   "id": "thornling",
+   "zh": "荊棘妖",
+   "tier": "reg",
+   "rg": 6,
+   "fw": 48,
+   "fh": 48,
+   "rows": {
+    "idle": {
+     "r": 0,
+     "n": 4,
+     "fps": 6
+    },
+    "walk": {
+     "r": 1,
+     "n": 6,
+     "fps": 10
+    },
+    "atk": {
+     "r": 2,
+     "n": 4,
+     "fps": 10
+    },
+    "hurt": {
+     "r": 3,
+     "n": 2,
+     "fps": 8
+    },
+    "die": {
+     "r": 4,
+     "n": 4,
+     "fps": 8
+    }
+   },
+   "colors": 10,
+   "cap": 16,
+   "frames": 20
+  },
+  "venomspider": {
+   "id": "venomspider",
+   "zh": "劇毒蛛",
+   "tier": "elite",
+   "rg": 6,
+   "fw": 64,
+   "fh": 64,
+   "rows": {
+    "idle": {
+     "r": 0,
+     "n": 6,
+     "fps": 6
+    },
+    "walk": {
+     "r": 1,
+     "n": 6,
+     "fps": 10
+    },
+    "atk": {
+     "r": 2,
+     "n": 6,
+     "fps": 10
+    },
+    "hurt": {
+     "r": 3,
+     "n": 2,
+     "fps": 8
+    },
+    "die": {
+     "r": 4,
+     "n": 4,
+     "fps": 8
+    }
+   },
+   "colors": 14,
+   "cap": 20,
+   "frames": 24
+  },
+  "hollowdryad": {
+   "id": "hollowdryad",
+   "zh": "空洞樹妖",
+   "tier": "elite",
+   "rg": 6,
+   "fw": 64,
+   "fh": 64,
+   "rows": {
+    "idle": {
+     "r": 0,
+     "n": 6,
+     "fps": 6
+    },
+    "walk": {
+     "r": 1,
+     "n": 6,
+     "fps": 10
+    },
+    "atk": {
+     "r": 2,
+     "n": 6,
+     "fps": 10
+    },
+    "hurt": {
+     "r": 3,
+     "n": 2,
+     "fps": 8
+    },
+    "die": {
+     "r": 4,
+     "n": 4,
+     "fps": 8
+    }
+   },
+   "colors": 12,
+   "cap": 20,
+   "frames": 24
+  },
+  "hollowmatriarch": {
+   "id": "hollowmatriarch",
+   "zh": "幽森蛛母",
+   "tier": "boss",
+   "rg": 6,
+   "fw": 128,
+   "fh": 128,
+   "rows": {
+    "idle": {
+     "r": 0,
+     "n": 8,
+     "fps": 6
+    },
+    "walk": {
+     "r": 1,
+     "n": 6,
+     "fps": 8
+    },
+    "atk": {
+     "r": 2,
+     "n": 8,
+     "fps": 10
+    },
+    "charge": {
+     "r": 3,
+     "n": 6,
+     "fps": 10
+    },
+    "hurt": {
+     "r": 4,
+     "n": 2,
+     "fps": 8
+    },
+    "die": {
+     "r": 5,
+     "n": 6,
+     "fps": 6
+    }
+   },
+   "colors": 18,
+   "cap": 28,
+   "frames": 36
+  },
+  "claylizard": {
+   "id": "claylizard",
+   "zh": "赤土蜥蜴",
+   "tier": "reg",
+   "rg": 7,
+   "fw": 48,
+   "fh": 48,
+   "rows": {
+    "idle": {
+     "r": 0,
+     "n": 4,
+     "fps": 6
+    },
+    "walk": {
+     "r": 1,
+     "n": 6,
+     "fps": 10
+    },
+    "atk": {
+     "r": 2,
+     "n": 4,
+     "fps": 10
+    },
+    "hurt": {
+     "r": 3,
+     "n": 2,
+     "fps": 8
+    },
+    "die": {
+     "r": 4,
+     "n": 4,
+     "fps": 8
+    }
+   },
+   "colors": 10,
+   "cap": 16,
+   "frames": 20
+  },
+  "dustboar": {
+   "id": "dustboar",
+   "zh": "塵土野豬",
+   "tier": "reg",
+   "rg": 7,
+   "fw": 48,
+   "fh": 48,
+   "rows": {
+    "idle": {
+     "r": 0,
+     "n": 4,
+     "fps": 6
+    },
+    "walk": {
+     "r": 1,
+     "n": 6,
+     "fps": 10
+    },
+    "atk": {
+     "r": 2,
+     "n": 4,
+     "fps": 10
+    },
+    "hurt": {
+     "r": 3,
+     "n": 2,
+     "fps": 8
+    },
+    "die": {
+     "r": 4,
+     "n": 4,
+     "fps": 8
+    }
+   },
+   "colors": 10,
+   "cap": 16,
+   "frames": 20
+  },
+  "hillvulture": {
+   "id": "hillvulture",
+   "zh": "丘陵禿鷲",
+   "tier": "reg",
+   "rg": 7,
+   "fw": 48,
+   "fh": 48,
+   "rows": {
+    "idle": {
+     "r": 0,
+     "n": 4,
+     "fps": 6
+    },
+    "walk": {
+     "r": 1,
+     "n": 6,
+     "fps": 10
+    },
+    "atk": {
+     "r": 2,
+     "n": 4,
+     "fps": 10
+    },
+    "hurt": {
+     "r": 3,
+     "n": 2,
+     "fps": 8
+    },
+    "die": {
+     "r": 4,
+     "n": 4,
+     "fps": 8
+    }
+   },
+   "colors": 10,
+   "cap": 16,
+   "frames": 20
+  },
+  "rockjackal": {
+   "id": "rockjackal",
+   "zh": "岩皮豺",
+   "tier": "elite",
+   "rg": 7,
+   "fw": 64,
+   "fh": 64,
+   "rows": {
+    "idle": {
+     "r": 0,
+     "n": 6,
+     "fps": 6
+    },
+    "walk": {
+     "r": 1,
+     "n": 6,
+     "fps": 10
+    },
+    "atk": {
+     "r": 2,
+     "n": 6,
+     "fps": 10
+    },
+    "hurt": {
+     "r": 3,
+     "n": 2,
+     "fps": 8
+    },
+    "die": {
+     "r": 4,
+     "n": 4,
+     "fps": 8
+    }
+   },
+   "colors": 15,
+   "cap": 20,
+   "frames": 24
+  },
+  "windgust": {
+   "id": "windgust",
+   "zh": "風蝕幽魂",
+   "tier": "elite",
+   "rg": 7,
+   "fw": 64,
+   "fh": 64,
+   "rows": {
+    "idle": {
+     "r": 0,
+     "n": 6,
+     "fps": 6
+    },
+    "walk": {
+     "r": 1,
+     "n": 6,
+     "fps": 10
+    },
+    "atk": {
+     "r": 2,
+     "n": 6,
+     "fps": 10
+    },
+    "hurt": {
+     "r": 3,
+     "n": 2,
+     "fps": 8
+    },
+    "die": {
+     "r": 4,
+     "n": 4,
+     "fps": 8
+    }
+   },
+   "colors": 14,
+   "cap": 20,
+   "frames": 24
+  },
+  "redclaydrake": {
+   "id": "redclaydrake",
+   "zh": "赤土飛龍",
+   "tier": "boss",
+   "rg": 7,
+   "fw": 128,
+   "fh": 128,
+   "rows": {
+    "idle": {
+     "r": 0,
+     "n": 8,
+     "fps": 6
+    },
+    "walk": {
+     "r": 1,
+     "n": 6,
+     "fps": 8
+    },
+    "atk": {
+     "r": 2,
+     "n": 8,
+     "fps": 10
+    },
+    "charge": {
+     "r": 3,
+     "n": 6,
+     "fps": 10
+    },
+    "hurt": {
+     "r": 4,
+     "n": 2,
+     "fps": 8
+    },
+    "die": {
+     "r": 5,
+     "n": 6,
+     "fps": 6
+    }
+   },
+   "colors": 17,
+   "cap": 28,
+   "frames": 36
+  },
+  "stonesentinel": {
+   "id": "stonesentinel",
+   "zh": "石像哨兵",
+   "tier": "reg",
+   "rg": 8,
+   "fw": 48,
+   "fh": 48,
+   "rows": {
+    "idle": {
+     "r": 0,
+     "n": 4,
+     "fps": 6
+    },
+    "walk": {
+     "r": 1,
+     "n": 6,
+     "fps": 10
+    },
+    "atk": {
+     "r": 2,
+     "n": 4,
+     "fps": 10
+    },
+    "hurt": {
+     "r": 3,
+     "n": 2,
+     "fps": 8
+    },
+    "die": {
+     "r": 4,
+     "n": 4,
+     "fps": 8
+    }
+   },
+   "colors": 8,
+   "cap": 16,
+   "frames": 20
+  },
+  "cursedacolyte": {
+   "id": "cursedacolyte",
+   "zh": "詛咒侍僧",
+   "tier": "reg",
+   "rg": 8,
+   "fw": 48,
+   "fh": 48,
+   "rows": {
+    "idle": {
+     "r": 0,
+     "n": 4,
+     "fps": 6
+    },
+    "walk": {
+     "r": 1,
+     "n": 6,
+     "fps": 10
+    },
+    "atk": {
+     "r": 2,
+     "n": 4,
+     "fps": 10
+    },
+    "hurt": {
+     "r": 3,
+     "n": 2,
+     "fps": 8
+    },
+    "die": {
+     "r": 4,
+     "n": 4,
+     "fps": 8
+    }
+   },
+   "colors": 8,
+   "cap": 16,
+   "frames": 20
+  },
+  "glyphwisp": {
+   "id": "glyphwisp",
+   "zh": "符文靈",
+   "tier": "reg",
+   "rg": 8,
+   "fw": 48,
+   "fh": 48,
+   "rows": {
+    "idle": {
+     "r": 0,
+     "n": 4,
+     "fps": 6
+    },
+    "walk": {
+     "r": 1,
+     "n": 6,
+     "fps": 10
+    },
+    "atk": {
+     "r": 2,
+     "n": 4,
+     "fps": 10
+    },
+    "hurt": {
+     "r": 3,
+     "n": 2,
+     "fps": 8
+    },
+    "die": {
+     "r": 4,
+     "n": 4,
+     "fps": 8
+    }
+   },
+   "colors": 10,
+   "cap": 16,
+   "frames": 20
+  },
+  "templelion": {
+   "id": "templelion",
+   "zh": "神殿石獅",
+   "tier": "elite",
+   "rg": 8,
+   "fw": 64,
+   "fh": 64,
+   "rows": {
+    "idle": {
+     "r": 0,
+     "n": 6,
+     "fps": 6
+    },
+    "walk": {
+     "r": 1,
+     "n": 6,
+     "fps": 10
+    },
+    "atk": {
+     "r": 2,
+     "n": 6,
+     "fps": 10
+    },
+    "hurt": {
+     "r": 3,
+     "n": 2,
+     "fps": 8
+    },
+    "die": {
+     "r": 4,
+     "n": 4,
+     "fps": 8
+    }
+   },
+   "colors": 14,
+   "cap": 20,
+   "frames": 24
+  },
+  "veilpriest": {
+   "id": "veilpriest",
+   "zh": "面紗祭司",
+   "tier": "elite",
+   "rg": 8,
+   "fw": 64,
+   "fh": 64,
+   "rows": {
+    "idle": {
+     "r": 0,
+     "n": 6,
+     "fps": 6
+    },
+    "walk": {
+     "r": 1,
+     "n": 6,
+     "fps": 10
+    },
+    "atk": {
+     "r": 2,
+     "n": 6,
+     "fps": 10
+    },
+    "hurt": {
+     "r": 3,
+     "n": 2,
+     "fps": 8
+    },
+    "die": {
+     "r": 4,
+     "n": 4,
+     "fps": 8
+    }
+   },
+   "colors": 11,
+   "cap": 20,
+   "frames": 24
+  },
+  "gateguardian": {
+   "id": "gateguardian",
+   "zh": "神殿守門者",
+   "tier": "boss",
+   "rg": 8,
+   "fw": 128,
+   "fh": 128,
+   "rows": {
+    "idle": {
+     "r": 0,
+     "n": 8,
+     "fps": 6
+    },
+    "walk": {
+     "r": 1,
+     "n": 6,
+     "fps": 8
+    },
+    "atk": {
+     "r": 2,
+     "n": 8,
+     "fps": 10
+    },
+    "charge": {
+     "r": 3,
+     "n": 6,
+     "fps": 10
+    },
+    "hurt": {
+     "r": 4,
+     "n": 2,
+     "fps": 8
+    },
+    "die": {
+     "r": 5,
+     "n": 6,
+     "fps": 6
+    }
+   },
+   "colors": 14,
+   "cap": 28,
+   "frames": 36
+  },
+  "icegel": {
+   "id": "icegel",
+   "zh": "冰晶凝膠",
+   "tier": "reg",
+   "rg": 9,
+   "fw": 48,
+   "fh": 48,
+   "rows": {
+    "idle": {
+     "r": 0,
+     "n": 4,
+     "fps": 6
+    },
+    "walk": {
+     "r": 1,
+     "n": 6,
+     "fps": 10
+    },
+    "atk": {
+     "r": 2,
+     "n": 4,
+     "fps": 10
+    },
+    "hurt": {
+     "r": 3,
+     "n": 2,
+     "fps": 8
+    },
+    "die": {
+     "r": 4,
+     "n": 4,
+     "fps": 8
+    }
+   },
+   "colors": 12,
+   "cap": 16,
+   "frames": 20
+  },
+  "snowowl": {
+   "id": "snowowl",
+   "zh": "雪羽梟",
+   "tier": "reg",
+   "rg": 9,
+   "fw": 48,
+   "fh": 48,
+   "rows": {
+    "idle": {
+     "r": 0,
+     "n": 4,
+     "fps": 6
+    },
+    "walk": {
+     "r": 1,
+     "n": 6,
+     "fps": 10
+    },
+    "atk": {
+     "r": 2,
+     "n": 4,
+     "fps": 10
+    },
+    "hurt": {
+     "r": 3,
+     "n": 2,
+     "fps": 8
+    },
+    "die": {
+     "r": 4,
+     "n": 4,
+     "fps": 8
+    }
+   },
+   "colors": 10,
+   "cap": 16,
+   "frames": 20
+  },
+  "frostcrab": {
+   "id": "frostcrab",
+   "zh": "霜殼蟹",
+   "tier": "reg",
+   "rg": 9,
+   "fw": 48,
+   "fh": 48,
+   "rows": {
+    "idle": {
+     "r": 0,
+     "n": 4,
+     "fps": 6
+    },
+    "walk": {
+     "r": 1,
+     "n": 6,
+     "fps": 10
+    },
+    "atk": {
+     "r": 2,
+     "n": 4,
+     "fps": 10
+    },
+    "hurt": {
+     "r": 3,
+     "n": 2,
+     "fps": 8
+    },
+    "die": {
+     "r": 4,
+     "n": 4,
+     "fps": 8
+    }
+   },
+   "colors": 9,
+   "cap": 16,
+   "frames": 20
+  },
+  "glaciermammoth": {
+   "id": "glaciermammoth",
+   "zh": "冰原長毛象",
+   "tier": "elite",
+   "rg": 9,
+   "fw": 64,
+   "fh": 64,
+   "rows": {
+    "idle": {
+     "r": 0,
+     "n": 6,
+     "fps": 6
+    },
+    "walk": {
+     "r": 1,
+     "n": 6,
+     "fps": 10
+    },
+    "atk": {
+     "r": 2,
+     "n": 6,
+     "fps": 10
+    },
+    "hurt": {
+     "r": 3,
+     "n": 2,
+     "fps": 8
+    },
+    "die": {
+     "r": 4,
+     "n": 4,
+     "fps": 8
+    }
+   },
+   "colors": 14,
+   "cap": 20,
+   "frames": 24
+  },
+  "auroraspirit": {
+   "id": "auroraspirit",
+   "zh": "極光靈",
+   "tier": "elite",
+   "rg": 9,
+   "fw": 64,
+   "fh": 64,
+   "rows": {
+    "idle": {
+     "r": 0,
+     "n": 6,
+     "fps": 6
+    },
+    "walk": {
+     "r": 1,
+     "n": 6,
+     "fps": 10
+    },
+    "atk": {
+     "r": 2,
+     "n": 6,
+     "fps": 10
+    },
+    "hurt": {
+     "r": 3,
+     "n": 2,
+     "fps": 8
+    },
+    "die": {
+     "r": 4,
+     "n": 4,
+     "fps": 8
+    }
+   },
+   "colors": 13,
+   "cap": 20,
+   "frames": 24
+  },
+  "aurorawyrm": {
+   "id": "aurorawyrm",
+   "zh": "極光巨蟒",
+   "tier": "boss",
+   "rg": 9,
+   "fw": 128,
+   "fh": 128,
+   "rows": {
+    "idle": {
+     "r": 0,
+     "n": 8,
+     "fps": 6
+    },
+    "walk": {
+     "r": 1,
+     "n": 6,
+     "fps": 8
+    },
+    "atk": {
+     "r": 2,
+     "n": 8,
+     "fps": 10
+    },
+    "charge": {
+     "r": 3,
+     "n": 6,
+     "fps": 10
+    },
+    "hurt": {
+     "r": 4,
+     "n": 2,
+     "fps": 8
+    },
+    "die": {
+     "r": 5,
+     "n": 6,
+     "fps": 6
+    }
+   },
+   "colors": 11,
+   "cap": 28,
+   "frames": 36
+  },
+  "magmaslime": {
+   "id": "magmaslime",
+   "zh": "熔岩凝膠",
+   "tier": "reg",
+   "rg": 10,
+   "fw": 48,
+   "fh": 48,
+   "rows": {
+    "idle": {
+     "r": 0,
+     "n": 4,
+     "fps": 6
+    },
+    "walk": {
+     "r": 1,
+     "n": 6,
+     "fps": 10
+    },
+    "atk": {
+     "r": 2,
+     "n": 4,
+     "fps": 10
+    },
+    "hurt": {
+     "r": 3,
+     "n": 2,
+     "fps": 8
+    },
+    "die": {
+     "r": 4,
+     "n": 4,
+     "fps": 8
+    }
+   },
+   "colors": 12,
+   "cap": 16,
+   "frames": 20
+  },
+  "emberimp": {
+   "id": "emberimp",
+   "zh": "餘燼小惡魔",
+   "tier": "reg",
+   "rg": 10,
+   "fw": 48,
+   "fh": 48,
+   "rows": {
+    "idle": {
+     "r": 0,
+     "n": 4,
+     "fps": 6
+    },
+    "walk": {
+     "r": 1,
+     "n": 6,
+     "fps": 10
+    },
+    "atk": {
+     "r": 2,
+     "n": 4,
+     "fps": 10
+    },
+    "hurt": {
+     "r": 3,
+     "n": 2,
+     "fps": 8
+    },
+    "die": {
+     "r": 4,
+     "n": 4,
+     "fps": 8
+    }
+   },
+   "colors": 10,
+   "cap": 16,
+   "frames": 20
+  },
+  "lavagolem": {
+   "id": "lavagolem",
+   "zh": "熔岩傀儡",
+   "tier": "reg",
+   "rg": 10,
+   "fw": 48,
+   "fh": 48,
+   "rows": {
+    "idle": {
+     "r": 0,
+     "n": 4,
+     "fps": 6
+    },
+    "walk": {
+     "r": 1,
+     "n": 6,
+     "fps": 10
+    },
+    "atk": {
+     "r": 2,
+     "n": 4,
+     "fps": 10
+    },
+    "hurt": {
+     "r": 3,
+     "n": 2,
+     "fps": 8
+    },
+    "die": {
+     "r": 4,
+     "n": 4,
+     "fps": 8
+    }
+   },
+   "colors": 9,
+   "cap": 16,
+   "frames": 20
+  },
+  "cindermane": {
+   "id": "cindermane",
+   "zh": "灰燼獅",
+   "tier": "elite",
+   "rg": 10,
+   "fw": 64,
+   "fh": 64,
+   "rows": {
+    "idle": {
+     "r": 0,
+     "n": 6,
+     "fps": 6
+    },
+    "walk": {
+     "r": 1,
+     "n": 6,
+     "fps": 10
+    },
+    "atk": {
+     "r": 2,
+     "n": 6,
+     "fps": 10
+    },
+    "hurt": {
+     "r": 3,
+     "n": 2,
+     "fps": 8
+    },
+    "die": {
+     "r": 4,
+     "n": 4,
+     "fps": 8
+    }
+   },
+   "colors": 17,
+   "cap": 20,
+   "frames": 24
+  },
+  "flamewraith": {
+   "id": "flamewraith",
+   "zh": "烈焰幽魂",
+   "tier": "elite",
+   "rg": 10,
+   "fw": 64,
+   "fh": 64,
+   "rows": {
+    "idle": {
+     "r": 0,
+     "n": 6,
+     "fps": 6
+    },
+    "walk": {
+     "r": 1,
+     "n": 6,
+     "fps": 10
+    },
+    "atk": {
+     "r": 2,
+     "n": 6,
+     "fps": 10
+    },
+    "hurt": {
+     "r": 3,
+     "n": 2,
+     "fps": 8
+    },
+    "die": {
+     "r": 4,
+     "n": 4,
+     "fps": 8
+    }
+   },
+   "colors": 12,
+   "cap": 20,
+   "frames": 24
+  },
+  "cindertyrant": {
+   "id": "cindertyrant",
+   "zh": "餘燼暴君",
+   "tier": "boss",
+   "rg": 10,
+   "fw": 128,
+   "fh": 128,
+   "rows": {
+    "idle": {
+     "r": 0,
+     "n": 8,
+     "fps": 6
+    },
+    "walk": {
+     "r": 1,
+     "n": 6,
+     "fps": 8
+    },
+    "atk": {
+     "r": 2,
+     "n": 8,
+     "fps": 10
+    },
+    "charge": {
+     "r": 3,
+     "n": 6,
+     "fps": 10
+    },
+    "hurt": {
+     "r": 4,
+     "n": 2,
+     "fps": 8
+    },
+    "die": {
+     "r": 5,
+     "n": 6,
+     "fps": 6
+    }
+   },
+   "colors": 16,
+   "cap": 28,
+   "frames": 36
+  },
+  "ashwraith": {
+   "id": "ashwraith",
+   "zh": "灰燼遊魂",
+   "tier": "reg",
+   "rg": 11,
+   "fw": 48,
+   "fh": 48,
+   "rows": {
+    "idle": {
+     "r": 0,
+     "n": 4,
+     "fps": 6
+    },
+    "walk": {
+     "r": 1,
+     "n": 6,
+     "fps": 10
+    },
+    "atk": {
+     "r": 2,
+     "n": 4,
+     "fps": 10
+    },
+    "hurt": {
+     "r": 3,
+     "n": 2,
+     "fps": 8
+    },
+    "die": {
+     "r": 4,
+     "n": 4,
+     "fps": 8
+    }
+   },
+   "colors": 7,
+   "cap": 16,
+   "frames": 20
+  },
+  "bonehound": {
+   "id": "bonehound",
+   "zh": "白骨獵犬",
+   "tier": "reg",
+   "rg": 11,
+   "fw": 48,
+   "fh": 48,
+   "rows": {
+    "idle": {
+     "r": 0,
+     "n": 4,
+     "fps": 6
+    },
+    "walk": {
+     "r": 1,
+     "n": 6,
+     "fps": 10
+    },
+    "atk": {
+     "r": 2,
+     "n": 4,
+     "fps": 10
+    },
+    "hurt": {
+     "r": 3,
+     "n": 2,
+     "fps": 8
+    },
+    "die": {
+     "r": 4,
+     "n": 4,
+     "fps": 8
+    }
+   },
+   "colors": 10,
+   "cap": 16,
+   "frames": 20
+  },
+  "cindermoth": {
+   "id": "cindermoth",
+   "zh": "灰燼蛾",
+   "tier": "reg",
+   "rg": 11,
+   "fw": 48,
+   "fh": 48,
+   "rows": {
+    "idle": {
+     "r": 0,
+     "n": 4,
+     "fps": 6
+    },
+    "walk": {
+     "r": 1,
+     "n": 6,
+     "fps": 10
+    },
+    "atk": {
+     "r": 2,
+     "n": 4,
+     "fps": 10
+    },
+    "hurt": {
+     "r": 3,
+     "n": 2,
+     "fps": 8
+    },
+    "die": {
+     "r": 4,
+     "n": 4,
+     "fps": 8
+    }
+   },
+   "colors": 9,
+   "cap": 16,
+   "frames": 20
+  },
+  "ashreaper": {
+   "id": "ashreaper",
+   "zh": "灰燼收割者",
+   "tier": "elite",
+   "rg": 11,
+   "fw": 64,
+   "fh": 64,
+   "rows": {
+    "idle": {
+     "r": 0,
+     "n": 6,
+     "fps": 6
+    },
+    "walk": {
+     "r": 1,
+     "n": 6,
+     "fps": 10
+    },
+    "atk": {
+     "r": 2,
+     "n": 6,
+     "fps": 10
+    },
+    "hurt": {
+     "r": 3,
+     "n": 2,
+     "fps": 8
+    },
+    "die": {
+     "r": 4,
+     "n": 4,
+     "fps": 8
+    }
+   },
+   "colors": 11,
+   "cap": 20,
+   "frames": 24
+  },
+  "smolderstag": {
+   "id": "smolderstag",
+   "zh": "悶燒巨鹿",
+   "tier": "elite",
+   "rg": 11,
+   "fw": 64,
+   "fh": 64,
+   "rows": {
+    "idle": {
+     "r": 0,
+     "n": 6,
+     "fps": 6
+    },
+    "walk": {
+     "r": 1,
+     "n": 6,
+     "fps": 10
+    },
+    "atk": {
+     "r": 2,
+     "n": 6,
+     "fps": 10
+    },
+    "hurt": {
+     "r": 3,
+     "n": 2,
+     "fps": 8
+    },
+    "die": {
+     "r": 4,
+     "n": 4,
+     "fps": 8
+    }
+   },
+   "colors": 18,
+   "cap": 20,
+   "frames": 24
+  },
+  "ashendragon": {
+   "id": "ashendragon",
+   "zh": "灰燼龍",
+   "tier": "boss",
+   "rg": 11,
+   "fw": 128,
+   "fh": 128,
+   "rows": {
+    "idle": {
+     "r": 0,
+     "n": 8,
+     "fps": 6
+    },
+    "walk": {
+     "r": 1,
+     "n": 6,
+     "fps": 8
+    },
+    "atk": {
+     "r": 2,
+     "n": 8,
+     "fps": 10
+    },
+    "charge": {
+     "r": 3,
+     "n": 6,
+     "fps": 10
+    },
+    "hurt": {
+     "r": 4,
+     "n": 2,
+     "fps": 8
+    },
+    "die": {
+     "r": 5,
+     "n": 6,
+     "fps": 6
+    }
+   },
+   "colors": 18,
+   "cap": 28,
+   "frames": 36
+  },
+  "crystalbeetle": {
+   "id": "crystalbeetle",
+   "zh": "晶殼蟲",
+   "tier": "reg",
+   "rg": 12,
+   "fw": 48,
+   "fh": 48,
+   "rows": {
+    "idle": {
+     "r": 0,
+     "n": 4,
+     "fps": 6
+    },
+    "walk": {
+     "r": 1,
+     "n": 6,
+     "fps": 10
+    },
+    "atk": {
+     "r": 2,
+     "n": 4,
+     "fps": 10
+    },
+    "hurt": {
+     "r": 3,
+     "n": 2,
+     "fps": 8
+    },
+    "die": {
+     "r": 4,
+     "n": 4,
+     "fps": 8
+    }
+   },
+   "colors": 10,
+   "cap": 16,
+   "frames": 20
+  },
+  "prismwisp": {
+   "id": "prismwisp",
+   "zh": "稜光靈",
+   "tier": "reg",
+   "rg": 12,
+   "fw": 48,
+   "fh": 48,
+   "rows": {
+    "idle": {
+     "r": 0,
+     "n": 4,
+     "fps": 6
+    },
+    "walk": {
+     "r": 1,
+     "n": 6,
+     "fps": 10
+    },
+    "atk": {
+     "r": 2,
+     "n": 4,
+     "fps": 10
+    },
+    "hurt": {
+     "r": 3,
+     "n": 2,
+     "fps": 8
+    },
+    "die": {
+     "r": 4,
+     "n": 4,
+     "fps": 8
+    }
+   },
+   "colors": 9,
+   "cap": 16,
+   "frames": 20
+  },
+  "geodegolem": {
+   "id": "geodegolem",
+   "zh": "晶洞傀儡",
+   "tier": "reg",
+   "rg": 12,
+   "fw": 48,
+   "fh": 48,
+   "rows": {
+    "idle": {
+     "r": 0,
+     "n": 4,
+     "fps": 6
+    },
+    "walk": {
+     "r": 1,
+     "n": 6,
+     "fps": 10
+    },
+    "atk": {
+     "r": 2,
+     "n": 4,
+     "fps": 10
+    },
+    "hurt": {
+     "r": 3,
+     "n": 2,
+     "fps": 8
+    },
+    "die": {
+     "r": 4,
+     "n": 4,
+     "fps": 8
+    }
+   },
+   "colors": 10,
+   "cap": 16,
+   "frames": 20
+  },
+  "amethystbat": {
+   "id": "amethystbat",
+   "zh": "紫晶巨蝠",
+   "tier": "elite",
+   "rg": 12,
+   "fw": 64,
+   "fh": 64,
+   "rows": {
+    "idle": {
+     "r": 0,
+     "n": 6,
+     "fps": 6
+    },
+    "walk": {
+     "r": 1,
+     "n": 6,
+     "fps": 10
+    },
+    "atk": {
+     "r": 2,
+     "n": 6,
+     "fps": 10
+    },
+    "hurt": {
+     "r": 3,
+     "n": 2,
+     "fps": 8
+    },
+    "die": {
+     "r": 4,
+     "n": 4,
+     "fps": 8
+    }
+   },
+   "colors": 13,
+   "cap": 20,
+   "frames": 24
+  },
+  "starshard": {
+   "id": "starshard",
+   "zh": "星晶魔像",
+   "tier": "elite",
+   "rg": 12,
+   "fw": 64,
+   "fh": 64,
+   "rows": {
+    "idle": {
+     "r": 0,
+     "n": 6,
+     "fps": 6
+    },
+    "walk": {
+     "r": 1,
+     "n": 6,
+     "fps": 10
+    },
+    "atk": {
+     "r": 2,
+     "n": 6,
+     "fps": 10
+    },
+    "hurt": {
+     "r": 3,
+     "n": 2,
+     "fps": 8
+    },
+    "die": {
+     "r": 4,
+     "n": 4,
+     "fps": 8
+    }
+   },
+   "colors": 11,
+   "cap": 20,
+   "frames": 24
+  },
+  "prismcolossus": {
+   "id": "prismcolossus",
+   "zh": "稜晶巨像",
+   "tier": "boss",
+   "rg": 12,
+   "fw": 128,
+   "fh": 128,
+   "rows": {
+    "idle": {
+     "r": 0,
+     "n": 8,
+     "fps": 6
+    },
+    "walk": {
+     "r": 1,
+     "n": 6,
+     "fps": 8
+    },
+    "atk": {
+     "r": 2,
+     "n": 8,
+     "fps": 10
+    },
+    "charge": {
+     "r": 3,
+     "n": 6,
+     "fps": 10
+    },
+    "hurt": {
+     "r": 4,
+     "n": 2,
+     "fps": 8
+    },
+    "die": {
+     "r": 5,
+     "n": 6,
+     "fps": 6
+    }
+   },
+   "colors": 17,
+   "cap": 28,
+   "frames": 36
+  },
+  "stormhawk": {
+   "id": "stormhawk",
+   "zh": "暴風鷹",
+   "tier": "reg",
+   "rg": 13,
+   "fw": 48,
+   "fh": 48,
+   "rows": {
+    "idle": {
+     "r": 0,
+     "n": 4,
+     "fps": 6
+    },
+    "walk": {
+     "r": 1,
+     "n": 6,
+     "fps": 10
+    },
+    "atk": {
+     "r": 2,
+     "n": 4,
+     "fps": 10
+    },
+    "hurt": {
+     "r": 3,
+     "n": 2,
+     "fps": 8
+    },
+    "die": {
+     "r": 4,
+     "n": 4,
+     "fps": 8
+    }
+   },
+   "colors": 8,
+   "cap": 16,
+   "frames": 20
+  },
+  "thunderram": {
+   "id": "thunderram",
+   "zh": "雷角羊",
+   "tier": "reg",
+   "rg": 13,
+   "fw": 48,
+   "fh": 48,
+   "rows": {
+    "idle": {
+     "r": 0,
+     "n": 4,
+     "fps": 6
+    },
+    "walk": {
+     "r": 1,
+     "n": 6,
+     "fps": 10
+    },
+    "atk": {
+     "r": 2,
+     "n": 4,
+     "fps": 10
+    },
+    "hurt": {
+     "r": 3,
+     "n": 2,
+     "fps": 8
+    },
+    "die": {
+     "r": 4,
+     "n": 4,
+     "fps": 8
+    }
+   },
+   "colors": 10,
+   "cap": 16,
+   "frames": 20
+  },
+  "sparkwisp": {
+   "id": "sparkwisp",
+   "zh": "雷花靈",
+   "tier": "reg",
+   "rg": 13,
+   "fw": 48,
+   "fh": 48,
+   "rows": {
+    "idle": {
+     "r": 0,
+     "n": 4,
+     "fps": 6
+    },
+    "walk": {
+     "r": 1,
+     "n": 6,
+     "fps": 10
+    },
+    "atk": {
+     "r": 2,
+     "n": 4,
+     "fps": 10
+    },
+    "hurt": {
+     "r": 3,
+     "n": 2,
+     "fps": 8
+    },
+    "die": {
+     "r": 4,
+     "n": 4,
+     "fps": 8
+    }
+   },
+   "colors": 10,
+   "cap": 16,
+   "frames": 20
+  },
+  "voltstag": {
+   "id": "voltstag",
+   "zh": "電光雄鹿",
+   "tier": "elite",
+   "rg": 13,
+   "fw": 64,
+   "fh": 64,
+   "rows": {
+    "idle": {
+     "r": 0,
+     "n": 6,
+     "fps": 6
+    },
+    "walk": {
+     "r": 1,
+     "n": 6,
+     "fps": 10
+    },
+    "atk": {
+     "r": 2,
+     "n": 6,
+     "fps": 10
+    },
+    "hurt": {
+     "r": 3,
+     "n": 2,
+     "fps": 8
+    },
+    "die": {
+     "r": 4,
+     "n": 4,
+     "fps": 8
+    }
+   },
+   "colors": 16,
+   "cap": 20,
+   "frames": 24
+  },
+  "stormcaller": {
+   "id": "stormcaller",
+   "zh": "喚雷祭司",
+   "tier": "elite",
+   "rg": 13,
+   "fw": 64,
+   "fh": 64,
+   "rows": {
+    "idle": {
+     "r": 0,
+     "n": 6,
+     "fps": 6
+    },
+    "walk": {
+     "r": 1,
+     "n": 6,
+     "fps": 10
+    },
+    "atk": {
+     "r": 2,
+     "n": 6,
+     "fps": 10
+    },
+    "hurt": {
+     "r": 3,
+     "n": 2,
+     "fps": 8
+    },
+    "die": {
+     "r": 4,
+     "n": 4,
+     "fps": 8
+    }
+   },
+   "colors": 14,
+   "cap": 20,
+   "frames": 24
+  },
+  "thundergriffin": {
+   "id": "thundergriffin",
+   "zh": "雷霆獅鷲",
+   "tier": "boss",
+   "rg": 13,
+   "fw": 128,
+   "fh": 128,
+   "rows": {
+    "idle": {
+     "r": 0,
+     "n": 8,
+     "fps": 6
+    },
+    "walk": {
+     "r": 1,
+     "n": 6,
+     "fps": 8
+    },
+    "atk": {
+     "r": 2,
+     "n": 8,
+     "fps": 10
+    },
+    "charge": {
+     "r": 3,
+     "n": 6,
+     "fps": 10
+    },
+    "hurt": {
+     "r": 4,
+     "n": 2,
+     "fps": 8
+    },
+    "die": {
+     "r": 5,
+     "n": 6,
+     "fps": 6
+    }
+   },
+   "colors": 16,
+   "cap": 28,
+   "frames": 36
+  },
+  "shadeknight": {
+   "id": "shadeknight",
+   "zh": "暗影騎士",
+   "tier": "reg",
+   "rg": 14,
+   "fw": 48,
+   "fh": 48,
+   "rows": {
+    "idle": {
+     "r": 0,
+     "n": 4,
+     "fps": 6
+    },
+    "walk": {
+     "r": 1,
+     "n": 6,
+     "fps": 10
+    },
+    "atk": {
+     "r": 2,
+     "n": 4,
+     "fps": 10
+    },
+    "hurt": {
+     "r": 3,
+     "n": 2,
+     "fps": 8
+    },
+    "die": {
+     "r": 4,
+     "n": 4,
+     "fps": 8
+    }
+   },
+   "colors": 9,
+   "cap": 16,
+   "frames": 20
+  },
+  "gargoyle": {
+   "id": "gargoyle",
+   "zh": "滴水獸",
+   "tier": "reg",
+   "rg": 14,
+   "fw": 48,
+   "fh": 48,
+   "rows": {
+    "idle": {
+     "r": 0,
+     "n": 4,
+     "fps": 6
+    },
+    "walk": {
+     "r": 1,
+     "n": 6,
+     "fps": 10
+    },
+    "atk": {
+     "r": 2,
+     "n": 4,
+     "fps": 10
+    },
+    "hurt": {
+     "r": 3,
+     "n": 2,
+     "fps": 8
+    },
+    "die": {
+     "r": 4,
+     "n": 4,
+     "fps": 8
+    }
+   },
+   "colors": 10,
+   "cap": 16,
+   "frames": 20
+  },
+  "nightrat": {
+   "id": "nightrat",
+   "zh": "夜鼠群",
+   "tier": "reg",
+   "rg": 14,
+   "fw": 48,
+   "fh": 48,
+   "rows": {
+    "idle": {
+     "r": 0,
+     "n": 4,
+     "fps": 6
+    },
+    "walk": {
+     "r": 1,
+     "n": 6,
+     "fps": 10
+    },
+    "atk": {
+     "r": 2,
+     "n": 4,
+     "fps": 10
+    },
+    "hurt": {
+     "r": 3,
+     "n": 2,
+     "fps": 8
+    },
+    "die": {
+     "r": 4,
+     "n": 4,
+     "fps": 8
+    }
+   },
+   "colors": 10,
+   "cap": 16,
+   "frames": 20
+  },
+  "voidchampion": {
+   "id": "voidchampion",
+   "zh": "虛空勇者",
+   "tier": "elite",
+   "rg": 14,
+   "fw": 64,
+   "fh": 64,
+   "rows": {
+    "idle": {
+     "r": 0,
+     "n": 6,
+     "fps": 6
+    },
+    "walk": {
+     "r": 1,
+     "n": 6,
+     "fps": 10
+    },
+    "atk": {
+     "r": 2,
+     "n": 6,
+     "fps": 10
+    },
+    "hurt": {
+     "r": 3,
+     "n": 2,
+     "fps": 8
+    },
+    "die": {
+     "r": 4,
+     "n": 4,
+     "fps": 8
+    }
+   },
+   "colors": 14,
+   "cap": 20,
+   "frames": 24
+  },
+  "dusksorcerer": {
+   "id": "dusksorcerer",
+   "zh": "黃昏術師",
+   "tier": "elite",
+   "rg": 14,
+   "fw": 64,
+   "fh": 64,
+   "rows": {
+    "idle": {
+     "r": 0,
+     "n": 6,
+     "fps": 6
+    },
+    "walk": {
+     "r": 1,
+     "n": 6,
+     "fps": 10
+    },
+    "atk": {
+     "r": 2,
+     "n": 6,
+     "fps": 10
+    },
+    "hurt": {
+     "r": 3,
+     "n": 2,
+     "fps": 8
+    },
+    "die": {
+     "r": 4,
+     "n": 4,
+     "fps": 8
+    }
+   },
+   "colors": 14,
+   "cap": 20,
+   "frames": 24
+  },
+  "nightsovereign": {
+   "id": "nightsovereign",
+   "zh": "永夜君王",
+   "tier": "boss",
+   "rg": 14,
+   "fw": 128,
+   "fh": 128,
+   "rows": {
+    "idle": {
+     "r": 0,
+     "n": 8,
+     "fps": 6
+    },
+    "walk": {
+     "r": 1,
+     "n": 6,
+     "fps": 8
+    },
+    "atk": {
+     "r": 2,
+     "n": 8,
+     "fps": 10
+    },
+    "charge": {
+     "r": 3,
+     "n": 6,
+     "fps": 10
+    },
+    "hurt": {
+     "r": 4,
+     "n": 2,
+     "fps": 8
+    },
+    "die": {
+     "r": 5,
+     "n": 6,
+     "fps": 6
+    }
+   },
+   "colors": 15,
+   "cap": 28,
+   "frames": 36
+  }
+ }
+}

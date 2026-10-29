@@ -30,3 +30,7 @@
 
 ## 只想換回 Windows XP 外觀
 頁面上方「外觀」按鈕，或 localStorage `aur_theme` = `xp`；不需還原。
+
+## 仙境冒險 v2 測試版（/v2/，2026-10-29 14:26 UTC+8）
+只新增 `v2/` 資料夾（靜態測試頁），首頁、/old/、API、資料庫皆未變動。備份 tag：`pre-hdv2-20261029-1425`，離線檔 /workspace/backups/idle-game-pre-hdv2-20261029-1425.tar.gz
+移除：`git rm -r v2 && git commit -m "remove v2 test" && git push origin main`（或 git revert 該 commit）
